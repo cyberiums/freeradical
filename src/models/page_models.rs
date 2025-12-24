@@ -152,8 +152,13 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
         Ok(res)
     }
 
-    fn read_all(db: &mut MysqlConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
-        let res = pages::table.load::<Self>(db)?.into_iter().map(|x| x.into()).collect();
+    fn read_all(db: &mut MysylConnection) -> Result<Vec<Self>, diesel::result::Error> {
+        let res = pages::table
+            .select(Page::as_select())
+            .load::<Self>(db)?
+            .into_iter()
+            .map(|x| x.into())
+            .collect();
 
         Ok(res)
     }
