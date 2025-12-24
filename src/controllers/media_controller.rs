@@ -5,7 +5,7 @@ use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
 use uuid::Uuid;
 
-use crate::db_connection::establish_connection;
+use crate::services::database_service::establish_connection;
 use crate::models::media_models::{Media, NewMedia};
 use crate::schema::media;
 

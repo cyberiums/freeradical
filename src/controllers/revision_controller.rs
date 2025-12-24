@@ -5,7 +5,7 @@ use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
 use serde_json::json;
 
-use crate::db_connection::establish_connection;
+use crate::services::database_service::establish_connection;
 use crate::models::revision_models::{PageRevision, RevisionSummary};
 use crate::schema::page_revisions;
 
