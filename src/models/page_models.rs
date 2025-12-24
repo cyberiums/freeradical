@@ -39,12 +39,15 @@ pub struct Page {
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,
     pub reading_time: Option<i32>,
-    // Group 3: Iteration 4 - TESTING (Suspected culp rits!)
+    // TESTING: Only status field (enum type - suspected culprit!)
+    pub status: Option<String>,
+    // Commented out other Iteration 4 fields for now
+    /*
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
-    pub status: Option<String>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
+    */
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
