@@ -5,7 +5,7 @@ use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
 use uuid::Uuid;
 
-use crate::services::database_service::establish_connection;
+use crate::services::database_service;
 use crate::models::media_models::{Media, NewMedia};
 use crate::schema::media;
 
@@ -14,7 +14,7 @@ use crate::schema::media;
 pub async fn list_media() -> impl Responder {
     use crate::schema::media::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     match media
         .order(created_at.desc())
@@ -31,7 +31,7 @@ pub async fn list_media() -> impl Responder {
 pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
     use crate::schema::media::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     match media
         .filter(uuid.eq(media_uuid.as_str()))
@@ -47,7 +47,7 @@ pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
 pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
     use crate::schema::media::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     match diesel::delete(media.filter(uuid.eq(media_uuid.as_str())))
         .execute(&mut conn)
@@ -62,7 +62,7 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
 /// This is a placeholder that creates a database entry
 /// Full implementation would handle multipart uploads
 pub async fn upload_media(info: web::Json<NewMedia>) -> impl Responder {
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     let new_media = NewMedia {
         uuid: Uuid::new_v4().to_string(),
