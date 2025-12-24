@@ -89,7 +89,28 @@
               "item": "http://127.0.0.1:8080{{page_url}}"
             }{{/unless}}{{/if}}
           ]
-        }
+        }{{#if article_type}}{{#unless (eq article_type "WebPage")}}
+        ,{
+          "@type": "{{article_type}}",
+          "@id": "http://127.0.0.1:8080{{page_url}}#article",
+          "headline": "{{#if meta_title}}{{meta_title}}{{else}}{{page_title}}{{/if}}",
+          "description": "{{#if meta_description}}{{meta_description}}{{/if}}",
+          "image": "{{#if featured_image}}{{featured_image}}{{else}}http://127.0.0.1:8080/assets/logo.png{{/if}}",
+          "datePublished": "{{time_created}}",
+          "dateModified": "{{time_created}}",
+          {{#if author}}"author": {
+            "@type": "Person",
+            "name": "{{author}}"
+          },{{/if}}
+          "publisher": {
+            "@id": "http://127.0.0.1:8080/#organization"
+          },
+          "mainEntityOfPage": {
+            "@id": "http://127.0.0.1:8080{{page_url}}#webpage"
+          },
+          "inLanguage": "en-US"{{#if word_count}},
+          "wordCount": {{word_count}}{{/if}}
+        }{{/unless}}{{/if}}
       ]
     }
     </script>
