@@ -1,12 +1,12 @@
 use actix_web::{HttpResponse, web};
-use crate::mysql_pool::{pool_handler, MySQLPool};
+use crate::models::{pool_handler, MySQLPool};
 use crate::models::page_models::Page;
 use crate::models::Model;
-use crate::error::CustomHttpError;
+use crate::services::errors_service::CustomHttpError;
 
 /// GET /sitemap.xml
 /// Generates XML sitemap for all pages
-pub async fn sitemap(pool: web::Data<MySQLPool>) -&gt; Result<HttpResponse, CustomHttpError> {
+pub async fn sitemap(pool: web::Data<MySQLPool>) -> Result<HttpResponse, CustomHttpError> {
     let mysql_pool = pool_handler(pool)?;
     
     // Get all pages from database

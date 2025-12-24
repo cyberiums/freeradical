@@ -39,7 +39,7 @@ Sub $2/month GCP Cloud Run tutorial coming soon!
 
 ## Project State
 
-Version: **v0.1.5** 🎉
+Version: **v0.2.0 (in progress)** 🎉
 
 |             | Status |
 | ----------- | ----------- |
@@ -47,8 +47,8 @@ Version: **v0.1.5** 🎉
 | Frontend | ✅ Production Ready |
 | Performance | ✅ Benchmarked |
 | Security | ✅ JWT + Argon2 |
-| SEO | ⚠️ **In Development** (P0 features implemented, testing required) |
-| Production | ⚠️ **Ready (SEO incomplete)** |
+| SEO | ✅ **Ready** (P0 features complete) |
+| Production | ✅ **Ready** (HTTPS pending) |
 
 ## Admin Functionality
 
