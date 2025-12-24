@@ -1,17 +1,17 @@
-use actix_web::{get, HttpResponse, Responder};
-use crate::db_connection::establish_connection;
+use actix_web::{HttpResponse, Responder};
 use diesel::prelude::*;
 use flate2::Compression;
 use flate2::write::GzEncoder;
 use std::io::Write;
 
+use crate::services::database_service;
+
 /// Generate XML sitemap with gzip compression support
-/// Supports sitemap index for large sites (>50k URLs)
-#[get("/sitemap.xml")]
+/// Standardized to manual routing (no macro)
 pub async fn sitemap() -> impl Responder {
     use crate::schema::pages::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     // Get all pages
     let results = pages

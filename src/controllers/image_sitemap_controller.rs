@@ -1,15 +1,14 @@
-use actix_web::{get, HttpResponse, Responder};
-use crate::db_connection::establish_connection;
-use crate::models::page_models::Page;
+use actix_web::{HttpResponse, Responder};
 use diesel::prelude::*;
 
+use crate::services::database_service;
+
 /// Generate image sitemap XML
-/// Extracts images from pages and creates image sitemap
-#[get("/image-sitemap.xml")]
+/// Standardized to manual routing (no macro)
 pub async fn image_sitemap() -> impl Responder {
     use crate::schema::pages::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     // Get all pages with featured images
     let results = pages
