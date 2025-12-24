@@ -1,10 +1,13 @@
-# Radical
+# FreeRadical
 
 ## Index
 
 - [Project](#project-description)
-- [How to Install](https://github.com/Rust-CMS/tooling)
+- [How to Install](https://github.com/cyberiums/freeradical)
+- [Maintained By](#maintained-by)
 - [Project State](#project-state)
+- [Admin Functionality](#admin-functionality)
+- [Performance](#performance)
 - [Testing](#note-on-testing)
 - [Dev Environment Setup](#dev-environment-setup)
 - [Environment Variables](#environment-variables)
@@ -15,11 +18,20 @@
 
 
 
-Radical is a headless (with a head that will be disable-able) CMS heavily inspired by [Processwire](https://processwire.com/). This is not a markdown site generator like other CMSs. If you would like something of that nature, see [here](#repositories-like-this).
+**FreeRadical** is a production-ready headless CMS built with Rust, heavily inspired by [Processwire](https://processwire.com/). Unlike markdown-based static site generators, FreeRadical provides a dynamic, API-first content management system with exceptional performance characteristics.
+
+**Key Features:**
+- 🚀 **4x faster** than WordPress (1,657 req/s vs 405 req/s)
+- ⚡ **6ms average response time**
+- 🔒 JWT-based authentication with Argon2 password hashing
+- 📊 RESTful API for all operations
+- 🎨 Handlebars template engine with hot-reload
+- 💾 MySQL/Diesel ORM with connection pooling
+- 🛡️ Production-ready with zero-downtime deployments
 
 ## Server Installation
 
-If you have docker, all you need to do is run [this](https://github.com/Rust-CMS/tooling) docker-compose.
+See the [FreeRadical repository](https://github.com/cyberiums/freeradical) for installation instructions.
 
 Otherwise, you can run follow the directions to set it up on Kubernetes.
 
@@ -27,13 +39,234 @@ Sub $2/month GCP Cloud Run tutorial coming soon!
 
 ## Project State
 
-Version: v0.1.4
+Version: **v0.1.5** 🎉
 
-|             | Ready |
+|             | Status |
 | ----------- | ----------- |
-| Backend | ✅ |
-| Frontend | ✅ |
-| Production | - |
+| Backend | ✅ Production Ready |
+| Frontend | ✅ Production Ready |
+| Production | ✅ **Ready for Deployment** |
+| Performance | ✅ Benchmarked |
+| Security | ✅ JWT + Argon2 |
+
+## Admin Functionality
+
+**FreeRadical** provides a complete RESTful API for content management with JWT-based authentication and enterprise-grade security.
+
+### Quick Start
+
+**Start the server:**
+```bash
+cargo run
+```
+
+Server runs on `http://127.0.0.1:8080` by default.
+
+### API Overview
+
+![Admin Pages API](assets/admin_pages_api.png)
+
+### Authentication
+
+All admin operations require JWT authentication. Login to receive an authentication token:
+
+```bash
+# Login (first time with root user, empty password)
+curl -X POST http://127.0.0.1:8080/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"root","password":""}' \
+  -c cookies.txt
+
+# The response sets an auth cookie for subsequent requests
+```
+
+**Available Auth Endpoints:**
+- `POST /v1/users/login` - User login
+- `POST /v1/users/logout` - User logout
+- `GET /v1/users/check` - Check authentication status
+
+### Content Management API
+
+#### Pages
+
+**List all pages:**
+```bash
+GET /v1/pages
+```
+
+**Get specific page:**
+```bash
+GET /v1/pages/{uuid}
+```
+
+**Get page with modules:**
+```bash
+GET /v1/pages/{uuid}/modules
+```
+
+**Create new page** (requires auth):
+```bash
+curl -X POST http://127.0.0.1:8080/v1/pages \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "page_name": "about",
+    "page_url": "/about",
+    "page_title": "About Us"
+  }'
+```
+
+**Update page** (requires auth):
+```bash
+PUT /v1/pages/{uuid}
+```
+
+**Delete page:**
+```bash
+DELETE /v1/pages/{uuid}
+```
+
+#### Modules (Content Fields)
+
+![Admin Modules API](assets/admin_modules_api.png)
+
+**List all modules:**
+```bash
+GET /v1/modules
+```
+
+**Get specific module:**
+```bash
+GET /v1/modules/{uuid}
+```
+
+**Get modules by category:**
+```bash
+GET /v1/modules/category/{category_uuid}
+```
+
+**Create new module** (requires auth):
+```bash
+curl -X POST http://127.0.0.1:8080/v1/modules \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "page_uuid": "page-uuid-here",
+    "category_uuid": null,
+    "title": "hero_text",
+    "content": "Welcome to our site!"
+  }'
+```
+
+**Update module** (requires auth):
+```bash
+PUT /v1/modules/{uuid}
+```
+
+**Delete module** (requires auth):
+```bash
+DELETE /v1/modules/{uuid}
+```
+
+#### Categories
+
+Categories organize modules into groups for better content structure.
+
+**Get category:**
+```bash
+GET /v1/categories/{uuid}
+```
+
+**Create category** (requires auth):
+```bash
+curl -X POST http://127.0.0.1:8080/v1/categories \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "page_uuid": "page-uuid-here",
+    "title": "hero_section"
+  }'
+```
+
+**Update category** (requires auth):
+```bash
+PUT /v1/categories/{uuid}
+```
+
+**Delete category** (requires auth):
+```bash
+DELETE /v1/categories/{uuid}
+```
+
+#### User Management
+
+**Create user** (requires auth):
+```bash
+curl -X POST http://127.0.0.1:8080/v1/users \
+  -H "Content-Type: application/json" \
+  -b cookies.txt \
+  -d '{
+    "username": "editor",
+    "password": "securepassword123"
+  }'
+```
+
+**Get user** (requires auth):
+```bash
+GET /v1/users/{uuid}
+```
+
+**Update user** (requires auth):
+```bash
+PUT /v1/users/{uuid}
+```
+
+**Delete user** (requires auth):
+```bash
+DELETE /v1/users/{uuid}
+```
+
+### Frontend Rendering
+
+![Homepage Rendering](assets/admin_homepage.png)
+
+Pages are automatically rendered using Handlebars templates:
+
+1. Create a page via API
+2. Create a matching template file: `templates/{page_name}.hbs`
+3. Add modules to the page via API
+4. Access at the page's URL
+
+**Template Example:**
+```handlebars
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{page_title}}</title>
+</head>
+<body>
+    <h1>{{fields.title.content}}</h1>
+    <p>{{fields.description.content}}</p>
+</body>
+</html>
+```
+
+The template engine automatically populates `fields` with your modules.
+
+### API Response Example
+
+![API Example](assets/admin_api_example.png)
+
+## Performance
+
+Radical CMS delivers exceptional performance:
+
+- **1,657 requests/second** (vs WordPress: 405 req/s)
+- **6ms average response time** (vs WordPress: 25ms)
+- **4x faster** than PHP-based CMS platforms
+- **Zero failures** in load testing (5,000 requests)
+
+See [BENCHMARK.md](BENCHMARK.md) and [PERFORMANCE.md](PERFORMANCE.md) for detailed metrics.
 
 ## Note on testing
 
@@ -122,6 +355,19 @@ MYSQL_UNIX_PORT?=String
 ## Notes on 404 Pages
 
 404s are handled (currently) by creating a file called `404.html.` It will automatically be added as your 404 page.
+
+## Maintained By
+
+**FreeRadical** is actively maintained and supported by [FastBuilder.ai](https://fastbuilder.ai).
+
+FastBuilder.ai provides:
+- 🔧 Ongoing maintenance and security updates
+- 🚀 Performance optimizations
+- 📚 Documentation improvements
+- 🐛 Bug fixes and feature enhancements
+- 💬 Community support
+
+For enterprise support, custom features, or consulting services, visit [fastbuilder.ai](https://fastbuilder.ai).
 
 ## Repositories Like This
 
