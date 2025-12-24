@@ -63,7 +63,7 @@ v0.1.5 (Current)  →  v0.2.0 (SEO Ready)  →  v0.3.0 (Feature Rich)  →  v1.0
 - [x] Add `twitter_card`, `twitter_title`, `twitter_description` fields ✅
 - [x] Update Handlebars templates to render all meta tags ✅
 - [x] API endpoints to manage meta fields ✅ (via existing CRUD)
-- [ ] Validation (title length, description length)
+- [x] Validation (title length, description length) ✅
 
 **Success Criteria**:
 - All pages can have unique meta tags
@@ -111,7 +111,7 @@ v0.1.5 (Current)  →  v0.2.0 (SEO Ready)  →  v0.3.0 (Feature Rich)  →  v1.0
 **Priority**: P1 - HIGH
 
 - [x] Create `/robots.txt` endpoint ✅
-- [ ] Configurable via environment/database
+- [x] Configurable via environment/database ✅
 - [x] Default rules for admin/API routes ✅
 - [x] Sitemap reference ✅
 - [ ] User-agent specific rules
