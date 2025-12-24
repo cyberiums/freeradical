@@ -11,7 +11,7 @@ use crate::schema::modules;
 #[belongs_to(Page, foreign_key = "page_uuid")]
 #[belongs_to(ModuleCategory, foreign_key = "category_uuid")]
 #[primary_key(uuid)]
-#[table_name = "modules"]
+#[diesel(table_name = modules)]
 pub struct Module {
     pub uuid: String,
     pub page_uuid: String,
@@ -21,7 +21,7 @@ pub struct Module {
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
-#[table_name = "modules"]
+#[diesel(table_name = modules)]
 pub struct MutModule {
     pub uuid: Option<String>,
     pub title: String,
@@ -48,7 +48,7 @@ pub struct FieldsDTO {
 )]
 #[primary_key(uuid)]
 #[belongs_to(Page, foreign_key = "page_uuid")]
-#[table_name = "module_category"]
+#[diesel(table_name = module_category)]
 pub struct ModuleCategory {
     pub uuid: String,
     pub page_uuid: String,
@@ -58,7 +58,7 @@ pub struct ModuleCategory {
 #[derive(
     Debug, Serialize, Deserialize, AsChangeset, Insertable, PartialEq, Clone, Eq, Hash,
 )]
-#[table_name = "module_category"]
+#[diesel(table_name = module_category)]
 pub struct MutCategory {
     pub title: String,
     pub page_uuid: String,

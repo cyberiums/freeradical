@@ -6,7 +6,7 @@ use crate::schema::users;
 
 #[derive(Queryable, Identifiable, Debug, Clone, Serialize, Deserialize)]
 #[primary_key("uuid")]
-#[table_name = "users"]
+#[diesel(table_name = users)]
 pub struct User {
     pub uuid: String,
     pub username: String,
@@ -15,7 +15,7 @@ pub struct User {
 }
 
 #[derive(Debug, AsChangeset, Insertable, Clone, Serialize, Deserialize)]
-#[table_name = "users"]
+#[diesel(table_name = users)]
 pub struct MutUser {
     pub uuid: Option<String>,
     pub username: String,
