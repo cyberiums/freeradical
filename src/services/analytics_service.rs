@@ -79,6 +79,86 @@ impl AnalyticsService {
             .unwrap_or(0)
     }
     
+    /// Get page views for today
+    pub fn get_views_today() -> i64 {
+        use crate::schema::page_views::dsl;
+        use chrono::{Utc, Duration, Timelike};
+        
+        let mut conn = establish_connection();
+        let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+        
+        dsl::page_views
+            .filter(dsl::viewed_at.ge(today_start))
+            .count()
+            .get_result(&mut conn)
+            .unwrap_or(0)
+    }
+    
+    /// Get page views for the last 7 days
+    pub fn get_views_week() -> i64 {
+        use crate::schema::page_views::dsl;
+        use chrono::{Utc, Duration};
+        
+        let mut conn = establish_connection();
+        let week_ago = (Utc::now() - Duration::days(7)).naive_utc();
+        
+        dsl::page_views
+            .filter(dsl::viewed_at.ge(week_ago))
+            .count()
+            .get_result(&mut conn)
+            .unwrap_or(0)
+    }
+    
+    /// Get page views for the last 30 days
+    pub fn get_views_month() -> i64 {
+        use crate::schema::page_views::dsl;
+        use chrono::{Utc, Duration};
+        
+        let mut conn = establish_connection();
+        let month_ago = (Utc::now() - Duration::days(30)).naive_utc();
+        
+        dsl::page_views
+            .filter(dsl::viewed_at.ge(month_ago))
+            .count()
+            .get_result(&mut conn)
+            .unwrap_or(0)
+    }
+    
+    /// Get unique visitors today
+    pub fn get_unique_visitors_today() -> i64 {
+        use crate::schema::page_views::dsl;
+        use chrono::{Utc, Timelike};
+        use diesel::dsl::count_distinct;
+        
+        let mut conn = establish_connection();
+        let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+        
+        dsl::page_views
+            .filter(dsl::viewed_at.ge(today_start))
+            .select(count_distinct(dsl::visitor_hash))
+            .first(&mut conn)
+            .unwrap_or(0)
+    }
+    
+    /// Get top referrers
+    pub fn get_top_referrers(limit: i64) -> Vec<(String, i64)> {
+        use crate::schema::page_views::dsl;
+        
+        let mut conn = establish_connection();
+        
+        dsl::page_views
+            .filter(dsl::referrer.is_not_null())
+            .group_by(dsl::referrer)
+            .select((dsl::referrer, diesel::dsl::count(dsl::id)))
+            .order(diesel::dsl::count(dsl::id).desc())
+            .limit(limit)
+            .load::<(Option<String>, i64)>(&mut conn)
+            .unwrap_or_else(|_| vec![])
+            .into_iter()
+            .filter_map(|(r, c)| r.map(|ref_url| (ref_url, c)))
+            .collect()
+    }
+    
     /// Get top pages by views
     pub fn get_top_pages(limit: i64) -> Vec<(String, i64)> {
         use crate::schema::page_views::dsl;

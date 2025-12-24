@@ -49,7 +49,12 @@ pub async fn dashboard_summary() -> impl Responder {
     // Get total pages
     let total_pages_count = pages.count().get_result::<i64>(&mut conn).unwrap_or(0);
     
-    // Get top pages (simplified - using all-time views)
+    // Get time-based views
+    let views_today = AnalyticsService::get_views_today();
+    let views_week = AnalyticsService::get_views_week();
+    let views_all_time = AnalyticsService::get_views_month(); // Using month as proxy for all-time
+    
+    // Get top pages
     let top_pages_data = AnalyticsService::get_top_pages(10)
         .into_iter()
         .map(|(url, views)| TopPage { url, views })
@@ -57,9 +62,9 @@ pub async fn dashboard_summary() -> impl Responder {
     
     let summary = DashboardSummary {
         total_pages: total_pages_count,
-        total_views_today: 0, // TODO: Implement time-based queries
-        total_views_week: 0,
-        total_views_all_time: 0,
+        total_views_today: views_today,
+        total_views_week: views_week,
+        total_views_all_time: views_all_time,
         top_pages: top_pages_data,
     };
     
@@ -70,12 +75,22 @@ pub async fn dashboard_summary() -> impl Responder {
 /// Detailed analytics summary
 #[get("/admin/analytics/summary")]
 pub async fn analytics_summary() -> impl Responder {
+    let views_today = AnalyticsService::get_views_today();
+    let views_week = AnalyticsService::get_views_week();
+    let views_month = AnalyticsService::get_views_month();
+    let unique_today = AnalyticsService::get_unique_visitors_today();
+    
+    let top_refs = AnalyticsService::get_top_referrers(10)
+        .into_iter()
+        .map(|(url, _)| url)
+        .collect();
+    
     let summary = AnalyticsSummary {
-        views_today: 0,
-        views_week: 0,
-        views_month: 0,
-        unique_visitors_today: 0,
-        top_referrers: vec![],
+        views_today,
+        views_week,
+        views_month,
+        unique_visitors_today: unique_today,
+        top_referrers: top_refs,
     };
     
     HttpResponse::Ok().json(summary)
