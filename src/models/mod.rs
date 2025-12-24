@@ -21,15 +21,15 @@ pub type MySQLPooledConnection = PooledConnection<ConnectionManager<MysqlConnect
 /// TPrimary: The primary key type.
 /// TDto: The DTO object that will be sent back to the user.
 pub trait Model<TQueryable, TMutable: AsChangeset, TPrimary, TDto = TQueryable> {
-    fn create(new: &TMutable, db: &MysqlConnection) -> Result<usize, diesel::result::Error>;
-    fn read_one(id: TPrimary, db: &MysqlConnection) -> Result<TDto, diesel::result::Error>;
-    fn read_all(db: &MysqlConnection) -> Result<Vec<TDto>, diesel::result::Error>;
+    fn create(new: &TMutable, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error>;
+    fn read_one(id: TPrimary, db: &mut MysqlConnection) -> Result<TDto, diesel::result::Error>;
+    fn read_all(db: &mut MysqlConnection) -> Result<Vec<TDto>, diesel::result::Error>;
     fn update(
         id: TPrimary,
         new: &TMutable,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<usize, diesel::result::Error>;
-    fn delete(id: TPrimary, db: &MysqlConnection) -> Result<usize, diesel::result::Error>;
+    fn delete(id: TPrimary, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error>;
 }
 
 pub trait DTO<TColumns> {
@@ -42,7 +42,7 @@ pub trait DTO<TColumns> {
 pub trait Joinable<TLeft, TRight, TPrimary> {
     fn read_one_join_on(
         id: TPrimary,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<(TLeft, Vec<TRight>), diesel::result::Error>;
 }
 

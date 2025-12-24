@@ -66,7 +66,7 @@ pub struct MutCategory {
 }
 
 impl ModuleCategory {
-    pub fn join(_id: String, db: &MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
+    pub fn join(_id: String, db: &mut MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
         use module_category::dsl::uuid;
         let categories = module_category::table.filter(uuid.eq(_id)).first::<Self>(db)?;
 
@@ -75,13 +75,13 @@ impl ModuleCategory {
 }
 
 impl Model<Self, MutCategory, String, ModuleCategory> for ModuleCategory {
-    fn create(new: &MutCategory, db: &MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn create(new: &MutCategory, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
         Ok(diesel::insert_or_ignore_into(module_category::table)
             .values(new)
             .execute(db)?)
     }
 
-    fn read_one(_id: String, db: &MysqlConnection) -> Result<ModuleCategory, diesel::result::Error> {
+    fn read_one(_id: String, db: &mut MysqlConnection) -> Result<ModuleCategory, diesel::result::Error> {
         use module_category::dsl::uuid;
 
         let module = module_category::table.filter(uuid.eq(_id)).first::<ModuleCategory>(db)?;
@@ -89,14 +89,14 @@ impl Model<Self, MutCategory, String, ModuleCategory> for ModuleCategory {
         Ok(module)
     }
 
-    fn read_all(_db: &MysqlConnection) -> Result<Vec<ModuleCategory>, diesel::result::Error> {
+    fn read_all(_db: &mut MysqlConnection) -> Result<Vec<ModuleCategory>, diesel::result::Error> {
         unimplemented!()
     }
 
     fn update(
         _id: String,
         new: &MutCategory,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         use module_category::dsl::uuid;
 
@@ -105,7 +105,7 @@ impl Model<Self, MutCategory, String, ModuleCategory> for ModuleCategory {
             .execute(db)?)
     }
 
-    fn delete(_id: String, db: &MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
         use module_category::dsl::uuid;
 
         Ok(diesel::delete(module_category::table.filter(uuid.eq(_id))).execute(db)?)
@@ -115,14 +115,14 @@ impl Model<Self, MutCategory, String, ModuleCategory> for ModuleCategory {
 impl Model<Self, MutModule, String, Module> for Module {
     fn create(
         new_module: &MutModule,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         Ok(diesel::insert_into(modules::table)
             .values(new_module)
             .execute(db)?)
     }
 
-    fn read_one(mod_id: String, db: &MysqlConnection) -> Result<Module, diesel::result::Error> {
+    fn read_one(mod_id: String, db: &mut MysqlConnection) -> Result<Module, diesel::result::Error> {
         use modules::dsl::uuid;
 
         let module = modules::table.filter(uuid.eq(mod_id)).first::<Self>(db)?;
@@ -130,14 +130,14 @@ impl Model<Self, MutModule, String, Module> for Module {
         Ok(module.into())
     }
 
-    fn read_all(db: &MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
+    fn read_all(db: &mut MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
         use modules::dsl::category_uuid;
         Ok(modules::table
             .filter(category_uuid.is_null())
             .load::<Module>(db)?.into_iter().map(|m| { m.into() }).collect())
     }
 
-    fn delete(mod_id: String, db: &MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(mod_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
         use modules::dsl::uuid;
 
         Ok(diesel::delete(modules::table.filter(uuid.eq(mod_id))).execute(db)?)
@@ -146,7 +146,7 @@ impl Model<Self, MutModule, String, Module> for Module {
     fn update(
         mod_id: String,
         new_module: &MutModule,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         use modules::dsl::uuid;
 
