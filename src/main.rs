@@ -107,6 +107,11 @@ async fn main() -> std::io::Result<()> {
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
             .route("/robots.txt", web::get().to(controllers::robots_controller::robots_txt))
+            // Admin Dashboard API
+            .service(controllers::dashboard_controller::dashboard_summary)
+            .service(controllers::dashboard_controller::analytics_summary)
+            .service(controllers::dashboard_controller::seo_health)
+            .service(controllers::dashboard_controller::top_pages)
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .default_service(web::get().to(controllers::page_controllers::display_page))
             .data(pool.clone())

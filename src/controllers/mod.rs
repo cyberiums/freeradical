@@ -5,3 +5,4 @@ pub mod user_controller;
 pub mod robots_controller;
 pub mod sitemap_controller;
 pub mod image_sitemap_controller;
+pub mod dashboard_controller;
