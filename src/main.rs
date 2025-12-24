@@ -109,7 +109,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a -> %U | %Dms "))
             .wrap(rate_limiting)
             .service(api_scope)
-            // SEO endpoints
+            // SEO endpoints - standardized manual routing
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
             .route("/robots.txt", web::get().to(controllers::robots_controller::robots_txt))
