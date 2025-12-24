@@ -41,6 +41,7 @@ uuid = {version = "0.8", features=["serde", "v4"]}
 futures = "*"
 time = "0.2.23"
 redis = { version = "0.21", features = ["tokio-comp"] }
+sha2 = "0.9"
 
 [dev-dependencies]
 actix-rt = "2.2.0"
