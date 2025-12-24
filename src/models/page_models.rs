@@ -18,13 +18,11 @@ use crate::schema::pages;
 #[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct Page {
     pub uuid: String,
-    /// This should match the name of the HTML file.
     pub page_name: String,
-    /// This should be the path which the program matches on.
     pub page_url: String,
     pub page_title: String,
+    pub page_content: Option<String>,
     pub time_created: NaiveDateTime,
-    // SEO fields
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
@@ -35,6 +33,13 @@ pub struct Page {
     pub twitter_card: Option<String>,
     pub twitter_title: Option<String>,
     pub twitter_description: Option<String>,
+    pub author: Option<String>,
+    pub article_type: Option<String>,
+    pub featured_image: Option<String>,
+    pub word_count: Option<i32>,
+    pub reading_time: Option<i32>,
+    pub current_revision: Option<i32>,
+    pub last_modified_by: Option<i32>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
