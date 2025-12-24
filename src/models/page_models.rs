@@ -21,7 +21,6 @@ pub struct Page {
     pub page_name: String,
     pub page_url: String,
     pub page_title: String,
-    pub page_content: Option<String>,
     pub time_created: NaiveDateTime,
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
@@ -40,6 +39,9 @@ pub struct Page {
     pub reading_time: Option<i32>,
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
+    pub status: Option<String>,
+    pub publish_at: Option<NaiveDateTime>,
+    pub unpublish_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
@@ -183,7 +185,10 @@ impl Page {
         use pages::dsl::uuid;
         use modules::dsl::category_uuid;
 
-        let filtered_page = pages::table.filter(uuid.eq(_id)).first::<Page>(db)?;
+        let filtered_page = pages::table
+            .filter(uuid.eq(_id))
+            .select(Page::as_select())
+            .first::<Page>(db)?;
 
         let modules_no_category = Module::belonging_to(&filtered_page).filter(category_uuid.is_null()).load::<Module>(db)?;
 
@@ -225,7 +230,10 @@ impl Page {
     ) -> Result<(Self, FieldsDTO), diesel::result::Error> {
         use crate::schema::pages::dsl::page_url;
 
-        let filtered_page = pages::table.filter(page_url.eq(id)).first::<Page>(db)?;
+        let filtered_page = pages::table
+            .filter(page_url.eq(id))
+            .select(Page::as_select())
+            .first::<Page>(db)?;
 
         let modules = Module::belonging_to(&filtered_page).load::<Module>(db)?;
 
