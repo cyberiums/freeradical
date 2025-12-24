@@ -5,7 +5,9 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
-#[derive(Queryable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
+#[diesel(table_name = page_revisions)]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct PageRevision {
     pub id: i64,
     pub page_uuid: String,
