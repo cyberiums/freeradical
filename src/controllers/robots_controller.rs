@@ -1,5 +1,5 @@
 use actix_web::{get, HttpResponse, Responder};
-use crate::db_connection::establish_connection;
+use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 
 #[derive(Queryable, Selectable)]

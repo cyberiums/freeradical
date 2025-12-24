@@ -1,7 +1,7 @@
 use actix_web::{get, HttpResponse, Responder, web};
 use serde::{Serialize, Deserialize};
 use crate::services::analytics_service::AnalyticsService;
-use crate::db_connection::establish_connection;
+use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 
 #[derive(Serialize)]
