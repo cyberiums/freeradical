@@ -1,7 +1,9 @@
-pub mod config_models;
-pub mod module_models;
 pub mod page_models;
+pub mod module_models;
+pub mod category_models;
 pub mod user_models;
+pub mod media_models;
+pub mod revision_models;
 
 use actix_web::web;
 use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
