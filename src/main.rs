@@ -105,6 +105,7 @@ async fn main() -> std::io::Result<()> {
             .service(api_scope)
             // SEO endpoints
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
+            .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
             .route("/robots.txt", web::get().to(controllers::robots_controller::robots_txt))
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .default_service(web::get().to(controllers::page_controllers::display_page))
