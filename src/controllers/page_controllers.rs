@@ -12,6 +12,60 @@ use crate::models::page_models::{PageModuleDisplayDTO,MutPage, Page, PageDTO};
 use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
 
+/// Validates SEO fields to ensure they meet requirements
+fn validate_seo_fields(page: &MutPage) -> Result<(), CustomHttpError> {
+    // Validate meta_title length (max 70 chars)
+    if let Some(title) = &page.meta_title {
+        if title.len() > 70 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate meta_description length (max 160 chars)
+    if let Some(desc) = &page.meta_description {
+        if desc.len() > 160 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate og_title length (max 70 chars)
+    if let Some(title) = &page.og_title {
+        if title.len() > 70 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate og_description length (max 200 chars)
+    if let Some(desc) = &page.og_description {
+        if desc.len() > 200 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate twitter_title length (max 70 chars)
+    if let Some(title) = &page.twitter_title {
+        if title.len() > 70 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate twitter_description length (max 200 chars)
+    if let Some(desc) = &page.twitter_description {
+        if desc.len() > 200 {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    // Validate canonical_url format (must be valid URL or relative path)
+    if let Some(url) = &page.canonical_url {
+        if !url.starts_with("http://") && !url.starts_with("https://") && !url.starts_with("/") {
+            return Err(CustomHttpError::BadRequest);
+        }
+    }
+    
+    Ok(())
+}
+
 fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDisplayDTO, CustomHttpError> {
     let origin_page = page.0;
 
@@ -66,6 +120,9 @@ pub async fn create_page(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mysql_pool = pool_handler(pool)?;
 
+    // Validate SEO fields
+    validate_seo_fields(&new)?;
+
     let mut uuid_new = new.clone();
     uuid_new.uuid = Some(Uuid::new_v4().to_string());
 
@@ -111,6 +168,9 @@ pub async fn update_page(
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mysql_pool = pool_handler(pool)?;
+
+    // Validate SEO fields
+    validate_seo_fields(&updated_page)?;
 
     Page::update(id.clone(), &updated_page, &mysql_pool)?;
 
