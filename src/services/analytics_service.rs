@@ -10,24 +10,25 @@ pub struct AnalyticsService;
 impl AnalyticsService {
     /// Track a page view
     /// Non-blocking - errors are logged but don't affect response
+    /// Changed to owned Strings to fix lifetime issues with std::thread::spawn
     pub fn track_page_view(
-        page_url: &str,
-        page_uuid: Option<&str>,
-        ip_address: &str,
-        referrer: Option<&str>,
-        user_agent: Option<&str>,
+        page_url: String,  // Changed from &str
+        page_uuid: Option<String>,  // Changed from Option<&str>
+        ip_address: String,  // Changed from &str
+        referrer: Option<String>,  // Changed from Option<&str>
+        user_agent: Option<String>,  // Changed from Option<&str>
     ) {
         // Hash IP for privacy
-        let visitor_hash = Self::hash_ip(ip_address);
+        let visitor_hash = Self::hash_ip(&ip_address);
         
         // Insert page view asynchronously (fire and forget)
         std::thread::spawn(move || {
             if let Err(e) = Self::insert_page_view(
-                page_url.to_string(),
-                page_uuid.map(|s| s.to_string()),
+                page_url,  // Now owned, can move
+                page_uuid,  // Now owned, can move
                 visitor_hash,
-                referrer.map(|s| s.to_string()),
-                user_agent.map(|s| s.to_string()),
+                referrer,  // Now owned, can move
+                user_agent,  // Now owned, can move
             ) {
                 eprintln!("Analytics error: {}", e);
             }

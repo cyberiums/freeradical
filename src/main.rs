@@ -48,12 +48,18 @@ async fn main() -> std::io::Result<()> {
     }
 
     let conf = envy::prefixed("APP_").from_env::<LocalConfig>().unwrap();
-    let pool = models::establish_database_connection(conf.clone()).unwrap();
-
-    match run_pending_migrations(&MysqlConnection::establish(&models::format_connection_string(conf.clone())).unwrap()) {
+    
+    let db_url = models::format_connection_string(conf.clone());
+    let mut connection = MysqlConnection::establish(&db_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
+    
+    println!("Running migrations...");
+    match connection.run_pending_migrations(MIGRATIONS) {
         Ok(_) => println!("Ran migrations."),
-        Err(_) => println!("Migrations not ran.")
+        Err(e) => println!("Migrations error: {}", e)
     };
+
+    let pool = models::establish_database_connection(conf.clone()).unwrap();
 
     std::env::set_var("RUST_LOG", "actix_web=info");
     env_logger::init();
