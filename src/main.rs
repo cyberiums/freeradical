@@ -9,7 +9,8 @@ use std::sync::Mutex;
 use std::time::Duration;
 use envy;
 use dotenv::dotenv;
-use diesel_migrations::{run_pending_migrations};
+// Diesel 2.x migration import
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
 use actix_files as fs;
 
@@ -32,16 +33,15 @@ use crate::routers::user_routers::UserRouter;
 
 #[macro_use]
 extern crate diesel;
-#[macro_use]
-extern crate diesel_migrations;
+
+// Diesel 2.x migrations
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
 /// The main function is replaced by actix_web::main.
 /// This allows main to be async and register the HttpServer.
 /// All routes are defined here.
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    embed_migrations!();
-
     // if the program is running in release mode
     if cfg!(debug_assertions) {
         dotenv().unwrap();
