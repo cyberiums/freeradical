@@ -131,13 +131,13 @@ impl From<Page> for PageDTO {
 }
 
 impl Model<Page, MutPage, String, PageDTO> for Page {
-    fn create(new_page: &MutPage, db: &MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn create(new_page: &MutPage, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
         Ok(diesel::insert_or_ignore_into(pages::table)
             .values(new_page)
             .execute(db)?)
     }
 
-    fn read_one(_id: String, db: &MysqlConnection) -> Result<PageDTO, diesel::result::Error> {
+    fn read_one(_id: String, db: &mut MysqlConnection) -> Result<PageDTO, diesel::result::Error> {
         use pages::dsl::uuid;
 
         let res = pages::table.filter(uuid.eq(_id)).first::<Self>(db)?.into();
@@ -145,7 +145,7 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
         Ok(res)
     }
 
-    fn read_all(db: &MysqlConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
+    fn read_all(db: &mut MysqlConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
         let res = pages::table.load::<Self>(db)?.into_iter().map(|x| x.into()).collect();
 
         Ok(res)
@@ -154,7 +154,7 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
     fn update(
         _id: String,
         new_page: &MutPage,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
 
@@ -163,7 +163,7 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
             .execute(db)?)
     }
 
-    fn delete(_id: String, db: &MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
 
         Ok(diesel::delete(pages::table.filter(uuid.eq(_id))).execute(db)?)
@@ -173,7 +173,7 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
 impl Page {
     pub fn read_one_join_on(
         _id: String,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<PageModuleDTO, diesel::result::Error> {
         use pages::dsl::uuid;
         use modules::dsl::category_uuid;
@@ -216,7 +216,7 @@ impl Page {
     /// This is used for displaying a page, rather than getting a page's modules/array modules.
     pub fn read_one_join_on_url(
         id: String,
-        db: &MysqlConnection,
+        db: &mut MysqlConnection,
     ) -> Result<(Self, FieldsDTO), diesel::result::Error> {
         use crate::schema::pages::dsl::page_url;
 
