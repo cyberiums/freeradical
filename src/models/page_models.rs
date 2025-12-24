@@ -12,8 +12,10 @@ use crate::schema::module_category;
 use crate::schema::modules;
 use crate::schema::pages;
 
-#[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, PartialEq, Clone)]
-#[primary_key(uuid)]
+#[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone)]
+#[diesel(table_name = pages)]
+#[diesel(primary_key(uuid))]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct Page {
     pub uuid: String,
     /// This should match the name of the HTML file.
@@ -36,7 +38,7 @@ pub struct Page {
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
-#[table_name = "pages"]
+#[diesel(table_name = pages)]
 pub struct MutPage {
     pub uuid: Option<String>,
     pub page_name: String,
