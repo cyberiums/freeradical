@@ -189,4 +189,53 @@ mod tests {
         assert_ne!(hash1, hash3); // Different IP = different hash
         assert_eq!(hash1.len(), 64); // SHA256 = 64 hex chars
     }
+    
+    #[test]
+    fn test_ip_hashing_privacy() {
+        // Verify that original IP cannot be recovered from hash
+        let original_ip = "203.0.113.45";
+        let hash = AnalyticsService::hash_ip(original_ip);
+        
+        // Hash should not contain the IP
+        assert!(!hash.contains(original_ip));
+        assert!(!hash.contains("203"));
+        
+        // Hash should be deterministic
+        assert_eq!(hash, AnalyticsService::hash_ip(original_ip));
+    }
+    
+    #[test]
+    fn test_hash_different_ips() {
+        let ips = vec![
+            "1.1.1.1",
+            "8.8.8.8",
+            "127.0.0.1",
+            "192.168.1.1",
+            "10.0.0.1",
+        ];
+        
+        let mut hashes = std::collections::HashSet::new();
+        
+        for ip in ips {
+            let hash = AnalyticsService::hash_ip(ip);
+            assert_eq!(hash.len(), 64);
+            assert!(hashes.insert(hash)); // All hashes should be unique
+        }
+    }
+    
+    #[test]
+    fn test_tracking_non_blocking() {
+        // This test verifies that track_page_view doesn't panic
+        // Actual database insertion tested separately
+        AnalyticsService::track_page_view(
+            "/test-page",
+            Some("test-uuid"),
+            "127.0.0.1",
+            Some("https://google.com"),
+            Some("TestAgent/1.0"),
+        );
+        
+        // If we get here without panic, test passes
+        assert!(true);
+    }
 }

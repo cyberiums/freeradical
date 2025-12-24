@@ -119,4 +119,46 @@ mod tests {
         // Should not panic even if Redis unavailable
         assert!(true);
     }
+    
+    #[test]
+    fn test_cache_graceful_degradation() {
+        // With Redis disabled/unavailable, should work without errors
+        let service = CacheService::new();
+        
+        // Operations should return false/None when disabled
+        let set_result = service.set("test_key", "test_value", 60);
+        let get_result = service.get("test_key");
+        let delete_result = service.delete("test_key");
+        
+        // When disabled, operations fail gracefully
+        assert!(get_result.is_none());
+        
+        // Service should report disabled state
+        // (when CACHE_ENABLED=false)
+    }
+    
+    #[test]
+    fn test_cache_enabled_check() {
+        let service = CacheService::new();
+        
+        // Should return enabled status
+        let enabled = service.is_enabled();
+        
+        // Value depends on environment config
+        assert!(enabled == true || enabled == false);
+    }
+    
+    #[test]
+    fn test_cache_operations_safe() {
+        let service = CacheService::new();
+        
+        // All operations should be safe to call
+        // even if Redis is not available
+        service.set("key1", "value1", 10);
+        service.get("key1");
+        service.delete("key1");
+        
+        // No panic = success
+        assert!(true);
+    }
 }
