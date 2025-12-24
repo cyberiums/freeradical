@@ -22,6 +22,9 @@ pub struct Page {
     pub page_url: String,
     pub page_title: String,
     pub time_created: NaiveDateTime,
+    // TEMPORARILY COMMENTED OUT FOR ECRSS REDUCE TESTING
+    // Will add back incrementally to find problematic field
+    /*
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
@@ -42,6 +45,7 @@ pub struct Page {
     pub status: Option<String>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
+    */
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
