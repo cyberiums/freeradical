@@ -35,6 +35,11 @@ diesel::table! {
         twitter_card -> Nullable<Varchar>,
         twitter_title -> Nullable<Varchar>,
         twitter_description -> Nullable<Varchar>,
+        author -> Nullable<Varchar>,
+        article_type -> Nullable<Varchar>,
+        featured_image -> Nullable<Varchar>,
+        word_count -> Nullable<Integer>,
+        reading_time -> Nullable<Integer>,
     }
 }
 
