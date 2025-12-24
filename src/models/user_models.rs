@@ -4,8 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::schema::users;
 
-#[derive(Queryable, Identifiable, Debug, Clone, Serialize, Deserialize)]
-#[primary_key("uuid")]
+#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
+#[diesel(primary_key(uuid))]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = users)]
 pub struct User {
     pub uuid: String,
@@ -24,24 +25,24 @@ pub struct MutUser {
 }
 
 impl Model<User, MutUser, String> for User {
-    fn create(new: &MutUser, db: &diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn create(new: &MutUser, db: &mut diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
         diesel::insert_into(users::table).values(new).execute(db)
     }
 
-    fn read_one(id: String, db: &diesel::MysqlConnection) -> Result<User, diesel::result::Error> {
+    fn read_one(id: String, db: &mut diesel::MysqlConnection) -> Result<User, diesel::result::Error> {
         use users::dsl::username;
 
         Ok(users::table.filter(username.eq(id)).first::<User>(db)?)
     }
 
-    fn read_all(_: &diesel::MysqlConnection) -> Result<Vec<User>, diesel::result::Error> {
+    fn read_all(_: &mut diesel::MysqlConnection) -> Result<Vec<User>, diesel::result::Error> {
         unimplemented!()
     }
 
     fn update(
         id: String,
         new: &MutUser,
-        db: &diesel::MysqlConnection,
+        db: &mut diesel::MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
         let update = diesel::update(users::table.filter(username.eq(id)))
@@ -51,7 +52,7 @@ impl Model<User, MutUser, String> for User {
         Ok(update)
     }
 
-    fn delete(_: String, _: &diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_: String, _: &mut diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
         todo!()
     }
 }
@@ -59,7 +60,7 @@ impl Model<User, MutUser, String> for User {
 impl User {
     pub fn update_with_token(
         new: &MutUser,
-        db: &diesel::MysqlConnection,
+        db: &mut diesel::MysqlConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
 
