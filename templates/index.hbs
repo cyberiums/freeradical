@@ -67,7 +67,28 @@
           "isPartOf": {
             "@id": "http://127.0.0.1:8080/#website"
           },
-          "inLanguage": "en-US"
+          "inLanguage": "en-US",
+          "breadcrumb": {
+            "@id": "http://127.0.0.1:8080{{page_url}}#breadcrumb"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "http://127.0.0.1:8080{{page_url}}#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "http://127.0.0.1:8080/"
+            }{{#if page_url}}{{#unless (eq page_url "/")}}
+            ,{
+              "@type": "ListItem",
+              "position": 2,
+              "name": "{{page_title}}",
+              "item": "http://127.0.0.1:8080{{page_url}}"
+            }{{/unless}}{{/if}}
+          ]
         }
       ]
     }
