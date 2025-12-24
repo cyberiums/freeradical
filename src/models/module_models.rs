@@ -7,10 +7,11 @@ use super::{Model};
 use crate::schema::module_category;
 use crate::schema::modules;
 
-#[derive(Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, PartialEq, Clone, Eq, Hash)]
-#[belongs_to(Page, foreign_key = "page_uuid")]
-#[belongs_to(ModuleCategory, foreign_key = "category_uuid")]
-#[primary_key(uuid)]
+#[derive(Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash)]
+#[diesel(belongs_to(Page, foreign_key = page_uuid))]
+#[diesel(belongs_to(ModuleCategory, foreign_key = category_uuid))]
+#[diesel(primary_key(uuid))]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = modules)]
 pub struct Module {
     pub uuid: String,
@@ -44,10 +45,11 @@ pub struct FieldsDTO {
 }
 
 #[derive(
-    Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, PartialEq, Clone, Eq, Hash,
+    Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash,
 )]
-#[primary_key(uuid)]
-#[belongs_to(Page, foreign_key = "page_uuid")]
+#[diesel(primary_key(uuid))]
+#[diesel(belongs_to(Page, foreign_key = page_uuid))]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = module_category)]
 pub struct ModuleCategory {
     pub uuid: String,
