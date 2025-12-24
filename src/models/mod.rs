@@ -1,6 +1,6 @@
-pub mod page_models;
+pub mod config_models;
 pub mod module_models;
-pub mod category_models;
+pub mod page_models;
 pub mod user_models;
 pub mod media_models;
 pub mod revision_models;
@@ -60,8 +60,7 @@ pub fn format_connection_string(conf: LocalConfig) -> String {
         }
         None if std::env::var("MYSQL_UNIX_PORT").is_ok() => {
             format!(
-                "mysql://{}:{}@/{}",
-                conf.mysql_username,
+                "mysql://{}:{}@/{}", conf.mysql_username,
                 conf.mysql_password,
                 conf.mysql_database
             )
