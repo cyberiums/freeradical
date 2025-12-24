@@ -87,6 +87,7 @@ pub fn init_pool(db_url: &str) -> Result<MySQLPool, PoolError> {
     Pool::builder().max_size(2).build(manager)
 }
 
+// Updated for Diesel 2.x: returns mutable connection
 pub fn pool_handler(pool: web::Data<MySQLPool>) -> Result<MySQLPooledConnection, CustomHttpError> {
     pool.get().or(Err(CustomHttpError::BadRequest))
 }
