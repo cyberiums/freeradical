@@ -22,7 +22,7 @@ pub struct Page {
     pub page_url: String,
     pub page_title: String,
     pub time_created: NaiveDateTime,
-    // Group 1: SEO Metadata (15 fields total so far) - CLEAN ✅
+    // Group 1: SEO Metadata - CLEAN ✅
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
@@ -33,20 +33,18 @@ pub struct Page {
     pub twitter_card: Option<String>,
     pub twitter_title: Option<String>,
     pub twitter_description: Option<String>,
-    // Group 2: Article Info (20 fields total) - TESTING...
+    // Group 2: Article Info - CLEAN ✅
     pub author: Option<String>,
     pub article_type: Option<String>,
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,
     pub reading_time: Option<i32>,
-    // Group 3: Iteration 4 - Still commented
-    /*
+    // Group 3: Iteration 4 - TESTING (Suspected culp rits!)
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
     pub status: Option<String>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
-    */
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
