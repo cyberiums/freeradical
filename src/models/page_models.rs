@@ -22,6 +22,17 @@ pub struct Page {
     pub page_url: String,
     pub page_title: String,
     pub time_created: NaiveDateTime,
+    // SEO fields
+    pub meta_title: Option<String>,
+    pub meta_description: Option<String>,
+    pub meta_keywords: Option<String>,
+    pub canonical_url: Option<String>,
+    pub og_title: Option<String>,
+    pub og_description: Option<String>,
+    pub og_image: Option<String>,
+    pub twitter_card: Option<String>,
+    pub twitter_title: Option<String>,
+    pub twitter_description: Option<String>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
@@ -31,6 +42,17 @@ pub struct MutPage {
     pub page_name: String,
     pub page_url: String,
     pub page_title: String,
+    // SEO fields - all optional
+    pub meta_title: Option<String>,
+    pub meta_description: Option<String>,
+    pub meta_keywords: Option<String>,
+    pub canonical_url: Option<String>,
+    pub og_title: Option<String>,
+    pub og_description: Option<String>,
+    pub og_image: Option<String>,
+    pub twitter_card: Option<String>,
+    pub twitter_title: Option<String>,
+    pub twitter_description: Option<String>,
 }
 
 /// Used in the displaying of pages.
