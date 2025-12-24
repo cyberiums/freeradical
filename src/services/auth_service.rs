@@ -105,13 +105,11 @@ impl FromRequest for Claims {
 
     fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
         let pool = req.app_data::<web::Data<MySQLPool>>().unwrap().to_owned();
-        // TODO this needs to not be blocking. not terribly important as only one or two users will be performing authenticated actions.
-        let mysql_pool = pool_handler(pool).unwrap();
         let auth_header = req.headers().get("Authorization");
 
         match auth_header {
             Some(auth) => {
-                let fut = authenticate(auth, &mysql_pool);
+                let fut = authenticate(auth, &pool);
                 Box::pin(fut)
             }
             _ => Box::pin(async { Err(CryptoError::NoAuthHeader.into()) }),
@@ -121,7 +119,7 @@ impl FromRequest for Claims {
 
 pub fn authenticate(
     auth_header: &HeaderValue,
-    db: &MysqlConnection,
+    pool: &MySQLPool,
 ) -> impl Future<Output = Result<Claims, CustomHttpError>> {
     let encrypted_token = std::str::from_utf8(auth_header.as_bytes())
         .unwrap()
@@ -132,7 +130,7 @@ pub fn authenticate(
     // done this way to pass up the error.
     let mut logged_in = Err(CryptoError::NotLoggedIn);
     if let Ok(decrypted_token) = &decrypted_token {
-        logged_in = compare(&decrypted_token, &encrypted_token, db);
+        logged_in = compare(&decrypted_token, &encrypted_token, pool);
     }
 
     async move {
