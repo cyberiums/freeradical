@@ -4,7 +4,9 @@
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-#[derive(Queryable, Serialize, Deserialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
+#[diesel(table_name = media)]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct Media {
     pub id: i32,
     pub uuid: String,
@@ -42,7 +44,10 @@ pub struct NewMedia {
     pub caption: Option<String>,
 }
 
-#[derive(Queryable, Serialize, Debug)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, Serialize, Deserialize, Clone)]
+#[diesel(belongs_to(Media, foreign_key = media_id))]
+#[diesel(table_name = media_variants)]
+#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct MediaVariant {
     pub id: i32,
     pub media_id: i32,

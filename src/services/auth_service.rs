@@ -65,9 +65,10 @@ pub fn decrypt(jwt: &String) -> Result<Claims, CryptoError> {
 pub fn compare(
     token: &Claims,
     enc_token: &String,
-    pool: &MysqlConnection,
+    pool: &MySQLPool,
 ) -> Result<(), CryptoError> {
-    if let Ok(user) = user_models::User::read_one(token.sub.clone(), &pool) {
+    let mut pool_conn = pool.get().map_err(|_| CryptoError::Unknown)?; // Convert r2d2 error to CryptoError
+    if let Ok(user) = user_models::User::read_one(token.sub.clone(), &mut pool_conn) {
         if user.token.is_none() {
             return Err(CryptoError::NotLoggedIn);
         }

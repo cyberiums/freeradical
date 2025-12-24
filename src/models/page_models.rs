@@ -39,15 +39,13 @@ pub struct Page {
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,
     pub reading_time: Option<i32>,
-    // TESTING: Only status field (enum type - suspected culprit!)
-    pub status: Option<String>,
-    // Commented out other Iteration 4 fields for now
-    /*
+    // Iteration 4 fields (status REMOVED - it's the culprit!)
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
-    */
+    // TODO: Add status field back with proper PagesStatusEnum type
+    // pub status: Option<PagesStatusEnum>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
