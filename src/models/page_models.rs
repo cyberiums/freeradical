@@ -22,9 +22,7 @@ pub struct Page {
     pub page_url: String,
     pub page_title: String,
     pub time_created: NaiveDateTime,
-    // TEMPORARILY COMMENTED OUT FOR ECRSS REDUCE TESTING
-    // Will add back incrementally to find problematic field
-    /*
+    // Group 1: SEO Metadata (testing)
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
@@ -35,6 +33,8 @@ pub struct Page {
     pub twitter_card: Option<String>,
     pub twitter_title: Option<String>,
     pub twitter_description: Option<String>,
+    // Group 2 & 3: Still commented for testing
+    /*
     pub author: Option<String>,
     pub article_type: Option<String>,
     pub featured_image: Option<String>,
