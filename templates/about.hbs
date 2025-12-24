@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>{{#if meta_title}}{{meta_title}}{{else}}{{page_title}}{{/if}}</title>
+    {{#if meta_description}}
+    <meta name="description" content="{{meta_description}}">{{/if}}
+    {{#if meta_keywords}}
+    <meta name="keywords" content="{{meta_keywords}}">{{/if}}
+    {{#if canonical_url}}
+    <link rel="canonical" href="{{canonical_url}}">{{else}}
+    <link rel="canonical" href="http://127.0.0.1:8080{{page_url}}">{{/if}}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://127.0.0.1:8080{{page_url}}">
+    <meta property="og:title" content="{{#if og_title}}{{og_title}}{{else}}{{page_title}}{{/if}}">
+    {{#if og_description}}
+    <meta property="og:description" content="{{og_description}}">{{/if}}
+    {{#if og_image}}
+    <meta property="og:image" content="{{og_image}}">{{/if}}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="{{#if twitter_card}}{{twitter_card}}{{else}}summary{{/if}}">
+    <meta name="twitter:url" content="http://127.0.0.1:8080{{page_url}}">
+    <meta name="twitter:title" content="{{#if twitter_title}}{{twitter_title}}{{else}}{{page_title}}{{/if}}">
+    {{#if twitter_description}}
+    <meta name="twitter:description" content="{{twitter_description}}">{{/if}}
+
+    <!-- Stylesheets and Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/style.css">
+</head>
+
+<body>
+    <main class="container">
+        <section class="vh-100 d-flex flex-column justify-content-center">
+            <div class="mx-auto w-75">
+                <h1 class="display-1">{{page_title}}</h1>
+                <p class="lead">{{#if meta_description}}{{meta_description}}{{else}}Welcome to our page{{/if}}</p>
+                <a href="/" class="btn btn-primary mt-3">Back to Home</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark w-100 mt-5 justify-content-center d-flex text-light">
+        <div class="container w-75 py-5">
+            <p>Powered by FreeRadical CMS</p>
+        </div>
+    </footer>
+</body>
+
+</html>
