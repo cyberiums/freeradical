@@ -40,6 +40,7 @@ dotenv = "*"
 uuid = {version = "0.8", features=["serde", "v4"]}
 futures = "*"
 time = "0.2.23"
+redis = { version = "0.21", features = ["tokio-comp"] }
 
 [dev-dependencies]
 actix-rt = "2.2.0"
