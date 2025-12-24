@@ -5,7 +5,7 @@ use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
 use serde_json::json;
 
-use crate::services::database_service::establish_connection;
+use crate::services::database_service;
 use crate::models::revision_models::{PageRevision, RevisionSummary};
 use crate::schema::page_revisions;
 
@@ -14,7 +14,7 @@ use crate::schema::page_revisions;
 pub async fn list_revisions(page_uuid: web::Path<String>) -> impl Responder {
     use crate::schema::page_revisions::dsl::*;
     
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     match page_revisions
         .filter(page_uuid.eq(page_uuid.as_str()))
@@ -45,7 +45,7 @@ pub async fn get_revision(path: web::Path<(String, i32)>) -> impl Responder {
     use crate::schema::page_revisions::dsl::*;
     
     let (uuid, rev_num) = path.into_inner();
-    let mut conn = establish_connection();
+    let mut conn = database_service::establish_connection();
     
     match page_revisions
         .filter(page_uuid.eq(uuid))
