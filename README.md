@@ -119,13 +119,46 @@ Quick deploy with Docker:
 - Phase 4 (i18n): 100%
 - Phase 5 (Enterprise): 99%
 
+## Environment Variables
+
+See `.env.sample` for all configuration options.
+
+---
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+
+### Developer Guides
+- **[SDK Developer Guide](./docs/sdk/SDK_DEVELOPER_GUIDE.md)** - Build client libraries
+- **[Core Developer Guide](./docs/core/CORE_DEVELOPER_GUIDE.md)** - Contribute to core
+- **[SDK Overview](./docs/sdk/sdk_overview.md)** - Compare available SDKs
+
+### Architecture
+- **[Payment System](./docs/architecture/payment_architecture.md)** - Extensible payment handlers
+- **[Feature Walkthrough](./docs/walkthrough.md)** - Complete feature overview
+
+### Historical Documentation
+- **[Iterations](./docs/iterations/)** - Development history by phase
+- **[Roadmaps](./docs/roadmaps/)** - Product planning & roadmaps
+- **[Releases](./docs/releases/)** - Version history & changelogs
+
+**Start here**: [Documentation Index](./docs/README.md)
+
+---
+
 ## 🤝 Contributing
 
-Contributions welcome! Please read our contributing guidelines.
+Contributions are welcome! Please see:
+- [Core Developer Guide](./docs/core/CORE_DEVELOPER_GUIDE.md) for backend/frontend development
+- [SDK Developer Guide](./docs/sdk/SDK_DEVELOPER_GUIDE.md) for SDK development
 
-## 📄 License
+---
 
-MIT License - see LICENSE file
+## 📜 License
+
+MIT
+ License - see LICENSE file
 
 ## 🙏 Credits
 

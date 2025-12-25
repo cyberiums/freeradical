@@ -13,6 +13,8 @@ pub struct User {
     pub username: String,
     pub password: String,
     pub token: Option<String>,
+    pub two_factor_secret: Option<String>,
+    pub two_factor_enabled: bool,
 }
 
 #[derive(Debug, AsChangeset, Insertable, Clone, Serialize, Deserialize)]
@@ -22,6 +24,8 @@ pub struct MutUser {
     pub username: String,
     pub password: Option<String>,
     pub token: Option<String>,
+    pub two_factor_secret: Option<String>,
+    pub two_factor_enabled: Option<bool>,
 }
 
 impl Model<User, MutUser, String> for User {
@@ -32,7 +36,10 @@ impl Model<User, MutUser, String> for User {
     fn read_one(id: String, db: &mut diesel::MysqlConnection) -> Result<User, diesel::result::Error> {
         use users::dsl::username;
 
-        Ok(users::table.filter(username.eq(id)).first::<User>(db)?)
+        Ok(users::table
+            .filter(username.eq(id))
+            .select(User::as_select())
+            .first(db)?)
     }
 
     fn read_all(_: &mut diesel::MysqlConnection) -> Result<Vec<User>, diesel::result::Error> {
@@ -70,4 +77,17 @@ impl User {
 
         Ok(res)
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LoginRequest {
+    pub username: String,
+    pub password: String,
+    pub two_factor_code: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Enable2faRequest {
+    pub secret: String,
+    pub code: String,
 }

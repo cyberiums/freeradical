@@ -3,6 +3,8 @@ use std::any::Any;
 use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
 
+pub mod middleware;
+
 /// The core Plugin trait that all plugins must implement
 #[async_trait]
 pub trait Plugin: Send + Sync + Any {
@@ -30,7 +32,7 @@ pub trait Plugin: Send + Sync + Any {
 
 /// Registry to manage loaded plugins
 pub struct PluginRegistry {
-    plugins: Arc<Mutex<Vec<Box<dyn Plugin>>>>,
+    plugins: Arc<Mutex<Vec<Arc<dyn Plugin>>>>,
 }
 
 impl PluginRegistry {
@@ -41,7 +43,7 @@ impl PluginRegistry {
     }
 
     /// Register a new plugin
-    pub fn register(&self, plugin: Box<dyn Plugin>) {
+    pub fn register(&self, plugin: Arc<dyn Plugin>) {
         let mut plugins = self.plugins.lock().unwrap();
         log::info!("Registering plugin: {} v{}", plugin.name(), plugin.version());
         plugins.push(plugin);
@@ -49,16 +51,26 @@ impl PluginRegistry {
 
     /// Execute on_load hooks for all plugins
     pub async fn load_all(&self) {
-        let plugins = {
+        let plugins: Vec<Arc<dyn Plugin>> = {
             let guard = self.plugins.lock().unwrap();
-            // Clone the vector of references logic would be complex with trait objects,
-            // so we iterate with the lock held for now, or change architecture if async needed.
-            // For async hooks, we need careful concurrency management.
-            // Simplified: Copying raw pointers or using Arc<Plugin> is better.
-            // Refactoring to use Arc<dyn Plugin>
-            guard.len()
+            guard.clone()
         };
-        log::info!("Loaded {} plugins", plugins);
+        
+        log::info!("Loading {} plugins", plugins.len());
+        for plugin in plugins {
+             let _ = plugin.on_load().await;
+        }
+    }
+
+    pub async fn execute_on_request(&self, req: &ServiceRequest) {
+        let plugins: Vec<Arc<dyn Plugin>> = {
+             let guard = self.plugins.lock().unwrap();
+             guard.clone()
+        };
+        
+        for plugin in plugins {
+             let _ = plugin.on_request(req).await;
+        }
     }
     
     pub fn get_hooks(&self) -> Vec<String> {
@@ -87,7 +99,7 @@ mod tests {
     #[actix_rt::test]
     async fn test_plugin_registry() {
         let registry = PluginRegistry::new();
-        registry.register(Box::new(TestPlugin));
+        registry.register(Arc::new(TestPlugin));
         
         let hooks = registry.get_hooks();
         assert_eq!(hooks.len(), 1);

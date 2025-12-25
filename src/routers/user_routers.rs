@@ -15,6 +15,8 @@ impl Router for UserRouter {
             .route("/{id}", web::put().to(update_user))
             .route("/{id}", web::get().to(get_user))
             .route("/{id}", web::delete().to(delete_user))
+            .route("/{id}/2fa/setup", web::get().to(setup_2fa))
+            .route("/{id}/2fa/enable", web::post().to(enable_2fa))
             
     }
 }

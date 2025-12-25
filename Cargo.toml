@@ -38,7 +38,7 @@ log = "0.4.0"
 env_logger = "0.8.4"
 envy = "0.4"
 dotenv = "*"
-uuid = {version = "0.8", features=["serde", "v4"]}
+uuid = { version = "0.8", features = ["serde", "v4"] }
 futures = "*"
 futures-util = "0.3"  # For async file I/O
 tokio = { version = "1", features = ["time"] }  # For async runtime
@@ -60,6 +60,8 @@ urlencoding = "2.1"  # For OAuth URL encoding
 liquid = "0.26"
 pyo3 = "0.20"
 async-trait = "0.1.89"
+totp-rs = { version = "5.0", features = ["gen_secret", "qr"] }
+base64 = "0.22.1"
 
 [dev-dependencies]
 actix-rt = "2.2.0"
