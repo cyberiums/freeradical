@@ -11,6 +11,9 @@ __pycache__/
 sdks/python/dist/
 sdks/python/build/
 
+# Node.js dependencies
+node_modules/
+
 # SDK build artifacts
 sdk/*/dist/
 
