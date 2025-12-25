@@ -240,6 +240,9 @@ async fn main() -> std::io::Result<()> {
                 // Semantic Search routes
                 .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
                 .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
+                // AI Recommendations routes
+                .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
+                .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
