@@ -36,8 +36,11 @@ pub async fn get_product_variants(
 ) -> Result<HttpResponse, CustomHttpError> {
     let product_id = product_id.into_inner();
     
-    let variants = web::block(move || {
-        let mut conn = pool.get()?;
+    let variants = web::block(move || -> Result<Vec<ProductVariant>, diesel::result::Error> {
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+            diesel::result::DatabaseErrorKind::Unknown,
+            Box::new("Database connection error".to_string())
+        ))?;
         product_variants::table
             .filter(product_variants::product_id.eq(product_id))
             .filter(product_variants::is_active.eq(true))
