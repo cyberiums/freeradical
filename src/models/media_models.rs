@@ -5,7 +5,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
-#[diesel(table_name = media)]
+#[diesel(table_name = crate::schema::media)]
 #[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct Media {
     pub id: i32,
@@ -22,8 +22,8 @@ pub struct Media {
     pub upload_user_id: Option<i32>,
     pub alt_text: Option<String>,
     pub caption: Option<String>,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: Option<chrono::NaiveDateTime>,
+    pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
 #[derive(Insertable, Deserialize)]
@@ -46,7 +46,7 @@ pub struct NewMedia {
 
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, Serialize, Deserialize, Clone)]
 #[diesel(belongs_to(Media, foreign_key = media_id))]
-#[diesel(table_name = media_variants)]
+#[diesel(table_name = crate::schema::media_variants)]
 #[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct MediaVariant {
     pub id: i32,
@@ -56,7 +56,7 @@ pub struct MediaVariant {
     pub width: Option<i32>,
     pub height: Option<i32>,
     pub file_size: Option<i64>,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: Option<chrono::NaiveDateTime>,
 }
 
 #[derive(Insertable)]

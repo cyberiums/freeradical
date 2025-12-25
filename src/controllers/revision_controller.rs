@@ -11,13 +11,14 @@ use crate::schema::page_revisions;
 
 /// List all revisions for a page
 /// GET /api/pages/:page_uuid/revisions
-pub async fn list_revisions(page_uuid: web::Path<String>) -> impl Responder {
+pub async fn list_revisions(page_uuid_param: web::Path<String>) -> impl Responder {
     use crate::schema::page_revisions::dsl::*;
     
     let mut conn = database_service::establish_connection();
+    let uuid_str = page_uuid_param.into_inner();
     
     match page_revisions
-        .filter(page_uuid.eq(page_uuid.as_str()))
+        .filter(page_uuid.eq(uuid_str))
         .order(revision_number.desc())
         .load::<PageRevision>(&mut conn)
     {
@@ -57,22 +58,91 @@ pub async fn get_revision(path: web::Path<(String, i32)>) -> impl Responder {
     }
 }
 
-/// Rollback to a specific revision (simplified)
+/// Rollback to a specific revision
 /// POST /api/pages/:page_uuid/rollback/:rev_number
-/// This is a placeholder - full implementation would update the page
+/// Restores the page to the state captured in the specified revision
 pub async fn rollback_revision(path: web::Path<(String, i32)>) -> impl Responder {
+    use crate::schema::page_revisions::dsl::*;
+    use crate::schema::pages;
+    
     let (uuid, rev_num) = path.into_inner();
+    let mut conn = database_service::establish_connection();
     
-    // TODO: Implement actual rollback logic
-    // Would need to:
     // 1. Load the revision
-    // 2. Update the page with revision data
-    // 3. Create a new revision for the rollback
+    let revision = match page_revisions
+        .filter(page_uuid.eq(&uuid))
+        .filter(revision_number.eq(rev_num))
+        .first::<PageRevision>(&mut conn)
+    {
+        Ok(rev) => rev,
+        Err(_) => return HttpResponse::NotFound().json("Revision not found"),
+    };
     
-    HttpResponse::Ok().json(json!({
-        "message": "Rollback placeholder",
-        "page_uuid": uuid,
-        "revision_number": rev_num,
-        "note": "Full implementation pending"
-    }))
+    // 2. Deserialize the full_snapshot to get page state
+    let restored_page: crate::models::page_models::Page = match serde_json::from_str(&revision.full_snapshot) {
+        Ok(page) => page,
+        Err(e) =>  {
+            return HttpResponse::InternalServerError()
+                .json(format!("Failed to deserialize snapshot: {}", e));
+        }
+    };
+    
+    // 3. Update the page with revision data
+    // We'll use Diesel's update directly
+    match diesel::update(pages::table.filter(pages::uuid.eq(&uuid)))
+        .set((
+            pages::page_title.eq(&restored_page.page_title),
+            pages::page_url.eq(&restored_page.page_url),
+            pages::page_name.eq(&restored_page.page_name),
+            pages::meta_title.eq(&restored_page.meta_title),
+            pages::meta_description.eq(&restored_page.meta_description),
+            pages::meta_keywords.eq(&restored_page.meta_keywords),
+            pages::canonical_url.eq(&restored_page.canonical_url),
+            pages::og_title.eq(&restored_page.og_title),
+            pages::og_description.eq(&restored_page.og_description),
+            pages::og_image.eq(&restored_page.og_image),
+            pages::twitter_card.eq(&restored_page.twitter_card),
+            pages::twitter_title.eq(&restored_page.twitter_title),
+            pages::twitter_description.eq(&restored_page.twitter_description),
+            pages::author.eq(&restored_page.author),
+            pages::article_type.eq(&restored_page.article_type),
+            pages::featured_image.eq(&restored_page.featured_image),
+            pages::word_count.eq(&restored_page.word_count),
+            pages::reading_time.eq(&restored_page.reading_time),
+        ))
+        .execute(&mut conn)
+    {
+        Ok(_) => {
+            // 4. Create a new revision documenting the rollback
+            let summary = format!("Rolled back to revision {}", rev_num);
+            match crate::services::revision_service::create_page_revision(
+                &uuid,
+                revision.changed_by_user_id,
+                Some(summary),
+                &mut conn
+            ) {
+                Ok(new_rev) => {
+                    HttpResponse::Ok().json(serde_json::json!({
+                        "message": "Page rolled back successfully",
+                        "page_uuid": uuid,
+                        "rollback_to_revision": rev_num,
+                        "new_revision": new_rev
+                    }))
+                }
+                Err(e) => {
+                    // Rollback succeeded but creating revision failed
+                    HttpResponse::Ok().json(serde_json::json!({
+                        "message": "Page rolled back but revision creation failed",
+                        "page_uuid": uuid,
+                        "rollback_to_revision": rev_num,
+                        "error": format!("{}", e)
+                    }))
+                }
+            }
+        }
+        Err(e) => {
+            HttpResponse::InternalServerError()
+                .json(format!("Failed to rollback page: {}", e))
+        }
+    }
 }

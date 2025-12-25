@@ -42,13 +42,13 @@ pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 /// All routes are defined here.
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    // if the program is running in release mode
-    if cfg!(debug_assertions) {
-        dotenv().unwrap();
-    }
+    dotenv().ok();
+    env_logger::init();
 
-    let conf = envy::prefixed("APP_").from_env::<LocalConfig>().unwrap();
-    
+    // Initialize config
+    let conf: LocalConfig = envy::prefixed("APP_").from_env().unwrap();
+
+    // Run migrations
     let db_url = models::format_connection_string(conf.clone());
     let mut connection = MysqlConnection::establish(&db_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
@@ -112,7 +112,7 @@ async fn main() -> std::io::Result<()> {
             // SEO endpoints - standardized manual routing
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
-            .route("/robots.txt", web::get().to(controllers::robots_controller::robots_txt))
+            .service(controllers::robots_controller::robots)
             // Admin Dashboard API
             .service(controllers::dashboard_controller::dashboard_summary)
             .service(controllers::dashboard_controller::analytics_summary)

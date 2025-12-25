@@ -3,10 +3,11 @@
 
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use serde_json::Value as JsonValue;
+use diesel::serialize::ToSql;
+use diesel::deserialize::FromSql;
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
-#[diesel(table_name = page_revisions)]
+#[diesel(table_name = crate::schema::page_revisions)]
 #[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct PageRevision {
     pub id: i64,
@@ -19,10 +20,10 @@ pub struct PageRevision {
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
     pub canonical_url: Option<String>,
-    pub full_snapshot: JsonValue,
+    pub full_snapshot: String,  // Store JSON as String, serialize on insert
     pub change_summary: Option<String>,
     pub changed_by_user_id: Option<i32>,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: Option<chrono::NaiveDateTime>,
 }
 
 #[derive(Insertable)]
@@ -37,7 +38,7 @@ pub struct NewPageRevision {
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
     pub canonical_url: Option<String>,
-    pub full_snapshot: JsonValue,
+    pub full_snapshot: String,  // Store JSON as String, serialize before insert
     pub change_summary: Option<String>,
     pub changed_by_user_id: Option<i32>,
 }
@@ -47,6 +48,6 @@ pub struct RevisionSummary {
     pub id: i64,
     pub revision_number: i32,
     pub change_summary: Option<String>,
-    pub created_at: chrono::NaiveDateTime,
+    pub created_at: Option<chrono::NaiveDateTime>,  // Nullable in schema
     pub changed_by_user_id: Option<i32>,
 }

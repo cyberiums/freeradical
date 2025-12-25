@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use super::module_models::Module;
+use super::status_enum::PageStatus;
 use super::Model;
 use crate::models::module_models::CategoryDTO;
 use crate::models::module_models::FieldsDTO;
@@ -39,13 +40,12 @@ pub struct Page {
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,
     pub reading_time: Option<i32>,
-    // Iteration 4 fields (status REMOVED - it's the culprit!)
+    // Iteration 4 fields - MUST match schema.rs exact order!
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
+    pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
-    // TODO: Add status field back with proper PagesStatusEnum type
-    // pub status: Option<PagesStatusEnum>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]

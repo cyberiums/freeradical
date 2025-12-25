@@ -11,7 +11,9 @@ struct RobotRule {
     path: String,
     crawl_delay: Option<i32>,
     comment: Option<String>,
-    is_active: bool,
+    is_active: Option<bool>,  // Nullable in schema
+    created_at: Option<chrono::NaiveDateTime>,
+    updated_at: Option<chrono::NaiveDateTime>,
 }
 
 /// Generate dynamic robots.txt from database configuration

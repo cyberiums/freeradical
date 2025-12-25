@@ -1,7 +1,7 @@
 use sha2::{Sha256, Digest};
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use crate::db_connection::establish_connection;
+use crate::services::database_service::establish_connection;
 
 /// Analytics tracking service
 /// Privacy-compliant with IP hashing

@@ -14,14 +14,14 @@ pub async fn create_user(
     pool: web::Data<MySQLPool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
     let mut salted_user = new.clone();
     let encrypted_password = encrypt_password(&salted_user.password.unwrap())?;
     salted_user.password = Some(encrypted_password);
     salted_user.uuid = Some(Uuid::new_v4().to_string());
 
-    User::create(&salted_user, &mysql_pool)?;
+    User::create(&salted_user, &mut mysql_pool)?;
 
     Ok(HttpResponse::Created().json(&new.clone()))
 }
@@ -31,9 +31,9 @@ pub async fn get_user(
     pool: web::Data<MySQLPool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let user: User = User::read_one(id.clone(), &mysql_pool)?;
+    let user: User = User::read_one(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(&user))
 }
@@ -44,7 +44,7 @@ pub async fn update_user(
     pool: web::Data<MySQLPool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
     // TODO maybe make this only happen whenever the password changes?
     let mut salted_user = new.clone();
@@ -75,7 +75,7 @@ pub async fn update_user(
 
     let user = HttpResponse::Ok().cookie(cookie).json(&new.clone());
     salted_user.token = Some(token_enc);
-    User::update(id.clone(), &salted_user, &mysql_pool)?;
+    User::update(id.clone(), &salted_user, &mut mysql_pool)?;
 
     Ok(user)
 }
@@ -85,9 +85,9 @@ pub async fn delete_user(
     pool: web::Data<MySQLPool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let res = User::delete(id.clone(), &mysql_pool)?;
+    let res = User::delete(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(res))
 }
@@ -96,10 +96,10 @@ pub async fn login(
     user: web::Json<MutUser>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
     let arg = Argon2::default();
 
-    let read_user = User::read_one(user.username.clone(), &mysql_pool)?;
+    let read_user = User::read_one(user.username.clone(), &mut mysql_pool)?;
 
     let is_default = read_user.username == "root" && read_user.password == "";
 
@@ -117,7 +117,7 @@ pub async fn login(
 
         new_user.token = Some(cookie.value().to_string());
 
-        User::update_with_token(&new_user, &mysql_pool)?;
+        User::update_with_token(&new_user, &mut mysql_pool)?;
 
         return Ok(cookie_response);
     }
@@ -135,7 +135,7 @@ pub async fn login(
 
             new_user.token = Some(cookie.value().to_string());
 
-            User::update_with_token(&new_user, &mysql_pool)?;
+            User::update_with_token(&new_user, &mut mysql_pool)?;
 
             Ok(cookie_response)
         }
@@ -173,10 +173,9 @@ pub async fn check_login(
     req: HttpRequest,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
     let auth_header = req.headers().get("authorization");
 
-    let auth_res = authenticate(auth_header.unwrap(), &mysql_pool).await;
+    let auth_res = authenticate(auth_header.unwrap(), &pool).await;
 
     match auth_res {
         Ok(_) => Ok(HttpResponse::Ok().finish()),

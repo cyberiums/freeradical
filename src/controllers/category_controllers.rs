@@ -11,12 +11,12 @@ pub async fn create_category(
     pool: web::Data<MySQLPool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
     let mut uuid_new = new.clone();
     uuid_new.uuid = Some(Uuid::new_v4().to_string());
 
-    ModuleCategory::create(&uuid_new, &mysql_pool)?;
+    ModuleCategory::create(&uuid_new, &mut mysql_pool)?;
 
     Ok(HttpResponse::Created().json(uuid_new))
 }
@@ -27,9 +27,9 @@ pub async fn update_category(
     pool: web::Data<MySQLPool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    ModuleCategory::update(id.clone(), &updated_category, &mysql_pool)?;
+    ModuleCategory::update(id.clone(), &updated_category, &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(updated_category.0))
 }
@@ -38,9 +38,9 @@ pub async fn get_category(
     id: web::Path<String>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let res = ModuleCategory::read_one(id.clone(), &mysql_pool)?;
+    let res = ModuleCategory::read_one(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(res))
 }
@@ -50,9 +50,9 @@ pub async fn delete_category(
     pool: web::Data<MySQLPool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let res = ModuleCategory::delete(id.clone(), &mysql_pool)?;
+    let res = ModuleCategory::delete(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(res))
 }
