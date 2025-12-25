@@ -2,6 +2,7 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
+use rust_decimal::Decimal;
 
 use crate::schema::{inventory_audit_log, product_variants};
 
@@ -15,9 +16,9 @@ pub struct ProductVariant {
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
-    pub price: Option<rust_decimal::Decimal>,
+    pub price: Option<Decimal>,
     pub stock_quantity: Option<i32>,
-    pub weight: Option<rust_decimal::Decimal>,
+    pub weight: Option<Decimal>,
     pub attributes: Option<serde_json::Value>,
     pub image_url: Option<String>,
     pub is_active: Option<bool>,
@@ -33,9 +34,9 @@ pub struct NewProductVariant {
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
-    pub price: Option<rust_decimal::Decimal>,
+    pub price: Option<Decimal>,
     pub stock_quantity: Option<i32>,
-    pub weight: Option<rust_decimal::Decimal>,
+    pub weight: Option<Decimal>,
     pub attributes: Option<serde_json::Value>,
     pub image_url: Option<String>,
     pub is_active: Option<bool>,

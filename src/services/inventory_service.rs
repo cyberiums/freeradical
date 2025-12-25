@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use rust_decimal::Decimal;
 
 use crate::models::inventory_models::{
     InventoryAuditLog, NewInventoryAuditLog, NewProductVariant, ProductVariant,
