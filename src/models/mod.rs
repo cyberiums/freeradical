@@ -19,6 +19,10 @@ use crate::services::errors_service::CustomHttpError;
 
 use self::config_models::LocalConfig;
 
+// Re-export database pool types
+pub use db_connection::DatabasePool as DbPool;
+pub use db_connection::PooledDatabaseConnection;
+
 // Export database abstraction layer types
 pub use db_connection::{DatabasePool, PooledDatabaseConnection, create_pool, detect_database_type};
 
