@@ -7,9 +7,8 @@ use rust_decimal::Decimal;
 use crate::schema::{inventory_audit_log, product_variants};
 
 /// Product variant for SKU-level inventory management
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable, Associations)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable)]
 #[diesel(table_name = product_variants)]
-#[diesel(belongs_to(crate::models::product_models::Product))]
 pub struct ProductVariant {
     pub id: i32,
     pub uuid: String,
