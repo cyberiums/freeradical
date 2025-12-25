@@ -32,6 +32,25 @@ services:
       timeout: 5s
       retries: 5
 
+  # PostgreSQL (alternative to MySQL - uncomment to use)
+  # Comment out mysql service and update cms dependencies if using postgres
+  # postgres:
+  #   image: postgres:15-alpine
+  #   container_name: freeradical_postgres
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER:-freeradical}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+  #     POSTGRES_DB: ${POSTGRES_DB:-freeradical}
+  #   ports:
+  #     - "${POSTGRES_PORT:-5432}:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
   cms:
     build: .
     container_name: freeradical_cms
@@ -72,3 +91,4 @@ services:
 volumes:
   mysql_data:
   redis_data:
+  # postgres_data:  # Uncomment if using PostgreSQL
