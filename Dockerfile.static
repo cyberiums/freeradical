@@ -15,7 +15,6 @@ COPY Cargo.toml Cargo.lock ./
 # Copy source
 COPY src ./src
 COPY migrations ./migrations
-COPY static ./static
 
 # Build release
 RUN cargo build --release
@@ -37,7 +36,6 @@ COPY --from=builder /app/target/release/freeradical /app/freeradical
 # Copy required directories
 COPY templates ./templates
 COPY migrations ./migrations
-COPY static ./static
 
 # Create uploads directory
 RUN mkdir -p /app/uploads
