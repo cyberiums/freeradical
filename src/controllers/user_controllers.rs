@@ -4,10 +4,12 @@ use argon2::{Argon2, PasswordHash, PasswordVerifier};
 use time::{Duration, OffsetDateTime};
 use uuid::Uuid;
 
-use crate::models::user_models::{MutUser, User};
+use crate::models::user_models::{MutUser, User, LoginRequest, Enable2faRequest};
 use crate::models::{pool_handler, Model, MySQLPool};
+use crate::services::totp_service::TotpService;
 use crate::services::auth_service::{authenticate, encrypt, encrypt_password, Claims};
 use crate::services::errors_service::CustomHttpError;
+use serde_json;
 
 pub async fn create_user(
     new: web::Json<MutUser>,
@@ -93,7 +95,7 @@ pub async fn delete_user(
 }
 
 pub async fn login(
-    user: web::Json<MutUser>,
+    user: web::Json<LoginRequest>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -110,31 +112,58 @@ pub async fn login(
 
     // default password handler.
     if is_default {
-        let mut new_user = user.clone();
+        let mut new_user = MutUser {
+            uuid: None,
+            username: user.username.clone(),
+            password: None,
+            token: None,
+            two_factor_secret: None,
+            two_factor_enabled: None,
+        };
+        
         let cookie = login_res(&mut new_user)?;
-
         let cookie_response = HttpResponse::Accepted().cookie(cookie.clone()).finish();
 
         new_user.token = Some(cookie.value().to_string());
-
         User::update_with_token(&new_user, &mut mysql_pool)?;
 
         return Ok(cookie_response);
     }
+    
     let read_user_password = PasswordHash::new(&read_user.password).unwrap();
 
     match arg.verify_password(
-        user.password.clone().unwrap().as_bytes(),
+        user.password.as_bytes(),
         &read_user_password,
     ) {
         Ok(_) => {
-            let mut new_user = user;
-            let cookie = login_res(&mut new_user)?;
+            // 2FA Verification
+            if read_user.two_factor_enabled {
+                match &user.two_factor_code {
+                    Some(code) => {
+                         if let Some(secret) = &read_user.two_factor_secret {
+                             if !TotpService::verify(secret, code).unwrap_or(false) {
+                                  return Ok(HttpResponse::Unauthorized().json("Invalid 2FA code"));
+                             }
+                         }
+                    }
+                    None => return Ok(HttpResponse::Unauthorized().json("2FA code required")),
+                }
+            }
+            
+            let mut new_user = MutUser {
+                uuid: None,
+                username: user.username.clone(),
+                password: None,
+                token: None,
+                two_factor_secret: None,
+                two_factor_enabled: None,
+            };
 
+            let cookie = login_res(&mut new_user)?;
             let cookie_response = HttpResponse::Ok().cookie(cookie.clone()).finish();
 
             new_user.token = Some(cookie.value().to_string());
-
             User::update_with_token(&new_user, &mut mysql_pool)?;
 
             Ok(cookie_response)
@@ -181,4 +210,54 @@ pub async fn check_login(
         Ok(_) => Ok(HttpResponse::Ok().finish()),
         Err(_) => Ok(HttpResponse::Unauthorized().finish()),
     }
+}
+
+pub async fn setup_2fa(
+    path: web::Path<String>,
+    _: web::Data<MySQLPool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    if path.clone() != claim.sub {
+         return Err(CustomHttpError::Unauthorized);
+    }
+    
+    let (secret, qr) = TotpService::generate_secret(&path).map_err(|e| {
+         log::error!("2FA Gen Error: {}", e);
+         CustomHttpError::BadRequest
+    })?;
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "secret": secret,
+        "qr": qr
+    })))
+}
+
+pub async fn enable_2fa(
+    path: web::Path<String>,
+    body: web::Json<Enable2faRequest>,
+    pool: web::Data<MySQLPool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    if path.clone() != claim.sub {
+        return Err(CustomHttpError::Unauthorized);
+    }
+    
+    if !TotpService::verify(&body.secret, &body.code).unwrap_or(false) {
+         return Ok(HttpResponse::BadRequest().json("Invalid Code"));
+    }
+    
+    let mut mysql_pool = pool_handler(pool)?;
+    
+    let update_user = MutUser {
+         uuid: None,
+         username: path.clone(),
+         password: None,
+         token: None,
+         two_factor_secret: Some(body.secret.clone()),
+         two_factor_enabled: Some(true),
+    };
+    
+    User::update(path.clone(), &update_user, &mut mysql_pool)?;
+    
+    Ok(HttpResponse::Ok().json("2FA Enabled"))
 }

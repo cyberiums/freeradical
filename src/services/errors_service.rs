@@ -12,6 +12,8 @@ pub enum CustomHttpError {
     NotFound,
     #[error("Unknown Internal Error")]
     Unknown,
+    #[error("Internal Server Error")]
+    InternalServerError,
     #[error("User is not authorized.")]
     Unauthorized,
 }
@@ -22,6 +24,7 @@ impl CustomHttpError {
         match self {
             Self::BadRequest => String::from("Server was unable to handle data"),
             Self::Unknown => String::from("Internal server error"),
+            Self::InternalServerError => String::from("Internal server error"),
             Self::NotFound => String::from("Resource was not found"),
             Self::Unauthorized => String::from("Not authorized")
         }
@@ -41,6 +44,7 @@ impl ResponseError for CustomHttpError {
         match *self {
             Self::BadRequest => StatusCode::BAD_REQUEST,
             Self::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
+            Self::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR,
             Self::NotFound => StatusCode::NOT_FOUND,
             Self::Unauthorized => StatusCode::UNAUTHORIZED
         }

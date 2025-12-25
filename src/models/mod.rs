@@ -3,6 +3,7 @@ pub mod module_models;
 pub mod page_models;
 pub mod status_enum;
 pub mod user_models;
+pub mod commerce_models;
 pub mod media_models;
 pub mod revision_models;
 pub mod field_type_enum;

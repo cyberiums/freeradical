@@ -1,0 +1,117 @@
+name: Publish SDKs
+
+on:
+  push:
+    tags:
+      - 'typescript-v*'
+      - 'python-v*'
+      - 'go-v*'
+
+jobs:
+  publish-typescript:
+    if: startsWith(github.ref, 'refs/tags/typescript-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+      
+      - name: Install dependencies
+        run: cd sdk/freeradical-sdk && npm install
+      
+      - name: Build
+        run: cd sdk/freeradical-sdk && npm run build
+      
+      - name: Publish to npm
+        run: cd sdk/freeradical-sdk && npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: TypeScript SDK ${{ github.ref }}
+          body: |
+            **TypeScript/JavaScript SDK Release**
+            
+            Install: `npm install @freeradical/sdk`
+            
+            See [CHANGELOG](./sdk/freeradical-sdk/CHANGELOG.md) for details.
+          draft: false
+          prerelease: false
+
+  publish-python:
+    if: startsWith(github.ref, 'refs/tags/python-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install build tools
+        run: pip install build twine
+      
+      - name: Build distributions
+        run: cd sdks/python && python -m build
+      
+      - name: Publish to PyPI
+        run: cd sdks/python && twine upload dist/*
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Python SDK ${{ github.ref }}
+          body: |
+            **Python SDK Release**
+            
+            Install: `pip install freeradical-client`
+            
+            See [README](./sdks/python/README.md) for details.
+          draft: false
+          prerelease: false
+
+  publish-go:
+    if: startsWith(github.ref, 'refs/tags/go-v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+      
+      - name: Run tests
+        run: cd sdks/go && go test ./...
+      
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Go SDK ${{ github.ref }}
+          body: |
+            **Go SDK Release**
+            
+            Install: `go get github.com/cyberiums/freeradical-go-client@${{ github.ref }}`
+            
+            See [README](./sdks/go/README.md) for details.
+          draft: false
+          prerelease: false

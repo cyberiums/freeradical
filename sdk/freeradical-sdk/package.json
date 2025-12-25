@@ -1,6 +1,6 @@
 {
     "name": "@freeradical/sdk",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "Official TypeScript SDK for FreeRadical CMS",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -32,5 +32,8 @@
     "files": [
         "dist",
         "README.md"
-    ]
+    ],
+    "dependencies": {
+        "@freeradical/sdk": "^0.7.1"
+    }
 }

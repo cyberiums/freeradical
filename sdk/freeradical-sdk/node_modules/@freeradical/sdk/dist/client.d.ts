@@ -1,0 +1,30 @@
+import { FreeRadicalConfig, Page, CreatePageInput, UpdatePageInput, Module, Media, SearchResponse, Webhook, Relationship, PaginationOptions } from './types';
+export declare class FreeRadicalClient {
+    private client;
+    constructor(config: FreeRadicalConfig);
+    getPages(options?: PaginationOptions): Promise<Page[]>;
+    getPage(uuid: string): Promise<Page>;
+    createPage(input: CreatePageInput): Promise<Page>;
+    updatePage(uuid: string, input: UpdatePageInput): Promise<Page>;
+    deletePage(uuid: string): Promise<void>;
+    getModules(pageUuid?: string): Promise<Module[]>;
+    getModule(uuid: string): Promise<Module>;
+    createModule(input: Partial<Module>): Promise<Module>;
+    updateModule(uuid: string, input: Partial<Module>): Promise<Module>;
+    deleteModule(uuid: string): Promise<void>;
+    getMedia(options?: PaginationOptions): Promise<Media[]>;
+    uploadMedia(file: any, filename?: string): Promise<Media>;
+    deleteMedia(uuid: string): Promise<void>;
+    search(query: string, resources?: string[]): Promise<SearchResponse>;
+    getWebhooks(): Promise<Webhook[]>;
+    createWebhook(input: Webhook): Promise<Webhook>;
+    updateWebhook(id: number, input: Partial<Webhook>): Promise<Webhook>;
+    deleteWebhook(id: number): Promise<void>;
+    testWebhook(id: number): Promise<any>;
+    createRelationship(input: Relationship): Promise<Relationship>;
+    getRelated(resourceType: string, resourceId: string): Promise<any[]>;
+    deleteRelationship(id: number): Promise<void>;
+    getHealth(): Promise<any>;
+    getMetrics(): Promise<any>;
+}
+export default FreeRadicalClient;
