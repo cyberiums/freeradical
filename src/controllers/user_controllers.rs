@@ -1,7 +1,7 @@
 use actix_web::cookie::Cookie;
+use actix_web::cookie::time::{Duration, OffsetDateTime};
 use actix_web::{web, HttpRequest, HttpResponse};
 use argon2::{Argon2, PasswordHash, PasswordVerifier};
-use time::{Duration, OffsetDateTime};
 use uuid::Uuid;
 
 use crate::models::user_models::{MutUser, User, LoginRequest, Enable2faRequest};
@@ -67,11 +67,11 @@ pub async fn update_user(
         sub: salted_user.username.clone(),
     };
 
-    let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hour();
+    let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hours(1);
 
     let token_enc = encrypt(claim)?;
-    let cookie = Cookie::build("auth", &token_enc)
-        .expires(time)
+    let cookie = Cookie::build("auth", token_enc.clone())
+        .expires(Some(time))
         .path("/")
         .finish();
 
@@ -180,9 +180,9 @@ fn login_res(user: &mut MutUser) -> Result<Cookie, CustomHttpError> {
     user.password = None;
     let token_enc = encrypt(claim)?;
 
-    let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hour();
-    let cookie = Cookie::build("auth", token_enc)
-        .expires(time)
+    let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hours(1);
+    let cookie = Cookie::build("auth", token_enc.clone())
+        .expires(Some(time))
         .path("/")
         .finish();
 
@@ -191,7 +191,7 @@ fn login_res(user: &mut MutUser) -> Result<Cookie, CustomHttpError> {
 
 pub async fn logout() -> Result<HttpResponse, CustomHttpError> {
     let cookie = Cookie::build("auth", "")
-        .expires(OffsetDateTime::now_utc())
+        .expires(Some(OffsetDateTime::now_utc()))
         .path("/")
         .finish();
 

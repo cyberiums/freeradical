@@ -1,4 +1,5 @@
-use actix_web::{dev::Payload, http::HeaderValue, web, FromRequest, HttpRequest};
+use actix_web::http::header::HeaderValue;
+use actix_web::{dev::Payload, web, FromRequest, HttpRequest};
 use argon2::{Argon2, PasswordHasher, password_hash::SaltString};
 use diesel::MysqlConnection;
 use futures::{future::LocalBoxFuture, Future};
@@ -101,7 +102,7 @@ pub struct Claims {
 impl FromRequest for Claims {
     type Error = CustomHttpError;
     type Future = LocalBoxFuture<'static, Result<Self, Self::Error>>;
-    type Config = ();
+    // Config type removed in actix-web v4
 
     fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
         let pool = req.app_data::<web::Data<MySQLPool>>().unwrap().to_owned();
