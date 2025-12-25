@@ -33,134 +33,232 @@ export default function Login() {
     };
 
     return (
-        <>
-            {/* Typography: Inter font */}
+        <div style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            backgroundColor: '#0F172A',
+            fontFamily: 'Inter, sans-serif'
+        }}>
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-            <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: '#0F172A', fontFamily: 'Inter, sans-serif' }}>
-                <div className="w-full max-w-md">
-                    {/* Card with Carbon Gray + Hard Shadow */}
+            <div style={{ width: '100%', maxWidth: '448px' }}>
+                <div style={{
+                    backgroundColor: '#1E293B',
+                    borderRadius: '24px',
+                    boxShadow: '8px 8px 0px rgba(15, 23, 42, 0.3)',
+                    overflow: 'hidden'
+                }}>
+                    {/* Header */}
                     <div style={{
-                        backgroundColor: '#1E293B',
-                        borderRadius: '24px',
-                        boxShadow: '8px 8px 0px rgba(15, 23, 42, 0.3)',
-                        overflow: 'hidden'
+                        padding: '40px 32px',
+                        textAlign: 'center',
+                        background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
+                        borderBottom: '3px solid #F97316'
                     }}>
-                        {/* Header with Reactive Orange accent */}
-                        <div className="px-8 py-10 text-center" style={{
-                            background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
-                            borderBottom: '3px solid #F97316'
+                        <div style={{ marginBottom: '16px' }}>
+                            <img
+                                src="/static/logo.svg"
+                                alt="FreeRadical"
+                                style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    margin: '0 auto',
+                                    display: 'block'
+                                }}
+                            />
+                        </div>
+                        <h1 style={{
+                            fontSize: '36px',
+                            fontWeight: 900,
+                            color: 'white',
+                            marginBottom: '8px',
+                            letterSpacing: '-0.04em'
                         }}>
-                            <div className="inline-block mb-4">
-                                <img src="/logo.svg" alt="FreeRadical" className="w-20 h-20 mx-auto" />
-                            </div>
-                            <h1 className="text-4xl font-black text-white mb-2" style={{
-                                letterSpacing: '-0.04em',
-                                fontWeight: 900
-                            }}>
-                                FreeRadical
-                            </h1>
-                            <p className="text-white text-sm" style={{ color: '#F97316', fontWeight: 600 }}>
-                                Full Admin Interface
-                            </p>
-                        </div>
-
-                        {/* Form */}
-                        <div className="px-8 py-10">
-                            {error && (
-                                <div className="mb-6 p-4 rounded-xl" style={{
-                                    backgroundColor: '#991B1B',
-                                    borderLeft: '4px solid #DC2626',
-                                    boxShadow: '4px 4px 0px rgba(15, 23, 42, 0.2)'
-                                }}>
-                                    <p className="text-sm text-white font-medium">{error}</p>
-                                </div>
-                            )}
-
-                            <form onSubmit={handleSubmit} className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-semibold text-white mb-2" style={{ letterSpacing: '-0.02em' }}>
-                                        Email Address
-                                    </label>
-                                    <input
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required
-                                        style={{
-                                            backgroundColor: '#0F172A',
-                                            border: '2px solid #334155',
-                                            borderRadius: '12px',
-                                            color: 'white',
-                                            fontFamily: 'JetBrains Mono, monospace'
-                                        }}
-                                        className="w-full px-4 py-3.5 outline-none transition-all focus:border-[#F97316]"
-                                        placeholder="admin@freeradical.dev"
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-semibold text-white mb-2" style={{ letterSpacing: '-0.02em' }}>
-                                        Password
-                                    </label>
-                                    <input
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                        style={{
-                                            backgroundColor: '#0F172A',
-                                            border: '2px solid #334155',
-                                            borderRadius: '12px',
-                                            color: 'white',
-                                            fontFamily: 'JetBrains Mono, monospace'
-                                        }}
-                                        className="w-full px-4 py-3.5 outline-none transition-all focus:border-[#F97316]"
-                                        placeholder="••••••••"
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    style={{
-                                        backgroundColor: '#F97316',
-                                        borderRadius: '12px',
-                                        boxShadow: loading ? '4px 4px 0px rgba(15, 23, 42, 0.2)' : '8px 8px 0px rgba(15, 23, 42, 0.3)',
-                                        fontWeight: 700,
-                                        letterSpacing: '-0.02em'
-                                    }}
-                                    className="w-full mt-8 text-white py-4 px-6 transition-all hover:shadow-[4px_4px_0px_rgba(15,23,42,0.3)] disabled:opacity-50"
-                                >
-                                    {loading ? 'Signing in...' : 'Sign In'}
-                                </button>
-                            </form>
-
-                            <div className="mt-8 pt-6 text-center" style={{ borderTop: '1px solid #334155' }}>
-                                <a href="/" className="text-sm font-semibold transition-colors" style={{ color: '#F97316' }}>
-                                    ← Back to Home
-                                </a>
-                            </div>
-                        </div>
+                            FreeRadical
+                        </h1>
+                        <p style={{
+                            color: '#F97316',
+                            fontSize: '14px',
+                            fontWeight: 600
+                        }}>
+                            Full Admin Interface
+                        </p>
                     </div>
 
-                    {/* Footer with Rust Cyan accent */}
-                    <div className="mt-8 text-center space-y-2">
-                        <p className="text-sm font-medium text-white flex items-center justify-center">
-                            <svg className="w-4 h-4 mr-2" fill="#06B6D4" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                            </svg>
-                            <span style={{ color: '#06B6D4' }}>Secured with JWT & Argon2</span>
-                        </p>
-                        <p className="text-xs" style={{
-                            color: '#334155',
-                            fontFamily: 'JetBrains Mono, monospace'
+                    {/* Form */}
+                    <div style={{ padding: '40px 32px' }}>
+                        {error && (
+                            <div style={{
+                                marginBottom: '24px',
+                                padding: '16px',
+                                borderRadius: '12px',
+                                backgroundColor: '#991B1B',
+                                borderLeft: '4px solid #DC2626',
+                                boxShadow: '4px 4px 0px rgba(15, 23, 42, 0.2)'
+                            }}>
+                                <p style={{
+                                    fontSize: '14px',
+                                    color: 'white',
+                                    fontWeight: 500,
+                                    margin: 0
+                                }}>{error}</p>
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            <div>
+                                <label style={{
+                                    display: 'block',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: 'white',
+                                    marginBottom: '8px',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    Email Address
+                                </label>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    style={{
+                                        width: '100%',
+                                        padding: '14px 16px',
+                                        backgroundColor: '#0F172A',
+                                        border: '2px solid #334155',
+                                        borderRadius: '12px',
+                                        color: 'white',
+                                        fontFamily: 'JetBrains Mono, monospace',
+                                        fontSize: '14px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s'
+                                    }}
+                                    onFocus={(e) => e.target.style.borderColor = '#F97316'}
+                                    onBlur={(e) => e.target.style.borderColor = '#334155'}
+                                    placeholder="admin@freeradical.dev"
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{
+                                    display: 'block',
+                                    fontSize: '14px',
+                                    fontWeight: 600,
+                                    color: 'white',
+                                    marginBottom: '8px',
+                                    letterSpacing: '-0.02em'
+                                }}>
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    style={{
+                                        width: '100%',
+                                        padding: '14px 16px',
+                                        backgroundColor: '#0F172A',
+                                        border: '2px solid #334155',
+                                        borderRadius: '12px',
+                                        color: 'white',
+                                        fontFamily: 'JetBrains Mono, monospace',
+                                        fontSize: '14px',
+                                        outline: 'none',
+                                        transition: 'border-color 0.2s'
+                                    }}
+                                    onFocus={(e) => e.target.style.borderColor = '#F97316'}
+                                    onBlur={(e) => e.target.style.borderColor = '#334155'}
+                                    placeholder="••••••••"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '32px',
+                                    padding: '16px 24px',
+                                    backgroundColor: '#F97316',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    fontSize: '16px',
+                                    fontWeight: 700,
+                                    letterSpacing: '-0.02em',
+                                    cursor: loading ? 'not-allowed' : 'pointer',
+                                    opacity: loading ? 0.5 : 1,
+                                    boxShadow: loading ? '4px 4px 0px rgba(15, 23, 42, 0.2)' : '8px 8px 0px rgba(15, 23, 42, 0.3)',
+                                    transition: 'all 0.2s'
+                                }}
+                            >
+                                {loading ? 'Signing in...' : 'Sign In'}
+                            </button>
+                        </form>
+
+                        <div style={{
+                            marginTop: '32px',
+                            paddingTop: '24px',
+                            borderTop: '1px solid #334155',
+                            textAlign: 'center'
                         }}>
-                            v1.0.3 • Powered by Rust & Actix-Web
-                        </p>
+                            <a href="/" style={{
+                                color: '#F97316',
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                textDecoration: 'none'
+                            }}>
+                                ← Back to Home
+                            </a>
+                        </div>
                     </div>
                 </div>
+
+                {/* Footer */}
+                <div style={{
+                    marginTop: '32px',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px'
+                }}>
+                    <p style={{
+                        fontSize: '14px',
+                        fontWeight: 500,
+                        color: 'white',
+                        margin: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <svg
+                            style={{
+                                width: '16px',
+                                height: '16px',
+                                marginRight: '8px'
+                            }}
+                            fill="#06B6D4"
+                            viewBox="0 0 20 20"
+                        >
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        <span style={{ color: '#06B6D4' }}>Secured with JWT & Argon2</span>
+                    </p>
+                    <p style={{
+                        fontSize: '12px',
+                        color: '#334155',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        margin: 0
+                    }}>
+                        v1.0.3 • Powered by Rust & Actix-Web
+                    </p>
+                </div>
             </div>
-        </>
+        </div>
     );
 }

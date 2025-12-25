@@ -4,110 +4,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - FreeRadical CMS</title>
+    <title>Simple Admin - FreeRadical CMS</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
         }
 
-        .gradient-bg {
-            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+        .hard-shadow {
+            box-shadow: 8px 8px 0px rgba(15, 23, 42, 0.3);
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
     </style>
 </head>
 
-<body class="min-h-screen gradient-bg flex items-center justify-center p-4">
-    <div class="w-full max-w-md">
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div style="width: 100%; max-width: 448px;">
         <!-- Login Card -->
-        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="hard-shadow" style="background-color: #1E293B; border-radius: 24px; overflow: hidden;">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center">
-                <div class="flex items-center justify-center space-x-3 mb-4">
-                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                    </svg>
-                    <h1 class="text-3xl font-bold text-white">FreeRadical CMS</h1>
-                </div>
-                <p class="text-indigo-100">Admin Portal Access</p>
+            <div
+                style="padding: 40px 32px; text-align: center; background: linear-gradient(135deg, #334155 0%, #1E293B 100%); border-bottom: 3px solid #F97316;">
+                <img src="/static/logo.svg" alt="FreeRadical"
+                    style="width: 80px; height: 80px; margin: 0 auto 16px auto; display: block;">
+                <h1
+                    style="font-size: 36px; font-weight: 900; color: white; margin-bottom: 8px; letter-spacing: -0.04em;">
+                    FreeRadical
+                </h1>
+                <p class="code-font"
+                    style="color: #F97316; font-size: 12px; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 4px;">
+                    SIMPLE ADMIN
+                </p>
+                <p style="color: #9CA3AF; font-size: 13px;">Lightweight API Access</p>
             </div>
 
-            <!-- Login Form -->
-            <div class="p-8">
-                <form id="loginForm" class="space-y-6">
-                    <div id="errorMessage" class="hidden p-4 bg-red-50 border border-red-200 rounded-lg">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            <span class="text-sm text-red-700" id="errorText">Invalid credentials</span>
-                        </div>
+            <!-- Form -->
+            <div style="padding: 40px 32px;">
+                <form id="loginForm" style="display: flex; flex-direction: column; gap: 24px;">
+                    <div id="errorMessage"
+                        style="display: none; padding: 16px; border-radius: 12px; background-color: #991B1B; border-left: 4px solid #DC2626; box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.2);">
+                        <p style="font-size: 14px; color: white; font-weight: 500; margin: 0;"></p>
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                        <input type="email" id="email" name="email" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                            placeholder="admin@freeradical.cms">
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input type="password" id="password" name="password" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
-                            placeholder="Enter your password">
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center">
-                            <input type="checkbox"
-                                class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                            <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                        <label
+                            style="display: block; font-size: 12px; font-weight: 700; color: #F97316; margin-bottom: 8px; letter-spacing: 0.05em;"
+                            class="code-font">
+                            EMAIL ADDRESS
                         </label>
-                        <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Forgot
-                            password?</a>
+                        <input type="email" id="email" required
+                            style="width: 100%; padding: 14px 16px; background-color: #0F172A; border: 2px solid #334155; border-radius: 12px; color: white; font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none;"
+                            placeholder="admin@freeradical.dev" onfocus="this.style.borderColor='#F97316'"
+                            onblur="this.style.borderColor='#334155'" />
                     </div>
 
-                    <button type="submit"
-                        class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                        Sign In
+                    <div>
+                        <label
+                            style="display: block; font-size: 12px; font-weight: 700; color: #F97316; margin-bottom: 8px; letter-spacing: 0.05em;"
+                            class="code-font">
+                            PASSWORD
+                        </label>
+                        <input type="password" id="password" required
+                            style="width: 100%; padding: 14px 16px; background-color: #0F172A; border: 2px solid #334155; border-radius: 12px; color: white; font-family: 'JetBrains Mono', monospace; font-size: 14px; outline: none;"
+                            placeholder="••••••••" onfocus="this.style.borderColor='#F97316'"
+                            onblur="this.style.borderColor='#334155'" />
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="code-font"
+                        style="width: 100%; margin-top: 32px; padding: 16px 24px; background-color: #F97316; color: white; border: none; border-radius: 12px; font-size: 14px; font-weight: 900; letter-spacing: 0.1em; cursor: pointer; box-shadow: 8px 8px 0px rgba(15, 23, 42, 0.3); transition: all 0.2s;"
+                        onmouseover="this.style.boxShadow='4px 4px 0px rgba(15, 23, 42, 0.3)'"
+                        onmouseout="this.style.boxShadow='8px 8px 0px rgba(15, 23, 42, 0.3)'">
+                        ACCESS SYSTEM
                     </button>
                 </form>
 
-                <div class="mt-6 pt-6 border-t border-gray-200 text-center">
-                    <p class="text-sm text-gray-600">
-                        <a href="/" class="text-indigo-600 hover:text-indigo-700 font-medium">← Back to Home</a>
-                    </p>
+                <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid #334155; text-align: center;">
+                    <a href="/"
+                        style="color: #06B6D4; font-size: 13px; font-weight: 700; text-decoration: none; letter-spacing: 0.05em;"
+                        class="code-font">
+                        ← HOMEPAGE
+                    </a>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Info -->
-        <div class="mt-8 text-center text-white">
-            <p class="text-sm opacity-90">
-                <svg class="w-4 h-4 inline-block mr-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd"
-                        d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                        clip-rule="evenodd" />
-                </svg>
-                Secured with JWT Authentication & Argon2 Encryption
+        <!-- Footer -->
+        <div style="margin-top: 32px; text-align: center;">
+            <p class="code-font" style="font-size: 12px; color: #334155; letter-spacing: 0.05em;">
+                JWT + ARGON2 • RUST v1.92 • ACTIX-WEB v4
             </p>
-            <p class="text-xs opacity-75 mt-2">Powered by Rust & Actix-Web v4</p>
         </div>
     </div>
 
@@ -115,41 +107,50 @@
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const errorMessage = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            errorMessage.classList.add('hidden');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = errorDiv.querySelector('p');
+            const submitBtn = document.getElementById('submitBtn');
 
-            const formData = new FormData(e.target);
-            const credentials = {
-                email: formData.get('email'),
-                password: formData.get('password')
-            };
+            // Hide error
+            errorDiv.style.display = 'none';
+
+            // Loading state
+            submitBtn.textContent = 'AUTHENTICATING...';
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
 
             try {
-                const response = await fetch('/auth/login', {
+                const response = await fetch('http://localhost:8000/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(credentials)
+                    body: JSON.stringify({ email, password }),
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    // Store token if needed
-                    if (data.token) {
-                        localStorage.setItem('auth_token', data.token);
-                    }
-                    // Redirect to admin dashboard
-                    window.location.href = '/admin/dashboard';
+                const data = await response.json();
+
+                if (response.ok && data.token) {
+                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('user_email', email);
+
+                    // Success - redirect  
+                    submitBtn.textContent = 'ACCESS GRANTED';
+                    submitBtn.style.backgroundColor = '#06B6D4';
+                    setTimeout(() => {
+                        window.location.href = '/admin';
+                    }, 500);
                 } else {
-                    const error = await response.json();
-                    errorText.textContent = error.message || 'Invalid email or password';
-                    errorMessage.classList.remove('hidden');
+                    throw new Error(data.message || 'Authentication failed');
                 }
             } catch (error) {
-                errorText.textContent = 'Connection error. Please try again.';
-                errorMessage.classList.remove('hidden');
+                errorText.textContent = error.message || 'Invalid credentials';
+                errorDiv.style.display = 'block';
+                submitBtn.textContent = 'ACCESS SYSTEM';
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
             }
         });
     </script>
