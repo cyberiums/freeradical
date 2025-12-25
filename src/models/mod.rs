@@ -45,28 +45,37 @@ pub trait Joinable<TLeft, TRight, TPrimary> {
     ) -> Result<(TLeft, Vec<TRight>), diesel::result::Error>;
 }
 
-pub fn format_connection_string(conf: LocalConfig) -> String {
-    match conf.mysql_url {
-        Some(mysql_url) => {
+pub fn format_connection_string(conf: config_models::LocalConfig) -> String {
+    // First check for DATABASE_URL environment variable (supports both MySQL and PostgreSQL)
+    if let Ok(database_url) = std::env::var("DATABASE_URL") {
+        return database_url;
+    }
+    
+    // Fall back to MySQL config if available
+    if let (Some(username), Some(password), Some(database), Some(url), Some(port)) = (
+        conf.mysql_username,
+        conf.mysql_password,
+        conf.mysql_database,
+        conf.mysql_url,
+        conf.mysql_port,
+    ) {
+        if url.contains(':') {
+            format!(
+                "mysql://{}:{}@{}:{}/ {}",
+                username,
+                password,
+                url.split(":").collect::<Vec<&str>>()[0],
+                url.split(":").collect::<Vec<&str>>()[1],
+                database
+            )
+        } else {
             format!(
                 "mysql://{}:{}@{}:{}/{}",
-                conf.mysql_username,
-                conf.mysql_password,
-                mysql_url,
-                conf.mysql_port.unwrap(),
-                conf.mysql_database
+                username, password, url, port, database
             )
         }
-        None if std::env::var("MYSQL_UNIX_PORT").is_ok() => {
-            format!(
-                "mysql://{}:{}@/{}", conf.mysql_username,
-                conf.mysql_password,
-                conf.mysql_database
-            )
-        }
-        None => {
-            panic!("Must supply one of the following: [mysql_url], [sql_name | socket_dir]")
-        }
+    } else {
+        panic!("Either DATABASE_URL or MySQL configuration (username, password, database, url, port) must be provided");
     }
 }
 

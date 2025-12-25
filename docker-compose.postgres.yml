@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: freeradical_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-freeradical}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-freeradical}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: freeradical_redis_postgres
+    ports:
+      - "${REDIS_PORT:-6380}:6379"
+    volumes:
+      - redis_data_postgres:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cms:
+    build: .
+    container_name: freeradical_cms_postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-freeradical}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-freeradical}
+      # MySQL vars required by app code (not used with PostgreSQL but needed for compilation)
+      APP_MYSQL_USERNAME: unused
+      APP_MYSQL_PASSWORD: unused
+      APP_MYSQL_DATABASE: unused
+      APP_MYSQL_URL: unused
+      APP_MYSQL_PORT: 3306
+      APP_BIND_ADDRESS: 0.0.0.0
+      APP_BIND_PORT: 8000
+      APP_JWT_KEY: ${JWT_SECRET:-change-this-in-production}
+      APP_MAX_REQ: 100
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
+      REDIS_URL: redis://redis:6379
+      RUST_LOG: info
+    ports:
+      - "${APP_PORT:-8001}:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  admin:
+    build: ./admin
+    container_name: freeradical_admin_postgres
+    depends_on:
+      - cms
+    ports:
+      - "${ADMIN_PORT:-3001}:80"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data_postgres:
