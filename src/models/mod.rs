@@ -8,6 +8,7 @@ pub mod media_models;
 pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
+pub mod db_connection;  // Database abstraction layer
 
 use actix_web::web;
 use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
@@ -15,6 +16,9 @@ use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManag
 use crate::services::errors_service::CustomHttpError;
 
 use self::config_models::LocalConfig;
+
+// Export database abstraction layer types
+pub use db_connection::{DatabasePool, PooledDatabaseConnection, create_pool, detect_database_type};
 
 pub type MySQLPool = Pool<ConnectionManager<MysqlConnection>>;
 pub type MySQLPooledConnection = PooledConnection<ConnectionManager<MysqlConnection>>;
