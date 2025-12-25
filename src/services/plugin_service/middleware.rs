@@ -1,5 +1,5 @@
 use actix_web::dev::{Service, ServiceRequest, ServiceResponse, Transform};
-use actix_web::Error;
+use actix_web::{Error, body::BoxBody};
 use std::future::{ready, Ready};
 use std::pin::Pin;
 use std::task::{Context, Poll};
@@ -18,13 +18,14 @@ impl PluginMiddleware {
     }
 }
 
-impl<S, B> Transform<S> for PluginMiddleware
+// actix-web v4: Transform<S, ServiceRequest>
+impl<S, B> Transform<S, ServiceRequest> for PluginMiddleware
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
+    // type Request removed in v4
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Transform = PluginMiddlewareService<S>;
@@ -44,22 +45,23 @@ pub struct PluginMiddlewareService<S> {
     registry: Arc<PluginRegistry>,
 }
 
-impl<S, B> Service for PluginMiddlewareService<S>
+// actix-web v4: Service<ServiceRequest>
+impl<S, B> Service<ServiceRequest> for PluginMiddlewareService<S>
 where
-    S: Service<Request = ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error> + 'static,
     S::Future: 'static,
     B: 'static,
 {
-    type Request = ServiceRequest;
+    // type Request removed in v4
     type Response = ServiceResponse<B>;
     type Error = Error;
     type Future = Pin<Box<dyn std::future::Future<Output = Result<Self::Response, Self::Error>>>>;
 
-    fn poll_ready(&mut self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.service.borrow_mut().poll_ready(ctx)
     }
 
-    fn call(&mut self, req: ServiceRequest) -> Self::Future {
+    fn call(&self, req: ServiceRequest) -> Self::Future {
         let service = self.service.clone();
         let registry = self.registry.clone();
 

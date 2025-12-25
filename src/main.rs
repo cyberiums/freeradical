@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_ratelimit::{MemoryStore, MemoryStoreActor, RateLimiter};
+use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use diesel::mysql::MysqlConnection;
@@ -87,7 +87,12 @@ async fn main() -> std::io::Result<()> {
     // Initialize GraphQL Schema
     let graphql_schema = web::Data::new(graphql::create_schema());
 
-    let store = MemoryStore::new();
+    // Configure rate limiting with actix-governor
+    let governor_conf = GovernorConfigBuilder::default()
+        .seconds_per_request(1)  // 1 request per second = 60 per minute
+        .burst_size(conf.max_req.into())
+        .finish()
+        .unwrap();
 
     // Initialize Plugin Registry
     let plugin_registry = std::sync::Arc::new(services::plugin_service::PluginRegistry::new());
@@ -139,15 +144,10 @@ async fn main() -> std::io::Result<()> {
             .service(ModuleRouter::new())
             .service(CategoryRouter::new());
 
-        let rate_limiting = RateLimiter::new(
-            MemoryStoreActor::from(store.clone()).start())
-                .with_interval(Duration::from_secs(60))
-                .with_max_requests(usize::from(conf.max_req));
-
         App::new()
             .wrap(cors)
             .wrap(Logger::new("%a -> %U | %Dms "))
-            .wrap(rate_limiting)
+            .wrap(Governor::new(&governor_conf))
             .service(api_scope)
             .app_data(web::Data::from(plugin_registry.clone()))
             .wrap(services::plugin_service::middleware::PluginMiddleware::new(plugin_registry.clone()))
@@ -184,7 +184,7 @@ async fn main() -> std::io::Result<()> {
             // .service(controllers::dashboard_controller::top_pages)
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .default_service(web::get().to(controllers::page_controllers::display_page))
-            .data(pool.clone())
+            .app_data(web::Data::new(pool.clone()))
             .app_data(handlebars_ref.clone())
             .app_data(payment_registry.clone())
     })

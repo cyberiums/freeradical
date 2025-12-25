@@ -99,16 +99,17 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
             Err(_) => return HttpResponse::BadRequest().json("Invalid multipart data"),
         };
         
-        let content_disposition = field.content_disposition();
-        let field_name = content_disposition.get_name().unwrap_or("");
+        // In actix-multipart v0.7, content_disposition() was removed
+        // Field metadata is accessed differently
+        let field_name = field.name();
         
         match field_name {
-            "file" => {
-                // Get original filename
-                filename = content_disposition
-                    .get_filename()
-                    .unwrap_or("unknown")
-                    .to_string();
+            Some("file") => {
+                // Get original filename from field
+                filename = match field.content_disposition().and_then(|cd| cd.get_filename()) {
+                    Some(name) => name.to_string(),
+                    None => "unknown".to_string(),
+                };
                 
                 // Stream file data
                 while let Some(chunk) = field.next().await {
@@ -126,7 +127,7 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
                     }
                 }
             }
-            "alt_text" => {
+            Some("alt_text") => {
                 let mut value = String::new();
                 while let Some(chunk) = field.next().await {
                     if let Ok(data) = chunk {
@@ -137,7 +138,7 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
                     alt_text = Some(value);
                 }
             }
-            "caption" => {
+            Some("caption") => {
                 let mut value = String::new();
                 while let Some(chunk) = field.next().await {
                     if let Ok(data) = chunk {
@@ -148,7 +149,7 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
                     caption = Some(value);
                 }
             }
-            "folder" => {
+            Some("folder") => {
                 let mut value = String::new();
                 while let Some(chunk) = field.next().await {
                     if let Ok(data) = chunk {
