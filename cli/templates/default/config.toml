@@ -1,0 +1,23 @@
+# FreeRadical CMS Configuration
+
+[server]
+host = "127.0.0.1"
+port = 8000
+max_requests_per_minute = 60
+
+[database]
+url = "mysql://user:password@localhost/freeradical"
+pool_size = 10
+
+[cache]
+enabled = true
+redis_url = "redis://127.0.0.1:6379"
+default_ttl = 3600
+
+[security]
+jwt_secret = "change-this-in-production"
+jwt_expiration = 86400  # 24 hours
+
+[uploads]
+max_file_size = 10485760  # 10MB
+allowed_types = ["image/jpeg", "image/png", "image/gif", "image/webp"]

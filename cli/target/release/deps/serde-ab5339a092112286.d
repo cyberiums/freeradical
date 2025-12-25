@@ -1,0 +1,14 @@
+/Users/prabhatsingh/freeradical-cli/target/release/deps/serde-ab5339a092112286.d: /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/prabhatsingh/freeradical-cli/target/release/build/serde-4135d59f04efbdca/out/private.rs
+
+/Users/prabhatsingh/freeradical-cli/target/release/deps/libserde-ab5339a092112286.rlib: /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/prabhatsingh/freeradical-cli/target/release/build/serde-4135d59f04efbdca/out/private.rs
+
+/Users/prabhatsingh/freeradical-cli/target/release/deps/libserde-ab5339a092112286.rmeta: /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs /Users/prabhatsingh/freeradical-cli/target/release/build/serde-4135d59f04efbdca/out/private.rs
+
+/Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/lib.rs:
+/Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/integer128.rs:
+/Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/mod.rs:
+/Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/de.rs:
+/Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.228/src/private/ser.rs:
+/Users/prabhatsingh/freeradical-cli/target/release/build/serde-4135d59f04efbdca/out/private.rs:
+
+# env-dep:OUT_DIR=/Users/prabhatsingh/freeradical-cli/target/release/build/serde-4135d59f04efbdca/out

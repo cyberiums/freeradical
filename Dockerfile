@@ -1,25 +1,38 @@
-FROM rustlang/rust:nightly-buster-slim as cargo-build
-RUN apt update
-RUN apt install -y default-libmysqlclient-dev pkg-config libssl-dev
-WORKDIR /usr/src/radical
-COPY . .
-RUN cargo install --path .
+FROM rustlang/rust:nightly as builder
 
-FROM debian:buster-slim
-RUN apt update
-RUN apt install -y default-libmysqlclient-dev pkg-config libssl-dev
-WORKDIR /usr/src/radical
-COPY --from=cargo-build /usr/src/radical/target/release/radical /usr/bin/radical
+WORKDIR /app
+
+# Copy manifests
+COPY Cargo.toml Cargo.lock ./
+
+# Copy source
+COPY src ./src
+COPY migrations ./migrations
+
+# Build release
+RUN cargo build --release
+
+# Runtime stage
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    libssl3 \
+    default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /app/target/release/freeradical /app/freeradical
+
+# Copy required directories
 COPY templates ./templates
 COPY migrations ./migrations
-COPY wait-for-it.sh .
 
-ENV APP_PRODUCTION=true
+# Create uploads directory
+RUN mkdir -p /app/uploads
 
-# Defaulted just in case someone wants to use mysqld.sock as their socket.
-# This file doesn't even exist in the fs so I don't know why this would be defaulted here?
-ENV MYSQL_UNIX_PORT = /var/lib/mysql/mysqld.sock
+EXPOSE 8000
 
-RUN ln -s /var/lib/mysql/mysqld.sock ${SOCKET_PATH}
-
-CMD [ "radical" ]
+CMD ["./freeradical"]

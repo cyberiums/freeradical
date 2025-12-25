@@ -81,7 +81,7 @@ impl CacheService {
         
         if let Some(ref client) = self.client {
             if let Ok(mut conn) = client.get_connection() {
-                let result: RedisResult<()> = conn.set_ex(key, value, ttl_seconds);
+                let result: RedisResult<()> = conn.set_ex(key, value, ttl_seconds as u64);
                 return result.is_ok();
             }
         }

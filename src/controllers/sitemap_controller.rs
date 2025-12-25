@@ -1,4 +1,4 @@
-use actix_web::{HttpResponse, Responder};
+use actix_web::{HttpRequest, HttpResponse, Responder};
 use diesel::prelude::*;
 use flate2::Compression;
 use flate2::write::GzEncoder;
@@ -8,7 +8,7 @@ use crate::services::database_service;
 
 /// Generate XML sitemap with gzip compression support
 /// Standardized to manual routing (no macro)
-pub async fn sitemap() -> impl Responder {
+pub async fn sitemap(req: HttpRequest) -> impl Responder {
     use crate::schema::pages::dsl::*;
     
     let mut conn = database_service::establish_connection();
@@ -48,22 +48,45 @@ pub async fn sitemap() -> impl Responder {
             
             sitemap.push_str("</urlset>");
             
-            // Note: Gzip compression available but not auto-enabled
-            // Can be enabled via Accept-Encoding header in future
+            // Check if client supports gzip
+            let accepts_gzip = req
+                .headers()
+                .get("accept-encoding")
+                .and_then(|h| h.to_str().ok())
+                .map(|s| s.contains("gzip"))
+                .unwrap_or(false);
             
-            HttpResponse::Ok()
-                .content_type("application/xml; charset=utf-8")
-                .set_header("X-Sitemap-Count", page_count.to_string())
-                .body(sitemap)
+            if accepts_gzip {
+                // Return gzipped sitemap
+                match compress_sitemap(&sitemap) {
+                    Ok(compressed) => HttpResponse::Ok()
+                        .content_type("application/xml; charset=utf-8")
+                        .set_header("Content-Encoding", "gzip")
+                        .set_header("X-Sitemap-Count", page_count.to_string())
+                        .body(compressed),
+                    Err(_) => {
+                        // Fallback to uncompressed
+                        HttpResponse::Ok()
+                            .content_type("application/xml; charset=utf-8")
+                            .set_header("X-Sitemap-Count", page_count.to_string())
+                            .body(sitemap)
+                    }
+                }
+            } else {
+                // Return uncompressed sitemap
+                HttpResponse::Ok()
+                    .content_type("application/xml; charset=utf-8")
+                    .set_header("X-Sitemap-Count", page_count.to_string())
+                    .body(sitemap)
+            }
         }
         Err(_) => HttpResponse::InternalServerError().body("Error generating sitemap"),
     }
 }
 
-/// Compress sitemap with gzip (helper function for future use)
-#[allow(dead_code)]
+/// Compress sitemap with gzip
 fn compress_sitemap(xml: &str) -> Result<Vec<u8>, std::io::Error> {
-    let mut encoder =GzEncoder::new(Vec::new(), Compression::default());
+    let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
     encoder.write_all(xml.as_bytes())?;
     encoder.finish()
 }

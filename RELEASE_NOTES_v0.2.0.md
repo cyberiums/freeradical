@@ -308,7 +308,7 @@ Before deploying to production:
 ## Credits
 
 **Maintained by**: FastBuilder.ai  
-**Contributors**: Spencer Bills, Community Contributors  
+**Contributors**: FastBuilder.AI, Community Contributors  
 **Special Thanks**: Rust community, Actix-web team, Diesel team
 
 ---
