@@ -45,7 +45,7 @@ futures-util = "0.3"  # For async file I/O
 tokio = { version = "1", features = ["time"] }  # For async runtime
 time = "0.2.23"
 redis = { version = "1.0.2", features = ["tokio-comp", "connection-manager", "aio"] }
-deadpool-redis = "0.22"  # Connection pooling for Redis
+deadpool-redis = "0.14"  # Connection pooling for Redis
 sha2 = "0.10"  # Updated for compatibility with digest 0.10
 flate2 = "1.0"  # For sitemap compression
 image = "0.24"  # For image dimension extraction
