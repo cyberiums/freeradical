@@ -1,7 +1,6 @@
 use actix_web::http::header::HeaderValue;
 use actix_web::{dev::Payload, web, FromRequest, HttpRequest};
-use argon2::{Argon2, PasswordHasher};
-use password_hash::{SaltString, PasswordHash, PasswordVerifier};
+use argon2::{Argon2, PasswordHasher, password_hash::SaltString};
 use diesel::MysqlConnection;
 use futures::{future::LocalBoxFuture, Future};
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
@@ -89,8 +88,9 @@ pub fn encrypt_password(password: &String) -> Result<String, CryptoError> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
 
-    let password_hash = argon2.hash_password(password.as_bytes(), &salt)?;
-    Ok(password_hash.to_string())
+    return Ok(argon2
+        .hash_password_simple(password.as_bytes(), &salt)?
+        .to_string());
 }
 
 #[derive(Debug, Serialize, Deserialize)]
