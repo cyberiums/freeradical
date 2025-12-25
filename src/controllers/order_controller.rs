@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
 
-use crate::models::{pool_handler, DatabasePool};
+use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
 use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
 use crate::services::errors_service::CustomHttpError;
 use crate::services::auth_service::Claims;
@@ -45,10 +45,20 @@ pub async fn list_orders(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
-    let user_orders = orders::table
-        .filter(orders::user_uuid.eq(&claim.sub))
-        .order(orders::created_at.desc())
-        .load::<Order>(&mut conn)?;
+    let user_orders = match &mut conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            orders::table
+                .filter(orders::user_uuid.eq(&claim.sub))
+                .order(orders::created_at.desc())
+                .load::<Order>(c)?
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            orders::table
+                .filter(orders::user_uuid.eq(&claim.sub))
+                .order(orders::created_at.desc())
+                .load::<Order>(c)?
+        }
+    };
     
     Ok(HttpResponse::Ok().json(user_orders))
 }
@@ -61,35 +71,70 @@ pub async fn get_order(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
-    // Get order and verify ownership
-    let order = orders::table
-        .find(*id)
-        .filter(orders::user_uuid.eq(&claim.sub))
-        .first::<Order>(&mut conn)
-        .map_err(|_| CustomHttpError::NotFound)?;
-    
-    // Get order items with product details
-    let items = order_items::table
-        .inner_join(products::table)
-        .filter(order_items::order_id.eq(order.id))
-        .select((
-            order_items::id,
-            order_items::product_id,
-            products::name,
-            order_items::quantity,
-            order_items::price_cents,
-        ))
-        .load::<(i64, i64, String, i32, i64)>(&mut conn)?
-        .into_iter()
-        .map(|(id, product_id, product_name, quantity, price_cents)| OrderItemWithProduct {
-            id,
-            product_id,
-            product_name,
-            quantity,
-            price_cents,
-            subtotal_cents: price_cents * quantity as i64,
-        })
-        .collect();
+    let (order, items) = match &mut conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            let ord = orders::table
+                .find(*id)
+                .filter(orders::user_uuid.eq(&claim.sub))
+                .first::<Order>(c)
+                .map_err(|_| CustomHttpError::NotFound)?;
+            
+            let itms = order_items::table
+                .inner_join(products::table)
+                .filter(order_items::order_id.eq(ord.id))
+                .select((
+                    order_items::id,
+                    order_items::product_id,
+                    products::name,
+                    order_items::quantity,
+                    order_items::price_cents,
+                ))
+                .load::<(i64, i64, String, i32, i64)>(c)?
+                .into_iter()
+                .map(|(id, product_id, product_name, quantity, price_cents)| OrderItemWithProduct {
+                    id,
+                    product_id,
+                    product_name,
+                    quantity,
+                    price_cents,
+                    subtotal_cents: price_cents * quantity as i64,
+                })
+                .collect();
+            
+            (ord, itms)
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            let ord = orders::table
+                .find(*id)
+                .filter(orders::user_uuid.eq(&claim.sub))
+                .first::<Order>(c)
+                .map_err(|_| CustomHttpError::NotFound)?;
+            
+            let itms = order_items::table
+                .inner_join(products::table)
+                .filter(order_items::order_id.eq(ord.id))
+                .select((
+                    order_items::id,
+                    order_items::product_id,
+                    products::name,
+                    order_items::quantity,
+                    order_items::price_cents,
+                ))
+                .load::<(i64, i64, String, i32, i64)>(c)?
+                .into_iter()
+                .map(|(id, product_id, product_name, quantity, price_cents)| OrderItemWithProduct {
+                    id,
+                    product_id,
+                    product_name,
+                    quantity,
+                    price_cents,
+                    subtotal_cents: price_cents * quantity as i64,
+                })
+                .collect();
+            
+            (ord, itms)
+        }
+    };
     
     let response = OrderResponse {
         order: order.clone(),
@@ -108,66 +153,136 @@ pub async fn create_order(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
-    // Validate all products exist and calculate total
-    let product_ids: Vec<i64> = body.items.iter().map(|item| item.product_id).collect();
-    let products_list = products::table
-        .filter(products::id.eq_any(&product_ids))
-        .filter(products::is_active.eq(true))
-        .load::<Product>(&mut conn)?;
-    
-    if products_list.len() != product_ids.len() {
-        return Err(CustomHttpError::BadRequest);
-    }
-    
-    // Calculate total
-    let mut total_cents: i64 = 0;
-    let mut order_item_data = Vec::new();
-    
-    for item_input in &body.items {
-        let product = products_list
-            .iter()
-            .find(|p| p.id == item_input.product_id)
-            .ok_or(CustomHttpError::BadRequest)?;
-        
-        let subtotal = product.price_cents * item_input.quantity as i64;
-        total_cents += subtotal;
-        
-        order_item_data.push((item_input.product_id, item_input.quantity, product.price_cents));
-    }
-    
-    // Create order
-    let new_order = NewOrder {
-        user_uuid: claim.sub.clone(),
-        total_cents,
-        currency: body.currency.clone(),
-        status: "pending".to_string(),
-        payment_provider: None,
-        payment_intent_id: None,
-        metadata: None,
+    let (order_id, total_cents) = match &mut conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            // Validate all products exist and calculate total
+            let product_ids: Vec<i64> = body.items.iter().map(|item| item.product_id).collect();
+            let products_list = products::table
+                .filter(products::id.eq_any(&product_ids))
+                .filter(products::is_active.eq(true))
+                .load::<Product>(c)?;
+            
+            if products_list.len() != product_ids.len() {
+                return Err(CustomHttpError::BadRequest);
+            }
+            
+            // Calculate total
+            let mut total_cents: i64 = 0;
+            let mut order_item_data = Vec::new();
+            
+            for item_input in &body.items {
+                let product = products_list
+                    .iter()
+                    .find(|p| p.id == item_input.product_id)
+                    .ok_or(CustomHttpError::BadRequest)?;
+                
+                let subtotal = product.price_cents * item_input.quantity as i64;
+                total_cents += subtotal;
+                
+                order_item_data.push((item_input.product_id, item_input.quantity, product.price_cents));
+            }
+            
+            // Create order
+            let new_order = NewOrder {
+                user_uuid: claim.sub.clone(),
+                total_cents,
+                currency: body.currency.clone(),
+                status: "pending".to_string(),
+                payment_provider: None,
+                payment_intent_id: None,
+                metadata: None,
+            };
+            
+            diesel::insert_into(orders::table)
+                .values(&new_order)
+                .execute(c)?;
+            
+            let order_id = orders::table
+                .order(orders::id.desc())
+                .select(orders::id)
+                .first::<i64>(c)?;
+            
+            // Create order items
+            for (product_id, quantity, price_cents) in order_item_data {
+                let new_item = NewOrderItem {
+                    order_id,
+                    product_id,
+                    quantity,
+                    price_cents,
+                };
+                
+                diesel::insert_into(order_items::table)
+                    .values(&new_item)
+                    .execute(c)?;
+            }
+            
+            (order_id, total_cents)
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            // Validate all products exist and calculate total
+            let product_ids: Vec<i64> = body.items.iter().map(|item| item.product_id).collect();
+            let products_list = products::table
+                .filter(products::id.eq_any(&product_ids))
+                .filter(products::is_active.eq(true))
+                .load::<Product>(c)?;
+            
+            if products_list.len() != product_ids.len() {
+                return Err(CustomHttpError::BadRequest);
+            }
+            
+            // Calculate total
+            let mut total_cents: i64 = 0;
+            let mut order_item_data = Vec::new();
+            
+            for item_input in &body.items {
+                let product = products_list
+                    .iter()
+                    .find(|p| p.id == item_input.product_id)
+                    .ok_or(CustomHttpError::BadRequest)?;
+                
+                let subtotal = product.price_cents * item_input.quantity as i64;
+                total_cents += subtotal;
+                
+                order_item_data.push((item_input.product_id, item_input.quantity, product.price_cents));
+            }
+            
+            // Create order
+            let new_order = NewOrder {
+                user_uuid: claim.sub.clone(),
+                total_cents,
+                currency: body.currency.clone(),
+                status: "pending".to_string(),
+                payment_provider: None,
+                payment_intent_id: None,
+                metadata: None,
+            };
+            
+            diesel::insert_into(orders::table)
+                .values(&new_order)
+                .execute(c)?;
+            
+            let order_id = orders::table
+                .order(orders::id.desc())
+                .select(orders::id)
+                .first::<i64>(c)?;
+            
+            // Create order items
+            for (product_id, quantity, price_cents) in order_item_data {
+                let new_item = NewOrderItem {
+                    order_id,
+                    product_id,
+                    quantity,
+                    price_cents,
+                };
+                
+                diesel::insert_into(order_items::table)
+                    .values(&new_item)
+                    .execute(c)?;
+            }
+            
+            (order_id, total_cents)
+        }
     };
-    
-    diesel::insert_into(orders::table)
-        .values(&new_order)
-        .execute(&mut conn)?;
-    
-    let order_id = orders::table
-        .order(orders::id.desc())
-        .select(orders::id)
-        .first::<i64>(&mut conn)?;
-    
-    // Create order items
-    for (product_id, quantity, price_cents) in order_item_data {
-        let new_item = NewOrderItem {
-            order_id,
-            product_id,
-            quantity,
-            price_cents,
-        };
-        
-        diesel::insert_into(order_items::table)
-            .values(&new_item)
-            .execute(&mut conn)?;
-    }
     
     Ok(HttpResponse::Created().json(serde_json::json!({
         "order_id": order_id,
@@ -180,7 +295,7 @@ pub async fn create_order(
 // Update order status
 #[derive(Deserialize)]
 pub struct UpdateOrderStatusRequest {
-    pub status: String, // pending, processing, completed, cancelled
+    pub status: String,
 }
 
 pub async fn update_order_status(
@@ -197,13 +312,26 @@ pub async fn update_order_status(
         return Err(CustomHttpError::BadRequest);
     }
     
-    let updated = diesel::update(
-        orders::table
-            .find(*id)
-            .filter(orders::user_uuid.eq(&claim.sub))
-    )
-    .set(orders::status.eq(&body.status))
-    .execute(&mut conn)?;
+    let updated = match &mut conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            diesel::update(
+                orders::table
+                    .find(*id)
+                    .filter(orders::user_uuid.eq(&claim.sub))
+            )
+            .set(orders::status.eq(&body.status))
+            .execute(c)?
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            diesel::update(
+                orders::table
+                    .find(*id)
+                    .filter(orders::user_uuid.eq(&claim.sub))
+            )
+            .set(orders::status.eq(&body.status))
+            .execute(c)?
+        }
+    };
     
     if updated == 0 {
         return Err(CustomHttpError::NotFound);
@@ -215,7 +343,7 @@ pub async fn update_order_status(
     })))
 }
 
-// Link payment to order (called after payment success)
+// Link payment to order
 #[derive(Deserialize)]
 pub struct LinkPaymentRequest {
     pub payment_provider: String,
@@ -230,17 +358,34 @@ pub async fn link_payment_to_order(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
-    let updated = diesel::update(
-        orders::table
-            .find(*id)
-            .filter(orders::user_uuid.eq(&claim.sub))
-    )
-    .set((
-        orders::payment_provider.eq(&body.payment_provider),
-        orders::payment_intent_id.eq(&body.payment_intent_id),
-        orders::status.eq("processing"),
-    ))
-    .execute(&mut conn)?;
+    let updated = match &mut conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            diesel::update(
+                orders::table
+                    .find(*id)
+                    .filter(orders::user_uuid.eq(&claim.sub))
+            )
+            .set((
+                orders::payment_provider.eq(&body.payment_provider),
+                orders::payment_intent_id.eq(&body.payment_intent_id),
+                orders::status.eq("processing"),
+            ))
+            .execute(c)?
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            diesel::update(
+                orders::table
+                    .find(*id)
+                    .filter(orders::user_uuid.eq(&claim.sub))
+            )
+            .set((
+                orders::payment_provider.eq(&body.payment_provider),
+                orders::payment_intent_id.eq(&body.payment_intent_id),
+                orders::status.eq("processing"),
+            ))
+            .execute(c)?
+        }
+    };
     
     if updated == 0 {
         return Err(CustomHttpError::NotFound);
