@@ -229,11 +229,11 @@ mod tests {
         // This test verifies that track_page_view doesn't panic
         // Actual database insertion tested separately
         AnalyticsService::track_page_view(
-            "/test-page".to_string(),
-            Some("test-uuid".to_string()),
-            "127.0.0.1".to_string(),
-            Some("https://google.com".to_string()),
-            Some("TestAgent/1.0".to_string()),
+            "/test-page",
+            Some("test-uuid"),
+            "127.0.0.1",
+            Some("https://google.com"),
+            Some("TestAgent/1.0"),
         );
         
         // If we get here without panic, test passes
