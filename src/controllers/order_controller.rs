@@ -92,7 +92,7 @@ pub async fn get_order(
         .collect();
     
     let response = OrderResponse {
-        order,
+        order: order.clone(),
         items,
         total_cents: order.total_cents,
     };

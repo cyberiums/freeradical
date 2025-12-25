@@ -22,7 +22,7 @@ pub async fn create_payment_intent(
 ) -> Result<HttpResponse, CustomHttpError> {
     let handler = registry
         .get(&body.provider)
-        .ok_or(CustomHttpError::BadRequest("Payment provider not found".to_string()))?;
+        .ok_or(CustomHttpError::BadRequest)?;
     
     let request = CreatePaymentIntentRequest {
         amount_cents: body.amount_cents,
@@ -54,13 +54,13 @@ pub async fn get_payment_intent(
 ) -> Result<HttpResponse, CustomHttpError> {
     let handler = registry
         .get(&query.provider)
-        .ok_or(CustomHttpError::BadRequest("Payment provider not found".to_string()))?;
+        .ok_or(CustomHttpError::BadRequest)?;
     
     let intent = handler
         .get_payment_intent(&query.intent_id)
         .await
         .map_err(|e| {
-            log::error!("Get payment failed: {}", e);
+            log::error!("Failed to fetch payment intent: {}", e);
             CustomHttpError::InternalServerError
         })?;
     

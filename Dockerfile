@@ -2,6 +2,13 @@ FROM rustlang/rust:nightly as builder
 
 WORKDIR /app
 
+# Install Python development dependencies for pyo3
+RUN apt-get update && apt-get install -y \
+    python3-dev \
+    python3-pip \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy manifests
 COPY Cargo.toml Cargo.lock ./
 
@@ -13,7 +20,7 @@ COPY migrations ./migrations
 RUN cargo build --release
 
 # Runtime stage
-FROM debian:bookworm-slim
+FROM debian:sid-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \

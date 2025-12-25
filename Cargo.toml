@@ -58,7 +58,7 @@ hex = "0.4"  # For hex encoding HMAC signatures
 hmac = "0.12"  # For HMAC-SHA256 signatures
 urlencoding = "2.1"  # For OAuth URL encoding
 liquid = "0.26"
-pyo3 = "0.20"
+# pyo3 = "0.20"  # Not currently used, commented out to avoid Docker build issues
 async-trait = "0.1.89"
 totp-rs = { version = "5.0", features = ["gen_secret", "qr"] }
 base64 = "0.22.1"
