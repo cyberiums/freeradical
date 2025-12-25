@@ -5,9 +5,12 @@ use serde::{Deserialize, Serialize};
 use crate::models::inventory_models::{
     InventoryAuditLog, NewInventoryAuditLog, NewProductVariant, ProductVariant,
 };
-use crate::models::{DbPool, GenericHttpResponse};
-use crate::schema::{inventory_audit_log, product_variants};
+use crate::models::db_connection::DbPool;
 use crate::services::errors_service::CustomHttpError;
+
+// Note: inventory tables not in schema yet - migrations need to run
+// Using placeholder for now
+use crate::schema::{products}; // inventory_audit_log, product_variants};
 
 /// Request body for creating a product variant
 #[derive(Debug, Deserialize)]
