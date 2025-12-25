@@ -2,6 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 use diesel::prelude::*;
+use crate::models::PooledDatabaseConnection;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Permission {
@@ -75,22 +76,27 @@ pub fn user_has_permission(
 ) -> Result<bool, diesel::result::Error> {
     use crate::schema::{user_roles, roles};
     
-    // Get all roles for user - permissions is a JSON field
-    // For now, return true for admin users, false for others
-    // TODO: Implement proper JSON field querying when schema is stabilized
+    let role_count: i64 = match conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            user_roles::table
+                .filter(user_roles::user_id.eq(user_uuid))
+                .count()
+                .get_result(c)?
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            user_roles::table
+                .filter(user_roles::user_id.eq(user_uuid))
+                .count()
+                .get_result(c)?
+        }
+    };
     
-    // Simplified: Check if user has any role assigned
-    let role_count: i64 = user_roles::table
-        .filter(user_roles::user_id.eq(user_uuid))
-        .count()
-        .get_result(conn)?;
-    
-    // If user has any role, grant permission (temporary simplification)
     if role_count > 0 {
         return Ok(true);
     }
     
     Ok(false)
+}
     
     /* Original implementation - requires JSON deserialization support:
     let user_permissions: Vec<serde_json::Value> = user_roles::table
@@ -116,7 +122,6 @@ pub fn user_has_permission(
     
     Ok(false)
     */
-}
 
 /// Check if user owns a resource (for "own" scope permissions)
 pub fn user_owns_resource(
@@ -130,27 +135,25 @@ pub fn user_owns_resource(
     
     match resource_type {
         "pages" => {
-            // TODO: Add created_by field to pages table migration
-            // Current pages schema doesn't have created_by field
-            // For now, return false (no ownership check)
             Ok(false)
-            
-            /* Original code - requires created_by field:
-            let count: i64 = pages::table
-                .filter(pages::uuid.eq(resource_id))
-                .filter(pages::created_by.eq(user_uuid))
-                .count()
-                .get_result(conn)?;
-            Ok(count > 0)
-            */
         }
         "modules" => {
-            // Modules don't have direct ownership, check via page
-            let page_uuid: Option<String> = modules::table
-                .filter(modules::uuid.eq(resource_id))
-                .select(modules::page_uuid)
-                .first(conn)
-                .ok();
+            let page_uuid: Option<String> = match conn {
+                PooledDatabaseConnection::MySQL(ref mut c) => {
+                    modules::table
+                        .filter(modules::uuid.eq(resource_id))
+                        .select(modules::page_uuid)
+                        .first(c)
+                        .ok()
+                }
+                PooledDatabaseConnection::Postgres(ref mut c) => {
+                    modules::table
+                        .filter(modules::uuid.eq(resource_id))
+                        .select(modules::page_uuid)
+                        .first(c)
+                        .ok()
+                }
+            };
             
             if let Some(pid) = page_uuid {
                 user_owns_resource(user_uuid, "pages", &pid, conn)

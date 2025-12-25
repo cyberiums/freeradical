@@ -79,7 +79,7 @@ pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::MysqlConnectio
     ConnectionManager::<MysqlConnection>::new(db_url)
 }
 
-pub fn init_pool(db_url: &str) -> Result<MySQLPool, PoolError> {
+pub fn init_pool(db_url: &str) -> Result<Pool<ConnectionManager<MysqlConnection>>, PoolError> {
     let manager = init_connection(db_url);
     Pool::builder().max_size(2).build(manager)
 }
