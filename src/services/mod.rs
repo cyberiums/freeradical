@@ -9,6 +9,7 @@ pub mod ai_provider_service;  // AI provider management
 pub mod ai_content_service;  // AI content generation
 pub mod metadata_automation_service;  // AI metadata automation
 pub mod semantic_search_service;  // Vector-based semantic search
+pub mod recommendation_service;  // AI recommendations
 pub mod scheduler_service;
 pub mod monitoring_service;
 pub mod field_validation_service;
