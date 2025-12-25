@@ -5,9 +5,16 @@ use serde::{Deserialize, Serialize};
 use crate::models::inventory_models::{
     InventoryAuditLog, NewInventoryAuditLog, NewProductVariant, ProductVariant,
 };
-use crate::models::db_connection::DbPool;
 use crate::schema::{inventory_audit_log, product_variants};
 use crate::services::errors_service::CustomHttpError;
+
+// Import DbPool from parent module where it's defined
+type DbPool = crate::models::DbPool;
+
+#[derive(Serialize)]
+struct GenericHttpResponse {
+    message: String,
+}
 
 /// Request body for creating a product variant
 #[derive(Debug, Deserialize)]
