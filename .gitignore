@@ -1,6 +1,6 @@
 # Rust build artifacts
 /target/
-cli/target/
+**/target/
 debug/
 .env
 
@@ -8,14 +8,16 @@ debug/
 *.pyc
 __pycache__/
 *.egg-info/
-sdks/python/dist/
-sdks/python/build/
+**/dist/
+**/build/
 
 # Node.js dependencies
 node_modules/
+**/node_modules/
 
-# SDK build artifacts
-sdk/*/dist/
+# Build output directories (all locations)
+dist/
+build/
 
 # vscode stuff
 *.code-workspace
