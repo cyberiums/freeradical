@@ -10,3 +10,5 @@ pub mod media_controller;
 pub mod revision_controller;
 pub mod metrics_controller;
 pub mod search_controller;
+pub mod relationship_controller;
+pub mod webhook_controller;
