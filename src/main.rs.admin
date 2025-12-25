@@ -185,9 +185,6 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(|| async {
                 actix_files::NamedFile::open_async("./static/index.html").await
             }))
-            .route("/admin", web::get().to(|| async {
-                actix_files::NamedFile::open_async("./static/admin-portal.html").await
-            }))
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .service(fs::Files::new("/static", "./static"))
             .app_data(web::Data::new(pool.clone()))
