@@ -157,3 +157,7 @@ Built with:
 
 Modern, professional landing page built with Tailwind CSS showcasing the CMS features and technology stack.
 
+
+### Security & Deployment
+- **[HTTPS Setup Guide](./docs/https-setup.md)** - Enable SSL/TLS for production
+
