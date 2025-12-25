@@ -1,6 +1,7 @@
 extern crate notify;
 
 use actix_web::web::Data;
+use handlebars::DirectorySourceOptions;
 use notify::{RecommendedWatcher, RecursiveMode, Watcher};
 use std::sync::mpsc::channel;
 use std::sync::Mutex;
@@ -18,9 +19,11 @@ pub fn watch(hb: Data<Mutex<handlebars::Handlebars<'_>>>) -> notify::Result<()> 
         match rx.recv() {
             Ok(_) => {
                 hb.lock().unwrap().clear_templates();
+                let mut options = DirectorySourceOptions::default();
+                options.tpl_extension = ".hbs".to_string();
                 hb.lock()
                     .unwrap()
-                    .register_templates_directory(".hbs", "./templates")
+                    .register_templates_directory("./templates", options)
                     .unwrap();
             }
             Err(e) => println!("watch error: {:?}", e),

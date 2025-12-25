@@ -38,7 +38,7 @@ fn get(
         Ok(values)
     })();
 
-    out.write(&field.unwrap_or_else(|e| e.desc))?;
+    out.write(&field.unwrap_or_else(|e| e.to_string()))?;
     Ok(())
 }
 
@@ -51,11 +51,11 @@ pub struct ArrayHelper;
 impl HelperDef for ArrayHelper {
     fn call_inner<'reg: 'rc, 'rc>(
         &self,
-        h: &Helper<'reg, 'rc>,
+        h: &Helper<'rc>,
         _: &'reg Handlebars<'reg>,
         ctx: &'rc Context,
         _: &mut RenderContext<'reg, 'rc>,
-    ) -> Result<Option<ScopedJson<'reg, 'rc>>, RenderError> {
+    ) -> Result<Option<ScopedJson<'rc>>, RenderError> {
         let module_title = h
             .param(0)
             .ok_or(RenderError::new(
