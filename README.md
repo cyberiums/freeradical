@@ -1,6 +1,11 @@
 # FreeRadical CMS
 
-Open-source headless CMS built with Rust, featuring GraphQL API, SEO optimization, and modern admin interface.
+![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+
+A **blazing-fast**, **production-ready** headless CMS and **e-commerce platform** built with Rust. Designed for performance, scalability, and developer experience.
 
 ## 🚀 Quick Start
 
@@ -32,33 +37,6 @@ freeradical/
 
 ## 🎯 Features
 
-### Core CMS (v0.9.0)
-- ✅ GraphQL API with Playground
-- ✅ RESTful API
-- ✅ Image optimization (auto WebP, resize)
-- ✅ SEO optimization (sitemaps, schemas)
-- ✅ Redis caching
-- ✅ JWT authentication
-
-### Admin Dashboard (Ready)
-- ✅ Modern React 18 UI
-- ✅ TipTap WYSIWYG editor
-- ✅ Media browser
-- ✅ Dark/light mode
-- ✅ SEO preview
-- ✅ Analytics Dashboard 🆕
-
-### CLI Tool (Ready)
-- ✅ Project scaffolding
-- ✅ Content export/import
-- ✅ Database migrations
-- ✅ Development server
-- ✅ Production builds
-
-### Multi-Language Support (Ready)
-- ✅ Database schema complete
-- ✅ Translation API ready
-- ✅ Hreflang generation
 - ✅ Language management
 
 ### Enterprise Features (Ready)

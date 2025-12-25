@@ -271,6 +271,7 @@ diesel::table! {
 
 diesel::table! {
     users (uuid) {
+        id -> Integer,
         #[max_length = 255]
         uuid -> Varchar,
         #[max_length = 255]
@@ -279,6 +280,9 @@ diesel::table! {
         password -> Varchar,
         #[max_length = 511]
         token -> Nullable<Varchar>,
+        #[max_length = 255]
+        two_factor_secret -> Nullable<Varchar>,
+        two_factor_enabled -> Bool,
     }
 }
 
@@ -306,4 +310,61 @@ diesel::allow_tables_to_appear_in_same_query!(
     users,
     webhooks,
     webhook_logs,
+    products,
+    orders,
+    order_items,
 );
+
+// Commerce tables
+diesel::table! {
+    products (id) {
+        id -> BigInt,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        price_cents -> BigInt,
+        #[max_length = 3]
+        currency -> Varchar,
+        #[max_length = 100]
+        sku -> Nullable<Varchar>,
+        inventory_count -> Nullable<Integer>,
+        is_active -> Bool,
+        metadata -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    orders (id) {
+        id -> BigInt,
+        #[max_length = 255]
+        user_uuid -> Varchar,
+        total_cents -> BigInt,
+        #[max_length = 3]
+        currency -> Varchar,
+        #[max_length = 50]
+        status -> Varchar,
+        #[max_length = 50]
+        payment_provider -> Nullable<Varchar>,
+        #[max_length = 255]
+        payment_intent_id -> Nullable<Varchar>,
+        metadata -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    order_items (id) {
+        id -> BigInt,
+        order_id -> BigInt,
+        product_id -> BigInt,
+        quantity -> Integer,
+        price_cents -> BigInt,
+    }
+}
+
+diesel::joinable!(orders -> users (user_uuid));
+diesel::joinable!(order_items -> orders (order_id));
+diesel::joinable!(order_items -> products (product_id));
