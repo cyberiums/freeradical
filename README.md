@@ -101,9 +101,31 @@ Quick deploy with Docker:
 
 ### Database Configuration
 
-FreeRadical supports **both MySQL and PostgreSQL** with runtime switching:
+FreeRadical supports **both PostgreSQL and MySQL** with runtime switching. **PostgreSQL is recommended** for maximum performance (30-129% faster in benchmarks).
 
-#### MySQL (Default)
+#### PostgreSQL (Default - Recommended 🏆)
+
+```bash
+DATABASE_URL=postgres://freeradical:password@localhost:5432/freeradical
+POSTGRES_USER=freeradical
+POSTGRES_PASSWORD=password
+POSTGRES_DB=freeradical
+```
+
+Start PostgreSQL stack (default):
+```bash
+docker-compose up -d
+# Access at http://localhost:8000 (CMS)
+# Access at http://localhost:3000 (Admin)
+```
+
+Test PostgreSQL:
+```bash
+bash scripts/test_postgres.sh
+```
+
+#### MySQL (Alternative)
+
 ```bash
 DATABASE_URL=mysql://freeradical:password@localhost:3306/freeradical
 APP_MYSQL_USERNAME=freeradical
@@ -113,29 +135,13 @@ APP_MYSQL_DATABASE=freeradical
 
 Start MySQL stack:
 ```bash
-docker-compose up -d
+docker-compose -f docker-compose.mysql.yml up -d
 # Access at http://localhost:8000
 ```
 
 Test MySQL:
 ```bash
 bash scripts/test_mysql.sh
-```
-
-#### PostgreSQL
-```bash
-DATABASE_URL=postgres://freeradical:password@localhost:5432/freeradical
-```
-
-Start PostgreSQL stack:
-```bash
-docker-compose -f docker-compose.postgres.yml up -d
-# Access at http://localhost:8001
-```
-
-Test PostgreSQL:
-```bash
-bash scripts/test_postgres.sh
 ```
 
 **No rebuild required!** Switch databases by changing the `DATABASE_URL` environment variable.

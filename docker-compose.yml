@@ -1,20 +1,19 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: freeradical_mysql
+  postgres:
+    image: postgres:15-alpine
+    container_name: freeradical_postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-freeradical}
-      MYSQL_USER: ${MYSQL_USER:-freeradical}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      POSTGRES_USER: ${POSTGRES_USER:-freeradical}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-freeradical}
     ports:
-      - "${MYSQL_PORT:-5506}:3306"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -32,45 +31,27 @@ services:
       timeout: 5s
       retries: 5
 
-  # PostgreSQL (alternative to MySQL - uncomment to use)
-  # Comment out mysql service and update cms dependencies if using postgres
-  # postgres:
-  #   image: postgres:15-alpine
-  #   container_name: freeradical_postgres
-  #   environment:
-  #     POSTGRES_USER: ${POSTGRES_USER:-freeradical}
-  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-  #     POSTGRES_DB: ${POSTGRES_DB:-freeradical}
-  #   ports:
-  #     - "${POSTGRES_PORT:-5432}:5432"
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
-
   cms:
     build: .
     container_name: freeradical_cms
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
     environment:
-      DATABASE_URL: mysql://${MYSQL_USER:-freeradical}:${MYSQL_PASSWORD:-password}@mysql:3306/${MYSQL_DATABASE:-freeradical}
-      APP_MYSQL_USERNAME: ${MYSQL_USER:-freeradical}
-      APP_MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
-      APP_MYSQL_DATABASE: ${MYSQL_DATABASE:-freeradical}
-      APP_MYSQL_URL: mysql
+      DATABASE_URL: postgres://${POSTGRES_USER:-freeradical}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-freeradical}
+      # MySQL vars required by app code (not used with PostgreSQL but needed for compilation)
+      APP_MYSQL_USERNAME: unused
+      APP_MYSQL_PASSWORD: unused
+      APP_MYSQL_DATABASE: unused
+      APP_MYSQL_URL: unused
       APP_MYSQL_PORT: 3306
       APP_BIND_ADDRESS: 0.0.0.0
       APP_BIND_PORT: 8000
       APP_JWT_KEY: ${JWT_SECRET:-change-this-in-production}
       APP_MAX_REQ: 100
-      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8000}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
       REDIS_URL: redis://redis:6379
       RUST_LOG: info
     ports:
@@ -89,6 +70,5 @@ services:
     restart: unless-stopped
 
 volumes:
-  mysql_data:
+  postgres_data:
   redis_data:
-  # postgres_data:  # Uncomment if using PostgreSQL

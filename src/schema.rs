@@ -3,6 +3,7 @@
 pub mod sql_types {
     #[derive(diesel::sql_types::SqlType)]
     #[diesel(mysql_type(name = "Enum"))]
+    #[diesel(postgres_type(name = "varchar"))]
     pub struct PagesStatusEnum;
 }
 

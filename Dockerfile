@@ -27,6 +27,7 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     libssl3 \
     default-libmysqlclient-dev \
+    libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
