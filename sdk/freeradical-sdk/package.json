@@ -1,0 +1,36 @@
+{
+    "name": "@freeradical/sdk",
+    "version": "0.7.0",
+    "description": "Official TypeScript SDK for FreeRadical CMS",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "prepublishOnly": "npm run build",
+        "test": "echo \"Tests coming soon\""
+    },
+    "keywords": [
+        "cms",
+        "headless",
+        "freeradical",
+        "api",
+        "sdk",
+        "typescript"
+    ],
+    "author": "FreeRadical Team",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cyberiums/freeradical.git",
+        "directory": "sdk/freeradical-sdk"
+    },
+    "devDependencies": {
+        "@types/node": "^20.19.27",
+        "axios": "^1.13.2",
+        "typescript": "^5.9.3"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ]
+}
