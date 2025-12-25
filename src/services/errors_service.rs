@@ -1,34 +1,17 @@
 use actix_web::{error::ResponseError, http::StatusCode, HttpResponse};
 use serde::Serialize;
-use thiserror::Error;
+use std::fmt;
 
 use super::auth_service::CryptoError;
 
-#[derive(Error, Debug)]
+#[derive(Debug)]
 pub enum CustomHttpError {
-    #[error("Incorrect parameter type.")]
-    BadRequest,
-    #[error("Resource not found.")]
-    NotFound,
-    #[error("Unknown Internal Error")]
+    BadRequest(String),
+    Unauthorized(String),
+    Forbidden(String),
+    NotFound(String),
+    InternalServerError(String),
     Unknown,
-    #[error("Internal Server Error")]
-    InternalServerError,
-    #[error("User is not authorized.")]
-    Unauthorized,
-}
-
-/// Provides an interface for getting a description of the request.
-impl CustomHttpError {
-    pub fn descriptor(&self) -> String {
-        match self {
-            Self::BadRequest => String::from("Server was unable to handle data"),
-            Self::Unknown => String::from("Internal server error"),
-            Self::InternalServerError => String::from("Internal server error"),
-            Self::NotFound => String::from("Resource was not found"),
-            Self::Unauthorized => String::from("Not authorized")
-        }
-    }
 }
 
 #[derive(Serialize)]
@@ -38,52 +21,96 @@ struct ErrorResponse {
     message: String,
 }
 
-/// Full implementation of ResponseError trait so that it can be sent back as an error through actix-web.
 impl ResponseError for CustomHttpError {
     fn status_code(&self) -> StatusCode {
-        match *self {
-            Self::BadRequest => StatusCode::BAD_REQUEST,
+        match self {
+            Self::BadRequest(_) => StatusCode::BAD_REQUEST,
+            Self::Unauthorized(_) => StatusCode::UNAUTHORIZED,
+            Self::Forbidden(_) => StatusCode::FORBIDDEN,
+            Self::NotFound(_) => StatusCode::NOT_FOUND,
+            Self::InternalServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
-            Self::InternalServerError => StatusCode::INTERNAL_SERVER_ERROR,
-            Self::NotFound => StatusCode::NOT_FOUND,
-            Self::Unauthorized => StatusCode::UNAUTHORIZED
         }
     }
 
     fn error_response(&self) -> HttpResponse {
-        let status_code = self.status_code();
-        let error_response = ErrorResponse {
-            code: status_code.as_u16(),
-            message: self.descriptor(),
-            error: self.to_string(),
-        };
-
-        HttpResponse::build(status_code).json(error_response)
+        match self {
+            CustomHttpError::BadRequest(msg) => {
+                HttpResponse::BadRequest().json(ErrorResponse {
+                    code: StatusCode::BAD_REQUEST.as_u16(),
+                    error: "Bad Request".to_string(),
+                    message: msg.clone(),
+                })
+            }
+            CustomHttpError::Unauthorized(msg) => {
+                HttpResponse::Unauthorized().json(ErrorResponse {
+                    code: StatusCode::UNAUTHORIZED.as_u16(),
+                    error: "Unauthorized".to_string(),
+                    message: msg.clone(),
+                })
+            }
+            CustomHttpError::Forbidden(msg) => {
+                HttpResponse::Forbidden().json(ErrorResponse {
+                    code: StatusCode::FORBIDDEN.as_u16(),
+                    error: "Forbidden".to_string(),
+                    message: msg.clone(),
+                })
+            }
+            CustomHttpError::NotFound(msg) => {
+                HttpResponse::NotFound().json(ErrorResponse {
+                    code: StatusCode::NOT_FOUND.as_u16(),
+                    error: "Not Found".to_string(),
+                    message: msg.clone(),
+                })
+            }
+            CustomHttpError::InternalServerError(msg) => {
+ HttpResponse::InternalServerError().json(ErrorResponse {
+                    code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
+                    error: "Internal Server Error".to_string(),
+                    message: msg.clone(),
+                })
+            }
+            CustomHttpError::Unknown => {
+                HttpResponse::InternalServerError().json(ErrorResponse {
+                    code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
+                    error: "Internal Server Error".to_string(),
+                    message: "An unknown error occurred".to_string(),
+                })
+            }
+        }
     }
 }
 
-/// Any time an SQL query fails, it gets mapped to here.
+impl fmt::Display for CustomHttpError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            CustomHttpError::BadRequest(msg) => write!(f, "Bad Request: {}", msg),
+            CustomHttpError::Unauthorized(msg) => write!(f, "Unauthorized: {}", msg),
+            CustomHttpError::Forbidden(msg) => write!(f, "Forbidden: {}", msg),
+            CustomHttpError::NotFound(msg) => write!(f, "Not Found: {}", msg),
+            CustomHttpError::InternalServerError(msg) => write!(f, "Internal Server Error: {}", msg),
+            CustomHttpError::Unknown => write!(f, "An unknown error occurred"),
+        }
+    }
+}
+
 impl From<diesel::result::Error> for CustomHttpError {
     fn from(e: diesel::result::Error) -> Self {
         match e {
-            diesel::result::Error::NotFound => CustomHttpError::NotFound,
-            _ => CustomHttpError::Unknown,
+            diesel::result::Error::NotFound => CustomHttpError::NotFound("Resource not found".to_string()),
+            _ => CustomHttpError::InternalServerError(format!("Database error: {}", e)),
         }
     }
 }
 
 impl From<jsonwebtoken::errors::Error> for CustomHttpError {
     fn from(e: jsonwebtoken::errors::Error) -> Self {
-        match e {
-            _ => CustomHttpError::Unknown
-        }
+        CustomHttpError::Unauthorized(format!("JWT error: {}", e))
     }
 }
 
 impl From<CryptoError> for CustomHttpError {
-    fn from(e: CryptoError) -> Self {
-        match e {
-            _ => Self::Unauthorized
-        }
+    fn from(_e: CryptoError) -> Self {
+        CustomHttpError::Unauthorized("Authentication failed".to_string())
     }
 }

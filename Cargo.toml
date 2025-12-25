@@ -39,7 +39,8 @@ log = "0.4.0"
 env_logger = "0.8.4"
 envy = "0.4"
 dotenv = "*"
-uuid = { version = "0.8", features = ["serde", "v4"] }
+uuid = { version = "1.19.0", features = ["v4", "serde"] }
+rust_decimal = "1.36"
 futures = "*"
 futures-util = "0.3"  # For async file I/O
 tokio = { version = "1", features = ["time"] }  # For async runtime
