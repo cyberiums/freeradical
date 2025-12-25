@@ -99,6 +99,20 @@ Quick deploy with Docker:
 
 ## Environment Variables
 
+### Database Configuration
+
+FreeRadical supports both MySQL and PostgreSQL with runtime switching:
+
+```bash
+# MySQL (default)
+DATABASE_URL=mysql://user:password@localhost:3306/freeradical
+
+# PostgreSQL
+DATABASE_URL=postgres://user:password@localhost:5432/freeradical
+```
+
+No rebuild required! Switch databases by changing the `DATABASE_URL` environment variable.
+
 See `.env.sample` for all configuration options.
 
 ---
@@ -141,10 +155,11 @@ MIT
 ## 🙏 Credits
 
 Built with:
-- Rust + Actix-web
-- React + TypeScript + Vite
-- MySQL + Redis
-- TipTap, React Query, Tailwind CSS
+- **Backend:** Rust + Actix-web
+- **Frontend:** React + TypeScript + Vite  
+- **Databases:** MySQL / PostgreSQL (runtime switchable)
+- **Cache:** Redis
+- **Editor:** TipTap, React Query, Tailwind CSS
 
 ---
 
