@@ -60,7 +60,7 @@ export default function Login() {
                     }}>
                         <div style={{ marginBottom: '16px' }}>
                             <img
-                                src="/static/logo.svg"
+                                src="logo.svg"
                                 alt="FreeRadical"
                                 style={{
                                     width: '80px',
