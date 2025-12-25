@@ -65,23 +65,24 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("RUST_LOG", "actix_web=info");
     // env_logger::init();  // REMOVED - already called above at line 47
 
-    let handlebars = Handlebars::new();
-
-    // web::Data is Arc, so we can safely clone it and send it between our watcher and the server.
-    let handlebars_ref = web::Data::new(Mutex::new(handlebars));
-    let hb = handlebars_ref.clone();
-
-    hb.lock()
-        .unwrap()
-        .register_templates_directory(".hbs", "./templates")
-        .unwrap();
-
+    // Initialize Template Service (Supports Handlebars + Liquid)
+    let template_service = services::template_service::TemplateService::new();
+    
+    // Register templates
+    template_service.load_templates("./templates").unwrap();
+    
+    // Legacy support: Create web::Data from the inner Arc that TemplateService holds.
+    // This allows existing controllers to continue accessing "Data<Mutex<Handlebars>>"
+    let handlebars_ref = web::Data::from(template_service.get_handlebars());
+    
     // Registers all default handlebars functions.
     helpers::default::register_helpers(handlebars_ref.clone());
 
-    // Registers the fs watcher that updates the templates in memory every time a template is changed.
-    // This is what enables hot reload.
-    std::thread::spawn(|| watch::watch(hb));
+    // Registers the fs watcher
+    // We pass the legacy ref to the watcher for now.
+    // Ideally, watcher should trigger template_service.reload()
+    let hb_for_watch = handlebars_ref.clone();
+    std::thread::spawn(|| watch::watch(hb_for_watch));
 
     // Initialize GraphQL Schema
     let graphql_schema = web::Data::new(graphql::create_schema());

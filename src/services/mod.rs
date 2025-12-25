@@ -12,6 +12,8 @@ pub mod search_service;
 pub mod cache_service_v2;
 pub mod webhook_service;
 pub mod image_service;
+pub mod plugin_service;
+pub mod template_service;
 // Services below require migrations to be run first
 // pub mod language_service;
 // pub mod analytics_service_v2;
