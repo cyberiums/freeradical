@@ -1,0 +1,184 @@
+use actix_web::{web, HttpResponse};
+use diesel::prelude::*;
+use serde::{Deserialize, Serialize};
+
+use crate::models::inventory_models::{
+    InventoryAuditLog, NewInventoryAuditLog, NewProductVariant, ProductVariant,
+};
+use crate::models::{DbPool, GenericHttpResponse};
+use crate::schema::{inventory_audit_log, product_variants};
+use crate::services::errors_service::CustomHttpError;
+
+/// Request body for creating a product variant
+#[derive(Debug, Deserialize)]
+pub struct CreateVariantRequest {
+    pub product_id: i32,
+    pub sku: Option<String>,
+    pub variant_name: String,
+    pub price: Option<rust_decimal::Decimal>,
+    pub stock_quantity: Option<i32>,
+    pub weight: Option<rust_decimal::Decimal>,
+    pub attributes: Option<serde_json::Value>,
+    pub image_url: Option<String>,
+}
+
+/// Request body for updating stock
+#[derive(Debug, Deserialize)]
+pub struct UpdateStockRequest {
+    pub quantity_change: i32,
+    pub reason: Option<String>,
+}
+
+/// Get all variants for a product
+pub async fn get_product_variants(
+    pool: web::Data<DbPool>,
+    product_id: web::Path<i32>,
+) -> Result<HttpResponse, CustomHttpError> {
+    let product_id = product_id.into_inner();
+    
+    let variants = web::block(move || {
+        let mut conn = pool.get()?;
+        product_variants::table
+            .filter(product_variants::product_id.eq(product_id))
+            .filter(product_variants::is_active.eq(true))
+            .load::<ProductVariant>(&mut conn)
+    })
+    .await?
+    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+
+    Ok(HttpResponse::Ok().json(variants))
+}
+
+/// Create a new product variant
+pub async fn create_variant(
+    pool: web::Data<DbPool>,
+    payload: web::Json<CreateVariantRequest>,
+) -> Result<HttpResponse, CustomHttpError> {
+    let new_variant = NewProductVariant {
+        uuid: uuid::Uuid::new_v4().to_string(),
+        product_id: payload.product_id,
+        sku: payload.sku.clone(),
+        variant_name: payload.variant_name.clone(),
+        price: payload.price,
+        stock_quantity: payload.stock_quantity,
+        weight: payload.weight,
+        attributes: payload.attributes.clone(),
+        image_url: payload.image_url.clone(),
+        is_active: Some(true),
+    };
+
+    let variant = web::block(move || {
+        let mut conn = pool.get()?;
+        diesel::insert_into(product_variants::table)
+            .values(&new_variant)
+            .execute(&mut conn)?;
+        
+        product_variants::table
+            .order(product_variants::id.desc())
+            .first::<ProductVariant>(&mut conn)
+    })
+    .await?
+    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+
+    Ok(HttpResponse::Created().json(variant))
+}
+
+/// Update variant stock and log the change
+pub async fn update_variant_stock(
+    pool: web::Data<DbPool>,
+    variant_id: web::Path<i32>,
+    payload: web::Json<UpdateStockRequest>,
+) -> Result<HttpResponse, CustomHttpError> {
+    let variant_id = variant_id.into_inner();
+    let quantity_change = payload.quantity_change;
+    let reason = payload.reason.clone();
+
+    let variant = web::block(move || {
+        let mut conn = pool.get()?;
+        
+        // Get current variant
+        let current: ProductVariant = product_variants::table
+            .find(variant_id)
+            .first(&mut conn)?;
+        
+        let old_quantity = current.stock_quantity.unwrap_or(0);
+        let new_quantity = old_quantity + quantity_change;
+        
+        // Update stock
+        diesel::update(product_variants::table.find(variant_id))
+            .set(product_variants::stock_quantity.eq(new_quantity))
+            .execute(&mut conn)?;
+        
+        // Create audit log
+        let audit = NewInventoryAuditLog {
+            product_id: Some(current.product_id),
+            variant_id: Some(variant_id),
+            user_id: None, // TODO: Get from auth context
+            order_id: None,
+            change_type: if quantity_change > 0 {
+                "restock".to_string()
+            } else {
+                "adjustment".to_string()
+            },
+            quantity_before: old_quantity,
+            quantity_after: new_quantity,
+            quantity_change,
+            reason,
+        };
+        
+        diesel::insert_into(inventory_audit_log::table)
+            .values(&audit)
+            .execute(&mut conn)?;
+        
+        // Return updated variant
+        product_variants::table
+            .find(variant_id)
+            .first::<ProductVariant>(&mut conn)
+    })
+    .await?
+    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+
+    Ok(HttpResponse::Ok().json(variant))
+}
+
+/// Get inventory audit log for a product
+pub async fn get_inventory_audit_log(
+    pool: web::Data<DbPool>,
+    product_id: web::Path<i32>,
+) -> Result<HttpResponse, CustomHttpError> {
+    let product_id = product_id.into_inner();
+    
+    let logs = web::block(move || {
+        let mut conn = pool.get()?;
+        inventory_audit_log::table
+            .filter(inventory_audit_log::product_id.eq(product_id))
+            .order(inventory_audit_log::created_at.desc())
+            .limit(100)
+            .load::<InventoryAuditLog>(&mut conn)
+    })
+    .await?
+    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+
+    Ok(HttpResponse::Ok().json(logs))
+}
+
+/// Delete a variant (soft delete by setting is_active = false)
+pub async fn delete_variant(
+    pool: web::Data<DbPool>,
+    variant_id: web::Path<i32>,
+) -> Result<HttpResponse, CustomHttpError> {
+    let variant_id = variant_id.into_inner();
+    
+    web::block(move || {
+        let mut conn = pool.get()?;
+        diesel::update(product_variants::table.find(variant_id))
+            .set(product_variants::is_active.eq(false))
+            .execute(&mut conn)
+    })
+    .await?
+    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+
+    Ok(HttpResponse::Ok().json(GenericHttpResponse {
+        message: "Variant deleted successfully".to_string(),
+    }))
+}
