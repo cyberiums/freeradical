@@ -86,7 +86,7 @@ This release marks a major milestone with complete e-commerce capabilities and a
 
 ---
 
-## [0.9.0] - 2024-12-24
+## [0.9.0] - 2025-12-24
 
 ### Added
 - Payment provider system (Stripe, PayPal, Square)
@@ -102,7 +102,7 @@ This release marks a major milestone with complete e-commerce capabilities and a
 
 ---
 
-## [0.8.0] - 2024-12-23
+## [0.8.0] - 2025-12-23
 
 ### Added
 - SEO features (meta tags, sitemap, robots.txt)
@@ -112,7 +112,7 @@ This release marks a major milestone with complete e-commerce capabilities and a
 
 ---
 
-## [0.7.0] - 2024-12-20
+## [0.7.0] - 2025-12-20
 
 ### Added
 - Admin UI foundation
@@ -126,7 +126,7 @@ This release marks a major milestone with complete e-commerce capabilities and a
 [0.8.0]: https://github.com/cyberiums/freeradical/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/cyberiums/freeradical/releases/tag/v0.7.0
 
-## [1.0.3] - 2024-12-25
+## [1.0.3] - 2025-12-25
 
 ### Changed
 - Upgraded Rust from 1.90.0 to 1.92.0 stable

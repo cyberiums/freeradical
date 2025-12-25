@@ -1,6 +1,6 @@
 # Actix-Web v4.12.1 Upgrade Release
 
-**Release Date:** December 25, 2024  
+**Release Date:** December 25, 2025  
 **Version:** v1.0.2  
 **Branch:** main (merged from `upgrade/actix-web-v4`)
 

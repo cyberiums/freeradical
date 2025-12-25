@@ -1,5 +1,18 @@
-/target
+# Rust build artifacts
+/target/
+cli/target/
+debug/
 .env
+
+# Python build artifacts
+*.pyc
+__pycache__/
+*.egg-info/
+sdks/python/dist/
+sdks/python/build/
+
+# SDK build artifacts
+sdk/*/dist/
 
 # vscode stuff
 *.code-workspace
