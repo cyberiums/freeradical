@@ -5,137 +5,241 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>API Documentation - FreeRadical CMS</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+        }
+
+        .hard-shadow {
+            box-shadow: 8px 8px 0px rgba(249, 115, 22, 0.3);
+        }
+
+        .hard-shadow-sm {
+            box-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);
+        }
+
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
 </head>
 
-<body class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="/" class="flex items-center space-x-2 text-2xl font-bold text-indigo-600">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                                d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                        </svg>
-                        <span>FreeRadical CMS</span>
-                    </a>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav style="background-color: #1E293B; border-bottom: 2px solid #334155;">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="/static/logo.svg" alt="FreeRadical" style="width: 40px; height: 40px;">
+                    <span class="text-white text-2xl font-black" style="letter-spacing: -0.04em;">FreeRadical</span>
                 </div>
-                <div class="flex items-center">
-                    <a href="/" class="text-gray-600 hover:text-indigo-600 font-medium">← Back to Home</a>
+                <div class="flex items-center space-x-4">
+                    <a href="/"
+                        class="text-gray-300 hover:text-[#F97316] font-semibold transition-colors code-font text-xs"
+                        style="letter-spacing: 0.05em;">HOME</a>
+                    <a href="/admin"
+                        class="px-5 py-2.5 rounded-xl font-bold text-white transition-all hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(249,115,22,0.2)]"
+                        style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em; font-size: 12px;">ADMIN</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">API Documentation</h1>
-            <p class="text-xl text-gray-600">Explore the FreeRadical CMS API endpoints</p>
+    <!-- Hero -->
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <div class="inline-block mb-6">
+                    <img src="/static/logo.svg" alt="FreeRadical"
+                        style="width: 96px; height: 96px; filter: drop-shadow(8px 8px 0px rgba(249, 115, 22, 0.3));">
+                </div>
+                <h1 class="text-6xl font-black text-white mb-4" style="letter-spacing: -0.04em;">
+                    API <span style="color: #F97316;">DOCUMENTATION</span>
+                </h1>
+                <p class="text-xl text-gray-400 code-font max-w-2xl mx-auto" style="letter-spacing: 0.02em;">
+                    GraphQL • REST • WebSocket • Real-time
+                </p>
+            </div>
         </div>
+    </section>
 
-        <!-- API Options Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <!-- GraphQL Playground -->
-            <a href="/graphql"
-                class="block p-6 bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-indigo-500 transition-all hover:shadow-md">
-                <div class="flex items-center justify-center w-12 h-12 bg-indigo-50 rounded-lg mb-4">
-                    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">GraphQL Playground</h3>
-                <p class="text-gray-600 text-sm mb-4">Interactive GraphQL API explorer with schema documentation and
-                    query builder.</p>
-                <span class="text-indigo-600 font-medium text-sm">Open Playground →</span>
-            </a>
+    <!-- API Cards -->
+    <section class="pb-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- GraphQL API -->
+                <div class="rounded-3xl p-8 hard-shadow hover:shadow-[12px_12px_0px_rgba(249,115,22,0.4)] transition-all"
+                    style="background-color: #1E293B;">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h2 class="text-3xl font-black text-white mb-2" style="letter-spacing: -0.02em;">GraphQL API
+                            </h2>
+                            <p class="code-font text-sm" style="color: #06B6D4; letter-spacing: 0.05em;">REAL-TIME
+                                QUERIES</p>
+                        </div>
+                        <div class="px-4 py-2 rounded-xl code-font text-xs font-bold"
+                            style="background-color: #0F172A; color: #F97316; border: 2px solid #334155;">
+                            v1.0
+                        </div>
+                    </div>
 
-            <!-- REST API -->
-            <div class="p-6 bg-white rounded-xl shadow-sm border-2 border-gray-100">
-                <div class="flex items-center justify-center w-12 h-12 bg-purple-50 rounded-lg mb-4">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Type-safe queries and mutations</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Real-time subscriptions</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">GraphQL Playground included</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl p-4 mb-6 code-font text-sm"
+                        style="background-color: #0F172A; border: 2px solid #334155;">
+                        <div style="color: #06B6D4;">POST</div>
+                        <div class="text-white mt-1">/graphql</div>
+                    </div>
+
+                    <a href="/graphql"
+                        class="block text-center px-6 py-4 rounded-xl font-bold hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(249,115,22,0.2)] transition-all code-font text-sm"
+                        style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); color: white; text-decoration: none; letter-spacing: 0.05em;">
+                        OPEN PLAYGROUND →
+                    </a>
                 </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">REST API</h3>
-                <p class="text-gray-600 text-sm mb-4">Traditional RESTful endpoints for pages, users, media, and content
-                    management.</p>
-                <div class="space-y-1 text-xs text-gray-500">
-                    <div><code class="bg-gray-100 px-2 py-1 rounded">GET /pages</code></div>
-                    <div><code class="bg-gray-100 px-2 py-1 rounded">POST /auth/login</code></div>
-                    <div><code class="bg-gray-100 px-2 py-1 rounded">GET /sitemap.xml</code></div>
+
+                <!-- REST API -->
+                <div class="rounded-3xl p-8 hard-shadow hover:shadow-[12px_12px_0px_rgba(249,115,22,0.4)] transition-all"
+                    style="background-color: #1E293B;">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <h2 class="text-3xl font-black text-white mb-2" style="letter-spacing: -0.02em;">REST API
+                            </h2>
+                            <p class="code-font text-sm" style="color: #06B6D4; letter-spacing: 0.05em;">HTTP/JSON
+                                ENDPOINTS</p>
+                        </div>
+                        <div class="px-4 py-2 rounded-xl code-font text-xs font-bold"
+                            style="background-color: #0F172A; color: #F97316; border: 2px solid #334155;">
+                            v1.0
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">RESTful resource endpoints</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">JWT authentication</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Comprehensive documentation</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 mb-6">
+                        <div class="rounded-xl p-3 code-font text-sm flex items-center justify-between"
+                            style="background-color: #0F172A; border: 2px solid #334155;">
+                            <div>
+                                <span style="color: #06B6D4;">GET</span>
+                                <span class="text-white ml-3">/api/pages</span>
+                            </div>
+                        </div>
+                        <div class="rounded-xl p-3 code-font text-sm flex items-center justify-between"
+                            style="background-color: #0F172A; border: 2px solid #334155;">
+                            <div>
+                                <span style="color: #F97316;">POST</span>
+                                <span class="text-white ml-3">/api/pages</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="https://github.com/cyberiums/freeradical#api" target="_blank"
+                        class="block text-center px-6 py-4 rounded-xl font-bold hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(6,182,212,0.2)] transition-all code-font text-sm"
+                        style="background-color: #0F172A; color: #06B6D4; text-decoration: none; border: 2px solid #334155; letter-spacing: 0.05em;">
+                        VIEW DOCS →
+                    </a>
                 </div>
             </div>
 
-            <!-- Admin Dashboard -->
-            <a href="/static/admin-login.html"
-                class="block p-6 bg-white rounded-xl shadow-sm border-2 border-transparent hover:border-indigo-500 transition-all hover:shadow-md">
-                <div class="flex items-center justify-center w-12 h-12 bg-green-50 rounded-lg mb-4">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Admin Portal</h3>
-                <p class="text-gray-600 text-sm mb-4">Secure admin dashboard for content management and system
-                    configuration.</p>
-                <span class="text-indigo-600 font-medium text-sm">Login →</span>
-            </a>
-        </div>
-
-        <!-- Tech Stack -->
-        <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl p-8 border border-indigo-100">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">API Technology Stack</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div>
-                    <div class="text-3xl font-bold text-indigo-600 mb-2">Rust</div>
-                    <div class="text-sm text-gray-600">Backend Language</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-purple-600 mb-2">Actix v4</div>
-                    <div class="text-sm text-gray-600">Web Framework</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-indigo-600 mb-2">GraphQL</div>
-                    <div class="text-sm text-gray-600">Query Language</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-purple-600 mb-2">MySQL</div>
-                    <div class="text-sm text-gray-600">Database</div>
+            <!-- SDK Section -->
+            <div class="mt-8 rounded-3xl p-8 hard-shadow" style="background-color: #1E293B; border: 2px solid #F97316;">
+                <div class="text-center">
+                    <h3 class="text-2xl font-black text-white mb-4" style="letter-spacing: -0.02em;">OFFICIAL SDKs</h3>
+                    <p class="text-gray-400 mb-6">Multi-language client libraries for seamless integration</p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <div class="px-6 py-3 rounded-xl code-font text-sm font-bold"
+                            style="background-color: #0F172A; color: #06B6D4; border: 2px solid #334155;">
+                            TypeScript
+                        </div>
+                        <div class="px-6 py-3 rounded-xl code-font text-sm font-bold"
+                            style="background-color: #0F172A; color: #06B6D4; border: 2px solid #334155;">
+                            Python
+                        </div>
+                        <div class="px-6 py-3 rounded-xl code-font text-sm font-bold"
+                            style="background-color: #0F172A; color: #06B6D4; border: 2px solid #334155;">
+                            Go
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- Quick Links -->
-        <div class="mt-12 text-center">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-            <div class="flex justify-center space-x-4 flex-wrap">
-                <a href="/sitemap.xml"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:border-indigo-500 transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                        <path fill-rule="evenodd"
-                            d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    Sitemap
-                </a>
-                <a href="https://github.com/cyberiums/freeradical" target="_blank"
-                    class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-lg hover:border-indigo-500 transition-colors">
-                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd"
-                            d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z"
-                            clip-rule="evenodd" />
-                    </svg>
-                    GitHub
-                </a>
+    <!-- Footer -->
+    <footer style="background-color: #1E293B; border-top: 2px solid #334155;" class="py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <img src="/static/logo.svg" alt="FreeRadical" style="width: 32px; height: 32px;">
+                    <span class="text-white font-black text-xl">FreeRadical</span>
+                </div>
+                <p class="text-gray-400 code-font text-sm">
+                    © 2024 • v1.0.3 • RUST + ACTIX-WEB
+                </p>
             </div>
         </div>
-    </div>
+    </footer>
 </body>
 
 </html>
