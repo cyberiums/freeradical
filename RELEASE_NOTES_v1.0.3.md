@@ -1,6 +1,6 @@
 # Release Notes - FreeRadical CMS v1.0.3
 
-**Release Date:** December 25, 2024  
+**Release Date:** December 25, 2025  
 **Type:** Maintenance Release  
 **Status:** ✅ Production Ready
 
@@ -15,7 +15,7 @@ Version 1.0.3 brings Rust compiler upgrade, GitHub Actions CI/CD fixes, and admi
 ## 🦀 Rust Compiler Upgrade
 
 **Rust 1.90.0 → 1.92.0**
-- ✅ Upgraded to latest stable release (Dec 11, 2024)
+- ✅ Upgraded to latest stable release (Dec 11, 2025)
 - ✅ Zero breaking changes
 - ✅ Improved performance and error messages
 - ✅ Latest security fixes

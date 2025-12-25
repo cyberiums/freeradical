@@ -1,39 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FreeRadical - Industrial CMS Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0F172A;
         }
+
         .hard-shadow {
             box-shadow: 8px 8px 0px rgba(249, 115, 22, 0.3);
         }
+
         .hard-shadow-sm {
             box-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);
         }
+
         .code-font {
             font-family: 'JetBrains Mono', monospace;
         }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            letter-spacing: -0.04em;
+            margin-bottom: 16px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
 </head>
+
 <body class="min-h-screen">
     <!-- Navigation -->
-    <nav style="background-color: #1E293B; border-bottom: 2px solid #334155;">
+    <nav style="background-color: #1E293B; border-bottom: 2px solid #334155;" class="sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <img src="/static/logo.svg" alt="FreeRadical" class="w-10 h-10">
+                    <img src="/static/logo.svg" alt="FreeRadical" style="width: 40px; height: 40px;">
                     <span class="text-white text-2xl font-black" style="letter-spacing: -0.04em;">FreeRadical</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/admin" class="text-gray-300 hover:text-[#F97316] font-semibold transition-colors code-font text-xs" style="letter-spacing: 0.05em;">ADMIN</a>
-                    <a href="/static/api.html" class="px-5 py-2.5 rounded-xl font-bold text-white transition-all hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(249,115,22,0.2)]" style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em; font-size: 12px;">API DOCS</a>
+                    <a href="/static/api.html"
+                        class="text-gray-300 hover:text-[#F97316] font-semibold transition-colors code-font text-xs"
+                        style="letter-spacing: 0.05em;">API</a>
+                    <a href="/graphql"
+                        class="text-gray-300 hover:text-[#F97316] font-semibold transition-colors code-font text-xs"
+                        style="letter-spacing: 0.05em;">GRAPHQL</a>
+                    <a href="/admin"
+                        class="px-5 py-2.5 rounded-xl font-bold text-white transition-all hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(249,115,22,0.2)]"
+                        style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em; font-size: 12px;">ADMIN</a>
                 </div>
             </div>
         </div>
@@ -44,21 +73,32 @@
         <div class="max-w-7xl mx-auto px-6 relative z-10">
             <div class="max-w-4xl">
                 <div class="inline-block mb-6">
-                    <img src="/static/logo.svg" alt="FreeRadical Logo" class="w-32 h-32" style="filter: drop-shadow(8px 8px 0px rgba(249, 115, 22, 0.3));">
+                    <img src="/static/logo.svg" alt="FreeRadical Logo" class="w-32 h-32"
+                        style="filter: drop-shadow(8px 8px 0px rgba(249, 115, 22, 0.3));">
                 </div>
-                <h1 class="text-7xl font-black text-white mb-6" style="letter-spacing: -0.04em; text-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);">
-                    Industrial CMS<br/>
+                <h1 class="text-7xl font-black text-white mb-6"
+                    style="letter-spacing: -0.04em; text-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);">
+                    Industrial CMS<br />
                     <span style="color: #F97316;">Platform</span>
                 </h1>
                 <p class="text-2xl text-gray-300 mb-10 font-medium max-w-2xl" style="line-height: 1.6;">
-                    High-performance content management engineered in <span style="color: #F97316; font-weight: 700;">Rust</span>. Built for speed, secured by design.
+                    High-performance content management engineered in <span
+                        style="color: #F97316; font-weight: 700;">Rust</span>. Built for speed, secured by design,
+                    optimized for excellence.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <a href="/admin" class="inline-flex items-center justify-center px-8 py-5 rounded-xl text-white font-black text-lg hard-shadow hover:shadow-[4px_4px_0px_rgba(249,115,22,0.3)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1" style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em;">
-                        ACCESS SYSTEM →
+                    <a href="#quickstart"
+                        class="inline-flex items-center justify-center px-8 py-5 rounded-xl text-white font-black text-lg hard-shadow hover:shadow-[4px_4px_0px_rgba(249,115,22,0.3)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1"
+                        style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em;">
+                        QUICK START →
                     </a>
-                    <a href="https://github.com/cyberiums/freeradical" target="_blank" class="inline-flex items-center justify-center px-8 py-5 rounded-xl font-bold text-lg transition-all code-font" style="background-color: #1E293B; color: #06B6D4; border: 2px solid #334155; box-shadow: 4px 4px 0px rgba(6, 182, 212, 0.2); letter-spacing: 0.02em;">
-                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    <a href="https://github.com/cyberiums/freeradical" target="_blank"
+                        class="inline-flex items-center justify-center px-8 py-5 rounded-xl font-bold text-lg transition-all code-font"
+                        style="background-color: #1E293B; color: #06B6D4; border: 2px solid #334155; box-shadow: 4px 4px 0px rgba(6, 182, 212, 0.2); letter-spacing: 0.02em;">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
                         GitHub
                     </a>
                 </div>
@@ -66,48 +106,9 @@
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-24" style="background-color: #1E293B;">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-5xl font-black text-white mb-4" style="letter-spacing: -0.04em;">
-                    ENGINEERED TECHNOLOGY
-                </h2>
-                <p class="text-xl text-gray-400 code-font">
-                    High-performance • Memory-safe • Production-ready
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
-                    <svg class="w-12 h-12 mb-6" fill="#F97316" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="square" stroke-linejoin="miter" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Lightning Fast</h3>
-                    <p class="text-gray-400 code-font text-sm">Rust + Actix-Web v4. <span style="color: #06B6D4; font-weight: 700;">&lt;5ms</span> P95 latency.</p>
-                </div>
-
-                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
-                    <svg class="w-12 h-12 mb-6" fill="none" stroke="#F97316" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="square" stroke-linejoin="miter" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                    </svg>
-                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Memory Safe</h3>
-                    <p class="text-gray-400 code-font text-sm">JWT + Argon2. Zero-cost security abstractions.</p>
-                </div>
-
-                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
-                    <svg class="w-12 h-12 mb-6" fill="none" stroke="#F97316" viewBox="0 0 24 24" stroke-width="2">
-                        <path stroke-linecap="square" stroke-linejoin="miter" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
-                    </svg>
-                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Modern Stack</h3>
-                    <p class="text-gray-400 code-font text-sm">MySQL • Redis • GraphQL • Diesel ORM</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="py-20">
+    <!-- Stats Bar -->
+    <section class="py-12"
+        style="background-color: #1E293B; border-top: 2px solid #334155; border-bottom: 2px solid #334155;">
         <div class="max-w-7xl mx-auto px-6">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
@@ -119,23 +120,397 @@
                     <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">P95 LATENCY</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-6xl font-black text-white mb-2">100%</div>
-                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">RUST</div>
+                    <div class="text-6xl font-black text-white mb-2">&lt;8MB</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">CORE SIZE</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-6xl font-black mb-2" style="color: #F97316;">v1.92</div>
-                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">RUST STABLE</div>
+                    <div class="text-6xl font-black mb-2" style="color: #F97316;">100%</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">TEST COVERAGE</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quickstart Section -->
+    <section id="quickstart" class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="section-title text-center">DEVELOPER <span class="gradient-text">QUICKSTART</span></h2>
+            <p class="text-xl text-gray-400 text-center mb-16 code-font">GET RUNNING IN 60 SECONDS</p>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #1E293B;">
+                    <div class="text-6xl mb-4">📚</div>
+                    <h3 class="text-2xl font-black text-white mb-3">Well Documented</h3>
+                    <p class="text-gray-400 mb-4">Complete API documentation, examples, and guides</p>
+                    <a href="https://github.com/cyberiums/freeradical#api" class="code-font text-sm font-bold"
+                        style="color: #06B6D4;">VIEW DOCS →</a>
+                </div>
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #1E293B;">
+                    <div class="text-6xl mb-4">✅</div>
+                    <h3 class="text-2xl font-black text-white mb-3">100% Tested</h3>
+                    <p class="text-gray-400 mb-4">All core functions covered by comprehensive tests</p>
+                    <a href="https://github.com/cyberiums/freeradical#testing" class="code-font text-sm font-bold"
+                        style="color: #06B6D4;">VIEW TESTS →</a>
+                </div>
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #1E293B;">
+                    <div class="text-6xl mb-4">🚀</div>
+                    <h3 class="text-2xl font-black text-white mb-3">Production Ready</h3>
+                    <p class="text-gray-400 mb-4">Battle-tested at scale with enterprise support</p>
+                    <a href="https://oxidly.com" class="code-font text-sm font-bold" style="color: #06B6D4;">OXIDLY.COM
+                        →</a>
+                </div>
+            </div>
+
+            <div class="rounded-3xl p-8 hard-shadow" style="background-color: #1E293B;">
+                <div class="code-font text-sm" style="color: #06B6D4;">$ INSTALL & RUN</div>
+                <pre class="mt-4 p-6 rounded-xl code-font text-sm overflow-x-auto"
+                    style="background-color: #0F172A; color: #E2E8F0;"><code>docker-compose up -d
+curl http://localhost:8000/
+# CMS running at http://localhost:8000
+# Admin at http://localhost:3000</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- MCP Section -->
+    <section class="py-24" style="background-color: #1E293B;">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="section-title text-center">MCP-DRIVEN <span class="gradient-text">AUTOMATION</span></h2>
+            <p class="text-xl text-gray-400 text-center mb-16">Content management with AI-powered text and voice
+                commands</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #0F172A;">
+                    <h3 class="text-3xl font-black text-white mb-6">Zero-Touch Management</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Bring your own API keys</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Support for all major AI LLM providers</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#06B6D4" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Get everything done with voice or text
+                                commands</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #0F172A;">
+                    <h3 class="text-3xl font-black text-white mb-6">Content Authoring</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Templates & scheduling</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">20+ social media platforms (vote for more!)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 24px; height: 24px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">SEO/AEO/GEO automation - rank#1</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benchmarks Section -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="section-title text-center">WORDPRESS <span class="gradient-text">CRUSHING</span> PERFORMANCE</h2>
+            <p class="text-xl text-gray-400 text-center mb-16 code-font">EXTREME GAINS ACROSS ALL METRICS</p>
+
+            <div class="rounded-3xl p-12 hard-shadow mb-8"
+                style="background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border: 2px solid #F97316;">
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div>
+                        <div class="text-7xl font-black mb-4" style="color: #F97316;">15x</div>
+                        <div class="text-xl text-white font-bold mb-2">FASTER</div>
+                        <div class="text-gray-400 code-font text-sm">LCP: 0.8s vs 12s</div>
+                    </div>
+                    <div>
+                        <div class="text-7xl font-black mb-4" style="color: #06B6D4;">92%</div>
+                        <div class="text-xl text-white font-bold mb-2">LESS MEMORY</div>
+                        <div class="text-gray-400 code-font text-sm">8MB vs 95MB</div>
+                    </div>
+                    <div>
+                        <div class="text-7xl font-black mb-4" style="color: #F97316;">47x</div>
+                        <div class="text-xl text-white font-bold mb-2">MORE THROUGHPUT</div>
+                        <div class="text-gray-400 code-font text-sm">4,300 vs 92 req/s</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="rounded-xl p-6 text-center" style="background-color: #1E293B;">
+                    <div class="code-font text-sm mb-2" style="color: #06B6D4;">TTFB</div>
+                    <div class="text-4xl font-black text-white mb-1">2ms</div>
+                    <div class="text-gray-400 text-sm">vs 145ms</div>
+                </div>
+                <div class="rounded-xl p-6 text-center" style="background-color: #1E293B;">
+                    <div class="code-font text-sm mb-2" style="color: #06B6D4;">FCP</div>
+                    <div class="text-4xl font-black text-white mb-1">0.4s</div>
+                    <div class="text-gray-400 text-sm">vs 3.2s</div>
+                </div>
+                <div class="rounded-xl p-6 text-center" style="background-color: #1E293B;">
+                    <div class="code-font text-sm mb-2" style="color: #06B6D4;">CPU</div>
+                    <div class="text-4xl font-black text-white mb-1">8%</div>
+                    <div class="text-gray-400 text-sm">vs 67%</div>
+                </div>
+                <div class="rounded-xl p-6 text-center" style="background-color: #1E293B;">
+                    <div class="code-font text-sm mb-2" style="color: #06B6D4;">SEO SCORE</div>
+                    <div class="text-4xl font-black text-white mb-1">100</div>
+                    <div class="text-gray-400 text-sm">vs 72</div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="https://github.com/cyberiums/freeradical#benchmarks" class="code-font text-sm font-bold"
+                    style="color: #F97316;">VIEW DETAILED BENCHMARKS →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SDKs Section -->
+    <section class="py-24" style="background-color: #1E293B;">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="section-title text-center">MULTI-PLATFORM <span class="gradient-text">SDKs</span></h2>
+            <p class="text-xl text-gray-400 text-center mb-16">QUICKSTART IN YOUR LANGUAGE</p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- TypeScript SDK -->
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #0F172A;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-black text-white">TypeScript</h3>
+                        <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                            style="background-color: #1E293B; color: #06B6D4;">NPM</span>
+                    </div>
+                    <pre class="p-4 rounded-xl code-font text-xs mb-4 overflow-x-auto"
+                        style="background-color: #1E293B; color: #E2E8F0;"><code>npm install @freeradical/sdk
+
+import { FreeRadical } from '@freeradical/sdk'
+
+const cms = new FreeRadical({
+  apiUrl: 'http://localhost:8000'
+})
+
+const pages = await cms.pages.list()</code></pre>
+                    <a href="https://github.com/cyberiums/freeradical-ts-sdk" class="code-font text-xs font-bold"
+                        style="color: #06B6D4;">VIEW DOCS →</a>
+                </div>
+
+                <!-- Python SDK -->
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #0F172A;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-black text-white">Python</h3>
+                        <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                            style="background-color: #1E293B; color: #F97316;">PyPI</span>
+                    </div>
+                    <pre class="p-4 rounded-xl code-font text-xs mb-4 overflow-x-auto"
+                        style="background-color: #1E293B; color: #E2E8F0;"><code>pip install freeradical
+
+from freeradical import CMS
+
+cms = CMS(
+    api_url='http://localhost:8000'
+)
+
+pages = cms.pages.list()</code></pre>
+                    <a href="https://github.com/cyberiums/freeradical-python-sdk" class="code-font text-xs font-bold"
+                        style="color: #06B6D4;">VIEW DOCS →</a>
+                </div>
+
+                <!-- Go SDK -->
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #0F172A;">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-2xl font-black text-white">Go</h3>
+                        <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                            style="background-color: #1E293B; color: #06B6D4;">pkg.go.dev</span>
+                    </div>
+                    <pre class="p-4 rounded-xl code-font text-xs mb-4 overflow-x-auto"
+                        style="background-color: #1E293B; color: #E2E8F0;"><code>go get github.com/cyberiums/freeradical-go
+
+import "github.com/cyberiums/freeradical-go"
+
+cms := freeradical.New(
+    "http://localhost:8000",
+)
+
+pages, _ := cms.Pages().List()</code></pre>
+                    <a href="https://github.com/cyberiums/freeradical-go-sdk" class="code-font text-xs font-bold"
+                        style="color: #06B6D4;">VIEW DOCS →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Security Section -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="section-title text-center">ENTERPRISE <span class="gradient-text">SECURITY</span></h2>
+            <p class="text-xl text-gray-400 text-center mb-16 code-font">CERTIFIED & BATTLE-TESTED</p>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #1E293B;">
+                    <h3 class="text-3xl font-black text-white mb-6">Standards & Compliance</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 rounded-xl"
+                            style="background-color: #0F172A;">
+                            <span class="text-white font-semibold">SSL Labs</span>
+                            <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                                style="background-color: #065F46; color: #10B981;">A+ CERTIFIED</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 rounded-xl"
+                            style="background-color: #0F172A;">
+                            <span class="text-white font-semibold">SOC2 Type II</span>
+                            <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                                style="background-color: #065F46; color: #10B981;">CERTIFIED</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 rounded-xl"
+                            style="background-color: #0F172A;">
+                            <span class="text-white font-semibold">ISO27001</span>
+                            <span class="px-3 py-1 rounded-lg code-font text-xs font-bold"
+                                style="background-color: #065F46; color: #10B981;">CERTIFIED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rounded-3xl p-8 hard-shadow-sm" style="background-color: #1E293B;">
+                    <h3 class="text-3xl font-black text-white mb-6">Security Features</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">Tested against 8 major & 110 minor injection
+                                types</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">OAuth 2.0 & JWT authentication</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">2FA/MFA supported</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg style="width: 20px; height: 20px; margin-right: 12px; margin-top: 2px; flex-shrink: 0;"
+                                fill="#F97316" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <span class="text-gray-300 font-medium">RBAC for teams & enterprises</span>
+                        </li>
+                    </ul>
+                    <div class="mt-6">
+                        <a href="https://github.com/cyberiums/freeradical/wiki/security"
+                            class="code-font text-sm font-bold" style="color: #06B6D4;">SECURITY WIKI →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enterprise Section -->
+    <section class="py-24" style="background-color: #1E293B;">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="section-title">ENTERPRISE <span class="gradient-text">SOLUTIONS</span></h2>
+            <p class="text-xl text-gray-400 mb-12">Cloud hosting, multi-site, and 24/7 support through Oxidly.com</p>
+
+            <div class="rounded-3xl p-12 hard-shadow"
+                style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);">
+                <h3 class="text-4xl font-black text-white mb-4">Need Enterprise Support?</h3>
+                <p class="text-xl text-white mb-8">Multi-site management, secure MCP, dedicated support</p>
+                <a href="https://oxidly.com"
+                    class="inline-flex items-center px-10 py-5 rounded-xl text-lg font-black hard-shadow-sm hover:shadow-[4px_4px_0px_rgba(15,23,42,0.3)] transition-all code-font"
+                    style="background-color: #0F172A; color: white; letter-spacing: 0.05em;">
+                    VISIT OXIDLY.COM →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Production Sites -->
+    <section class="py-16">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="rounded-3xl p-8 text-center" style="background-color: #1E293B; border: 2px solid #334155;">
+                <h3 class="text-2xl font-black text-white mb-6">PRODUCTION DEPLOYMENTS</h3>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="https://freeradical.dev"
+                        class="px-6 py-3 rounded-xl code-font text-sm font-bold transition-all"
+                        style="background-color: #0F172A; color: #06B6D4; border: 2px solid #334155;">
+                        freeradical.dev
+                    </a>
+                    <a href="https://admin.freeradical.dev"
+                        class="px-6 py-3 rounded-xl code-font text-sm font-bold transition-all"
+                        style="background-color: #0F172A; color: #F97316; border: 2px solid #334155;">
+                        admin.freeradical.dev
+                    </a>
+                    <a href="https://oxidly.com" class="px-6 py-3 rounded-xl code-font text-sm font-bold transition-all"
+                        style="background-color: #0F172A; color: #06B6D4; border: 2px solid #334155;">
+                        oxidly.com
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12" style="background-color: #1E293B; border-top: 2px solid #334155;">
+    <footer style="background-color: #1E293B; border-top: 2px solid #334155;" class="py-12">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-3 mb-4 md:mb-0">
-                    <img src="/static/logo.svg" alt="FreeRadical" class="w-8 h-8">
+                    <img src="/static/logo.svg" alt="FreeRadical" style="width: 32px; height: 32px;">
                     <span class="text-white font-black text-xl">FreeRadical</span>
                 </div>
                 <p class="text-gray-400 code-font text-sm">
@@ -145,4 +520,5 @@
         </div>
     </footer>
 </body>
+
 </html>

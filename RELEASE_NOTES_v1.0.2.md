@@ -1,6 +1,6 @@
 # Release Notes - FreeRadical CMS v1.0.2
 
-**Release Date:** December 25, 2024  
+**Release Date:** December 25, 2025  
 **Type:** Maintenance & Feature Release  
 **Status:** ✅ Production Ready
 
