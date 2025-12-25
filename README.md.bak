@@ -90,7 +90,7 @@ Quick deploy with Docker:
 
 ## 📊 Status
 
-**v1.0.3**: 99.8% complete (Production Beta)
+**v0.9.0**: 99.8% complete (Production Beta)
 - Phase 1 (Core): 100%
 - Phase 2 (Admin): 100%
 - Phase 3 (CLI): 100%
