@@ -96,8 +96,8 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_plugin_registry() {
+    #[actix_rt::test]
+    async fn test_plugin_registry() {
         let registry = PluginRegistry::new();
         registry.register(Arc::new(TestPlugin));
         
