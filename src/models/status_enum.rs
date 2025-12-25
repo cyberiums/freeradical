@@ -1,6 +1,7 @@
-// Page Status Enum - Maps to MySQL ENUM('draft', 'scheduled', 'published', 'archived')
+// Page Status Enum - Maps to MySQL ENUM('draft', 'scheduled', 'published', 'archived') and PostgreSQL VARCHAR
 use diesel::deserialize::{self, FromSql};
 use diesel::mysql::Mysql;
+use diesel::pg::Pg;
 use diesel::serialize::{self, Output, ToSql};
 use diesel::sql_types::Text;
 use diesel::expression::AsExpression;
@@ -53,5 +54,26 @@ impl ToSql<crate::schema::sql_types::PagesStatusEnum, Mysql> for PageStatus {
     fn to_sql(&self, out: &mut Output<Mysql>) -> serialize::Result {
         out.write_all(self.as_str().as_bytes())?;
         Ok(serialize::IsNull::No)
+    }
+}
+
+// PostgreSQL implementations - Use Text type since PostgreSQL doesn't have the MySQL ENUM type
+impl FromSql<crate::schema::sql_types::PagesStatusEnum, Pg> for PageStatus {
+    fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
+        let text = <String as FromSql<Text, Pg>>::from_sql(bytes)?;
+        
+        match text.as_str() {
+            "draft" => Ok(PageStatus::Draft),
+            "scheduled" => Ok(PageStatus::Scheduled),
+            "published" => Ok(PageStatus::Published),
+            "archived" => Ok(PageStatus::Archived),
+            other => Err(format!("Unrecognized enum variant: {}", other).into()),
+        }
+    }
+}
+
+impl ToSql<crate::schema::sql_types::PagesStatusEnum, Pg> for PageStatus {
+    fn to_sql(&self, out: &mut Output<Pg>) -> serialize::Result {
+        <str as ToSql<Text, Pg>>::to_sql(self.as_str(), out)
     }
 }
