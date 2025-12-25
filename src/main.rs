@@ -237,6 +237,9 @@ async fn main() -> std::io::Result<()> {
                 .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories))
                 .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
                 .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
+                // Semantic Search routes
+                .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
+                .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
