@@ -161,9 +161,21 @@ async fn main() -> std::io::Result<()> {
             // Admin/Backup endpoints
             .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup))
             // Payment endpoints
-            .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
-            .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
-            .route("/payments/providers", web::get().to(controllers::payment_controller::list_payment_handlers))
+                .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
+                .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
+                .route("/payments/providers", web::get().to(controllers::payment_controller::list_payment_handlers))
+                // Product management routes
+                .route("/products", web::get().to(controllers::product_controller::list_products))
+                .route("/products/{id}", web::get().to(controllers::product_controller::get_product))
+                .route("/products", web::post().to(controllers::product_controller::create_product))
+                .route("/products/{id}", web::put().to(controllers::product_controller::update_product))
+                .route("/products/{id}", web::delete().to(controllers::product_controller::delete_product))
+                // Order management routes
+                .route("/orders", web::get().to(controllers::order_controller::list_orders))
+                .route("/orders/{id}", web::get().to(controllers::order_controller::get_order))
+                .route("/orders", web::post().to(controllers::order_controller::create_order))
+                .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status))
+                .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
