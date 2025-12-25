@@ -20,14 +20,15 @@ struct GenericHttpResponse {
 /// Request body for creating a product variant
 #[derive(Debug, Deserialize)]
 pub struct CreateVariantRequest {
-    pub product_id: i32,
-    pub sku: Option<String>,
-    pub variant_name: String,
-    pub price: Option<rust_decimal::Decimal>,
-    pub stock_quantity: Option<i32>,
-    pub weight: Option<rust_decimal::Decimal>,
+    pub variant_name: Option<String>,
+    pub variant_sku: Option<String>,
     pub attributes: Option<serde_json::Value>,
+    pub price: Option<Decimal>,
+    pub compare_at_price: Option<Decimal>,
+    pub weight: Option<Decimal>,
+    pub stock_quantity: i32,
     pub image_url: Option<String>,
+    pub is_active: Option<bool>,
 }
 
 /// Request body for updating stock
