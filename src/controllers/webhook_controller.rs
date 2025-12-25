@@ -8,7 +8,7 @@ use crate::models::{MySQLPool, pool_handler};
 pub struct Webhook {
     pub id: Option<i32>,
     pub url: String,
-    pub events: Vec<String>,
+    pub events: serde_json::Value,  // JSON field from schema
     pub secret: Option<String>,
     pub active: bool,
 }
@@ -16,7 +16,7 @@ pub struct Webhook {
 #[derive(Debug, Deserialize)]
 pub struct CreateWebhookInput {
     pub url: String,
-    pub events: Vec<String>,
+    pub events: serde_json::Value,  // JSON field from schema
     pub secret: Option<String>,
 }
 

@@ -10,6 +10,7 @@ use uuid::Uuid;
 use crate::models::media_models::{Media, NewMedia};
 use crate::schema::media;
 use crate::services::database_service;
+use crate::services::image_service;
 
 const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10MB
 const UPLOAD_DIR: &str = "uploads";
@@ -194,31 +195,68 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
     let new_uuid = Uuid::new_v4().to_string();
     let new_filename = format!("{}.{}", new_uuid, ext);
     
+    // Optimize images (resize, compress, generate WebP)
+    let (optimized_data, webp_data, opt_width, opt_height) = if mime_type.starts_with("image/") {
+        match image_service::optimize_image(&file_data, 1920, true) {
+            Ok((jpeg_bytes, webp_bytes, w, h)) => {
+                log::info!("Image optimized: {}x{}, original: {} bytes, optimized: {} bytes", 
+                    w, h, file_data.len(), jpeg_bytes.len());
+                (jpeg_bytes, webp_bytes, Some(w as i32), Some(h as i32))
+            }
+            Err(e) => {
+                log::warn!("Image optimization failed: {}, using original", e);
+                (file_data.clone(), None, width, height)
+            }
+        }
+    } else {
+        (file_data.clone(), None, width, height)
+    };
+    
     // Create upload directory if it doesn't exist
     fs::create_dir_all(UPLOAD_DIR).ok();
     
-    // Save file to disk
+    // Save optimized file to disk
     let file_path = PathBuf::from(UPLOAD_DIR).join(&new_filename);
     let storage_path = file_path.to_str().unwrap().to_string();
     
     match fs::File::create(&file_path) {
         Ok(mut file) => {
-            if let Err(_) = file.write_all(&file_data) {
+            if let Err(_) = file.write_all(&optimized_data) {
                 return HttpResponse::InternalServerError().json("Failed to write file");
             }
         }
         Err(_) => return HttpResponse::InternalServerError().json("Failed to create file"),
     }
     
+    // Save WebP variant if generated
+    let webp_path = match webp_data {
+        Some(webp_bytes) => {
+            let webp_filename = format!("{}.webp", new_uuid);
+            let webp_file_path = PathBuf::from(UPLOAD_DIR).join(&webp_filename);
+            match fs::File::create(&webp_file_path) {
+                Ok(mut file) => {
+                    if file.write_all(&webp_bytes).is_ok() {
+                        log::info!("WebP variant saved: {}", webp_filename);
+                        Some(webp_file_path.to_str().unwrap().to_string())
+                    } else {
+                        None
+                    }
+                }
+                Err(_) => None,
+            }
+        }
+        None => None,
+    };
+    
     // Create database record
     let new_media = NewMedia {
         uuid: new_uuid.clone(),
         filename: new_filename.clone(),
-        original_filename: filename,
+        original_filename: filename.clone(),
         mime_type: mime_type.clone(),
-        file_size: file_data.len() as i64,
-        width,
-        height,
+        file_size: optimized_data.len() as i64,  // Size of optimized file
+        width: opt_width,
+        height: opt_height,
         folder,
         storage_path: storage_path.clone(),
         cdn_url: None,
@@ -236,17 +274,23 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
         Ok(_) => HttpResponse::Created().json(serde_json::json!({
             "uuid": new_uuid,
             "filename": new_filename,
-            "original_filename": new_media.original_filename,
+            "original_filename": filename,
             "mime_type": mime_type,
-            "file_size": file_data.len(),
-            "width": width,
-            "height": height,
+            "file_size": optimized_data.len(),
+            "original_size": file_data.len(),
+            "width": opt_width,
+            "height": opt_height,
             "storage_path": storage_path,
-            "message": "File uploaded successfully"
+            "webp_generated": webp_path.is_some(),
+            "webp_path": webp_path,
+            "message": "File uploaded and optimized successfully"
         })),
         Err(e) => {
-            // Delete file if database insert fails
-            let _ = fs::remove_file(file_path);
+            // Delete files if database insert fails
+            let _ = fs::remove_file(&file_path);
+            if let Some(wp_path) = webp_path {
+                let _ = fs::remove_file(wp_path);
+            }
             HttpResponse::InternalServerError()
                 .json(format!("Failed to save media metadata: {}", e))
         }

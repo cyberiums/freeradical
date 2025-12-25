@@ -201,6 +201,75 @@ diesel::table! {
 }
 
 diesel::table! {
+    content_relationships (id) {
+        id -> Bigint,
+        #[max_length = 255]
+        source_type -> Varchar,
+        #[max_length = 255]
+        source_id -> Varchar,
+        #[max_length = 255]
+        target_type -> Varchar,
+        #[max_length = 255]
+        target_id -> Varchar,
+        #[max_length = 50]
+        relationship_type -> Nullable<Varchar>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    roles (id) {
+        id -> Integer,
+        #[max_length = 50]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        permissions -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    user_roles (user_id, role_id) {
+        #[max_length = 255]
+        user_id -> Varchar,
+        role_id -> Integer,
+        assigned_at -> Nullable<Timestamp>,
+        #[max_length = 255]
+        assigned_by -> Nullable<Varchar>,
+    }
+}
+
+diesel::table! {
+    webhooks (id) {
+        id -> Integer,
+        #[max_length = 500]
+        url -> Varchar,
+        events -> Json,
+        #[max_length = 255]
+        secret -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        last_triggered_at -> Nullable<Timestamp>,
+        failure_count -> Nullable<Integer>,
+    }
+}
+
+diesel::table! {
+    webhook_logs (id) {
+        id -> Bigint,
+        webhook_id -> Integer,
+        #[max_length = 100]
+        event_type -> Varchar,
+        payload -> Nullable<Json>,
+        response_status -> Nullable<Integer>,
+        response_body -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     users (uuid) {
         #[max_length = 255]
         uuid -> Varchar,
@@ -217,9 +286,13 @@ diesel::joinable!(media_variants -> media (media_id));
 diesel::joinable!(module_category -> pages (page_uuid));
 diesel::joinable!(modules -> module_category (category_uuid));
 diesel::joinable!(modules -> pages (page_uuid));
+diesel::joinable!(user_roles -> users (user_id));
+diesel::joinable!(user_roles -> roles (role_id));
+diesel::joinable!(webhook_logs -> webhooks (webhook_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     analytics_summary,
+    content_relationships,
     media,
     media_variants,
     module_category,
@@ -228,5 +301,9 @@ diesel::allow_tables_to_appear_in_same_query!(
     page_views,
     pages,
     robots_rules,
+    roles,
+    user_roles,
     users,
+    webhooks,
+    webhook_logs,
 );

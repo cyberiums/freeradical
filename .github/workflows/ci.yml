@@ -1,0 +1,114 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-cms:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: freeradical_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    
+    - name: Cache cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Build CMS
+      run: cargo build --verbose
+    
+    - name: Run tests
+      run: cargo test --verbose
+      env:
+        DATABASE_URL: mysql://root:root@localhost:3306/freeradical_test
+        REDIS_URL: redis://localhost:6379
+
+  test-cli:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    
+    - name: Build CLI
+      run: cd freeradical-cli && cargo build --release --verbose
+    
+    - name: Test CLI
+      run: cd freeradical-cli && cargo test --verbose
+
+  test-admin:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: freeradical-admin/package-lock.json
+    
+    - name: Install dependencies
+      run: cd freeradical-admin && npm ci
+    
+    - name: Build admin
+      run: cd freeradical-admin && npm run build
+    
+    - name: Lint
+      run: cd freeradical-admin && npm run lint || true
+
+  build-docker:
+    runs-on: ubuntu-latest
+    needs: [test-cms, test-cli, test-admin]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build Docker image
+      run: docker build -t freeradical-cms:latest .
+    
+    - name: Test Docker image
+      run: |
+        docker run -d --name test-cms freeradical-cms:latest
+        sleep 5
+        docker logs test-cms
+        docker stop test-cms

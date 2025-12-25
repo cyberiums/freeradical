@@ -5,7 +5,7 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use crate::models::{MySQLPool, pool_handler};
 
-#[derive(Debug, Serialize, Deserialize, Queryable, Insertable)]
+#[derive(Debug, Serialize, Deserialize, Queryable)]
 #[diesel(table_name = crate::schema::content_relationships)]
 pub struct Relationship {
     pub id: Option<i64>,
@@ -14,7 +14,7 @@ pub struct Relationship {
     pub target_type: String,
     pub target_id: String,
     pub relationship_type: String,
-    pub metadata: Option<String>,
+    pub metadata: Option<serde_json::Value>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -24,7 +24,7 @@ pub struct CreateRelationshipInput {
     pub target_type: String,
     pub target_id: String,
     pub relationship_type: String,
-    pub metadata: Option<String>,
+    pub metadata: Option<serde_json::Value>,
 }
 
 /// Create a new relationship

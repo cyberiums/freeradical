@@ -45,14 +45,14 @@ impl CacheServiceV2 {
         let serialized = serde_json::to_string(value)?;
         let ttl = ttl.unwrap_or(self.default_ttl);
         
-        conn.set_ex(key, serialized, ttl).await?;
+        conn.set_ex::<_, _, ()>(key, serialized, ttl as u64).await?;
         Ok(())
     }
     
     /// Delete single cache entry
     pub async fn delete(&self, key: &str) -> Result<(), Box<dyn Error>> {
         let mut conn = self.pool.get().await?;
-        conn.del(key).await?;
+        conn.del::<_, ()>(key).await?;
         Ok(())
     }
     
@@ -66,7 +66,7 @@ impl CacheServiceV2 {
         }
         
         let count = keys.len();
-        conn.del(&keys).await?;
+        conn.del::<_, ()>(&keys).await?;
         
         log::debug!("🗑️ Deleted {} cache keys matching '{}'", count, pattern);
         Ok(count)
@@ -82,7 +82,7 @@ impl CacheServiceV2 {
     /// Set expiration on existing key
     pub async fn expire(&self, key: &str, seconds: usize) -> Result<(), Box<dyn Error>> {
         let mut conn = self.pool.get().await?;
-        conn.expire(key, seconds as i64).await?;
+        conn.expire::<_, ()>(key, seconds as i64).await?;
         Ok(())
     }
     

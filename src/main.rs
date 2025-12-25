@@ -21,6 +21,7 @@ mod models;
 mod routers;
 mod schema;
 mod watch;
+mod graphql;
 
 use routers::module_routers::ModuleRouter;
 use routers::page_routers::PageRouter;
@@ -48,21 +49,21 @@ async fn main() -> std::io::Result<()> {
     // Initialize config
     let conf: LocalConfig = envy::prefixed("APP_").from_env().unwrap();
 
-    // Run migrations
-    let db_url = models::format_connection_string(conf.clone());
-    let mut connection = MysqlConnection::establish(&db_url)
-        .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
+    // Run migrations - DISABLED for Docker (run manually via migrate.sh)
+    // let db_url = models::format_connection_string(conf.clone());
+    // let mut connection = MysqlConnection::establish(&db_url)
+    //     .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
     
-    println!("Running migrations...");
-    match connection.run_pending_migrations(MIGRATIONS) {
-        Ok(_) => println!("Ran migrations."),
-        Err(e) => println!("Migrations error: {}", e)
-    };
+    // println!("Running migrations...");
+    // match connection.run_pending_migrations(MIGRATIONS) {
+    //     Ok(_) => println!("Ran migrations."),
+    //     Err(e) => println!("Migrations error: {}", e)
+    // };
 
     let pool = models::establish_database_connection(conf.clone()).unwrap();
 
     std::env::set_var("RUST_LOG", "actix_web=info");
-    env_logger::init();
+    // env_logger::init();  // REMOVED - already called above at line 47
 
     let handlebars = Handlebars::new();
 
@@ -81,6 +82,9 @@ async fn main() -> std::io::Result<()> {
     // Registers the fs watcher that updates the templates in memory every time a template is changed.
     // This is what enables hot reload.
     std::thread::spawn(|| watch::watch(hb));
+
+    // Initialize GraphQL Schema
+    let graphql_schema = web::Data::new(graphql::create_schema());
 
     let store = MemoryStore::new();
 
@@ -109,15 +113,19 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a -> %U | %Dms "))
             .wrap(rate_limiting)
             .service(api_scope)
+            // GraphQL endpoint
+            .app_data(graphql_schema.clone())
+            .service(controllers::graphql_controller::graphql_handler)
+            .service(controllers::graphql_controller::graphql_playground)
             // SEO endpoints - standardized manual routing
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
-            .service(controllers::robots_controller::robots)
+            // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
-            .service(controllers::dashboard_controller::dashboard_summary)
-            .service(controllers::dashboard_controller::analytics_summary)
-            .service(controllers::dashboard_controller::seo_health)
-            .service(controllers::dashboard_controller::top_pages)
+            // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
+            // .service(controllers::dashboard_controller::analytics_summary)
+            // .service(controllers::dashboard_controller::seo_health)
+            // .service(controllers::dashboard_controller::top_pages)
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .default_service(web::get().to(controllers::page_controllers::display_page))
             .data(pool.clone())
