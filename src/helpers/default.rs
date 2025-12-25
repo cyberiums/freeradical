@@ -51,11 +51,11 @@ pub struct ArrayHelper;
 impl HelperDef for ArrayHelper {
     fn call_inner<'reg: 'rc, 'rc>(
         &self,
-        h: &Helper<'reg, 'rc>,
+        h: &Helper<'rc>,
         _: &'reg Handlebars<'reg>,
         ctx: &'rc Context,
         _: &mut RenderContext<'reg, 'rc>,
-    ) -> Result<Option<ScopedJson<'reg, 'rc>>, RenderError> {
+    ) -> Result<ScopedJson<'rc>, RenderError> {
         let module_title = h
             .param(0)
             .ok_or(RenderError::new(
@@ -79,7 +79,7 @@ impl HelperDef for ArrayHelper {
             Ok(values)
         })();
         let empty_array: Vec<String> = Vec::new();
-        Ok(Some(fields.unwrap_or(to_json(empty_array).into())))
+        Ok(fields.unwrap_or(to_json(empty_array).into()))
     }
 }
 
