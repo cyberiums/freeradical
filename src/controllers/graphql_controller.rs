@@ -15,12 +15,36 @@ pub struct GraphQLRequest {
     pub operation_name: Option<String>,
 }
 
-/// GraphQL endpoint handler
+/// GraphQL endpoint handler with JWT authentication
 #[post("/graphql")]
 pub async fn graphql_handler(
     schema: web::Data<AppSchema>,
     req: web::Json<GraphQLRequest>,
+    http_req: actix_web::HttpRequest,
 ) -> Result<HttpResponse> {
+    // Extract and verify JWT token from Authorization header
+    let auth_header = http_req
+        .headers()
+        .get("Authorization")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|h| h.strip_prefix("Bearer "));
+    
+    // Require authentication for GraphQL queries
+    if auth_header.is_none() {
+        return Ok(HttpResponse::Unauthorized().json(serde_json::json!({
+            "errors": [{
+                "message": "Authentication required. Please provide a valid JWT token in the Authorization header.",
+                "extensions": {
+                    "code": "UNAUTHENTICATED"
+                }
+            }]
+        })));
+    }
+    
+    // TODO: Add actual JWT verification here
+    // For now, just check that a token is present
+    // In production, verify signature with JWT_SECRET
+    
     let mut request = async_graphql::Request::new(&req.query);
     
     if let Some(variables) = &req.variables {
