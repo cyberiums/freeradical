@@ -16,7 +16,8 @@ actix-multipart = "0.7"  # For file uploads
 
 # encryption
 jsonwebtoken = { version = "10.2.0", features = ["aws_lc_rs"] }
-argon2 = "0.2"
+argon2 = "0.5"
+password-hash = "0.5"
 rand_core = { version = "0.6", features = ["std"] }
 
 # serialization
