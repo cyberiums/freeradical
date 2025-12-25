@@ -190,6 +190,8 @@ async fn main() -> std::io::Result<()> {
                 .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider))
                 .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider))
                 .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
+                // AI Content Generation routes
+                .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
