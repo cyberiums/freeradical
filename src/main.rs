@@ -182,6 +182,13 @@ async fn main() -> std::io::Result<()> {
                 .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock))
                 .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
                 .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant))
+                // AI Provider management routes (admin only)
+                .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers))
+                .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider))
+                .route("/admin/ai/providers", web::post().to(services::ai_provider_service::create_provider))
+                .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider))
+                .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider))
+                .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
