@@ -55,7 +55,7 @@ impl HelperDef for ArrayHelper {
         _: &'reg Handlebars<'reg>,
         ctx: &'rc Context,
         _: &mut RenderContext<'reg, 'rc>,
-    ) -> Result<ScopedJson<'rc>, RenderError> {
+    ) -> Result<Option<ScopedJson<'rc>>, RenderError> {
         let module_title = h
             .param(0)
             .ok_or(RenderError::new(
@@ -79,7 +79,7 @@ impl HelperDef for ArrayHelper {
             Ok(values)
         })();
         let empty_array: Vec<String> = Vec::new();
-        Ok(fields.unwrap_or(to_json(empty_array).into()))
+        Ok(Some(fields.unwrap_or(to_json(empty_array).into())))
     }
 }
 

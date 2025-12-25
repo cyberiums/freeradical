@@ -1,6 +1,6 @@
 use std::path::Path;
 use std::sync::{Arc, Mutex};
-use handlebars::Handlebars;
+use handlebars::{Handlebars, DirectorySourceOptions};
 use liquid::{Parser, ParserBuilder, Template};
 use std::collections::HashMap;
 
@@ -40,7 +40,9 @@ impl TemplateService {
         // Load Handlebars
         {
             let mut hb = self.handlebars.lock().unwrap();
-            hb.register_templates_directory(".hbs", dir)
+            let mut options = DirectorySourceOptions::default();
+            options.tpl_extension = ".hbs".to_string();
+            hb.register_templates_directory(dir, options)
                 .map_err(|e| e.to_string())?;
         }
 
