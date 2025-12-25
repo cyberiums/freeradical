@@ -38,7 +38,7 @@ fn get(
         Ok(values)
     })();
 
-    out.write(&field.unwrap_or_else(|e| e.to_string()))?;
+    out.write(&field.unwrap_or_else(|e| e.desc))?;
     Ok(())
 }
 
