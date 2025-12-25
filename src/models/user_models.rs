@@ -1,4 +1,5 @@
 use super::Model;
+use super::PooledDatabaseConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -6,7 +7,6 @@ use crate::schema::users;
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
 #[diesel(primary_key(uuid))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = users)]
 pub struct User {
     pub uuid: String,
@@ -29,37 +29,61 @@ pub struct MutUser {
 }
 
 impl Model<User, MutUser, String> for User {
-    fn create(new: &MutUser, db: &mut diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
-        diesel::insert_into(users::table).values(new).execute(db)
+    fn create(new: &MutUser, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::insert_into(users::table).values(new).execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::insert_into(users::table).values(new).execute(conn)
+            }
+        }
     }
 
-    fn read_one(id: String, db: &mut diesel::MysqlConnection) -> Result<User, diesel::result::Error> {
+    fn read_one(id: String, db: &mut PooledDatabaseConnection) -> Result<User, diesel::result::Error> {
         use users::dsl::username;
 
-        Ok(users::table
-            .filter(username.eq(id))
-            .select(User::as_select())
-            .first(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                users::table
+                    .filter(username.eq(id))
+                    .select(User::as_select())
+                    .first(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                users::table
+                    .filter(username.eq(id))
+                    .select(User::as_select())
+                    .first(conn)
+            }
+        }
     }
 
-    fn read_all(_: &mut diesel::MysqlConnection) -> Result<Vec<User>, diesel::result::Error> {
+    fn read_all(_: &mut PooledDatabaseConnection) -> Result<Vec<User>, diesel::result::Error> {
         unimplemented!()
     }
 
     fn update(
         id: String,
         new: &MutUser,
-        db: &mut diesel::MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
-        let update = diesel::update(users::table.filter(username.eq(id)))
-            .set(new)
-            .execute(db)?;
-
-        Ok(update)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::update(users::table.filter(username.eq(id)))
+                    .set(new)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::update(users::table.filter(username.eq(id)))
+                    .set(new)
+                    .execute(conn)
+            }
+        }
     }
 
-    fn delete(_: String, _: &mut diesel::MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_: String, _: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
         todo!()
     }
 }
@@ -67,15 +91,22 @@ impl Model<User, MutUser, String> for User {
 impl User {
     pub fn update_with_token(
         new: &MutUser,
-        db: &mut diesel::MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
 
-        let res = diesel::update(users::table.filter(username.eq(new.username.clone())))
-            .set(new)
-            .execute(db)?;
-
-        Ok(res)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::update(users::table.filter(username.eq(new.username.clone())))
+                    .set(new)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::update(users::table.filter(username.eq(new.username.clone())))
+                    .set(new)
+                    .execute(conn)
+            }
+        }
     }
 }
 

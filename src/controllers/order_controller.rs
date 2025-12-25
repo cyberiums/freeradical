@@ -3,7 +3,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
 
-use crate::models::{pool_handler, MySQLPool};
+use crate::models::{pool_handler, DatabasePool};
 use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
 use crate::services::errors_service::CustomHttpError;
 use crate::services::auth_service::Claims;
@@ -40,7 +40,7 @@ pub struct OrderItemWithProduct {
 
 // List user's orders
 pub async fn list_orders(
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
@@ -56,7 +56,7 @@ pub async fn list_orders(
 // Get single order with items
 pub async fn get_order(
     id: web::Path<i64>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
@@ -103,7 +103,7 @@ pub async fn get_order(
 // Create order
 pub async fn create_order(
     body: web::Json<CreateOrderRequest>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
@@ -186,7 +186,7 @@ pub struct UpdateOrderStatusRequest {
 pub async fn update_order_status(
     id: web::Path<i64>,
     body: web::Json<UpdateOrderStatusRequest>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
@@ -225,7 +225,7 @@ pub struct LinkPaymentRequest {
 pub async fn link_payment_to_order(
     id: web::Path<i64>,
     body: web::Json<LinkPaymentRequest>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;

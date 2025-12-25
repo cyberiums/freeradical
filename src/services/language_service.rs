@@ -6,7 +6,7 @@ pub struct LanguageService;
 
 impl LanguageService {
     /// Get all enabled languages
-    pub fn get_enabled_languages(conn: &mut MysqlConnection) -> Result<Vec<Language>, diesel::result::Error> {
+    pub fn get_enabled_languages(conn: &mut PooledDatabaseConnection) -> Result<Vec<Language>, diesel::result::Error> {
         use crate::schema::languages::dsl::*;
         
         languages
@@ -16,7 +16,7 @@ impl LanguageService {
     }
     
     /// Get default language
-    pub fn get_default_language(conn: &mut MysqlConnection) -> Result<Language, diesel::result::Error> {
+    pub fn get_default_language(conn: &mut PooledDatabaseConnection) -> Result<Language, diesel::result::Error> {
         use crate::schema::languages::dsl::*;
         
         languages
@@ -26,7 +26,7 @@ impl LanguageService {
     
     /// Create a new language
     pub fn create_language(
-        conn: &mut MysqlConnection,
+        conn: &mut PooledDatabaseConnection,
         new_lang: NewLanguage
     ) -> Result<usize, diesel::result::Error> {
         use crate::schema::languages;
@@ -38,7 +38,7 @@ impl LanguageService {
     
     /// Get translation for a page
     pub fn get_page_translation(
-        conn: &mut MysqlConnection,
+        conn: &mut PooledDatabaseConnection,
         target_page_id: i32,
         lang_id: i32
     ) -> Result<Option<PageTranslation>, diesel::result::Error> {
@@ -53,7 +53,7 @@ impl LanguageService {
     
     /// Save page translation
     pub fn save_page_translation(
-        conn: &mut MysqlConnection,
+        conn: &mut PooledDatabaseConnection,
         translation: NewPageTranslation
     ) -> Result<usize, diesel::result::Error> {
         use crate::schema::page_translations;

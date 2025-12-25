@@ -3,7 +3,7 @@ use diesel::{Insertable, Queryable, RunQueryDsl};
 use serde::{Deserialize, Serialize};
 
 use super::page_models::Page;
-use super::{Model};
+use super::{Model, PooledDatabaseConnection};
 use crate::schema::module_category;
 use crate::schema::modules;
 
@@ -11,7 +11,6 @@ use crate::schema::modules;
 #[diesel(belongs_to(Page, foreign_key = page_uuid))]
 #[diesel(belongs_to(ModuleCategory, foreign_key = category_uuid))]
 #[diesel(primary_key(uuid))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = modules)]
 pub struct Module {
     pub uuid: String,
@@ -49,7 +48,6 @@ pub struct FieldsDTO {
 )]
 #[diesel(primary_key(uuid))]
 #[diesel(belongs_to(Page, foreign_key = page_uuid))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = module_category)]
 pub struct ModuleCategory {
     pub uuid: String,
@@ -68,92 +66,171 @@ pub struct MutCategory {
 }
 
 impl ModuleCategory {
-    pub fn join(_id: String, db: &mut MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
+    pub fn join(_id: String, db: &mut PooledDatabaseConnection) -> Result<Vec<Module>, diesel::result::Error> {
         use module_category::dsl::uuid;
-        let categories = module_category::table.filter(uuid.eq(_id)).first::<Self>(db)?;
-
-        Module::belonging_to(&categories).load::<Module>(db)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                let categories = module_category::table.filter(uuid.eq(_id)).first::<Self>(conn)?;
+                Module::belonging_to(&categories).load::<Module>(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                let categories = module_category::table.filter(uuid.eq(_id)).first::<Self>(conn)?;
+                Module::belonging_to(&categories).load::<Module>(conn)
+            }
+        }
     }
 }
 
 impl Model<Self, MutCategory, String, ModuleCategory> for ModuleCategory {
-    fn create(new: &MutCategory, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
-        Ok(diesel::insert_or_ignore_into(module_category::table)
-            .values(new)
-            .execute(db)?)
+    fn create(new: &MutCategory, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::insert_or_ignore_into(module_category::table)
+                    .values(new)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::insert_into(module_category::table)
+                    .values(new)
+                    .on_conflict_do_nothing()
+                    .execute(conn)
+            }
+        }
     }
 
-    fn read_one(_id: String, db: &mut MysqlConnection) -> Result<ModuleCategory, diesel::result::Error> {
+    fn read_one(_id: String, db: &mut PooledDatabaseConnection) -> Result<ModuleCategory, diesel::result::Error> {
         use module_category::dsl::uuid;
 
-        let module = module_category::table.filter(uuid.eq(_id)).first::<ModuleCategory>(db)?;
-
-        Ok(module)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                module_category::table.filter(uuid.eq(_id)).first::<ModuleCategory>(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                module_category::table.filter(uuid.eq(_id)).first::<ModuleCategory>(conn)
+            }
+        }
     }
 
-    fn read_all(_db: &mut MysqlConnection) -> Result<Vec<ModuleCategory>, diesel::result::Error> {
+    fn read_all(_db: &mut PooledDatabaseConnection) -> Result<Vec<ModuleCategory>, diesel::result::Error> {
         unimplemented!()
     }
 
     fn update(
         _id: String,
         new: &MutCategory,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use module_category::dsl::uuid;
 
-        Ok(diesel::update(module_category::table.filter(uuid.eq(_id)))
-            .set(new)
-            .execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::update(module_category::table.filter(uuid.eq(_id)))
+                    .set(new)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::update(module_category::table.filter(uuid.eq(_id)))
+                    .set(new)
+                    .execute(conn)
+            }
+        }
     }
 
-    fn delete(_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_id: String, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
         use module_category::dsl::uuid;
 
-        Ok(diesel::delete(module_category::table.filter(uuid.eq(_id))).execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::delete(module_category::table.filter(uuid.eq(_id))).execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::delete(module_category::table.filter(uuid.eq(_id))).execute(conn)
+            }
+        }
     }
 }
 
 impl Model<Self, MutModule, String, Module> for Module {
     fn create(
         new_module: &MutModule,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
-        Ok(diesel::insert_into(modules::table)
-            .values(new_module)
-            .execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::insert_into(modules::table)
+                    .values(new_module)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::insert_into(modules::table)
+                    .values(new_module)
+                    .execute(conn)
+            }
+        }
     }
 
-    fn read_one(mod_id: String, db: &mut MysqlConnection) -> Result<Module, diesel::result::Error> {
+    fn read_one(mod_id: String, db: &mut PooledDatabaseConnection) -> Result<Module, diesel::result::Error> {
         use modules::dsl::uuid;
 
-        let module = modules::table.filter(uuid.eq(mod_id)).first::<Self>(db)?;
-
-        Ok(module.into())
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                modules::table.filter(uuid.eq(mod_id)).first::<Self>(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                modules::table.filter(uuid.eq(mod_id)).first::<Self>(conn)
+            }
+        }
     }
 
-    fn read_all(db: &mut MysqlConnection) -> Result<Vec<Module>, diesel::result::Error> {
+    fn read_all(db: &mut PooledDatabaseConnection) -> Result<Vec<Module>, diesel::result::Error> {
         use modules::dsl::category_uuid;
-        Ok(modules::table
-            .filter(category_uuid.is_null())
-            .load::<Module>(db)?.into_iter().map(|m| { m.into() }).collect())
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                modules::table
+                    .filter(category_uuid.is_null())
+                    .load::<Module>(conn)
+                    .map(|modules| modules.into_iter().map(|m| m.into()).collect())
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                modules::table
+                    .filter(category_uuid.is_null())
+                    .load::<Module>(conn)
+                    .map(|modules| modules.into_iter().map(|m| m.into()).collect())
+            }
+        }
     }
 
-    fn delete(mod_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(mod_id: String, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
         use modules::dsl::uuid;
 
-        Ok(diesel::delete(modules::table.filter(uuid.eq(mod_id))).execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::delete(modules::table.filter(uuid.eq(mod_id))).execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::delete(modules::table.filter(uuid.eq(mod_id))).execute(conn)
+            }
+        }
     }
 
     fn update(
         mod_id: String,
         new_module: &MutModule,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use modules::dsl::uuid;
 
-        Ok(diesel::update(modules::table.filter(uuid.eq(mod_id)))
-            .set(new_module)
-            .execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::update(modules::table.filter(uuid.eq(mod_id)))
+                    .set(new_module)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::update(modules::table.filter(uuid.eq(mod_id)))
+                    .set(new_module)
+                    .execute(conn)
+            }
+        }
     }
 }

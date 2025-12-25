@@ -2,7 +2,7 @@
 
 use async_graphql::*;
 use crate::graphql::types::*;
-use crate::models::MySQLPool;
+use crate::models::DatabasePool;
 
 pub struct QueryRoot;
 

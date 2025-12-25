@@ -9,7 +9,7 @@ pub struct OAuthConnectionsQuery {
 /// Get user's connected OAuth providers
 pub async fn get_connections(
     query: web::Query<OAuthConnectionsQuery>,
-    pool: web::Data<crate::models::MySQLPool>,
+    pool: web::Data<crate::models::DatabasePool>,
 ) -> Result<HttpResponse, actix_web::Error> {
     use crate::schema::oauth_connections;
     use diesel::prelude::*;

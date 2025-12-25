@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
 use diesel::prelude::*;
 use serde::{Serialize, Deserialize};
-use crate::models::MySQLPool;
+use crate::models::DatabasePool;
 use crate::services::language_service::{LanguageService, Language, NewLanguage};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -14,7 +14,7 @@ pub struct CreateLanguageInput {
 
 /// List all languages
 #[get("/languages")]
-pub async fn list_languages(pool: web::Data<MySQLPool>) -> impl Responder {
+pub async fn list_languages(pool: web::Data<DatabasePool>) -> impl Responder {
     let mut conn = match pool.get() {
         Ok(conn) => conn,
         Err(_) => return HttpResponse::InternalServerError().json("Database connection failed")
@@ -30,7 +30,7 @@ pub async fn list_languages(pool: web::Data<MySQLPool>) -> impl Responder {
 #[post("/languages")]
 pub async fn create_language(
     input: web::Json<CreateLanguageInput>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     let mut conn = match pool.get() {
         Ok(conn) => conn,
@@ -60,7 +60,7 @@ pub async fn create_language(
 #[get("/pages/{page_id}/translations/{lang_code}")]
 pub async fn get_translation(
     path: web::Path<(i32, String)>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     let (page_id, lang_code) = path.into_inner();
     

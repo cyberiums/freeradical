@@ -71,7 +71,7 @@ impl Permission {
 pub fn user_has_permission(
     user_uuid: &str,
     required_permission: &str,
-    conn: &mut MysqlConnection
+    conn: &mut PooledDatabaseConnection
 ) -> Result<bool, diesel::result::Error> {
     use crate::schema::{user_roles, roles};
     
@@ -123,7 +123,7 @@ pub fn user_owns_resource(
     user_uuid: &str,
     resource_type: &str,
     resource_id: &str,
-    conn: &mut MysqlConnection
+    conn: &mut PooledDatabaseConnection
 ) -> Result<bool, diesel::result::Error> {
     use crate::schema::pages;
     use crate::schema::modules;

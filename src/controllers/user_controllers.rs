@@ -5,7 +5,7 @@ use argon2::{Argon2, PasswordHash, PasswordVerifier};
 use uuid::Uuid;
 
 use crate::models::user_models::{MutUser, User, LoginRequest, Enable2faRequest};
-use crate::models::{pool_handler, Model, MySQLPool};
+use crate::models::{pool_handler, Model, DatabasePool};
 use crate::services::totp_service::TotpService;
 use crate::services::auth_service::{authenticate, encrypt, encrypt_password, Claims};
 use crate::services::errors_service::CustomHttpError;
@@ -13,7 +13,7 @@ use serde_json;
 
 pub async fn create_user(
     new: web::Json<MutUser>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -30,7 +30,7 @@ pub async fn create_user(
 
 pub async fn get_user(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -43,7 +43,7 @@ pub async fn get_user(
 pub async fn update_user(
     id: web::Path<String>,
     new: web::Json<MutUser>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -84,7 +84,7 @@ pub async fn update_user(
 
 pub async fn delete_user(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -96,7 +96,7 @@ pub async fn delete_user(
 
 pub async fn login(
     user: web::Json<LoginRequest>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
     let arg = Argon2::default();
@@ -200,7 +200,7 @@ pub async fn logout() -> Result<HttpResponse, CustomHttpError> {
 
 pub async fn check_login(
     req: HttpRequest,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let auth_header = req.headers().get("authorization");
 
@@ -214,7 +214,7 @@ pub async fn check_login(
 
 pub async fn setup_2fa(
     path: web::Path<String>,
-    _: web::Data<MySQLPool>,
+    _: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     if path.clone() != claim.sub {
@@ -235,7 +235,7 @@ pub async fn setup_2fa(
 pub async fn enable_2fa(
     path: web::Path<String>,
     body: web::Json<Enable2faRequest>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     if path.clone() != claim.sub {
