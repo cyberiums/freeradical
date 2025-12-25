@@ -3,145 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreeRadical - The Digital Experience Platform for Modern Innovators</title>
+    <title>FreeRadical - Industrial CMS Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
         }
-        .gradient-animation {
-            background-size: 200% 200%;
-            animation: gradient 15s ease infinite;
+        .hard-shadow {
+            box-shadow: 8px 8px 0px rgba(249, 115, 22, 0.3);
+        }
+        .hard-shadow-sm {
+            box-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
         }
     </style>
 </head>
-<body class="min-h-screen bg-gray-50 font-sans text-gray-900">
+<body class="min-h-screen">
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <span class="flex items-center space-x-2 text-2xl font-bold text-indigo-600">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                        </svg>
-                        <span>FreeRadical CMS</span>
-                    </span>
+    <nav style="background-color: #1E293B; border-bottom: 2px solid #334155;">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <img src="/logo.svg" alt="FreeRadical" class="w-10 h-10">
+                    <span class="text-white text-2xl font-black" style="letter-spacing: -0.04em;">FreeRadical</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/admin" class="text-gray-600 hover:text-indigo-600 font-medium">Admin</a>
-                    <a href="/static/api.html" class="bg-indigo-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">API Docs</a>
+                    <a href="/admin" class="text-gray-300 hover:text-[#F97316] font-semibold transition-colors code-font text-xs" style="letter-spacing: 0.05em;">ADMIN</a>
+                    <a href="/static/api.html" class="px-5 py-2.5 rounded-xl font-bold text-white transition-all hard-shadow-sm hover:shadow-[2px_2px_0px_rgba(249,115,22,0.2)]" style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em; font-size: 12px;">API DOCS</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-white pt-20 pb-24 lg:pt-32 lg:pb-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-8">
-                The Digital Experience Platform <br class="hidden md:block" />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                    for Modern Innovators
-                </span>
-            </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-gray-500 mb-10">
-                FreeRadical CMS gives you the freedom to build faster, scale further, and secure your digital future. Powered by Rust and built for performance.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="/admin" class="w-full sm:w-auto bg-indigo-600 text-white px-8 py-3.5 rounded-lg text-lg font-semibold hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all">
-                    Get Started →
-                </a>
-                <a href="https://github.com/cyberiums/freeradical" target="_blank" class="w-full sm:w-auto bg-indigo-50 text-indigo-700 px-8 py-3.5 rounded-lg text-lg font-semibold hover:bg-indigo-100 transition-all border border-indigo-200">
-                    View on GitHub
-                </a>
+    <section class="relative overflow-hidden pt-24 pb-32">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="max-w-4xl">
+                <div class="inline-block mb-6">
+                    <img src="/logo.svg" alt="FreeRadical Logo" class="w-32 h-32" style="filter: drop-shadow(8px 8px 0px rgba(249, 115, 22, 0.3));">
+                </div>
+                <h1 class="text-7xl font-black text-white mb-6" style="letter-spacing: -0.04em; text-shadow: 4px 4px 0px rgba(249, 115, 22, 0.2);">
+                    Industrial CMS<br/>
+                    <span style="color: #F97316;">Platform</span>
+                </h1>
+                <p class="text-2xl text-gray-300 mb-10 font-medium max-w-2xl" style="line-height: 1.6;">
+                    High-performance content management engineered in <span style="color: #F97316; font-weight: 700;">Rust</span>. Built for speed, secured by design.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/admin" class="inline-flex items-center justify-center px-8 py-5 rounded-xl text-white font-black text-lg hard-shadow hover:shadow-[4px_4px_0px_rgba(249,115,22,0.3)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1" style="background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); letter-spacing: 0.05em;">
+                        ACCESS SYSTEM →
+                    </a>
+                    <a href="https://github.com/cyberiums/freeradical" target="_blank" class="inline-flex items-center justify-center px-8 py-5 rounded-xl font-bold text-lg transition-all code-font" style="background-color: #1E293B; color: #06B6D4; border: 2px solid #334155; box-shadow: 4px 4px 0px rgba(6, 182, 212, 0.2); letter-spacing: 0.02em;">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        GitHub
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="py-24 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-24" style="background-color: #1E293B;">
+        <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 sm:text-4xl">
-                    Built with Modern Technology
+                <h2 class="text-5xl font-black text-white mb-4" style="letter-spacing: -0.04em;">
+                    ENGINEERED TECHNOLOGY
                 </h2>
-                <p class="mt-4 text-xl text-gray-500">
-                    High-performance CMS powered by Rust, Actix-Web v4, and cutting-edge infrastructure.
+                <p class="text-xl text-gray-400 code-font">
+                    High-performance • Memory-safe • Production-ready
                 </p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Lightning Fast</h3>
-                    <p class="text-gray-600">Built in Rust with Actix-Web v4 for maximum performance and minimal latency.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
+                    <svg class="w-12 h-12 mb-6" fill="#F97316" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="square" stroke-linejoin="miter" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Lightning Fast</h3>
+                    <p class="text-gray-400 code-font text-sm">Rust + Actix-Web v4. <span style="color: #06B6D4; font-weight: 700;">&lt;5ms</span> P95 latency.</p>
                 </div>
 
-                <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Secure by Default</h3>
-                    <p class="text-gray-600">Memory-safe Rust foundation with JWT authentication and built-in security features.</p>
+                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
+                    <svg class="w-12 h-12 mb-6" fill="none" stroke="#F97316" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="square" stroke-linejoin="miter" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Memory Safe</h3>
+                    <p class="text-gray-400 code-font text-sm">JWT + Argon2. Zero-cost security abstractions.</p>
                 </div>
 
-                <div class="p-6 bg-white rounded-xl shadow-sm border border-gray-100">
-                    <div class="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-2">Modern Stack</h3>
-                    <p class="text-gray-600">MySQL, Redis caching, GraphQL API, and multi-language template support.</p>
+                <div class="rounded-3xl p-8 hard-shadow-sm hover:shadow-[8px_8px_0px_rgba(249,115,22,0.3)] transition-all" style="background-color: #0F172A;">
+                    <svg class="w-12 h-12 mb-6" fill="none" stroke="#F97316" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="square" stroke-linejoin="miter" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
+                    </svg>
+                    <h3 class="text-2xl font-black text-white mb-3" style="letter-spacing: -0.02em;">Modern Stack</h3>
+                    <p class="text-gray-400 code-font text-sm">MySQL • Redis • GraphQL • Diesel ORM</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Stats Section -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600">4,300+</div>
-                    <div class="text-gray-600 mt-2">Requests/sec</div>
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-6xl font-black mb-2" style="color: #F97316;">4.3K+</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">REQ/SEC</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600">&lt;5ms</div>
-                    <div class="text-gray-600 mt-2">P95 Latency</div>
+                <div class="text-center">
+                    <div class="text-6xl font-black mb-2" style="color: #06B6D4;">&lt;5ms</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">P95 LATENCY</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600">100%</div>
-                    <div class="text-gray-600 mt-2">Rust powered</div>
+                <div class="text-center">
+                    <div class="text-6xl font-black text-white mb-2">100%</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">RUST</div>
                 </div>
-                <div>
-                    <div class="text-4xl font-bold text-indigo-600">v4.12</div>
-                    <div class="text-gray-600 mt-2">Actix-Web</div>
+                <div class="text-center">
+                    <div class="text-6xl font-black mb-2" style="color: #F97316;">v1.92</div>
+                    <div class="text-gray-400 code-font text-xs" style="letter-spacing: 0.05em;">RUST STABLE</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-gray-400 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <div class="flex items-center space-x-2 text-white font-bold mb-4 md:mb-0">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                    </svg>
-                    <span>FreeRadical CMS</span>
+    <footer class="py-12" style="background-color: #1E293B; border-top: 2px solid #334155;">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                    <img src="/logo.svg" alt="FreeRadical" class="w-8 h-8">
+                    <span class="text-white font-black text-xl">FreeRadical</span>
                 </div>
-                <p class="text-sm">© 2024 FreeRadical CMS. High-Performance Rust-Powered Content Management.</p>
+                <p class="text-gray-400 code-font text-sm">
+                    © 2024 • v1.0.3 • RUST + ACTIX-WEB + DIESEL
+                </p>
             </div>
         </div>
     </footer>
