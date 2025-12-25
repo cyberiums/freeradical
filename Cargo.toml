@@ -15,7 +15,7 @@ actix-governor = "0.10.0"
 actix-multipart = "0.7"  # For file uploads
 
 # encryption
-jsonwebtoken = "7"
+jsonwebtoken = { version = "10.2.0", features = ["aws_lc_rs"] }
 argon2 = "0.2"
 rand_core = { version = "0.6", features = ["std"] }
 
