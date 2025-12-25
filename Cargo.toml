@@ -57,6 +57,9 @@ async-graphql = "3.0"  # GraphQL server
 hex = "0.4"  # For hex encoding HMAC signatures
 hmac = "0.12"  # For HMAC-SHA256 signatures
 urlencoding = "2.1"  # For OAuth URL encoding
+liquid = "0.26"
+pyo3 = "0.20"
+async-trait = "0.1.89"
 
 [dev-dependencies]
 actix-rt = "2.2.0"
