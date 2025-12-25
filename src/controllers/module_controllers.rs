@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse};
 use uuid::Uuid;
 
-use crate::models::{Model, MySQLPool, pool_handler};
+use crate::models::{Model, DatabasePool, pool_handler};
 use crate::models::module_models::{Module, ModuleCategory, MutModule};
 
 use crate::services::auth_service::Claims;
@@ -9,7 +9,7 @@ use crate::services::errors_service::CustomHttpError;
 
 pub async fn create_module(
     new: web::Json<MutModule>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -22,7 +22,7 @@ pub async fn create_module(
     Ok(HttpResponse::Created().json(uuid_new))
 }
 
-pub async fn get_modules(pool: web::Data<MySQLPool>) -> Result<HttpResponse, CustomHttpError> {
+pub async fn get_modules(pool: web::Data<DatabasePool>) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
     let modules = Module::read_all(&mut mysql_pool)?;
 
@@ -31,7 +31,7 @@ pub async fn get_modules(pool: web::Data<MySQLPool>) -> Result<HttpResponse, Cus
 
 pub async fn get_module(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -43,7 +43,7 @@ pub async fn get_module(
 pub async fn update_module(
     updated_module: web::Json<MutModule>,
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -55,7 +55,7 @@ pub async fn update_module(
 
 pub async fn delete_module(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -67,7 +67,7 @@ pub async fn delete_module(
 
 pub async fn get_module_category(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 

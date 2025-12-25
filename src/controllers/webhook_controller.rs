@@ -2,7 +2,7 @@
 
 use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
 use serde::{Serialize, Deserialize};
-use crate::models::{MySQLPool, pool_handler};
+use crate::models::{DatabasePool, pool_handler};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Webhook {
@@ -22,7 +22,7 @@ pub struct CreateWebhookInput {
 
 /// List all webhooks
 #[get("/webhooks")]
-pub async fn list_webhooks(pool: web::Data<MySQLPool>) -> impl Responder {
+pub async fn list_webhooks(pool: web::Data<DatabasePool>) -> impl Responder {
     // Mock implementation
     HttpResponse::Ok().json(serde_json::json!({
         "webhooks": [],
@@ -34,7 +34,7 @@ pub async fn list_webhooks(pool: web::Data<MySQLPool>) -> impl Responder {
 #[post("/webhooks")]
 pub async fn create_webhook(
     input: web::Json<CreateWebhookInput>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     HttpResponse::Created().json(serde_json::json!({
         "id": 1,
@@ -50,7 +50,7 @@ pub async fn create_webhook(
 pub async fn update_webhook(
     id: web::Path<i32>,
     input: web::Json<CreateWebhookInput>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     HttpResponse::Ok().json(serde_json::json!({
         "id": id.into_inner(),
@@ -64,7 +64,7 @@ pub async fn update_webhook(
 #[delete("/webhooks/{id}")]
 pub async fn delete_webhook(
     id: web::Path<i32>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     HttpResponse::Ok().json(serde_json::json!({
         "success": true,
@@ -76,7 +76,7 @@ pub async fn delete_webhook(
 #[post("/webhooks/{id}/test")]
 pub async fn test_webhook(
     id: web::Path<i32>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     HttpResponse::Ok().json(serde_json::json!({
         "success": true,
@@ -88,7 +88,7 @@ pub async fn test_webhook(
 #[get("/webhooks/{id}/logs")]
 pub async fn get_webhook_logs(
     id: web::Path<i32>,
-    pool: web::Data<MySQLPool>
+    pool: web::Data<DatabasePool>
 ) -> impl Responder {
     HttpResponse::Ok().json(serde_json::json!({
         "webhook_id": id.into_inner(),

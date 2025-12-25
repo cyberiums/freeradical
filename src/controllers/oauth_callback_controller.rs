@@ -1,6 +1,6 @@
 use actix_web::{web, HttpResponse, Error};
 use serde::{Deserialize, Serialize};
-use crate::models::MySQLPool;
+use crate::models::DatabasePool;
 use crate::services::oauth_service::OAuthService;
 
 #[derive(Deserialize)]
@@ -28,7 +28,7 @@ struct UserProfile {
 /// Google OAuth callback handler
 pub async fn google_callback(
     query: web::Query<OAuthCallbackQuery>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
     let oauth = OAuthService::new();
     
@@ -63,7 +63,7 @@ pub async fn google_callback(
 /// GitHub OAuth callback handler
 pub async fn github_callback(
     query: web::Query<OAuthCallbackQuery>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
     let oauth = OAuthService::new();
     
@@ -97,7 +97,7 @@ pub async fn github_callback(
 /// Disconnect OAuth provider
 pub async fn disconnect_provider(
     provider: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
     let conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;

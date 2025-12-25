@@ -9,6 +9,7 @@ pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
 pub mod db_connection;  // Database abstraction layer
+pub mod db_macros;      // Helper macros for database operations
 
 use actix_web::web;
 use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
@@ -20,20 +21,17 @@ use self::config_models::LocalConfig;
 // Export database abstraction layer types
 pub use db_connection::{DatabasePool, PooledDatabaseConnection, create_pool, detect_database_type};
 
-pub type MySQLPool = Pool<ConnectionManager<MysqlConnection>>;
-pub type MySQLPooledConnection = PooledConnection<ConnectionManager<MysqlConnection>>;
-
 /// CRUD implementation.
 pub trait Model<TQueryable, TMutable: AsChangeset, TPrimary, TDto = TQueryable> {
-    fn create(new: &TMutable, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error>;
-    fn read_one(id: TPrimary, db: &mut MysqlConnection) -> Result<TDto, diesel::result::Error>;
-    fn read_all(db: &mut MysqlConnection) -> Result<Vec<TDto>, diesel::result::Error>;
+    fn create(new: &TMutable, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error>;
+    fn read_one(id: TPrimary, db: &mut PooledDatabaseConnection) -> Result<TDto, diesel::result::Error>;
+    fn read_all(db: &mut PooledDatabaseConnection) -> Result<Vec<TDto>, diesel::result::Error>;
     fn update(
         id: TPrimary,
         new: &TMutable,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error>;
-    fn delete(id: TPrimary, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error>;
+    fn delete(id: TPrimary, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error>;
 }
 
 pub trait DTO<TColumns> {
@@ -43,7 +41,7 @@ pub trait DTO<TColumns> {
 pub trait Joinable<TLeft, TRight, TPrimary> {
     fn read_one_join_on(
         id: TPrimary,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<(TLeft, Vec<TRight>), diesel::result::Error>;
 }
 
@@ -72,9 +70,9 @@ pub fn format_connection_string(conf: LocalConfig) -> String {
     }
 }
 
-pub fn establish_database_connection(conf: LocalConfig) -> Option<MySQLPool> {
+pub fn establish_database_connection(conf: LocalConfig) -> Option<DatabasePool> {
     let db_url = format_connection_string(conf);
-    Some(init_pool(&db_url).expect("Failed to create pool."))
+    Some(create_pool(&db_url))
 }
 
 pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::MysqlConnection> {
@@ -86,6 +84,6 @@ pub fn init_pool(db_url: &str) -> Result<MySQLPool, PoolError> {
     Pool::builder().max_size(2).build(manager)
 }
 
-pub fn pool_handler(pool: web::Data<MySQLPool>) -> Result<MySQLPooledConnection, CustomHttpError> {
+pub fn pool_handler(pool: web::Data<DatabasePool>) -> Result<PooledDatabaseConnection, CustomHttpError> {
     pool.get().or(Err(CustomHttpError::InternalServerError))
 }

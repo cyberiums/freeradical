@@ -2,13 +2,13 @@ use actix_web::{web, HttpResponse};
 use uuid::Uuid;
 
 use crate::models::module_models::{ModuleCategory, MutCategory};
-use crate::models::{pool_handler, Model, MySQLPool};
+use crate::models::{pool_handler, Model, DatabasePool};
 use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
 
 pub async fn create_category(
     new: web::Json<MutCategory>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -24,7 +24,7 @@ pub async fn create_category(
 pub async fn update_category(
     updated_category: web::Json<MutCategory>,
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -36,7 +36,7 @@ pub async fn update_category(
 
 pub async fn get_category(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -47,7 +47,7 @@ pub async fn get_category(
 
 pub async fn delete_category(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;

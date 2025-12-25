@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use super::module_models::Module;
 use super::status_enum::PageStatus;
 use super::Model;
+use super::PooledDatabaseConnection;
 use crate::models::module_models::CategoryDTO;
 use crate::models::module_models::FieldsDTO;
 use crate::models::module_models::ModuleCategory;
@@ -16,7 +17,6 @@ use crate::schema::pages;
 #[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone)]
 #[diesel(table_name = pages)]
 #[diesel(primary_key(uuid))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct Page {
     pub uuid: String,
     pub page_name: String,
@@ -142,136 +142,257 @@ impl From<Page> for PageDTO {
 }
 
 impl Model<Page, MutPage, String, PageDTO> for Page {
-    fn create(new_page: &MutPage, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
-        Ok(diesel::insert_or_ignore_into(pages::table)
-            .values(new_page)
-            .execute(db)?)
+    fn create(new_page: &MutPage, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::insert_or_ignore_into(pages::table)
+                    .values(new_page)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::insert_into(pages::table)
+                    .values(new_page)
+                    .on_conflict_do_nothing()
+                    .execute(conn)
+            }
+        }
     }
 
-    fn read_one(_id: String, db: &mut MysqlConnection) -> Result<PageDTO, diesel::result::Error> {
+    fn read_one(_id: String, db: &mut PooledDatabaseConnection) -> Result<PageDTO, diesel::result::Error> {
         use pages::dsl::uuid;
 
-        let res = pages::table.filter(uuid.eq(_id)).first::<Self>(db)?.into();
-
-        Ok(res)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                pages::table.filter(uuid.eq(_id)).first::<Self>(conn).map(|p| p.into())
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                pages::table.filter(uuid.eq(_id)).first::<Self>(conn).map(|p| p.into())
+            }
+        }
     }
 
-    fn read_all(db: &mut MysqlConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
-        let res = pages::table
-            .select(Page::as_select())
-            .load::<Self>(db)?
-            .into_iter()
-            .map(|x| x.into())
-            .collect();
-
-        Ok(res)
+    fn read_all(db: &mut PooledDatabaseConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                pages::table
+                    .select(Page::as_select())
+                    .load::<Self>(conn)
+                    .map(|pages| pages.into_iter().map(|x| x.into()).collect())
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                pages::table
+                    .select(Page::as_select())
+                    .load::<Self>(conn)
+                    .map(|pages| pages.into_iter().map(|x| x.into()).collect())
+            }
+        }
     }
 
     fn update(
         _id: String,
         new_page: &MutPage,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
 
-        Ok(diesel::update(pages::table.filter(uuid.eq(_id)))
-            .set(new_page)
-            .execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::update(pages::table.filter(uuid.eq(_id)))
+                    .set(new_page)
+                    .execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::update(pages::table.filter(uuid.eq(_id)))
+                    .set(new_page)
+                    .execute(conn)
+            }
+        }
     }
 
-    fn delete(_id: String, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error> {
+    fn delete(_id: String, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
 
-        Ok(diesel::delete(pages::table.filter(uuid.eq(_id))).execute(db)?)
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                diesel::delete(pages::table.filter(uuid.eq(_id))).execute(conn)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                diesel::delete(pages::table.filter(uuid.eq(_id))).execute(conn)
+            }
+        }
     }
 }
 
 impl Page {
     pub fn read_one_join_on(
         _id: String,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<PageModuleDTO, diesel::result::Error> {
         use pages::dsl::uuid;
         use modules::dsl::category_uuid;
 
-        let filtered_page = pages::table
-            .filter(uuid.eq(_id))
-            .select(Page::as_select())
-            .first::<Page>(db)?;
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                let filtered_page = pages::table
+                    .filter(uuid.eq(_id))
+                    .select(Page::as_select())
+                    .first::<Page>(conn)?;
 
-        let modules_no_category = Module::belonging_to(&filtered_page).filter(category_uuid.is_null()).load::<Module>(db)?;
+                let modules_no_category = Module::belonging_to(&filtered_page)
+                    .filter(category_uuid.is_null())
+                    .load::<Module>(conn)?;
 
-        let categories =  ModuleCategory::belonging_to(&filtered_page).load::<ModuleCategory>(db)?;
+                let categories = ModuleCategory::belonging_to(&filtered_page)
+                    .load::<ModuleCategory>(conn)?;
 
-        let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-            .load::<Module>(db)?
-            .grouped_by(&categories)
-            .iter()
-            .map(|a| a.clone())
-            .zip(categories)
-            .collect::<Vec<_>>();
+                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+                    .load::<Module>(conn)?
+                    .grouped_by(&categories)
+                    .iter()
+                    .map(|a| a.clone())
+                    .zip(categories)
+                    .collect::<Vec<_>>();
 
-        let category_dtos: Vec<CategoryDTO> = module_array
-            .iter()
-            .map(|a| CategoryDTO {
-                title: a.1.title.clone(),
-                modules: a.0.clone(),
-                uuid: a.1.uuid.clone(),
-            })
-            .collect::<Vec<_>>();
+                let category_dtos: Vec<CategoryDTO> = module_array
+                    .iter()
+                    .map(|a| CategoryDTO {
+                        title: a.1.title.clone(),
+                        modules: a.0.clone(),
+                        uuid: a.1.uuid.clone(),
+                    })
+                    .collect::<Vec<_>>();
 
-        let module_dto = FieldsDTO {
-            modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
-            categories: Some(category_dtos),
-        };
+                let module_dto = FieldsDTO {
+                    modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
+                    categories: Some(category_dtos),
+                };
 
-        let mut page_dto: PageModuleDTO = filtered_page.into();
+                let mut page_dto: PageModuleDTO = filtered_page.into();
+                page_dto.fields = module_dto;
+                Ok(page_dto)
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                let filtered_page = pages::table
+                    .filter(uuid.eq(_id))
+                    .select(Page::as_select())
+                    .first::<Page>(conn)?;
 
-        page_dto.fields = module_dto;
+                let modules_no_category = Module::belonging_to(&filtered_page)
+                    .filter(category_uuid.is_null())
+                    .load::<Module>(conn)?;
 
-        Ok(page_dto)
+                let categories = ModuleCategory::belonging_to(&filtered_page)
+                    .load::<ModuleCategory>(conn)?;
+
+                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+                    .load::<Module>(conn)?
+                    .grouped_by(&categories)
+                    .iter()
+                    .map(|a| a.clone())
+                    .zip(categories)
+                    .collect::<Vec<_>>();
+
+                let category_dtos: Vec<CategoryDTO> = module_array
+                    .iter()
+                    .map(|a| CategoryDTO {
+                        title: a.1.title.clone(),
+                        modules: a.0.clone(),
+                        uuid: a.1.uuid.clone(),
+                    })
+                    .collect::<Vec<_>>();
+
+                let module_dto = FieldsDTO {
+                    modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
+                    categories: Some(category_dtos),
+                };
+
+                let mut page_dto: PageModuleDTO = filtered_page.into();
+                page_dto.fields = module_dto;
+                Ok(page_dto)
+            }
+        }
     }
 
     /// This is used for displaying a page, rather than getting a page's modules/array modules.
     pub fn read_one_join_on_url(
         id: String,
-        db: &mut MysqlConnection,
+        db: &mut PooledDatabaseConnection,
     ) -> Result<(Self, FieldsDTO), diesel::result::Error> {
         use crate::schema::pages::dsl::page_url;
 
-        let filtered_page = pages::table
-            .filter(page_url.eq(id))
-            .select(Page::as_select())
-            .first::<Page>(db)?;
+        match db {
+            PooledDatabaseConnection::MySQL(ref mut conn) => {
+                let filtered_page = pages::table
+                    .filter(page_url.eq(id))
+                    .select(Page::as_select())
+                    .first::<Page>(conn)?;
 
-        let modules = Module::belonging_to(&filtered_page).load::<Module>(db)?;
+                let modules = Module::belonging_to(&filtered_page).load::<Module>(conn)?;
 
-        let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
-            .inner_join(module_category::table)
-            .select(module_category::all_columns)
-            .load::<ModuleCategory>(db)?;
+                let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
+                    .inner_join(module_category::table)
+                    .select(module_category::all_columns)
+                    .load::<ModuleCategory>(conn)?;
 
-        let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-            .load::<Module>(db)?
-            .grouped_by(&categories)
-            .into_iter()
-            .zip(categories)
-            .collect::<Vec<_>>();
+                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+                    .load::<Module>(conn)?
+                    .grouped_by(&categories)
+                    .into_iter()
+                    .zip(categories)
+                    .collect::<Vec<_>>();
 
-        let category_dtos: Vec<CategoryDTO> = module_array
-            .iter()
-            .map(|a| CategoryDTO {
-                uuid: a.1.uuid.clone(),
-                title: a.1.title.clone(),
-                modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
-            })
-            .collect::<Vec<_>>();
+                let category_dtos: Vec<CategoryDTO> = module_array
+                    .iter()
+                    .map(|a| CategoryDTO {
+                        uuid: a.1.uuid.clone(),
+                        title: a.1.title.clone(),
+                        modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
+                    })
+                    .collect::<Vec<_>>();
 
-        let module_dto = FieldsDTO {
-            modules: modules.into_iter().map(|m| m.into()).collect(),
-            categories: Some(category_dtos),
-        };
+                let module_dto = FieldsDTO {
+                    modules: modules.into_iter().map(|m| m.into()).collect(),
+                    categories: Some(category_dtos),
+                };
 
-        Ok((filtered_page, module_dto))
+                Ok((filtered_page, module_dto))
+            }
+            PooledDatabaseConnection::Postgres(ref mut conn) => {
+                let filtered_page = pages::table
+                    .filter(page_url.eq(id))
+                    .select(Page::as_select())
+                    .first::<Page>(conn)?;
+
+                let modules = Module::belonging_to(&filtered_page).load::<Module>(conn)?;
+
+                let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
+                    .inner_join(module_category::table)
+                    .select(module_category::all_columns)
+                    .load::<ModuleCategory>(conn)?;
+
+                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+                    .load::<Module>(conn)?
+                    .grouped_by(&categories)
+                    .into_iter()
+                    .zip(categories)
+                    .collect::<Vec<_>>();
+
+                let category_dtos: Vec<CategoryDTO> = module_array
+                    .iter()
+                    .map(|a| CategoryDTO {
+                        uuid: a.1.uuid.clone(),
+                        title: a.1.title.clone(),
+                        modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
+                    })
+                    .collect::<Vec<_>>();
+
+                let module_dto = FieldsDTO {
+                    modules: modules.into_iter().map(|m| m.into()).collect(),
+                    categories: Some(category_dtos),
+                };
+
+                Ok((filtered_page, module_dto))
+            }
+        }
     }
 }

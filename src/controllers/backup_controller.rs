@@ -2,10 +2,10 @@ use actix_web::{web, HttpResponse};
 use crate::services::backup_service::BackupService;
 use crate::services::errors_service::CustomHttpError;
 use crate::services::auth_service::Claims;
-use crate::models::MySQLPool;
+use crate::models::DatabasePool;
 
 pub async fn create_backup(
-    _pool: web::Data<MySQLPool>,
+    _pool: web::Data<DatabasePool>,
     _claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let db_url = std::env::var("DATABASE_URL")

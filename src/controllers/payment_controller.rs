@@ -2,7 +2,7 @@ use actix_web::{web, HttpResponse};
 use crate::services::payment_service::{PaymentHandlerRegistry, CreatePaymentIntentRequest};
 use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
-use crate::models::MySQLPool;
+use crate::models::DatabasePool;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -17,7 +17,7 @@ pub struct CreatePaymentRequest {
 pub async fn create_payment_intent(
     body: web::Json<CreatePaymentRequest>,
     registry: web::Data<PaymentHandlerRegistry>,
-    _pool: web::Data<MySQLPool>,
+    _pool: web::Data<DatabasePool>,
     _claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let handler = registry

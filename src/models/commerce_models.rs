@@ -4,7 +4,6 @@ use crate::schema::{products, orders, order_items};
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
 #[diesel(primary_key(id))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = products)]
 pub struct Product {
     pub id: i64,
@@ -35,7 +34,6 @@ pub struct NewProduct {
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
 #[diesel(primary_key(id))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = orders)]
 pub struct Order {
     pub id: i64,
@@ -66,7 +64,6 @@ pub struct NewOrder {
 #[diesel(belongs_to(Order))]
 #[diesel(belongs_to(Product))]
 #[diesel(primary_key(id))]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 #[diesel(table_name = order_items)]
 pub struct OrderItem {
     pub id: i64,

@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use super::errors_service::CustomHttpError;
-use crate::models::{pool_handler, user_models, Model, MySQLPool};
+use crate::models::{pool_handler, user_models, Model, DatabasePool};
 
 #[derive(Error, Debug)]
 pub enum CryptoError {
@@ -67,7 +67,7 @@ pub fn decrypt(jwt: &String) -> Result<Claims, CryptoError> {
 pub fn compare(
     token: &Claims,
     enc_token: &String,
-    pool: &MySQLPool,
+    pool: &DatabasePool,
 ) -> Result<(), CryptoError> {
     let mut pool_conn = pool.get().map_err(|_| CryptoError::Unknown)?; // Convert r2d2 error to CryptoError
     if let Ok(user) = user_models::User::read_one(token.sub.clone(), &mut pool_conn) {
@@ -105,7 +105,7 @@ impl FromRequest for Claims {
     // Config type removed in actix-web v4
 
     fn from_request(req: &HttpRequest, _: &mut Payload) -> Self::Future {
-        let pool = req.app_data::<web::Data<MySQLPool>>().unwrap().to_owned();
+        let pool = req.app_data::<web::Data<DatabasePool>>().unwrap().to_owned();
         let auth_header = req.headers().get("Authorization");
 
         match auth_header {
@@ -120,7 +120,7 @@ impl FromRequest for Claims {
 
 pub fn authenticate(
     auth_header: &HeaderValue,
-    pool: &MySQLPool,
+    pool: &DatabasePool,
 ) -> impl Future<Output = Result<Claims, CustomHttpError>> {
     let encrypted_token = std::str::from_utf8(auth_header.as_bytes())
         .unwrap()

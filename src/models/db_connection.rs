@@ -25,6 +25,7 @@ pub enum PooledDatabaseConnection {
 }
 
 /// Connection pool wrapper
+#[derive(Debug, Clone)]
 pub enum DatabasePool {
     MySQL(Pool<ConnectionManager<MysqlConnection>>),
     Postgres(Pool<ConnectionManager<PgConnection>>),
@@ -42,6 +43,35 @@ impl DatabasePool {
             }
         }
     }
+}
+
+impl PooledDatabaseConnection {
+    /// Get mutable reference to MySQL connection if available
+    pub fn as_mysql_mut(&mut self) -> Option<&mut MysqlConnection> {
+        match self {
+            PooledDatabaseConnection::MySQL(conn) => Some(conn),
+            _ => None,
+        }
+    }
+    
+    /// Get mutable reference to Postgres connection if available  
+    pub fn as_postgres_mut(&mut self) -> Option<&mut PgConnection> {
+        match self {
+            PooledDatabaseConnection::Postgres(conn) => Some(conn),
+            _ => None,
+        }
+    }
+}
+
+/// Execute query on either database connection type
+#[macro_export]
+macro_rules! with_connection {
+    ($conn:expr, |$c:ident| $body:expr) => {
+        match $conn {
+            PooledDatabaseConnection::MySQL(ref mut $c) => $body,
+            PooledDatabaseConnection::Postgres(ref mut $c) => $body,
+        }
+    };
 }
 
 /// Detect database type from URL format

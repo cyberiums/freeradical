@@ -4,7 +4,7 @@ use actix_web::{web, HttpRequest, HttpResponse};
 use handlebars::Handlebars;
 use uuid::Uuid;
 
-use crate::models::{pool_handler, Model, MySQLPool};
+use crate::models::{pool_handler, Model, DatabasePool};
 
 use crate::models::module_models::{FieldsDTO};
 use crate::models::page_models::{PageModuleDisplayDTO,MutPage, Page, PageDTO};
@@ -90,7 +90,7 @@ fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDisplayDTO, CustomHtt
 
 pub async fn display_page(
     req: HttpRequest,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     hb: web::Data<Mutex<Handlebars<'_>>>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -115,7 +115,7 @@ pub async fn display_page(
 
 pub async fn create_page(
     new: web::Json<MutPage>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -131,7 +131,7 @@ pub async fn create_page(
     Ok(HttpResponse::Ok().json(uuid_new))
 }
 
-pub async fn get_pages(pool: web::Data<MySQLPool>) -> Result<HttpResponse, CustomHttpError> {
+pub async fn get_pages(pool: web::Data<DatabasePool>) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
     let pages: Vec<PageDTO> = Page::read_all(&mut mysql_pool)?;
 
@@ -141,7 +141,7 @@ pub async fn get_pages(pool: web::Data<MySQLPool>) -> Result<HttpResponse, Custo
 
 pub async fn get_page(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -152,7 +152,7 @@ pub async fn get_page(
 
 pub async fn get_page_join_modules(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -164,7 +164,7 @@ pub async fn get_page_join_modules(
 pub async fn update_page(
     updated_page: web::Json<MutPage>,
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
     claims: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
@@ -198,7 +198,7 @@ pub async fn update_page(
 
 pub async fn delete_page(
     id: web::Path<String>,
-    pool: web::Data<MySQLPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 

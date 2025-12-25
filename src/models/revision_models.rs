@@ -8,7 +8,6 @@ use diesel::deserialize::FromSql;
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
 #[diesel(table_name = crate::schema::page_revisions)]
-#[diesel(check_for_backend(diesel::mysql::Mysql))]
 pub struct PageRevision {
     pub id: i64,
     pub page_uuid: String,
