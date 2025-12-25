@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  description: Headless CMS API for FreeRadical
+  title: FreeRadical CMS API
+  version: 0.9.0
+servers:
+- description: Local Development Server
+  url: http://localhost:8000/v1
+security:
+- bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+          description: Successful login
+      security: []
+      summary: Authenticate user
+  /pages:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/Page"
+                type: array
+          description: List of pages
+      summary: List pages
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Page"
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+          description: Page created
+      summary: Create a page
+  /pages/{uuid}:
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: uuid
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Page"
+          description: Page details
+      summary: Get page by UUID
+  /analytics/summary:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/_analytics_summary_get_200_response"
+          description: Analytics data
+      summary: Get analytics summary
+components:
+  schemas:
+    Page:
+      example:
+        html_content: html_content
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: 0
+        title: title
+        uuid: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        slug: slug
+        status: draft
+      properties:
+        id:
+          type: integer
+        uuid:
+          format: uuid
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        html_content:
+          type: string
+        status:
+          enum:
+          - draft
+          - published
+          - archived
+          type: string
+        created_at:
+          format: date-time
+          type: string
+      type: object
+    User:
+      example:
+        role: role
+        id: 0
+        email: email
+      properties:
+        id:
+          type: integer
+        email:
+          format: email
+          type: string
+        role:
+          type: string
+      type: object
+    LoginRequest:
+      example:
+        password: password
+        email: email
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - password
+      type: object
+    LoginResponse:
+      example:
+        user:
+          role: role
+          id: 0
+          email: email
+        token: token
+      properties:
+        token:
+          type: string
+        user:
+          $ref: "#/components/schemas/User"
+      type: object
+    _analytics_summary_get_200_response:
+      example:
+        unique_visitors: 6
+        total_views: 0
+      properties:
+        total_views:
+          type: integer
+        unique_visitors:
+          type: integer
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
