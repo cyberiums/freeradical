@@ -182,11 +182,8 @@ async fn main() -> std::io::Result<()> {
             // .service(controllers::dashboard_controller::analytics_summary)
             // .service(controllers::dashboard_controller::seo_health)
             // .service(controllers::dashboard_controller::top_pages)
-            .route("/", web::get().to(|| async {
-                actix_files::NamedFile::open_async("./static/index.html").await
-            }))
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
-            .service(fs::Files::new("/static", "./static"))
+            .default_service(web::get().to(controllers::page_controllers::display_page))
             .app_data(web::Data::new(pool.clone()))
             .app_data(handlebars_ref.clone())
             .app_data(payment_registry.clone())

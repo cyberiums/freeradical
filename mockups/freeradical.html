@@ -1,0 +1,382 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Check, Server, Shield, Zap, Globe, Cpu, Menu, X, 
+  ArrowRight, Code, Database, Lock, Sparkles, Send, 
+  Loader2, RefreshCw, AlertCircle, Wand2
+} from 'lucide-react';
+
+// --- Gemini API Configuration ---
+const apiKey = "";
+const GEMINI_MODEL = "gemini-2.5-flash-preview-09-2025";
+
+const callGemini = async (prompt, systemInstruction = "") => {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+  
+  const payload = {
+    contents: [{ parts: [{ text: prompt }] }],
+    systemInstruction: systemInstruction ? { parts: [{ text: systemInstruction }] } : undefined,
+  };
+
+  const maxRetries = 5;
+  let delay = 1000;
+
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
+      const result = await response.json();
+      return result.candidates?.[0]?.content?.parts?.[0]?.text || "No response received.";
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+};
+
+// --- Components ---
+
+const Modal = ({ isOpen, onClose, title, children }) => {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col">
+        <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-indigo-50/30">
+          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-indigo-600" />
+            {title}
+          </h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <div className="p-6 overflow-y-auto flex-grow">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PricingTier = ({ title, price, sites, visits, storage, bandwidth, features, isPopular, onSelect }) => (
+  <div className={`relative p-8 bg-white rounded-2xl shadow-xl flex flex-col border-2 transition-all duration-300 ${isPopular ? 'border-indigo-600 scale-105 z-10' : 'border-transparent hover:border-gray-200'}`}>
+    {isPopular && (
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-indigo-600 text-white px-4 py-1 rounded-full text-sm font-semibold tracking-wide">
+        MOST POPULAR
+      </div>
+    )}
+    <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+    <div className="mb-6">
+      <span className="text-4xl font-extrabold text-gray-900">${price}</span>
+      <span className="text-gray-500 font-medium">/mo</span>
+    </div>
+    <div className="space-y-4 mb-8 flex-grow">
+      <div className="flex items-center text-gray-700">
+        <Globe className="w-5 h-5 mr-3 text-indigo-500" />
+        <span className="font-semibold">{sites} Site{sites > 1 ? 's' : ''}</span>
+      </div>
+      <div className="flex items-center text-gray-700">
+        <Zap className="w-5 h-5 mr-3 text-indigo-500" />
+        <span>{visits.toLocaleString()} Visits/mo</span>
+      </div>
+      <div className="flex items-center text-gray-700">
+        <Database className="w-5 h-5 mr-3 text-indigo-500" />
+        <span>{storage} Local Storage</span>
+      </div>
+      <div className="flex items-center text-gray-700">
+        <Server className="w-5 h-5 mr-3 text-indigo-500" />
+        <span>{bandwidth} Bandwidth</span>
+      </div>
+      <div className="border-t border-gray-100 pt-4 mt-4 space-y-3">
+        {features.map((feature, idx) => (
+          <div key={idx} className="flex items-start text-sm text-gray-600">
+            <Check className="w-4 h-4 mr-2 text-green-500 mt-1 flex-shrink-0" />
+            <span>{feature}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+    <button onClick={onSelect} className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors duration-200 ${isPopular ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-100 text-gray-900 hover:bg-gray-200'}`}>
+      Get Started
+    </button>
+  </div>
+);
+
+const FeatureCard = ({ icon: Icon, title, description }) => (
+  <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+    <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
+      <Icon className="w-6 h-6" />
+    </div>
+    <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
+    <p className="text-gray-600 leading-relaxed">{description}</p>
+  </div>
+);
+
+const App = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // 'migration' or 'recommendation'
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiResponse, setAiResponse] = useState("");
+  const [aiError, setAiError] = useState("");
+
+  // Form States
+  const [migrationInput, setMigrationInput] = useState("");
+  const [recommendInput, setRecommendInput] = useState({ traffic: "25000", sites: "1", focus: "speed" });
+
+  const pricingTiers = [
+    { title: "Starter", price: 25, sites: 1, visits: 25000, storage: "10GB", bandwidth: "50GB", features: ["Free SSL & SSH", "Global CDN", "Daily Backups", "24/7 Chat Support"], isPopular: false },
+    { title: "Professional", price: 50, sites: 3, visits: 75000, storage: "15GB", bandwidth: "150GB", features: ["All Starter Features", "Phone Support", "Smart Plugin Updates", "Genesis Framework"], isPopular: true },
+    { title: "Growth", price: 96, sites: 10, visits: 100000, storage: "20GB", bandwidth: "200GB", features: ["All Pro Features", "Geotargeting", "Multisite Ready", "Advanced Security"], isPopular: false },
+    { title: "Scale", price: 242, sites: 30, visits: 400000, storage: "50GB", bandwidth: "500GB", features: ["All Growth Features", "Dev/Stage/Prod Envs", "SLA 99.95% Uptime", "Consultative Onboarding"], isPopular: false }
+  ];
+
+  const handleMigrationPlan = async () => {
+    if (!migrationInput) return;
+    setAiLoading(true);
+    setAiResponse("");
+    setAiError("");
+    try {
+      const prompt = `My current tech stack is: ${migrationInput}. Please provide a concise, high-level technical migration plan to move this to FreeRadical Hosting. Include possible challenges and recommended FreeRadical features to use. Format with clear headings.`;
+      const system = "You are a Senior DevOps Architect for FreeRadical Hosting, an elite managed CMS platform. You are helpful, precise, and professional.";
+      const res = await callGemini(prompt, system);
+      setAiResponse(res);
+    } catch (e) {
+      setAiError("Failed to generate migration plan. Please try again later.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const handlePlanRecommendation = async () => {
+    setAiLoading(true);
+    setAiResponse("");
+    setAiError("");
+    try {
+      const prompt = `I have ${recommendInput.sites} site(s) with roughly ${recommendInput.traffic} visits per month. My primary focus is ${recommendInput.focus}. Which FreeRadical plan (Starter, Professional, Growth, Scale) should I choose? Explain why based on the specs (Starter: 25k visits, Pro: 75k, Growth: 100k, Scale: 400k).`;
+      const system = "You are an expert Solutions Consultant. Recommend a specific hosting tier based on the user's data and explain the value proposition clearly.";
+      const res = await callGemini(prompt, system);
+      setAiResponse(res);
+    } catch (e) {
+      setAiError("Recommendation engine is currently unavailable.");
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
+      {/* Navigation */}
+      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <span className="flex items-center space-x-2 text-2xl font-bold text-indigo-600">
+                <Cpu className="w-8 h-8" />
+                <span>FreeRadical</span>
+              </span>
+              <div className="hidden md:flex ml-10 space-x-8">
+                <a href="#features" className="text-gray-600 hover:text-indigo-600 font-medium">Features</a>
+                <a href="#pricing" className="text-gray-600 hover:text-indigo-600 font-medium">Pricing</a>
+                <a href="#solutions" className="text-gray-600 hover:text-indigo-600 font-medium">Solutions</a>
+              </div>
+            </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <button 
+                onClick={() => { setActiveModal('migration'); setAiResponse(""); setAiError(""); }}
+                className="flex items-center gap-2 text-indigo-600 font-semibold px-4 py-2 rounded-lg hover:bg-indigo-50 transition-colors"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>✨ AI Migration Architect</span>
+              </button>
+              <button className="bg-indigo-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                Get Started
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden bg-white pt-20 pb-24 lg:pt-32 lg:pb-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-8">
+            The Digital Experience Platform <br className="hidden md:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
+              for Modern Innovators
+            </span>
+          </h1>
+          <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500 mb-10">
+            FreeRadical gives you the freedom to build faster, scale further, and secure your digital future. Powered by next-gen infrastructure and AI insight.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+            <button className="w-full sm:w-auto bg-indigo-600 text-white px-8 py-3.5 rounded-lg text-lg font-semibold hover:bg-indigo-700 shadow-lg hover:shadow-xl transition-all flex items-center justify-center">
+              See Plans & Pricing <ArrowRight className="ml-2 w-5 h-5" />
+            </button>
+            <button 
+              onClick={() => { setActiveModal('migration'); setAiResponse(""); setAiError(""); }}
+              className="w-full sm:w-auto bg-indigo-50 text-indigo-700 px-8 py-3.5 rounded-lg text-lg font-semibold hover:bg-indigo-100 transition-all flex items-center justify-center border border-indigo-200"
+            >
+              <Sparkles className="mr-2 w-5 h-5" /> ✨ Build Migration Plan
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Migration Modal */}
+      <Modal 
+        isOpen={activeModal === 'migration'} 
+        onClose={() => setActiveModal(null)} 
+        title="✨ AI Migration Architect"
+      >
+        <div className="space-y-4">
+          <p className="text-gray-600 text-sm">Describe your current setup (e.g., "WordPress on AWS with 40 plugins and 50GB media library") and our AI will draft your custom migration strategy.</p>
+          <div className="flex gap-2">
+            <textarea 
+              className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none min-h-[100px]"
+              placeholder="Enter your current tech stack..."
+              value={migrationInput}
+              onChange={(e) => setMigrationInput(e.target.value)}
+            />
+          </div>
+          <button 
+            onClick={handleMigrationPlan}
+            disabled={aiLoading || !migrationInput}
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          >
+            {aiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+            ✨ Generate Technical Plan
+          </button>
+
+          {aiError && (
+            <div className="p-4 bg-red-50 text-red-700 rounded-xl flex items-center gap-2 text-sm">
+              <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              {aiError}
+            </div>
+          )}
+
+          {aiResponse && (
+            <div className="mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200 prose prose-sm max-w-none prose-indigo">
+              <div className="flex items-center gap-2 text-indigo-600 font-bold mb-4">
+                <Wand2 className="w-4 h-4" /> AI Generated Strategy
+              </div>
+              <div className="whitespace-pre-wrap text-gray-700 leading-relaxed font-mono text-xs">
+                {aiResponse}
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* Recommendation Modal */}
+      <Modal 
+        isOpen={activeModal === 'recommendation'} 
+        onClose={() => setActiveModal(null)} 
+        title="✨ Smart Plan Recommender"
+      >
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Monthly Traffic</label>
+              <select 
+                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+                value={recommendInput.traffic}
+                onChange={(e) => setRecommendInput({...recommendInput, traffic: e.target.value})}
+              >
+                <option value="10000">Up to 10,000</option>
+                <option value="25000">25,000</option>
+                <option value="75000">75,000</option>
+                <option value="150000">150,000</option>
+                <option value="500000">500,000+</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Number of Sites</label>
+              <input 
+                type="number" 
+                className="w-full border border-gray-200 rounded-lg p-2 text-sm bg-white"
+                value={recommendInput.sites}
+                onChange={(e) => setRecommendInput({...recommendInput, sites: e.target.value})}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Primary Focus</label>
+            <div className="grid grid-cols-3 gap-2">
+              {['Speed', 'Security', 'Scalability'].map(opt => (
+                <button 
+                  key={opt}
+                  onClick={() => setRecommendInput({...recommendInput, focus: opt.toLowerCase()})}
+                  className={`py-2 px-3 rounded-lg text-sm font-medium border transition-all ${recommendInput.focus === opt.toLowerCase() ? 'bg-indigo-600 text-white border-indigo-600 shadow-md' : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'}`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <button 
+            onClick={handlePlanRecommendation}
+            disabled={aiLoading}
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 disabled:opacity-50 transition-all"
+          >
+            {aiLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+            ✨ Find My Ideal Plan
+          </button>
+
+          {aiResponse && (
+            <div className="mt-4 p-5 bg-indigo-50 rounded-xl border border-indigo-100 italic text-gray-700 text-sm leading-relaxed">
+              {aiResponse}
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="mt-4 text-xl text-gray-500 mb-6">
+              Choose the perfect plan for your business.
+            </p>
+            <button 
+              onClick={() => { setActiveModal('recommendation'); setAiResponse(""); setAiError(""); }}
+              className="inline-flex items-center gap-2 px-6 py-2 bg-indigo-50 text-indigo-700 rounded-full font-semibold border border-indigo-200 hover:bg-indigo-100 transition-all"
+            >
+              <Sparkles className="w-4 h-4" /> ✨ Not sure? Let AI recommend a plan
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {pricingTiers.map((tier, index) => (
+              <PricingTier key={index} {...tier} onSelect={() => alert(`Selected ${tier.title} plan`)} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
+            <div className="flex items-center space-x-2 text-white font-bold mb-4 md:mb-0">
+               <Cpu className="w-6 h-6" />
+               <span>FreeRadical</span>
+            </div>
+            <p className="text-sm">© 2024 FreeRadical Inc. AI-Enhanced Managed Hosting.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
