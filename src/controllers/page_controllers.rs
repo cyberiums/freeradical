@@ -93,9 +93,9 @@ pub async fn display_page(
     pool: web::Data<MySQLPool>,
     hb: web::Data<Mutex<Handlebars<'_>>>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
     let path = req.path();
-    let page_tuple = Page::read_one_join_on_url(path.to_string(), &mysql_pool);
+    let page_tuple = Page::read_one_join_on_url(path.to_string(), &mut mysql_pool);
 
     if let Err(_) = page_tuple {
         let s = hb.lock().unwrap().render("404", &String::from("")).unwrap();
@@ -118,7 +118,7 @@ pub async fn create_page(
     pool: web::Data<MySQLPool>,
     _: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
     // Validate SEO fields
     validate_seo_fields(&new)?;
@@ -126,14 +126,14 @@ pub async fn create_page(
     let mut uuid_new = new.clone();
     uuid_new.uuid = Some(Uuid::new_v4().to_string());
 
-    Page::create(&uuid_new, &mysql_pool)?;
+    Page::create(&uuid_new, &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(uuid_new))
 }
 
 pub async fn get_pages(pool: web::Data<MySQLPool>) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
-    let pages: Vec<PageDTO> = Page::read_all(&mysql_pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
+    let pages: Vec<PageDTO> = Page::read_all(&mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(pages))
 
@@ -143,9 +143,9 @@ pub async fn get_page(
     id: web::Path<String>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let page: PageDTO = Page::read_one(id.clone(), &mysql_pool)?;
+    let page: PageDTO = Page::read_one(id.clone(), &mut mysql_pool)?;
     Ok(HttpResponse::Ok().json(page))
 
 }
@@ -154,9 +154,9 @@ pub async fn get_page_join_modules(
     id: web::Path<String>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let page_vec = Page::read_one_join_on(id.clone(), &mysql_pool)?;
+    let page_vec = Page::read_one_join_on(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(page_vec))
 }
@@ -165,14 +165,32 @@ pub async fn update_page(
     updated_page: web::Json<MutPage>,
     id: web::Path<String>,
     pool: web::Data<MySQLPool>,
-    _: Claims
+    claims: Claims
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
     // Validate SEO fields
     validate_seo_fields(&updated_page)?;
 
-    Page::update(id.clone(), &updated_page, &mysql_pool)?;
+    // Create revision BEFORE updating the page
+    let user_id = Some(claims.sub.parse::<i32>().unwrap_or(0));
+    match crate::services::revision_service::create_page_revision(
+        &id,
+        user_id,
+        Some("Page updated".to_string()),
+        &mut mysql_pool
+    ) {
+        Ok(rev_num) => {
+            log::info!("Created revision {} for page {}", rev_num, id);
+        }
+        Err(e) => {
+            log::warn!("Failed to create revision: {}", e);
+            // Continue with update even if revision fails
+        }
+    }
+
+    // Update the page
+    Page::update(id.clone(), &updated_page, &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(updated_page.0))
 
@@ -182,9 +200,9 @@ pub async fn delete_page(
     id: web::Path<String>,
     pool: web::Data<MySQLPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let mysql_pool = pool_handler(pool)?;
+    let mut mysql_pool = pool_handler(pool)?;
 
-    let res = Page::delete(id.clone(), &mysql_pool)?;
+    let res = Page::delete(id.clone(), &mut mysql_pool)?;
 
     Ok(HttpResponse::Ok().json(res))
 }

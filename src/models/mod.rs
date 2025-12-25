@@ -1,9 +1,12 @@
 pub mod config_models;
 pub mod module_models;
 pub mod page_models;
+pub mod status_enum;
 pub mod user_models;
 pub mod media_models;
 pub mod revision_models;
+pub mod field_type_enum;
+pub mod category_models;
 
 use actix_web::web;
 use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
@@ -16,10 +19,6 @@ pub type MySQLPool = Pool<ConnectionManager<MysqlConnection>>;
 pub type MySQLPooledConnection = PooledConnection<ConnectionManager<MysqlConnection>>;
 
 /// CRUD implementation.
-/// TQueryable: The queryable struct.
-/// TMutable: The struct that represents the mutable columns in the table.
-/// TPrimary: The primary key type.
-/// TDto: The DTO object that will be sent back to the user.
 pub trait Model<TQueryable, TMutable: AsChangeset, TPrimary, TDto = TQueryable> {
     fn create(new: &TMutable, db: &mut MysqlConnection) -> Result<usize, diesel::result::Error>;
     fn read_one(id: TPrimary, db: &mut MysqlConnection) -> Result<TDto, diesel::result::Error>;
@@ -36,9 +35,6 @@ pub trait DTO<TColumns> {
     fn columns() -> TColumns;
 }
 
-/// Trait that enforces a  Model to be joinable if that is desired.
-/// This should use associations rather than Left or Right join.
-/// https://docs.diesel.rs/diesel/associations/index.html
 pub trait Joinable<TLeft, TRight, TPrimary> {
     fn read_one_join_on(
         id: TPrimary,
@@ -73,7 +69,6 @@ pub fn format_connection_string(conf: LocalConfig) -> String {
 
 pub fn establish_database_connection(conf: LocalConfig) -> Option<MySQLPool> {
     let db_url = format_connection_string(conf);
-
     Some(init_pool(&db_url).expect("Failed to create pool."))
 }
 
@@ -81,13 +76,11 @@ pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::MysqlConnectio
     ConnectionManager::<MysqlConnection>::new(db_url)
 }
 
-// https://dev.to/werner/practical-rust-web-development-connection-pool-46f4
 pub fn init_pool(db_url: &str) -> Result<MySQLPool, PoolError> {
     let manager = init_connection(db_url);
     Pool::builder().max_size(2).build(manager)
 }
 
-// Updated for Diesel 2.x: returns mutable connection
 pub fn pool_handler(pool: web::Data<MySQLPool>) -> Result<MySQLPooledConnection, CustomHttpError> {
     pool.get().or(Err(CustomHttpError::BadRequest))
 }

@@ -1,13 +1,18 @@
-// Simplified Media Controller
-// Iteration 4, Task 1 - Basic implementation
-
+use actix_multipart::Multipart;
 use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
+use futures_util::StreamExt;
+use std::fs;
+use std::io::Write;
+use std::path::PathBuf;
 use uuid::Uuid;
 
-use crate::services::database_service;
 use crate::models::media_models::{Media, NewMedia};
 use crate::schema::media;
+use crate::services::database_service;
+
+const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10MB
+const UPLOAD_DIR: &str = "uploads";
 
 /// List all media files
 /// GET /api/media
@@ -49,43 +54,201 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
     
     let mut conn = database_service::establish_connection();
     
+    // Get media to find file path
+    let media_item = match media
+        .filter(uuid.eq(media_uuid.as_str()))
+        .first::<Media>(&mut conn)
+    {
+        Ok(item) => item,
+        Err(_) => return HttpResponse::NotFound().json("Media not found"),
+    };
+    
+    // Delete database record
     match diesel::delete(media.filter(uuid.eq(media_uuid.as_str())))
         .execute(&mut conn)
     {
-        Ok(_) => HttpResponse::Ok().json("Media deleted"),
+        Ok(_) => {
+            // Try to delete file from filesystem (storage_path is not Option)
+            let _ = fs::remove_file(&media_item.storage_path); // Ignore error if file doesn't exist
+            HttpResponse::Ok().json("Media deleted")
+        }
         Err(_) => HttpResponse::InternalServerError().json("Failed to delete media"),
     }
 }
 
-/// Basic media upload (simplified - no actual file handling yet)
+/// Upload media file (multipart form data)
 /// POST /api/media/upload
-/// This is a placeholder that creates a database entry
-/// Full implementation would handle multipart uploads
-pub async fn upload_media(info: web::Json<NewMedia>) -> impl Responder {
-    let mut conn = database_service::establish_connection();
+///
+/// Form fields:
+/// - file: The uploaded file (required)
+/// - alt_text: Alt text for accessibility (optional)
+/// - caption: Image caption (optional)
+/// - folder: Folder/category (optional)
+pub async fn upload_media(mut payload: Multipart) -> impl Responder {
+    let mut filename = String::new();
+    let mut file_data: Vec<u8> = Vec::new();
+    let mut alt_text = None;
+    let mut caption = None;
+    let mut folder = None;
     
-    let new_media = NewMedia {
-        uuid: Uuid::new_v4().to_string(),
-        filename: info.filename.clone(),
-        original_filename: info.original_filename.clone(),
-        mime_type: info.mime_type.clone(),
-        file_size: info.file_size,
-        width: info.width,
-        height: info.height,
-        folder: info.folder.clone(),
-        storage_path: info.storage_path.clone(),
-        cdn_url: None,
-        upload_user_id: None,
-        alt_text: info.alt_text.clone(),
-        caption: info.caption.clone(),
+    // Process multipart fields
+    while let Some(item) = payload.next().await {
+        let mut field = match item {
+            Ok(field) => field,
+            Err(_) => return HttpResponse::BadRequest().json("Invalid multipart data"),
+        };
+        
+        let content_disposition = field.content_disposition();
+        let field_name = content_disposition.get_name().unwrap_or("");
+        
+        match field_name {
+            "file" => {
+                // Get original filename
+                filename = content_disposition
+                    .get_filename()
+                    .unwrap_or("unknown")
+                    .to_string();
+                
+                // Stream file data
+                while let Some(chunk) = field.next().await {
+                    let data = match chunk {
+                        Ok(data) => data,
+                        Err(_) => return HttpResponse::BadRequest().json("Failed to read file"),
+                    };
+                    
+                    file_data.extend_from_slice(&data);
+                    
+                    // Check file size limit
+                    if file_data.len() > MAX_FILE_SIZE {
+                        return HttpResponse::PayloadTooLarge()
+                            .json(format!("File too large (max {}MB)", MAX_FILE_SIZE / 1024 / 1024));
+                    }
+                }
+            }
+            "alt_text" => {
+                let mut value = String::new();
+                while let Some(chunk) = field.next().await {
+                    if let Ok(data) = chunk {
+                        value.push_str(&String::from_utf8_lossy(&data));
+                    }
+                }
+                if !value.is_empty() {
+                    alt_text = Some(value);
+                }
+            }
+            "caption" => {
+                let mut value = String::new();
+                while let Some(chunk) = field.next().await {
+                    if let Ok(data) = chunk {
+                        value.push_str(&String::from_utf8_lossy(&data));
+                    }
+                }
+                if !value.is_empty() {
+                    caption = Some(value);
+                }
+            }
+            "folder" => {
+                let mut value = String::new();
+                while let Some(chunk) = field.next().await {
+                    if let Ok(data) = chunk {
+                        value.push_str(&String::from_utf8_lossy(&data));
+                    }
+                }
+                if !value.is_empty() {
+                    folder = Some(value);
+                }
+            }
+            _ => {}  // Ignore unknown fields
+        }
+    }
+    
+    // Validate file was provided
+    if file_data.is_empty() {
+        return HttpResponse::BadRequest().json("No file provided");
+    }
+    
+    // Detect MIME type
+    let mime_type = match infer::get(&file_data) {
+        Some(kind) => kind.mime_type().to_string(),
+        None => "application/octet-stream".to_string(),
     };
+    
+    // Validate image type (for MVP only allow images)
+    if !mime_type.starts_with("image/") {
+        return HttpResponse::BadRequest()
+            .json(format!("Invalid file type. Only images allowed. Got: {}", mime_type));
+    }
+    
+    // Extract image dimensions
+    let (width, height) = match image::load_from_memory(&file_data) {
+        Ok(img) => (Some(img.width() as i32), Some(img.height() as i32)),
+        Err(_) => (None, None),  // Not an image or unreadable
+    };
+    
+    // Generate unique filename with original extension
+    let filename_path = PathBuf::from(&filename);
+    let ext = filename_path
+        .extension()
+        .and_then(|s| s.to_str())
+        .unwrap_or("bin");
+    let new_uuid = Uuid::new_v4().to_string();
+    let new_filename = format!("{}.{}", new_uuid, ext);
+    
+    // Create upload directory if it doesn't exist
+    fs::create_dir_all(UPLOAD_DIR).ok();
+    
+    // Save file to disk
+    let file_path = PathBuf::from(UPLOAD_DIR).join(&new_filename);
+    let storage_path = file_path.to_str().unwrap().to_string();
+    
+    match fs::File::create(&file_path) {
+        Ok(mut file) => {
+            if let Err(_) = file.write_all(&file_data) {
+                return HttpResponse::InternalServerError().json("Failed to write file");
+            }
+        }
+        Err(_) => return HttpResponse::InternalServerError().json("Failed to create file"),
+    }
+    
+    // Create database record
+    let new_media = NewMedia {
+        uuid: new_uuid.clone(),
+        filename: new_filename.clone(),
+        original_filename: filename,
+        mime_type: mime_type.clone(),
+        file_size: file_data.len() as i64,
+        width,
+        height,
+        folder,
+        storage_path: storage_path.clone(),
+        cdn_url: None,
+        upload_user_id: None,  // TODO: Get from auth Claims
+        alt_text,
+        caption,
+    };
+    
+    let mut conn = database_service::establish_connection();
     
     match diesel::insert_into(media::table)
         .values(&new_media)
         .execute(&mut conn)
     {
-        Ok(_) => HttpResponse::Created().json("Media uploaded"),
-        Err(e) => HttpResponse::InternalServerError()
-            .json(format!("Failed to save media: {}", e)),
+        Ok(_) => HttpResponse::Created().json(serde_json::json!({
+            "uuid": new_uuid,
+            "filename": new_filename,
+            "original_filename": new_media.original_filename,
+            "mime_type": mime_type,
+            "file_size": file_data.len(),
+            "width": width,
+            "height": height,
+            "storage_path": storage_path,
+            "message": "File uploaded successfully"
+        })),
+        Err(e) => {
+            // Delete file if database insert fails
+            let _ = fs::remove_file(file_path);
+            HttpResponse::InternalServerError()
+                .json(format!("Failed to save media metadata: {}", e))
+        }
     }
 }

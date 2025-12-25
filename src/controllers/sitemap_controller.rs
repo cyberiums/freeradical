@@ -53,7 +53,7 @@ pub async fn sitemap() -> impl Responder {
             
             HttpResponse::Ok()
                 .content_type("application/xml; charset=utf-8")
-                .insert_header(("X-Sitemap-Count", page_count.to_string()))
+                .set_header("X-Sitemap-Count", page_count.to_string())
                 .body(sitemap)
         }
         Err(_) => HttpResponse::InternalServerError().body("Error generating sitemap"),

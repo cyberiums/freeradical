@@ -106,7 +106,7 @@ diesel::table! {
         meta_keywords -> Nullable<Varchar>,
         #[max_length = 500]
         canonical_url -> Nullable<Varchar>,
-        full_snapshot -> Json,
+        full_snapshot -> Text,
         #[max_length = 500]
         change_summary -> Nullable<Varchar>,
         changed_by_user_id -> Nullable<Integer>,
