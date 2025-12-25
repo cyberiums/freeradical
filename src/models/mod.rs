@@ -9,6 +9,7 @@ pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
 pub mod inventory_models;  // Inventory management models
+pub mod ai_provider_models;  // AI provider configuration
 pub mod db_connection;  // Database abstraction layer
 pub mod db_macros;      // Helper macros for database operations
 
