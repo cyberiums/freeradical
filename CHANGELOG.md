@@ -125,3 +125,20 @@ This release marks a major milestone with complete e-commerce capabilities and a
 [0.9.0]: https://github.com/cyberiums/freeradical/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/cyberiums/freeradical/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/cyberiums/freeradical/releases/tag/v0.7.0
+
+## [1.0.3] - 2024-12-25
+
+### Changed
+- Upgraded Rust from 1.90.0 to 1.92.0 stable
+- Updated README badge to rust-1.92+
+
+### Fixed
+- Fixed GitHub Actions workflow paths (cli/ and admin/)
+- Fixed analytics_service test type mismatches
+- Fixed /admin route serving admin portal chooser
+- Improved CI error handling and debugging
+
+### Added
+- Better CI workflow existence checks
+- Admin portal chooser at /admin
+

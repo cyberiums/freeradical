@@ -1,7 +1,7 @@
 [package]
 name = "freeradical"
 version = "1.0.1"
-authors = ["spbills <spencebills0@gmail.com>"]
+authors = ["fastbuilder <team@fastbuilder.ai>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

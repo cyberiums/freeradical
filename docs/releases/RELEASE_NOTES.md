@@ -128,7 +128,7 @@ Visit [fastbuilder.ai](https://fastbuilder.ai)
 
 ## Contributors
 
-- Original author: spbills <spencebills0@gmail.com>
+- Original author: fastbuilder <team@fastbuilder.ai>
 - Maintained by: FastBuilder.ai team
 - Community contributors welcome!
 
