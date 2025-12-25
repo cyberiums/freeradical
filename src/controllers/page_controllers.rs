@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpRequest, HttpResponse};
 use handlebars::Handlebars;
 use uuid::Uuid;
 
@@ -89,7 +89,7 @@ fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDisplayDTO, CustomHtt
 }
 
 pub async fn display_page(
-    req: web::HttpRequest,
+    req: HttpRequest,
     pool: web::Data<MySQLPool>,
     hb: web::Data<Mutex<Handlebars<'_>>>,
 ) -> Result<HttpResponse, CustomHttpError> {
