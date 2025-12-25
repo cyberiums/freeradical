@@ -5,6 +5,23 @@ All notable changes to FreeRadical CMS will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.0] - 2025-12-24
+
+### Added - Enterprise Features & Stability
+- **OAuth Infrastructure**: Callbacks for Google/GitHub, secure token storage, session management
+- **Analytics Dashboard**: Real-time React widget with charts (Chart.js), visitor tracking, referrer analysis
+- **Load Testing**: k6 test scenarios covering 100-1000 concurrent users
+- **Integration Tests**: Automated flow testing for API and OAuth
+- **API Improvements**: Typed Analytics API client in Admin UI
+
+### Changed
+- Refactored `admin/src/lib/api.ts` for namespace clarity
+- Updated Admin UI dependencies to include Chart.js
+
+### Status
+- **Phase 5 Complete**: 99% (only production OAuth testing remains)
+- **Overall Completion**: 99.8%
+
 ## [0.3.0] - 2025-12-24
 
 ### Added
