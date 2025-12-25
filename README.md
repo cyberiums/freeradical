@@ -149,3 +149,11 @@ Built with:
 ---
 
 **FreeRadical CMS** - Modern, fast, SEO-optimized headless CMS
+
+## 🎨 Screenshots
+
+### Homepage
+![FreeRadical CMS Homepage](assets/freeradicalhomepage.png)
+
+Modern, professional landing page built with Tailwind CSS showcasing the CMS features and technology stack.
+
