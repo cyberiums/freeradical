@@ -176,6 +176,12 @@ async fn main() -> std::io::Result<()> {
                 .route("/orders", web::post().to(controllers::order_controller::create_order))
                 .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status))
                 .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order))
+                // Inventory management routes
+                .route("/products/{id}/variants", web::get().to(services::inventory_service::get_product_variants))
+                .route("/variants", web::post().to(services::inventory_service::create_variant))
+                .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock))
+                .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
+                .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
