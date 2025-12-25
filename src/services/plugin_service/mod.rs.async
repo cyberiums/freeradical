@@ -105,6 +105,6 @@ mod tests {
         assert_eq!(hooks.len(), 1);
         assert_eq!(hooks[0], "test-plugin");
         
-        // registry.load_all().await; // Async call removed
+        registry.load_all().await;
     }
 }
