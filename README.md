@@ -101,19 +101,93 @@ Quick deploy with Docker:
 
 ### Database Configuration
 
-FreeRadical supports both MySQL and PostgreSQL with runtime switching:
+FreeRadical supports **both MySQL and PostgreSQL** with runtime switching:
 
+#### MySQL (Default)
 ```bash
-# MySQL (default)
-DATABASE_URL=mysql://user:password@localhost:3306/freeradical
-
-# PostgreSQL
-DATABASE_URL=postgres://user:password@localhost:5432/freeradical
+DATABASE_URL=mysql://freeradical:password@localhost:3306/freeradical
+APP_MYSQL_USERNAME=freeradical
+APP_MYSQL_PASSWORD=password
+APP_MYSQL_DATABASE=freeradical
 ```
 
-No rebuild required! Switch databases by changing the `DATABASE_URL` environment variable.
+Start MySQL stack:
+```bash
+docker-compose up -d
+# Access at http://localhost:8000
+```
+
+Test MySQL:
+```bash
+bash scripts/test_mysql.sh
+```
+
+#### PostgreSQL
+```bash
+DATABASE_URL=postgres://freeradical:password@localhost:5432/freeradical
+```
+
+Start PostgreSQL stack:
+```bash
+docker-compose -f docker-compose.postgres.yml up -d
+# Access at http://localhost:8001
+```
+
+Test PostgreSQL:
+```bash
+bash scripts/test_postgres.sh
+```
+
+**No rebuild required!** Switch databases by changing the `DATABASE_URL` environment variable.
+
+📖 **Full guide**: See [`docs/databases.md`](./docs/databases.md) for comprehensive database configuration, migration, and troubleshooting.
 
 See `.env.sample` for all configuration options.
+
+### Which Database Should You Choose?
+
+Based on professional Apache Bench load testing ([detailed results](./docs/performance_benchmarks.md)):
+
+#### Choose PostgreSQL for Maximum Performance 🏆
+
+- ✅ **30% faster homepage** (1,605 vs 1,231 req/s) - **Proven in Apache Bench**
+- ✅ **129% faster API** (3,304 vs 1,442 req/s - more than 2x!) - **Proven**
+- ✅ Better concurrent request handling
+- ✅ Advanced features (JSON, full-text search)
+- ✅ Modern cloud infrastructure ready
+- ✅ **Recommended for production**
+
+**Apache Bench Results:** 
+- Homepage: **1,605 req/s** 🚀
+- Pages API: **3,304 req/s** 🚀
+- Median response: **2-4ms**
+
+#### Choose MySQL for Simplicity
+
+- ✅ Team familiarity preferred
+- ✅ Traditional hosting environments  
+- ✅ Simpler operations
+- ✅ **Still excellent performance** (1,231 req/s)
+
+**Apache Bench Results:**
+- Homepage: 1,231 req/s
+- Pages API: 1,442 req/s
+- Median response: 2-5ms
+
+#### Deployment Scenarios (Updated with Benchmarks)
+
+| Use Case | Recommended Database | Performance | Why |
+|----------|---------------------|-------------|-----|
+| 📝 Blog / Content Site | **PostgreSQL** 🏆 | 1,605 req/s | 30% faster, proven in tests |
+| 🛒 E-commerce Platform | **PostgreSQL** 🏆 | 3,304 req/s | 129% faster API, complex queries |
+| 🔌 API Backend | **PostgreSQL** 🏆 | 3,304 req/s | Proven 2x faster API responses |
+| 📊 Analytics Dashboard | **PostgreSQL** 🏆 | Best | Superior aggregations + speed |
+| 📱 Mobile App Backend | **PostgreSQL** 🏆 | 3,304 req/s | Fast APIs critical |
+| 🏢 Enterprise CMS | **PostgreSQL** 🏆 | Best | Performance + features |
+
+💡 **Pro Tip:** PostgreSQL delivers 30-129% better performance - use it unless you have specific MySQL requirements!
+
+📈 **See Apache Bench results:** [`docs/benchmarks/apache_bench_v1.0.3.md`](./docs/benchmarks/apache_bench_v1.0.3.md)
 
 ---
 
