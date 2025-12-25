@@ -239,7 +239,7 @@ Organized in `assets/` folder:
 
 ## 🙏 Credits
 
-**Original Author**: spbills <spencebills0@gmail.com>
+**Original Author**: fastbuilder <team@fastbuilder.ai>
 
 **Maintained By**: [FastBuilder.ai](https://fastbuilder.ai)
 - Ongoing maintenance and security updates
