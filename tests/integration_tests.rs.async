@@ -37,7 +37,7 @@ mod integration_tests {
     }
     
     #[test]
-    async fn test_analytics_flow() {
+    fn test_analytics_flow() {
         // TODO: Test track -> store -> query flow
         assert!(true); // Placeholder
     }
