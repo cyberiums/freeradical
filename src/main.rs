@@ -22,6 +22,7 @@ mod routers;
 mod schema;
 mod watch;
 mod graphql;
+mod api_docs;
 
 use routers::module_routers::ModuleRouter;
 use routers::page_routers::PageRouter;
