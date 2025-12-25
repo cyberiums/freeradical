@@ -47,17 +47,17 @@ const Login = () => {
       `}</style>
 
             <div className="w-full max-w-md">
-                {/* Login Card */}
                 <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-center">
-                        <div className="flex items-center justify-center space-x-3 mb-4">
+                    <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-center">
+                        <div className="flex items-center justify-center space-x-3 mb-3">
                             <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
                             </svg>
                             <h1 className="text-3xl font-bold text-white">FreeRadical CMS</h1>
                         </div>
-                        <p className="text-indigo-100">Admin Portal Access</p>
+                        <p className="text-purple-100 text-lg font-semibold">Full Admin Interface</p>
+                        <p className="text-purple-200 text-sm mt-1">Complete Content Management</p>
                     </div>
 
                     {/* Login Form */}
@@ -84,7 +84,7 @@ const Login = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                                     placeholder="admin@freeradical.cms"
                                 />
                             </div>
@@ -99,17 +99,17 @@ const Login = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all"
                                     placeholder="Enter your password"
                                 />
                             </div>
 
                             <div className="flex items-center justify-between">
                                 <label className="flex items-center">
-                                    <input type="checkbox" className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500" />
+                                    <input type="checkbox" className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500" />
                                     <span className="ml-2 text-sm text-gray-600">Remember me</span>
                                 </label>
-                                <a href="#" className="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
+                                <a href="#" className="text-sm text-purple-600 hover:text-purple-700 font-medium">
                                     Forgot password?
                                 </a>
                             </div>
@@ -117,7 +117,7 @@ const Login = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {loading ? 'Signing in...' : 'Sign In'}
                             </button>
@@ -125,7 +125,7 @@ const Login = () => {
 
                         <div className="mt-6 pt-6 border-t border-gray-200 text-center">
                             <p className="text-sm text-gray-600">
-                                <a href="/" className="text-indigo-600 hover:text-indigo-700 font-medium">
+                                <a href="/" className="text-purple-600 hover:text-purple-700 font-medium">
                                     ← Back to Home
                                 </a>
                             </p>
