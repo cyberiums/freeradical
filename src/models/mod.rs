@@ -83,5 +83,5 @@ pub fn init_pool(db_url: &str) -> Result<MySQLPool, PoolError> {
 }
 
 pub fn pool_handler(pool: web::Data<MySQLPool>) -> Result<MySQLPooledConnection, CustomHttpError> {
-    pool.get().or(Err(CustomHttpError::BadRequest))
+    pool.get().or(Err(CustomHttpError::InternalServerError))
 }

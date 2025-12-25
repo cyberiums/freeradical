@@ -37,13 +37,13 @@ pub async fn list_products(
         .limit(per_page)
         .offset(page * per_page)
         .load::<Product>(&mut conn)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Database error: {}", e)))?;
+        .map_err(|_| CustomHttpError::InternalServerError)?;
     
     let total = products::table
         .filter(products::is_active.eq(true))
         .count()
         .get_result::<i64>(&mut conn)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Database error: {}", e)))?;
+        .map_err(|_| CustomHttpError::InternalServerError)?;
     
     let response = ProductListResponse {
         products: products_list,
@@ -66,7 +66,7 @@ pub async fn get_product(
         .find(*id)
         .filter(products::is_active.eq(true))
         .first::<Product>(&mut conn)
-        .map_err(|_| CustomHttpError::NotFound("Product not found".to_string()))?;
+        .map_err(|_| CustomHttpError::NotFound)?;
     
     Ok(HttpResponse::Ok().json(product))
 }
@@ -82,7 +82,7 @@ pub async fn create_product(
     diesel::insert_into(products::table)
         .values(&product.into_inner())
         .execute(&mut conn)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Failed to create product: {}", e)))?;
+        .map_err(|_| CustomHttpError::InternalServerError)?;
     
     Ok(HttpResponse::Created().json(serde_json::json!({
         "message": "Product created successfully"
@@ -101,10 +101,10 @@ pub async fn update_product(
     let updated = diesel::update(products::table.find(*id))
         .set(&product.into_inner())
         .execute(&mut conn)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Failed to update product: {}", e)))?;
+        .map_err(|_| CustomHttpError::InternalServerError)?;
     
     if updated == 0 {
-        return Err(CustomHttpError::NotFound("Product not found".to_string()));
+        return Err(CustomHttpError::NotFound);
     }
     
     Ok(HttpResponse::Ok().json(serde_json::json!({
@@ -123,10 +123,10 @@ pub async fn delete_product(
     let updated = diesel::update(products::table.find(*id))
         .set(products::is_active.eq(false))
         .execute(&mut conn)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Failed to delete product: {}", e)))?;
+        .map_err(|_| CustomHttpError::InternalServerError)?;
     
     if updated == 0 {
-        return Err(CustomHttpError::NotFound("Product not found".to_string()));
+        return Err(CustomHttpError::NotFound);
     }
     
     Ok(HttpResponse::NoContent().finish())
