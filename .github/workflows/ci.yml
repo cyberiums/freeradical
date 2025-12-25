@@ -68,10 +68,10 @@ jobs:
         override: true
     
     - name: Build CLI
-      run: cd freeradical-cli && cargo build --release --verbose
+      run: cd cli && cargo build --release --verbose
     
     - name: Test CLI
-      run: cd freeradical-cli && cargo test --verbose
+      run: cd cli && cargo test --verbose
 
   test-admin:
     runs-on: ubuntu-latest
@@ -84,16 +84,16 @@ jobs:
       with:
         node-version: '18'
         cache: 'npm'
-        cache-dependency-path: freeradical-admin/package-lock.json
+        cache-dependency-path: admin/package-lock.json
     
     - name: Install dependencies
-      run: cd freeradical-admin && npm ci
+      run: cd admin && npm ci
     
     - name: Build admin
-      run: cd freeradical-admin && npm run build
+      run: cd admin && npm run build
     
     - name: Lint
-      run: cd freeradical-admin && npm run lint || true
+      run: cd admin && npm run lint || true
 
   build-docker:
     runs-on: ubuntu-latest
