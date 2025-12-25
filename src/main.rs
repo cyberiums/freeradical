@@ -12,6 +12,11 @@ use dotenv::dotenv;
 // Diesel 2.x migration import
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
+// OpenAPI/Swagger imports
+use utoipa::OpenApi;
+use utoipa_swagger_ui::SwaggerUi;
+use utoipa_redoc::{Redoc, Servable};
+
 use actix_files as fs;
 
 mod controllers;
