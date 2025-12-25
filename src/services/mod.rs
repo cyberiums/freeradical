@@ -7,6 +7,7 @@ pub mod revision_service;
 pub mod inventory_service;
 pub mod ai_provider_service;  // AI provider management
 pub mod ai_content_service;  // AI content generation
+pub mod metadata_automation_service;  // AI metadata automation
 pub mod scheduler_service;
 pub mod monitoring_service;
 pub mod field_validation_service;

@@ -167,7 +167,7 @@ pub async fn generate_content(
 }
 
 /// Generate content with OpenAI
-async fn generate_with_openai(
+pub async fn generate_with_openai(
     provider: &AIProviderConfig,
     request: &GenerateContentRequest,
 ) -> Result<GeneratedContentResponse, CustomHttpError> {
@@ -247,7 +247,7 @@ async fn generate_with_openai(
 }
 
 /// Generate content with Anthropic
-async fn generate_with_anthropic(
+pub async fn generate_with_anthropic(
     provider: &AIProviderConfig,
     request: &GenerateContentRequest,
 ) -> Result<GeneratedContentResponse, CustomHttpError> {

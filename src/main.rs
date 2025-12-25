@@ -155,6 +155,40 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a -> %U | %Dms "))
             .wrap(Governor::new(&governor_conf))
             .service(api_scope)
+            // OpenAPI/Swagger Documentation
+            .service(
+                SwaggerUi::new("/swagger-ui/{_:.*}")
+                    .url("/api-docs/openapi.json", api_docs::ApiDoc::openapi())
+            )
+            .service(
+                Redoc::with_url("/redoc", api_docs::ApiDoc::openapi())
+            )
+            .route("/api-docs", web::get().to(|| async {
+                actix_web::HttpResponse::Ok().content_type("text/html").body(r#"
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FreeRadical API Docs</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+        .card { background: #f7f7f7; padding: 20px; margin: 15px 0; border-radius: 8px; }
+        a { color: #4299e1; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <h1>🚀 FreeRadical API Documentation</h1>
+    <div class="card">
+        <h2>Swagger UI</h2>
+        <a href="/swagger-ui/">Open →</a>
+    </div>
+    <div class="card">
+        <h2>ReDoc</h2>
+        <a href="/redoc">Open →</a>
+    </div>
+</body>
+</html>
+                "#)
+            }))
             .app_data(web::Data::from(plugin_registry.clone()))
             .wrap(services::plugin_service::middleware::PluginMiddleware::new(plugin_registry.clone()))
             // GraphQL endpoint
@@ -197,6 +231,12 @@ async fn main() -> std::io::Result<()> {
                 .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
                 // AI Content Generation routes
                 .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
+                // AI Metadata Automation routes
+                .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords))
+                .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags))
+                .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories))
+                .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
+                .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
