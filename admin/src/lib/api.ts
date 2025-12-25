@@ -75,6 +75,11 @@ export const api = {
       apiClient.post('/login', { email, password }),
     logout: () => apiClient.post('/logout'),
     me: () => apiClient.get('/users/me'),
+  },
+
+  // Analytics
+  analytics: {
+    getSummary: () => apiClient.get('/analytics/summary'),
   }
 }
 

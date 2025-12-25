@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
 import api from '../lib/api'
-import { Line } from 'react-chartjs-2'
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -39,7 +38,7 @@ interface AnalyticsData {
 export default function Analytics() {
     const { data, isLoading } = useQuery({
         queryKey: ['analytics'],
-        queryFn: () => api.get('/analytics/summary'),
+        queryFn: () => api.analytics.getSummary(),
         refetchInterval: 30000 // Refresh every 30s
     })
 
