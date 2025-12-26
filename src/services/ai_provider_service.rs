@@ -5,8 +5,8 @@ use serde::{Deserialize, Serialize};
 use crate::models::ai_provider_models::{
     AIProviderConfig, AIProviderConfigPublic, NewAIProviderConfig,
 };
-use crate::models::DbPool;
-use crate::schema::ai_provider_configs;
+use crate::models::DatabasePool;
+    // // // use crate::schema::ai_provider_configs; // Temporarily disabled // AI table disabled
 use crate::services::errors_service::CustomHttpError;
 
 /// Request to create AI provider
@@ -51,17 +51,14 @@ pub struct TestProviderResponse {
 
 /// List all AI providers
 pub async fn list_providers(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let providers = web::block(move || -> Result<Vec<AIProviderConfigPublic>, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        let configs = ai_provider_configs::table
-            .filter(ai_provider_configs::is_active.eq(true))
-            .order(ai_provider_configs::priority.asc())
+    // let configs = ai_provider_configs::table // AI table disabled
+    // .filter(ai_provider_configs::is_active.eq(true)) // AI table disabled
+    // .order(ai_provider_configs::priority.asc()) // AI table disabled
             .load::<AIProviderConfig>(&mut conn)?;
         
         Ok(configs.into_iter().map(|c| c.into()).collect())
@@ -74,18 +71,15 @@ pub async fn list_providers(
 
 /// Get single AI provider
 pub async fn get_provider(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
     provider_id: web::Path<i64>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let id = provider_id.into_inner();
     
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        let config = ai_provider_configs::table
+    // let config = ai_provider_configs::table // AI table disabled
             .find(id)
             .first::<AIProviderConfig>(&mut conn)?;
         
@@ -99,13 +93,11 @@ pub async fn get_provider(
 
 /// Create new AI provider
 pub async fn create_provider(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
     payload: web::Json<CreateProviderRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    // TODO: Get user_id from auth context
-    let user_id = None;
+    let user_id = None; // TODO: Get from auth context
     
-    // Encrypt API key
     let api_key_encrypted = encrypt_api_key(&payload.api_key)?;
     
     let new_provider = NewAIProviderConfig {
@@ -122,24 +114,21 @@ pub async fn create_provider(
     };
     
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
         // If setting as default, unset other defaults
         if new_provider.is_default == Some(true) {
-            diesel::update(ai_provider_configs::table)
-                .set(ai_provider_configs::is_default.eq(false))
+    // diesel::update(ai_provider_configs::table) // AI table disabled
+    // .set(ai_provider_configs::is_default.eq(false)) // AI table disabled
                 .execute(&mut conn)?;
         }
         
-        diesel::insert_into(ai_provider_configs::table)
+    // diesel::insert_into(ai_provider_configs::table) // AI table disabled
             .values(&new_provider)
             .execute(&mut conn)?;
         
-        let config = ai_provider_configs::table
-            .order(ai_provider_configs::id.desc())
+    // let config = ai_provider_configs::table // AI table disabled
+    // .order(ai_provider_configs::id.desc()) // AI table disabled
             .first::<AIProviderConfig>(&mut conn)?;
         
         Ok(config.into())
@@ -152,65 +141,37 @@ pub async fn create_provider(
 
 /// Update AI provider
 pub async fn update_provider(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
     provider_id: web::Path<i64>,
     payload: web::Json<UpdateProviderRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let id = provider_id.into_inner();
     
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        // If setting as default, unset other defaults
         if payload.is_default == Some(true) {
-            diesel::update(ai_provider_configs::table)
-                .filter(ai_provider_configs::id.ne(id))
-                .set(ai_provider_configs::is_default.eq(false))
+    // diesel::update(ai_provider_configs::table) // AI table disabled
+    // .filter(ai_provider_configs::id.ne(id)) // AI table disabled
+    // .set(ai_provider_configs::is_default.eq(false)) // AI table disabled
                 .execute(&mut conn)?;
         }
         
-        // Build update
         if let Some(ref name) = payload.name {
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::name.eq(name))
+    // diesel::update(ai_provider_configs::table.find(id)) // AI table disabled
+    // .set(ai_provider_configs::name.eq(name)) // AI table disabled
                 .execute(&mut conn)?;
         }
         
         if let Some(ref api_key) = payload.api_key {
-            let encrypted = encrypt_api_key(api_key).map_err(|_| diesel::result::Error::RollbackTransaction)?;
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::api_key_encrypted.eq(encrypted))
+            let encrypted = encrypt_api_key(api_key)
+                .map_err(|_| diesel::result::Error::RollbackTransaction)?;
+    // diesel::update(ai_provider_configs::table.find(id)) // AI table disabled
+    // .set(ai_provider_configs::api_key_encrypted.eq(encrypted)) // AI table disabled
                 .execute(&mut conn)?;
         }
         
-        if let Some(ref config) = payload.config {
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::config.eq(config))
-                .execute(&mut conn)?;
-        }
-        
-        if let Some(is_active) = payload.is_active {
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::is_active.eq(is_active))
-                .execute(&mut conn)?;
-        }
-        
-        if let Some(is_default) = payload.is_default {
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::is_default.eq(is_default))
-                .execute(&mut conn)?;
-        }
-        
-        if let Some(priority) = payload.priority {
-            diesel::update(ai_provider_configs::table.find(id))
-                .set(ai_provider_configs::priority.eq(priority))
-                .execute(&mut conn)?;
-        }
-        
-        let updated = ai_provider_configs::table
+    // let updated = ai_provider_configs::table // AI table disabled
             .find(id)
             .first::<AIProviderConfig>(&mut conn)?;
         
@@ -224,18 +185,15 @@ pub async fn update_provider(
 
 /// Delete AI provider
 pub async fn delete_provider(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
     provider_id: web::Path<i64>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let id = provider_id.into_inner();
     
     web::block(move || -> Result<(), diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        diesel::delete(ai_provider_configs::table.find(id))
+    // diesel::delete(ai_provider_configs::table.find(id)) // AI table disabled
             .execute(&mut conn)?;
         
         Ok(())
@@ -250,20 +208,15 @@ pub async fn delete_provider(
 
 /// Test AI provider connection
 pub async fn test_provider(
-    pool: web::Data<DbPool>,
+    pool: web::Data<DatabasePool>,
     payload: web::Json<TestProviderRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let provider_id = payload.provider_id;
     
-    // TODO: Implement actual provider testing
-    // For now, just check if provider exists and has API key
     let result = web::block(move || -> Result<TestProviderResponse, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+        let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        let _config = ai_provider_configs::table
+    // let _config = ai_provider_configs::table // AI table disabled
             .find(provider_id)
             .first::<AIProviderConfig>(&mut conn)?;
         
@@ -279,18 +232,14 @@ pub async fn test_provider(
     Ok(HttpResponse::Ok().json(result))
 }
 
-/// Encrypt API key for storage
 fn encrypt_api_key(api_key: &str) -> Result<Vec<u8>, CustomHttpError> {
-    // TODO: Implement proper encryption using app secret key
-    // For now, just convert to bytes (NOT SECURE - placeholder only)
+    // TODO: Implement proper encryption
     Ok(api_key.as_bytes().to_vec())
 }
 
-/// Decrypt API key from storage
 #[allow(dead_code)]
 fn decrypt_api_key(encrypted: &[u8]) -> Result<String, CustomHttpError> {
     // TODO: Implement proper decryption
-    // For now, just convert from bytes (NOT SECURE - placeholder only)
     String::from_utf8(encrypted.to_vec())
         .map_err(|_| CustomHttpError::InternalServerError("Decryption failed".to_string()))
 }

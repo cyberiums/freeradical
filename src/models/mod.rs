@@ -8,8 +8,8 @@ pub mod media_models;
 pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
-pub mod inventory_models;  // Inventory management models
-pub mod ai_provider_models;  // AI provider configuration
+// pub mod inventory_models;  // Inventory management models
+// pub mod ai_provider_models;  // AI provider configuration
 pub mod db_connection;  // Database abstraction layer
 pub mod db_macros;      // Helper macros for database operations
 
@@ -20,12 +20,11 @@ use crate::services::errors_service::CustomHttpError;
 
 use self::config_models::LocalConfig;
 
-// Re-export database pool types
-pub use db_connection::DatabasePool as DbPool;
+// Re-export database pool types (PostgreSQL only)
+pub use db_connection::DatabasePool;
 pub use db_connection::PooledDatabaseConnection;
 
-// Export database abstraction layer types
-pub use db_connection::{DatabasePool, PooledDatabaseConnection, create_pool, detect_database_type};
+pub type DbPool = DatabasePool;
 
 /// CRUD implementation.
 pub trait Model<TQueryable, TMutable: AsChangeset, TPrimary, TDto = TQueryable> {
@@ -87,7 +86,7 @@ pub fn format_connection_string(conf: config_models::LocalConfig) -> String {
 
 pub fn establish_database_connection(conf: LocalConfig) -> Option<DatabasePool> {
     let db_url = format_connection_string(conf);
-    Some(create_pool(&db_url))
+    Some(db_connection::create_pool(&db_url).expect("Failed to create pool"))
 }
 
 pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::MysqlConnection> {
@@ -100,5 +99,5 @@ pub fn init_pool(db_url: &str) -> Result<Pool<ConnectionManager<MysqlConnection>
 }
 
 pub fn pool_handler(pool: web::Data<DatabasePool>) -> Result<PooledDatabaseConnection, CustomHttpError> {
-    pool.get().or(Err(CustomHttpError::InternalServerError))
+    pool.get().or(Err(CustomHttpError::InternalServerError("Pool connection failed".to_string())))
 }

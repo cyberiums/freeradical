@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Provider Configuration - FreeRadical CMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2d3748;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #1a202c;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+
+        .provider-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .provider-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        .provider-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .provider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .provider-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .provider-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .type-openai {
+            background: #e6f7ff;
+            color: #0066cc;
+        }
+
+        .type-anthropic {
+            background: #fff4e6;
+            color: #cc6600;
+        }
+
+        .type-gcp {
+            background: #e7f5e9;
+            color: #1a8742;
+        }
+
+        .type-azure {
+            background: #ede7f6;
+            color: #5e35b1;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-inactive {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .dot-active {
+            background: #38a169;
+        }
+
+        .dot-inactive {
+            background: #e53e3e;
+        }
+
+        .provider-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat {
+            padding: 10px;
+            background: #f7fafc;
+            border-radius: 6px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .provider-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #f56565;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: monospace;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-actions">
+            <div>
+                <h1>AI Provider Configuration</h1>
+                <p class="subtitle">Manage AI providers for content generation, search, and recommendations</p>
+            </div>
+            <button class="btn btn-primary" onclick="openAddModal()">+ Add Provider</button>
+        </div>
+
+        <div class="provider-grid" id="providerGrid">
+            <!-- Providers will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Provider Modal -->
+    <div class="modal" id="providerModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add AI Provider</h2>
+            <form id="providerForm">
+                <div class="form-group">
+                    <label for="providerType">Provider Type *</label>
+                    <select id="providerType" required onchange="updateEndpoint()">
+                        <option value="">Select provider...</option>
+                        <option value="openai">OpenAI</option>
+                        <option value="anthropic">Anthropic</option>
+                        <option value="gcp">Google Cloud (Vertex AI)</option>
+                        <option value="azure">Azure OpenAI</option>
+                        <option value="custom">Custom / Self-hosted</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="providerName">Display Name *</label>
+                    <input type="text" id="providerName" placeholder="e.g., Main OpenAI GPT-4" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="apiKey">API Key *</label>
+                    <input type="password" id="apiKey" placeholder="sk-..." required>
+                    <p class="help-text">Your API key will be encrypted before storage</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="endpoint">API Endpoint</label>
+                    <input type="url" id="endpoint" placeholder="https://api.openai.com/v1">
+                    <p class="help-text">Leave blank for default, or override for Azure Enterprise / self-hosted</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="config">Configuration (JSON)</label>
+                    <textarea id="config" placeholder='{"model": "gpt-4", "temperature": 0.7}'></textarea>
+                    <p class="help-text">Provider-specific settings (model, temperature, etc.)</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="dailyLimit">Daily Token Limit</label>
+                    <input type="number" id="dailyLimit" placeholder="100000">
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlyBudget">Monthly Budget ($)</label>
+                    <input type="number" id="monthlyBudget" placeholder="100" step="0.01">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Provider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/admin/ai/providers';
+        let providers = [];
+        let editingId = null;
+
+        const defaultEndpoints = {
+            openai: 'https://api.openai.com/v1',
+            anthropic: 'https://api.anthropic.com/v1',
+            gcp: 'https://us-central1-aiplatform.googleapis.com',
+            azure: 'https://{resource-name}.openai.azure.com',
+            custom: ''
+        };
+
+        function updateEndpoint() {
+            const type = document.getElementById('providerType').value;
+            const endpoint = document.getElementById('endpoint');
+            if (type && defaultEndpoints[type]) {
+                endpoint.value = defaultEndpoints[type];
+                endpoint.placeholder = defaultEndpoints[type];
+            }
+        }
+
+        async function loadProviders() {
+            try {
+                const response = await fetch(API_BASE);
+                providers = await response.json();
+                renderProviders();
+            } catch (error) {
+                console.error('Failed to load providers:', error);
+            }
+        }
+
+        function renderProviders() {
+            const grid = document.getElementById('providerGrid');
+            grid.innerHTML = providers.map(p => `
+                <div class="provider-card">
+                    <div class="provider-header">
+                        <div>
+                            <div class="provider-name">${p.name}</div>
+                            <span class="provider-type type-${p.provider_type}">${p.provider_type}</span>
+                        </div>
+                        <span class="status-badge status-${p.is_active ? 'active' : 'inactive'}">
+                            <span class="status-dot dot-${p.is_active ? 'active' : 'inactive'}"></span>
+                            ${p.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    
+                    <div class="provider-stats">
+                        <div class="stat">
+                            <div class="stat-label">Tokens Today</div>
+                            <div class="stat-value">${(p.tokens_used_today || 0).toLocaleString()}</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Cost This Month</div>
+                            <div class="stat-value">$${((p.cost_month_cents || 0) / 100).toFixed(2)}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="provider-actions">
+                        <button class="btn btn-small btn-secondary" onclick="testProvider(${p.id})">Test</button>
+                        <button class="btn btn-small btn-primary" onclick="editProvider(${p.id})">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteProvider(${p.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Add AI Provider';
+            document.getElementById('providerForm').reset();
+            document.getElementById('providerModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('providerModal').style.display = 'none';
+        }
+
+        async function editProvider(id) {
+            const provider = providers.find(p => p.id === id);
+            if (!provider) return;
+
+            editingId = id;
+            document.getElementById('modalTitle').textContent = 'Edit AI Provider';
+            document.getElementById('providerType').value = provider.provider_type;
+            document.getElementById('providerName').value = provider.name;
+            document.getElementById('config').value = JSON.stringify(provider.config, null, 2);
+            document.getElementById('dailyLimit').value = provider.daily_token_limit || '';
+            document.getElementById('monthlyBudget').value = provider.monthly_budget_cents ? (provider.monthly_budget_cents / 100).toFixed(2) : '';
+
+            updateEndpoint();
+            document.getElementById('providerModal').style.display = 'block';
+        }
+
+        async function testProvider(id) {
+            try {
+                const response = await fetch(`${API_BASE}/test`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider_id: id })
+                });
+                const result = await response.json();
+                alert(result.success ? '✅ Connection successful!' : '❌ Connection failed: ' + result.message);
+            } catch (error) {
+                alert('❌ Test failed: ' + error.message);
+            }
+        }
+
+        async function deleteProvider(id) {
+            if (!confirm('Are you sure you want to delete this  provider?')) return;
+
+            try {
+                await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+                await loadProviders();
+            } catch (error) {
+                alert('Failed to delete provider: ' + error.message);
+            }
+        }
+
+        document.getElementById('providerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const data = {
+                provider_type: document.getElementById('providerType').value,
+                name: document.getElementById('providerName').value,
+                api_key: document.getElementById('apiKey').value,
+                config: JSON.parse(document.getElementById('config').value || '{}'),
+                daily_token_limit: parseInt(document.getElementById('dailyLimit').value) || null,
+                monthly_budget_cents: parseFloat(document.getElementById('monthlyBudget').value) * 100 || null
+            };
+
+            const endpoint = document.getElementById('endpoint').value;
+            if (endpoint) {
+                data.config.endpoint = endpoint;
+            }
+
+            try {
+                const url = editingId ? `${API_BASE}/${editingId}` : API_BASE;
+                const method = editingId ? 'PUT' : 'POST';
+
+                await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                closeModal();
+                await loadProviders();
+            } catch (error) {
+                alert('Failed to save provider: ' + error.message);
+            }
+        });
+
+        // Load providers on page load
+        loadProviders();
+    </script>
+</body>
+
+</html>

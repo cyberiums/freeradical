@@ -1,15 +1,18 @@
 pub mod errors_service;
 pub mod cache_service;
-pub mod analytics_service;
+// pub mod analytics_service;
 pub mod auth_service;
 pub mod database_service;
 pub mod revision_service;
-pub mod inventory_service;
-pub mod ai_provider_service;  // AI provider management
-pub mod ai_content_service;  // AI content generation
-pub mod metadata_automation_service;  // AI metadata automation
-pub mod semantic_search_service;  // Vector-based semantic search
-pub mod recommendation_service;  // AI recommendations
+// pub mod inventory_service;
+// pub mod ai_provider_service; // Temporarily disabled
+// pub mod ai_content_service; // Temporarily disabled
+// pub mod ai_recommendations_service; // Temporarily disabled
+// pub mod ai_metadata_service; // Temporarily disabled
+// pub mod ai_authorization_service; // Temporarily disabled
+// pub mod semantic_search_service;  // Vector-based semantic search - TEMPORARILY DISABLED
+// pub mod recommendation_service;  // AI recommendations - TEMPORARILY DISABLED
+// pub mod ai_authorization_service;  // AI feature authorization - TEMPORARILY DISABLED
 pub mod scheduler_service;
 pub mod monitoring_service;
 pub mod field_validation_service;

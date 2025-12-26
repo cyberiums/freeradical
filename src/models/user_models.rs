@@ -30,33 +30,15 @@ pub struct MutUser {
 
 impl Model<User, MutUser, String> for User {
     fn create(new: &MutUser, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::insert_into(users::table).values(new).execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::insert_into(users::table).values(new).execute(conn)
-            }
-        }
+        diesel::insert_into(users::table).values(new).execute(db)
     }
 
     fn read_one(id: String, db: &mut PooledDatabaseConnection) -> Result<User, diesel::result::Error> {
         use users::dsl::username;
-
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                users::table
-                    .filter(username.eq(id))
-                    .select(User::as_select())
-                    .first(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                users::table
-                    .filter(username.eq(id))
-                    .select(User::as_select())
-                    .first(conn)
-            }
-        }
+        users::table
+            .filter(username.eq(id))
+            .select(User::as_select())
+            .first(db)
     }
 
     fn read_all(_: &mut PooledDatabaseConnection) -> Result<Vec<User>, diesel::result::Error> {
@@ -69,18 +51,9 @@ impl Model<User, MutUser, String> for User {
         db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::update(users::table.filter(username.eq(id)))
-                    .set(new)
-                    .execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::update(users::table.filter(username.eq(id)))
-                    .set(new)
-                    .execute(conn)
-            }
-        }
+        diesel::update(users::table.filter(username.eq(id)))
+            .set(new)
+            .execute(db)
     }
 
     fn delete(_: String, _: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
@@ -94,19 +67,9 @@ impl User {
         db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use users::dsl::username;
-
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::update(users::table.filter(username.eq(new.username.clone())))
-                    .set(new)
-                    .execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::update(users::table.filter(username.eq(new.username.clone())))
-                    .set(new)
-                    .execute(conn)
-            }
-        }
+        diesel::update(users::table.filter(username.eq(new.username.clone())))
+            .set(new)
+            .execute(db)
     }
 }
 

@@ -7,7 +7,7 @@ use uuid::Uuid;
 use crate::models::{pool_handler, Model, DatabasePool};
 
 use crate::models::module_models::{FieldsDTO};
-use crate::models::page_models::{PageModuleDisplayDTO,MutPage, Page, PageDTO};
+use crate::models::page_models::{PageModuleDTO, MutPage, Page, PageDTO};
 
 use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
@@ -17,60 +17,60 @@ fn validate_seo_fields(page: &MutPage) -> Result<(), CustomHttpError> {
     // Validate meta_title length (max 70 chars)
     if let Some(title) = &page.meta_title {
         if title.len() > 70 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate meta_description length (max 160 chars)
     if let Some(desc) = &page.meta_description {
         if desc.len() > 160 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate og_title length (max 70 chars)
     if let Some(title) = &page.og_title {
         if title.len() > 70 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate og_description length (max 200 chars)
     if let Some(desc) = &page.og_description {
         if desc.len() > 200 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate twitter_title length (max 70 chars)
     if let Some(title) = &page.twitter_title {
         if title.len() > 70 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate twitter_description length (max 200 chars)
     if let Some(desc) = &page.twitter_description {
         if desc.len() > 200 {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     // Validate canonical_url format (must be valid URL or relative path)
     if let Some(url) = &page.canonical_url {
         if !url.starts_with("http://") && !url.starts_with("https://") && !url.starts_with("/") {
-            return Err(CustomHttpError::BadRequest);
+            return Err(CustomHttpError::BadRequest("Validation failed".to_string()));
         }
     }
     
     Ok(())
 }
 
-fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDisplayDTO, CustomHttpError> {
+fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDTO, CustomHttpError> {
     let origin_page = page.0;
 
     // cast the origin page that is always standard into a new object that has the modules as a vec of children.
-    let mut res: PageModuleDisplayDTO = origin_page.into();
+    let mut res: PageModuleDTO = origin_page.into();
 
     match page.1.categories {
         Some(modules) => {
@@ -123,7 +123,7 @@ pub async fn create_page(
     // Validate SEO fields
     validate_seo_fields(&new)?;
 
-    let mut uuid_new = new.clone();
+    let mut uuid_new = new.into_inner();
     uuid_new.uuid = Some(Uuid::new_v4().to_string());
 
     Page::create(&uuid_new, &mut mysql_pool)?;

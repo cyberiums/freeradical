@@ -6,7 +6,7 @@ use crate::models::DbPool;
 use crate::services::ai_content_service::{generate_with_openai, generate_with_anthropic};
 use crate::services::errors_service::CustomHttpError;
 use crate::models::ai_provider_models::AIProviderConfig;
-use crate::schema::ai_provider_configs;
+// use crate::schema::ai_provider_configs; // Temporarily disabled
 
 /// Request to generate metadata
 #[derive(Debug, Deserialize)]

@@ -2,7 +2,8 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::schema::{ai_provider_configs, ai_usage_log, ai_generated_content, ai_generation_queue};
+// // use crate::schema::{ai_provider_configs, ai_usage_log, ai_generated_content, ai_generation_queue};
+ // Temporarily disabled
 
 /// AI Provider Type
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
