@@ -1,5 +1,5 @@
 -- Create media table for search service
-CREATE TABLE media (
+CREATE TABLE IF NOT EXISTS media (
     id SERIAL PRIMARY KEY,
     uuid VARCHAR(36) NOT NULL UNIQUE,
     filename VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE media (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_media_uuid ON media(uuid);
-CREATE INDEX idx_media_mime_type ON media(mime_type);
-CREATE INDEX idx_media_uploaded_by ON media(uploaded_by) WHERE uploaded_by IS NOT NULL;
-CREATE INDEX idx_media_created_at ON media(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_media_uuid ON media(uuid);
+CREATE INDEX IF NOT EXISTS idx_media_mime_type ON media(mime_type);
+CREATE INDEX IF NOT EXISTS idx_media_uploaded_by ON media(uploaded_by) WHERE uploaded_by IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_media_created_at ON media(created_at DESC);

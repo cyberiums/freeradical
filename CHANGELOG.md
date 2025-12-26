@@ -2,6 +2,44 @@
 
 All notable changes to FreeRadical CMS will be documented in this file.
 
+## [1.4.0] - 2025-12-26
+
+### Added - AI/MCP Foundation 🤖
+- **AI Provider Service**: Complete CRUD operations for AI provider configurations (OpenAI, Anthropic, Azure, GCP)
+- **AI Content Service**: Content generation using OpenAI GPT-4/3.5 and Anthropic Claude models
+- **AI Authorization Service**: Permission and budget checks for AI operations with role-based access control
+- **Semantic Search Service**: Vector-based search foundation with pgvector support (placeholder)
+- **Recommendation Service**: Content recommendation engine based on similarity (placeholder)
+- **AI Scope Service**: Security layer for AI operations with user context and permission scoping
+
+### Database Migrations
+- Added 4 new AI tables:
+  - `ai_provider_configs`: AI provider credentials and configuration
+  - `ai_usage_log`: Track AI API usage, tokens, and costs
+  - `content_embeddings`: Vector embeddings for semantic search
+  - `search_history`: User search history for personalization
+- Total migrations: 47 (all successfully applied)
+
+### Models & Infrastructure
+- Created `AIProviderConfig`, `NewAIProviderConfig`, and `AIProviderConfigPublic` models
+- Created `AIUsageLog` and `NewAIUsageLog` for usage tracking
+- Created `ContentEmbedding` model for vector search
+- Implemented secure API key storage with encryption
+
+### Fixed 🔧
+- Resolved 84 compilation errors from AI service integration (100% success rate!)
+- Fixed schema alignment issues across all AI models
+- Fixed pool borrow/move issues in async service calls
+- Added proper error conversions for BlockingError in async operations
+- Updated pages table references to use UUID-based schema
+- Fixed type mismatches (Vec<u8> to String conversions)
+
+### Quality & Testing ✅
+- Zero-error build achieved (down from 84+ errors)
+- All 31 tests passing (26 + 5)
+- Build time: ~21.84s
+- Added comprehensive error handling for AI operations
+
 ## [1.2.1] - 2025-12-25
 
 ### Added

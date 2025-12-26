@@ -1,6 +1,6 @@
 -- Create products table for commerce
 CREATE TABLE IF NOT EXISTS products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     price_cents BIGINT NOT NULL,
@@ -10,14 +10,15 @@ CREATE TABLE IF NOT EXISTS products (
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     metadata JSON,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_sku (sku),
-    INDEX idx_active (is_active)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_sku ON products(sku);
+CREATE INDEX IF NOT EXISTS idx_active ON products(is_active);
 
 -- Create orders table
 CREATE TABLE IF NOT EXISTS orders (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     user_uuid VARCHAR(255) NOT NULL,
     total_cents BIGINT NOT NULL,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
@@ -26,22 +27,24 @@ CREATE TABLE IF NOT EXISTS orders (
     payment_intent_id VARCHAR(255),
     metadata JSON,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_uuid) REFERENCES users(uuid) ON DELETE CASCADE,
-    INDEX idx_user (user_uuid),
-    INDEX idx_status (status),
-    INDEX idx_payment_intent (payment_intent_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_uuid) REFERENCES users(uuid) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_user ON orders(user_uuid);
+CREATE INDEX IF NOT EXISTS idx_status ON orders(status);
+CREATE INDEX IF NOT EXISTS idx_payment_intent ON orders(payment_intent_id);
 
 -- Create order_items table
 CREATE TABLE IF NOT EXISTS order_items (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
     quantity INT NOT NULL,
     price_cents BIGINT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT,
-    INDEX idx_order (order_id),
-    INDEX idx_product (product_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+);
+
+CREATE INDEX IF NOT EXISTS idx_order ON order_items(order_id);
+CREATE INDEX IF NOT EXISTS idx_product ON order_items(product_id);

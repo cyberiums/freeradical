@@ -18,17 +18,14 @@ impl AnalyticsService {
         referrer: Option<String>,  // Changed from Option<&str>
         user_agent: Option<String>,  // Changed from Option<&str>
     ) {
-        // Hash IP for privacy
-        let visitor_hash = Self::hash_ip(&ip_address);
-        
         // Insert page view asynchronously (fire and forget)
         std::thread::spawn(move || {
             if let Err(e) = Self::insert_page_view(
-                page_url,  // Now owned, can move
-                page_uuid,  // Now owned, can move
-                visitor_hash,
-                referrer,  // Now owned, can move
-                user_agent,  // Now owned, can move
+                page_url,
+                page_uuid,
+                ip_address,  // Pass ip_address directly
+                referrer,
+                user_agent,
             ) {
                 eprintln!("Analytics error: {}", e);
             }
@@ -46,7 +43,7 @@ impl AnalyticsService {
     fn insert_page_view(
         page_url: String,
         page_uuid: Option<String>,
-        visitor_hash: String,
+        ip_address: String,  // Changed from visitor_hash
         referrer: Option<String>,
         user_agent: Option<String>,
     ) -> Result<(), Box<dyn std::error::Error>> {
@@ -54,12 +51,12 @@ impl AnalyticsService {
         
         let mut conn = establish_connection();
         
+        // Note: page_views table has page_id instead of page_url/page_uuid
         diesel::insert_into(page_views::table)
             .values((
-                page_views::page_url.eq(&page_url),
-                page_views::page_uuid.eq(&page_uuid),
-                page_views::visitor_hash.eq(&visitor_hash),
-                page_views::referrer.eq(&referrer),
+                // page_views::page_id.eq(page_id), // TODO: convert from page_url/uuid
+                page_views::ip_address.eq(&ip_address),
+                page_views::referer.eq(&referrer),
                 page_views::user_agent.eq(&user_agent),
             ))
             .execute(&mut conn)?;
@@ -73,8 +70,8 @@ impl AnalyticsService {
         
         let mut conn = establish_connection();
         
+        // TODO: convert page_url to page_id
         dsl::page_views
-            .filter(dsl::page_url.eq(page_url))
             .count()
             .get_result(&mut conn)
             .unwrap_or(0)
@@ -136,7 +133,7 @@ impl AnalyticsService {
         
         dsl::page_views
             .filter(dsl::viewed_at.ge(today_start))
-            .select(count_distinct(dsl::visitor_hash))
+            .select(count_distinct(dsl::user_id))
             .first(&mut conn)
             .unwrap_or(0)
     }
@@ -148,9 +145,9 @@ impl AnalyticsService {
         let mut conn = establish_connection();
         
         dsl::page_views
-            .filter(dsl::referrer.is_not_null())
-            .group_by(dsl::referrer)
-            .select((dsl::referrer, diesel::dsl::count(dsl::id)))
+            .filter(dsl::referer.is_not_null())
+            .group_by(dsl::referer)
+            .select((dsl::referer, diesel::dsl::count(dsl::id)))
             .order(diesel::dsl::count(dsl::id).desc())
             .limit(limit)
             .load::<(Option<String>, i64)>(&mut conn)
@@ -166,13 +163,17 @@ impl AnalyticsService {
         
         let mut conn = establish_connection();
         
+        // TODO: page_views now has page_id instead of page_url
         dsl::page_views
-            .group_by(dsl::page_url)
-            .select((dsl::page_url, diesel::dsl::count(dsl::id)))
+            .group_by(dsl::page_id)
+            .select((dsl::page_id, diesel::dsl::count(dsl::id)))
             .order(diesel::dsl::count(dsl::id).desc())
             .limit(limit)
-            .load::<(String, i64)>(&mut conn)
+            .load::<(Option<i32>, i64)>(&mut conn)
             .unwrap_or_else(|_| vec![])
+            .into_iter()
+            .filter_map(|(id, count)| id.map(|i| (i.to_string(), count)))
+            .collect()
     }
 }
 

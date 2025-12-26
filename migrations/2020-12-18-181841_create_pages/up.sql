@@ -71,4 +71,4 @@ CREATE TABLE IF NOT EXISTS users (
 
 INSERT INTO users (uuid, username, password) 
 VALUES (uuid_generate_v4()::varchar, 'root', '')
-ON CONFLICT (uuid) DO NOTHING;
+ON CONFLICT (username) DO NOTHING;

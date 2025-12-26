@@ -64,7 +64,7 @@ impl ResponseError for CustomHttpError {
                 })
             }
             CustomHttpError::InternalServerError(msg) => {
- HttpResponse::InternalServerError().json(ErrorResponse {
+                HttpResponse::InternalServerError().json(ErrorResponse {
                     code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
                     error: "Internal Server Error".to_string(),
                     message: msg.clone(),
@@ -114,3 +114,4 @@ impl From<CryptoError> for CustomHttpError {
         CustomHttpError::Unauthorized("Authentication failed".to_string())
     }
 }
+

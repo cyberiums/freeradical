@@ -1,13 +1,28 @@
--- Add full-text search indexes
+-- Add full-text search indexes using PostgreSQL text search
 
--- Pages full-text index
-ALTER TABLE pages
-ADD FULLTEXT INDEX idx_pages_fulltext (page_title, page_name, meta_title, meta_description);
+-- Pages full-text index (using GIN)
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_pages_fulltext') THEN
+        CREATE INDEX IF NOT EXISTS idx_pages_fulltext ON pages 
+        USING GIN (to_tsvector('english', coalesce(page_title, '') || ' ' || coalesce(page_name, '') || ' ' || coalesce(meta_title, '') || ' ' || coalesce(meta_description, '')));
+    END IF;
+END $$;
 
 -- Modules full-text index
-ALTER TABLE modules
-ADD FULLTEXT INDEX idx_modules_fulltext (title, content);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_modules_fulltext') THEN
+        CREATE INDEX IF NOT EXISTS idx_modules_fulltext ON modules 
+        USING GIN (to_tsvector('english', coalesce(title, '') || ' ' || coalesce(content, '')));
+    END IF;
+END $$;
 
 -- Media full-text index  
-ALTER TABLE media
-ADD FULLTEXT INDEX idx_media_fulltext (filename, original_filename, alt_text, caption);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_indexes WHERE indexname = 'idx_media_fulltext') THEN
+        CREATE INDEX IF NOT EXISTS idx_media_fulltext ON media 
+        USING GIN (to_tsvector('english', coalesce(filename, '') || ' ' || coalesce(original_filename, '') || ' ' || coalesce(alt_text, '')));
+    END IF;
+END $$;
