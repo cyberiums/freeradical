@@ -2,10 +2,10 @@
 -- Phase 2 query optimization
 
 -- Composite index for common page + module queries
-CREATE INDEX idx_modules_page_category ON modules(page_uuid, category_uuid);
+CREATE INDEX IF NOT EXISTS idx_modules_page_category ON modules(page_uuid, category_uuid);
 
 -- Composite index for active pages with recent updates
-CREATE INDEX idx_pages_time_url ON pages(time_created DESC, page_url);
+CREATE INDEX IF NOT EXISTS idx_pages_time_url ON pages(time_created DESC, page_url);
 
 -- Note: Individual indexes already exist from Phase 1:
 -- - idx_pages_page_url

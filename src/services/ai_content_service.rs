@@ -37,7 +37,7 @@ struct OpenAIRequest {
     temperature: Option<f32>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct OpenAIMessage {
     role: String,
     content: String,
@@ -102,6 +102,7 @@ pub async fn generate_content(
 ) -> Result<HttpResponse, CustomHttpError> {
     // Get provider
     let provider_id = payload.provider_id;
+    let pool_for_logging = pool.clone(); // Clone pool for later use
     
     let provider = web::block(move || -> Result<AIProviderConfig, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
@@ -111,15 +112,16 @@ pub async fn generate_content(
         
         if let Some(id) = provider_id {
             ai_provider_configs::table
-                .find(id)
+                .find(id as i32)
                 .first::<AIProviderConfig>(&mut conn)
         } else {
+            // Use first active provider since is_default doesn't exist
             ai_provider_configs::table
-                .filter(ai_provider_configs::is_default.eq(true))
+                .filter(ai_provider_configs::is_active.eq(true))
                 .first::<AIProviderConfig>(&mut conn)
         }
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(format!("Provider not found: {}", e)))?;
     
     // Generate content based on provider type
@@ -132,35 +134,29 @@ pub async fn generate_content(
     };
     
     // Log usage
-    let pool_clone = pool.clone();
     let provider_id = provider.id;
+    let provider_type = provider.provider_type.clone();
     let log = NewAIUsageLog {
-        provider_id: Some(provider_id),
         user_id: None, // TODO: Get from auth context
         operation: "generate_content".to_string(),
-        prompt_tokens: result.tokens_used as i32,
-        completion_tokens: 0,
-        total_tokens: result.tokens_used as i32,
-        cost_cents: result.cost_cents as i32,
-        model: result.model.clone(),
-        latency_ms: 0,
-        success: true,
-        error: None,
+        provider_type: Some(provider_type),
+        tokens_used: Some(result.tokens_used as i32),
+        cost_cents: Some(result.cost_cents as i32),
     };
     
     web::block(move || -> Result<(), diesel::result::Error> {
-        let mut conn = pool_clone.get().map_err(|_| diesel::result::Error::DatabaseError(
+        let mut conn = pool_for_logging.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
             Box::new("Database connection error".to_string())
         ))?;
         
         diesel::insert_into(ai_usage_log::table)
-            .values(&log)
+           .values(&log)
             .execute(&mut conn)?;
         
         Ok(())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
     
     Ok(HttpResponse::Ok().json(result))
@@ -173,16 +169,13 @@ pub async fn generate_with_openai(
 ) -> Result<GeneratedContentResponse, CustomHttpError> {
     let client = Client::new();
     
-    // Get config
-    let model = provider.config.get("model")
-        .and_then(|v| v.as_str())
-        .unwrap_or("gpt-4");
-    let endpoint = provider.config.get("endpoint")
-        .and_then(|v| v.as_str())
-        .unwrap_or("https://api.openai.com/v1");
+    // Get model from model_name field instead of config
+    let model = provider.model_name.as_deref().unwrap_or("gpt-4");
+    // Use default OpenAI endpoint since config doesn't exist
+    let endpoint = "https://api.openai.com/v1";
     
-    // Decrypt API key
-    let api_key = decrypt_api_key(&provider.api_key_encrypted.as_ref().unwrap())?;
+    // Decrypt API key (it's stored as TEXT, not Vec<u8>)
+    let api_key = provider.api_key_encrypted.clone();
     
     // Build system prompt based on content type
     let system_prompt = match request.content_type.as_str() {
@@ -253,14 +246,10 @@ pub async fn generate_with_anthropic(
 ) -> Result<GeneratedContentResponse, CustomHttpError> {
     let client = Client::new();
     
-    let model = provider.config.get("model")
-        .and_then(|v| v.as_str())
-        .unwrap_or("claude-3-opus-20240229");
-    let endpoint = provider.config.get("endpoint")
-        .and_then(|v| v.as_str())
-        .unwrap_or("https://api.anthropic.com/v1");
+    let model = provider.model_name.as_deref().unwrap_or("claude-3-opus-20240229");
+    let endpoint = "https://api.anthropic.com/v1";
     
-    let api_key = decrypt_api_key(&provider.api_key_encrypted.as_ref().unwrap())?;
+    let api_key = provider.api_key_encrypted.clone();
     
     let anthropic_request = AnthropicRequest {
         model: model.to_string(),

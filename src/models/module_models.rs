@@ -18,6 +18,9 @@ pub struct Module {
     pub category_uuid: Option<String>,
     pub title: String,
     pub content: String,
+    pub field_type: Option<String>,
+    pub field_config: Option<String>,
+    pub validation_rules: Option<String>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
@@ -28,6 +31,9 @@ pub struct MutModule {
     pub page_uuid: String,
     pub category_uuid: Option<String>,
     pub content: String,
+    pub field_type: Option<String>,
+    pub field_config: Option<String>,
+    pub validation_rules: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

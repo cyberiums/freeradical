@@ -1,6 +1,6 @@
 # FreeRadical CMS
 
-![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)
+[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v1.4.0)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Rust](https://img.shields.io/badge/rust-1.92%2B-orange.svg)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -11,7 +11,7 @@ A **blazing-fast**, **production-ready** headless CMS and **e-commerce platform*
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/freeradical.git
+git clone https://github.com/cyberiums/freeradical.git
 cd freeradical
 
 # Option 1: Docker (recommended)

@@ -5,14 +5,17 @@ pub mod auth_service;
 pub mod database_service;
 pub mod revision_service;
 pub mod inventory_service;
-// AI/MCP Services - Planned for v1.4.0 (requires migrations)
-// pub mod ai_provider_service;
-// pub mod ai_content_service;
-// pub mod ai_recommendations_service;
-// pub mod ai_metadata_service;
-// pub mod ai_authorization_service;
-// pub mod semantic_search_service;
-// pub mod recommendation_service;
+
+// AI/MCP Services - Phase 0: Security layer only for v1.4.0
+pub mod ai_scope_service; // AI security and scoping
+
+// AI Services - Re-enabled for v1.4.0 with models and migrations complete
+pub mod ai_provider_service; // Provider CRUD operations
+pub mod ai_content_service; // Content generation
+pub mod ai_authorization_service; // Budget and permission checks
+pub mod semantic_search_service; // Vector search with content_embeddings
+pub mod recommendation_service; // Content recommendations
+
 pub mod monitoring_service;
 pub mod field_validation_service;
 pub mod permission_service;

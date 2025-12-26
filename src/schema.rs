@@ -7,6 +7,119 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    ai_provider_configs (id) {
+        id -> Int4,
+        #[max_length = 50]
+        provider_type -> Varchar,
+        api_key_encrypted -> Text,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        daily_token_limit -> Nullable<Int4>,
+        monthly_budget_cents -> Nullable<Int4>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    ai_usage_log (id) {
+        id -> Int8,
+        user_id -> Nullable<Int4>,
+        #[max_length = 50]
+        operation -> Varchar,
+        #[max_length = 50]
+        provider_type -> Nullable<Varchar>,
+        tokens_used -> Nullable<Int4>,
+        cost_cents -> Nullable<Int4>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    analytics_events (id) {
+        id -> Int8,
+        #[max_length = 50]
+        event_type -> Varchar,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        user_id -> Nullable<Int4>,
+        #[max_length = 255]
+        session_id -> Nullable<Varchar>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        user_agent -> Nullable<Text>,
+        referer -> Nullable<Text>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    analytics_summary (id) {
+        id -> Int4,
+        #[max_length = 500]
+        page_url -> Varchar,
+        date -> Date,
+        view_count -> Nullable<Int4>,
+        unique_visitors -> Nullable<Int4>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    backups (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[sql_name = "type"]
+        #[max_length = 50]
+        type_ -> Varchar,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        #[max_length = 500]
+        file_path -> Nullable<Varchar>,
+        file_size -> Nullable<Int8>,
+        #[max_length = 100]
+        storage_location -> Nullable<Varchar>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    content_embeddings (id) {
+        id -> Int8,
+        page_id -> Nullable<Int4>,
+        embedding_vector -> Nullable<Array<Nullable<Float8>>>,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    content_relationships (id) {
+        id -> Int8,
+        #[max_length = 20]
+        source_type -> Varchar,
+        #[max_length = 255]
+        source_id -> Varchar,
+        #[max_length = 20]
+        target_type -> Varchar,
+        #[max_length = 255]
+        target_id -> Varchar,
+        #[max_length = 50]
+        relationship_type -> Nullable<Varchar>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     crm_campaigns (id) {
         id -> Int4,
         #[max_length = 200]
@@ -152,13 +265,37 @@ diesel::table! {
 }
 
 diesel::table! {
-    module_category (uuid) {
-        #[max_length = 255]
-        uuid -> Varchar,
-        #[max_length = 255]
-        page_uuid -> Varchar,
-        #[max_length = 255]
-        title -> Varchar,
+    inventory_audit_log (id) {
+        id -> Int4,
+        product_id -> Nullable<Int4>,
+        variant_id -> Nullable<Int4>,
+        user_id -> Nullable<Int4>,
+        order_id -> Nullable<Int4>,
+        #[max_length = 30]
+        change_type -> Varchar,
+        quantity_before -> Nullable<Int4>,
+        quantity_after -> Nullable<Int4>,
+        quantity_change -> Nullable<Int4>,
+        #[max_length = 500]
+        reason -> Nullable<Varchar>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    languages (id) {
+        id -> Int4,
+        #[max_length = 10]
+        code -> Varchar,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 100]
+        native_name -> Nullable<Varchar>,
+        is_default -> Nullable<Bool>,
+        is_rtl -> Nullable<Bool>,
+        enabled -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
     }
 }
 
@@ -189,19 +326,26 @@ diesel::table! {
 }
 
 diesel::table! {
-    page_views (id) {
-        id -> Int8,
-        #[max_length = 500]
-        page_url -> Varchar,
-        #[max_length = 36]
-        page_uuid -> Nullable<Varchar>,
-        #[max_length = 64]
-        visitor_hash -> Varchar,
-        #[max_length = 500]
-        referrer -> Nullable<Varchar>,
-        #[max_length = 500]
-        user_agent -> Nullable<Varchar>,
-        viewed_at -> Timestamp,
+    module_category (uuid) {
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        page_uuid -> Varchar,
+        #[max_length = 255]
+        title -> Varchar,
+    }
+}
+
+diesel::table! {
+    module_translations (id) {
+        id -> Int4,
+        module_id -> Int4,
+        language_id -> Int4,
+        #[max_length = 255]
+        title -> Nullable<Varchar>,
+        content -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
     }
 }
 
@@ -216,6 +360,25 @@ diesel::table! {
         #[max_length = 255]
         title -> Varchar,
         content -> Text,
+        #[max_length = 30]
+        field_type -> Nullable<Varchar>,
+        field_config -> Nullable<Text>,
+        validation_rules -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
+    oauth_providers (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 255]
+        client_id -> Varchar,
+        #[max_length = 255]
+        client_secret -> Varchar,
+        enabled -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
     }
 }
 
@@ -275,6 +438,50 @@ diesel::table! {
         change_summary -> Nullable<Varchar>,
         changed_by_user_id -> Nullable<Int4>,
         created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    page_translations (id) {
+        id -> Int4,
+        page_id -> Int4,
+        language_id -> Int4,
+        #[max_length = 255]
+        page_title -> Nullable<Varchar>,
+        page_content -> Nullable<Text>,
+        #[max_length = 255]
+        page_url -> Nullable<Varchar>,
+        #[max_length = 255]
+        meta_title -> Nullable<Varchar>,
+        meta_description -> Nullable<Text>,
+        #[max_length = 255]
+        og_title -> Nullable<Varchar>,
+        og_description -> Nullable<Text>,
+        #[max_length = 255]
+        twitter_title -> Nullable<Varchar>,
+        twitter_description -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    page_views (id) {
+        id -> Int4,
+        page_id -> Nullable<Int4>,
+        user_id -> Nullable<Int4>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        user_agent -> Nullable<Text>,
+        referer -> Nullable<Text>,
+        #[max_length = 2]
+        country_code -> Nullable<Varchar>,
+        #[max_length = 100]
+        city -> Nullable<Varchar>,
+        viewed_at -> Timestamp,
+        #[max_length = 255]
+        session_id -> Nullable<Varchar>,
+        duration_seconds -> Nullable<Int4>,
     }
 }
 
@@ -374,12 +581,77 @@ diesel::table! {
 }
 
 diesel::table! {
+    robots_rules (id) {
+        id -> Int4,
+        #[max_length = 100]
+        user_agent -> Varchar,
+        #[max_length = 20]
+        directive -> Varchar,
+        #[max_length = 500]
+        path -> Varchar,
+        crawl_delay -> Nullable<Int4>,
+        #[max_length = 200]
+        comment -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     roles (id) {
         id -> Int4,
         #[max_length = 50]
         name -> Varchar,
         description -> Nullable<Text>,
         permissions -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    search_history (id) {
+        id -> Int8,
+        user_id -> Nullable<Int4>,
+        query_text -> Text,
+        #[max_length = 20]
+        search_type -> Nullable<Varchar>,
+        results_count -> Nullable<Int4>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    tenants (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        #[max_length = 100]
+        subdomain -> Varchar,
+        #[max_length = 255]
+        custom_domain -> Nullable<Varchar>,
+        #[max_length = 50]
+        plan -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        settings -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    user_oauth_connections (id) {
+        id -> Int4,
+        user_id -> Int4,
+        provider_id -> Int4,
+        #[max_length = 255]
+        provider_user_id -> Varchar,
+        access_token -> Nullable<Text>,
+        refresh_token -> Nullable<Text>,
+        expires_at -> Nullable<Timestamp>,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
     }
@@ -413,21 +685,63 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    webhook_logs (id) {
+        id -> Int8,
+        webhook_id -> Int4,
+        #[max_length = 100]
+        event_type -> Varchar,
+        payload -> Nullable<Json>,
+        response_status -> Nullable<Int4>,
+        response_body -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    webhooks (id) {
+        id -> Int4,
+        #[max_length = 500]
+        url -> Varchar,
+        events -> Json,
+        #[max_length = 255]
+        secret -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        last_triggered_at -> Nullable<Timestamp>,
+        failure_count -> Nullable<Int4>,
+    }
+}
+
 diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
 diesel::joinable!(crm_interactions -> crm_customers (customer_id));
-// diesel::joinable!(crm_interactions -> orders (order_id));
+// diesel::joinable!(crm_interactions -> orders (order_id)); // Type mismatch: order_id is INT4 but orders.id is INT8
 diesel::joinable!(crm_notes -> crm_customers (customer_id));
 diesel::joinable!(crm_segment_members -> crm_customers (customer_id));
 diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
 diesel::joinable!(crm_tasks -> crm_customers (customer_id));
+// diesel::joinable!(inventory_audit_log -> orders (order_id)); // Type mismatch: order_id is INT4 but orders.id is INT8
+diesel::joinable!(inventory_audit_log -> product_variants (variant_id));
+// diesel::joinable!(inventory_audit_log -> products (product_id)); // Type mismatch: product_id is INT4 but products.id is INT8
 diesel::joinable!(module_category -> pages (page_uuid));
+diesel::joinable!(module_translations -> languages (language_id));
 diesel::joinable!(modules -> module_category (category_uuid));
 diesel::joinable!(modules -> pages (page_uuid));
-// diesel::joinable!(order_items -> orders (order_id));
-// diesel::joinable!(order_items -> products (product_id));
-// diesel::joinable!(product_variants -> products (product_id));
+diesel::joinable!(order_items -> orders (order_id));
+diesel::joinable!(order_items -> products (product_id));
+diesel::joinable!(page_translations -> languages (language_id));
+// diesel::joinable!(product_variants -> products (product_id)); // Type mismatch: product_id is INT4 but products.id is INT8
+diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
+diesel::joinable!(webhook_logs -> webhooks (webhook_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    ai_provider_configs,
+    ai_usage_log,
+    analytics_events,
+    analytics_summary,
+    backups,
+    content_embeddings,
+    content_relationships,
     crm_campaigns,
     crm_customers,
     crm_interactions,
@@ -435,17 +749,28 @@ diesel::allow_tables_to_appear_in_same_query!(
     crm_segment_members,
     crm_segments,
     crm_tasks,
+    inventory_audit_log,
+    languages,
     media,
     module_category,
+    module_translations,
     modules,
+    oauth_providers,
     order_items,
     orders,
     page_revisions,
+    page_translations,
     page_views,
     pages,
     product_variants,
     products,
+    robots_rules,
     roles,
+    search_history,
+    tenants,
+    user_oauth_connections,
     user_roles,
     users,
+    webhook_logs,
+    webhooks,
 );

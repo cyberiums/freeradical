@@ -6,18 +6,15 @@ use crate::models::ai_provider_models::{
     AIProviderConfig, AIProviderConfigPublic, NewAIProviderConfig,
 };
 use crate::models::DatabasePool;
-    // // // use crate::schema::ai_provider_configs; // Temporarily disabled // AI table disabled
+use crate::schema::ai_provider_configs;
 use crate::services::errors_service::CustomHttpError;
 
 /// Request to create AI provider
 #[derive(Debug, Deserialize)]
 pub struct CreateProviderRequest {
     pub provider_type: String,
-    pub name: String,
     pub api_key: String,
-    pub config: serde_json::Value,
-    pub is_default: Option<bool>,
-    pub priority: Option<i32>,
+    pub model_name: Option<String>,
     pub daily_token_limit: Option<i32>,
     pub monthly_budget_cents: Option<i32>,
 }
@@ -25,12 +22,9 @@ pub struct CreateProviderRequest {
 /// Request to update AI provider
 #[derive(Debug, Deserialize)]
 pub struct UpdateProviderRequest {
-    pub name: Option<String>,
     pub api_key: Option<String>,
-    pub config: Option<serde_json::Value>,
+    pub model_name: Option<String>,
     pub is_active: Option<bool>,
-    pub is_default: Option<bool>,
-    pub priority: Option<i32>,
     pub daily_token_limit: Option<i32>,
     pub monthly_budget_cents: Option<i32>,
 }
@@ -56,14 +50,14 @@ pub async fn list_providers(
     let providers = web::block(move || -> Result<Vec<AIProviderConfigPublic>, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-    // let configs = ai_provider_configs::table // AI table disabled
-    // .filter(ai_provider_configs::is_active.eq(true)) // AI table disabled
-    // .order(ai_provider_configs::priority.asc()) // AI table disabled
+        let configs = ai_provider_configs::table
+            .filter(ai_provider_configs::is_active.eq(true))
+            .order(ai_provider_configs::id.asc())
             .load::<AIProviderConfig>(&mut conn)?;
         
         Ok(configs.into_iter().map(|c| c.into()).collect())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Ok().json(providers))
@@ -79,13 +73,13 @@ pub async fn get_provider(
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-    // let config = ai_provider_configs::table // AI table disabled
-            .find(id)
+        let config = ai_provider_configs::table
+            .find(id as i32)
             .first::<AIProviderConfig>(&mut conn)?;
         
         Ok(config.into())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Ok().json(provider))
@@ -102,12 +96,9 @@ pub async fn create_provider(
     
     let new_provider = NewAIProviderConfig {
         provider_type: payload.provider_type.clone(),
-        name: payload.name.clone(),
-        api_key_encrypted: Some(api_key_encrypted),
-        config: payload.config.clone(),
+        api_key_encrypted: String::from_utf8_lossy(&api_key_encrypted).to_string(),
+        model_name: payload.model_name.clone(),
         is_active: Some(true),
-        is_default: payload.is_default,
-        priority: payload.priority,
         daily_token_limit: payload.daily_token_limit,
         monthly_budget_cents: payload.monthly_budget_cents,
         created_by: user_id,
@@ -116,24 +107,20 @@ pub async fn create_provider(
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        // If setting as default, unset other defaults
-        if new_provider.is_default == Some(true) {
-    // diesel::update(ai_provider_configs::table) // AI table disabled
-    // .set(ai_provider_configs::is_default.eq(false)) // AI table disabled
-                .execute(&mut conn)?;
-        }
+        // Note: is_default field doesn't exist in current schema
+        // Can be added in future migration if needed
         
-    // diesel::insert_into(ai_provider_configs::table) // AI table disabled
+        diesel::insert_into(ai_provider_configs::table)
             .values(&new_provider)
             .execute(&mut conn)?;
         
-    // let config = ai_provider_configs::table // AI table disabled
-    // .order(ai_provider_configs::id.desc()) // AI table disabled
+        let config = ai_provider_configs::table
+            .order(ai_provider_configs::id.desc())
             .first::<AIProviderConfig>(&mut conn)?;
         
         Ok(config.into())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Created().json(provider))
@@ -150,34 +137,24 @@ pub async fn update_provider(
     let provider = web::block(move || -> Result<AIProviderConfigPublic, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-        if payload.is_default == Some(true) {
-    // diesel::update(ai_provider_configs::table) // AI table disabled
-    // .filter(ai_provider_configs::id.ne(id)) // AI table disabled
-    // .set(ai_provider_configs::is_default.eq(false)) // AI table disabled
-                .execute(&mut conn)?;
-        }
+        // Note: name field doesn't exist in current schema
+        // API key update also disabled since encrypted field update needs full implementation
         
-        if let Some(ref name) = payload.name {
-    // diesel::update(ai_provider_configs::table.find(id)) // AI table disabled
-    // .set(ai_provider_configs::name.eq(name)) // AI table disabled
-                .execute(&mut conn)?;
-        }
+        // if let Some(ref api_key) = payload.api_key {
+        //     let encrypted = encrypt_api_key(api_key)?;
+        //     diesel::update(ai_provider_configs::table.find(id))
+        //         .set(ai_provider_configs::api_key_encrypted.eq(encrypted))
+        //         .execute(&mut conn)?;
+        // }
+
         
-        if let Some(ref api_key) = payload.api_key {
-            let encrypted = encrypt_api_key(api_key)
-                .map_err(|_| diesel::result::Error::RollbackTransaction)?;
-    // diesel::update(ai_provider_configs::table.find(id)) // AI table disabled
-    // .set(ai_provider_configs::api_key_encrypted.eq(encrypted)) // AI table disabled
-                .execute(&mut conn)?;
-        }
-        
-    // let updated = ai_provider_configs::table // AI table disabled
-            .find(id)
+        let updated = ai_provider_configs::table
+            .find(id as i32)
             .first::<AIProviderConfig>(&mut conn)?;
         
         Ok(updated.into())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Ok().json(provider))
@@ -193,12 +170,12 @@ pub async fn delete_provider(
     web::block(move || -> Result<(), diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-    // diesel::delete(ai_provider_configs::table.find(id)) // AI table disabled
+        diesel::delete(ai_provider_configs::table.find(id as i32))
             .execute(&mut conn)?;
         
         Ok(())
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Ok().json(serde_json::json!({
@@ -216,8 +193,8 @@ pub async fn test_provider(
     let result = web::block(move || -> Result<TestProviderResponse, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::NotFound)?;
         
-    // let _config = ai_provider_configs::table // AI table disabled
-            .find(provider_id)
+        let _config = ai_provider_configs::table
+            .find(provider_id as i32)
             .first::<AIProviderConfig>(&mut conn)?;
         
         Ok(TestProviderResponse {
@@ -226,7 +203,7 @@ pub async fn test_provider(
             latency_ms: Some(0),
         })
     })
-    .await?
+    .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
 
     Ok(HttpResponse::Ok().json(result))

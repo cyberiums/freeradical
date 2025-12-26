@@ -3,7 +3,7 @@
 -- Created: 2025-12-25
 
 -- Customer aggregated profile (extends users table)
-CREATE TABLE crm_customers (
+CREATE TABLE IF NOT EXISTS crm_customers (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     
@@ -46,14 +46,14 @@ CREATE TABLE crm_customers (
     UNIQUE(user_id)
 );
 
-CREATE INDEX idx_crm_customers_user_id ON crm_customers(user_id);
-CREATE INDEX idx_crm_customers_lifecycle ON crm_customers(lifecycle_stage);
-CREATE INDEX idx_crm_customers_rfm ON crm_customers(rfm_total_score DESC);
-CREATE INDEX idx_crm_customers_health ON crm_customers(health_score DESC);
-CREATE INDEX idx_crm_customers_segment ON crm_customers(primary_segment_id);
+CREATE INDEX IF NOT EXISTS idx_crm_customers_user_id ON crm_customers(user_id);
+CREATE INDEX IF NOT EXISTS idx_crm_customers_lifecycle ON crm_customers(lifecycle_stage);
+CREATE INDEX IF NOT EXISTS idx_crm_customers_rfm ON crm_customers(rfm_total_score DESC);
+CREATE INDEX IF NOT EXISTS idx_crm_customers_health ON crm_customers(health_score DESC);
+CREATE INDEX IF NOT EXISTS idx_crm_customers_segment ON crm_customers(primary_segment_id);
 
 -- Customer interactions timeline
-CREATE TABLE crm_interactions (
+CREATE TABLE IF NOT EXISTS crm_interactions (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
     
@@ -79,13 +79,13 @@ CREATE TABLE crm_interactions (
     search_vector tsvector
 );
 
-CREATE INDEX idx_crm_interactions_customer ON crm_interactions(customer_id);
-CREATE INDEX idx_crm_interactions_type ON crm_interactions(interaction_type);
-CREATE INDEX idx_crm_interactions_date ON crm_interactions(created_at DESC);
-CREATE INDEX idx_crm_interactions_search ON crm_interactions USING GIN(search_vector);
+CREATE INDEX IF NOT EXISTS idx_crm_interactions_customer ON crm_interactions(customer_id);
+CREATE INDEX IF NOT EXISTS idx_crm_interactions_type ON crm_interactions(interaction_type);
+CREATE INDEX IF NOT EXISTS idx_crm_interactions_date ON crm_interactions(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_crm_interactions_search ON crm_interactions USING GIN(search_vector);
 
 -- Customer segments for targeting
-CREATE TABLE crm_segments (
+CREATE TABLE IF NOT EXISTS crm_segments (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     description TEXT,
@@ -108,11 +108,11 @@ CREATE TABLE crm_segments (
     UNIQUE(name)
 );
 
-CREATE INDEX idx_crm_segments_name ON crm_segments(name);
-CREATE INDEX idx_crm_segments_criteria ON crm_segments USING GIN(criteria);
+CREATE INDEX IF NOT EXISTS idx_crm_segments_name ON crm_segments(name);
+CREATE INDEX IF NOT EXISTS idx_crm_segments_criteria ON crm_segments USING GIN(criteria);
 
 -- Segment membership (for static segments)
-CREATE TABLE crm_segment_members (
+CREATE TABLE IF NOT EXISTS crm_segment_members (
     segment_id INTEGER NOT NULL REFERENCES crm_segments(id) ON DELETE CASCADE,
     customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
     added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -120,10 +120,10 @@ CREATE TABLE crm_segment_members (
     PRIMARY KEY (segment_id, customer_id)
 );
 
-CREATE INDEX idx_segment_members_customer ON crm_segment_members(customer_id);
+CREATE INDEX IF NOT EXISTS idx_segment_members_customer ON crm_segment_members(customer_id);
 
 -- Marketing campaigns
-CREATE TABLE crm_campaigns (
+CREATE TABLE IF NOT EXISTS crm_campaigns (
     id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     campaign_type VARCHAR(50) NOT NULL, -- email, sms, push, social
@@ -157,12 +157,12 @@ CREATE TABLE crm_campaigns (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_crm_campaigns_status ON crm_campaigns(status);
-CREATE INDEX idx_crm_campaigns_segment ON crm_campaigns(segment_id);
-CREATE INDEX idx_crm_campaigns_scheduled ON crm_campaigns(scheduled_at);
+CREATE INDEX IF NOT EXISTS idx_crm_campaigns_status ON crm_campaigns(status);
+CREATE INDEX IF NOT EXISTS idx_crm_campaigns_segment ON crm_campaigns(segment_id);
+CREATE INDEX IF NOT EXISTS idx_crm_campaigns_scheduled ON crm_campaigns(scheduled_at);
 
 -- Tasks and reminders
-CREATE TABLE crm_tasks (
+CREATE TABLE IF NOT EXISTS crm_tasks (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER REFERENCES crm_customers(id) ON DELETE CASCADE,
     
@@ -186,13 +186,13 @@ CREATE TABLE crm_tasks (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_crm_tasks_customer ON crm_tasks(customer_id);
-CREATE INDEX idx_crm_tasks_assigned ON crm_tasks(assigned_to);
-CREATE INDEX idx_crm_tasks_due ON crm_tasks(due_date);
-CREATE INDEX idx_crm_tasks_status ON crm_tasks(status);
+CREATE INDEX IF NOT EXISTS idx_crm_tasks_customer ON crm_tasks(customer_id);
+CREATE INDEX IF NOT EXISTS idx_crm_tasks_assigned ON crm_tasks(assigned_to);
+CREATE INDEX IF NOT EXISTS idx_crm_tasks_due ON crm_tasks(due_date);
+CREATE INDEX IF NOT EXISTS idx_crm_tasks_status ON crm_tasks(status);
 
 -- Customer notes
-CREATE TABLE crm_notes (
+CREATE TABLE IF NOT EXISTS crm_notes (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL REFERENCES crm_customers(id) ON DELETE CASCADE,
     
@@ -206,8 +206,8 @@ CREATE TABLE crm_notes (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_crm_notes_customer ON crm_notes(customer_id);
-CREATE INDEX idx_crm_notes_pinned ON crm_notes(is_pinned) WHERE is_pinned = true;
+CREATE INDEX IF NOT EXISTS idx_crm_notes_customer ON crm_notes(customer_id);
+CREATE INDEX IF NOT EXISTS idx_crm_notes_pinned ON crm_notes(is_pinned) WHERE is_pinned = true;
 
 -- Update trigger for updated_at timestamps
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -218,8 +218,43 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_segments_updated_at ON crm_segments CASCADE;
+DROP TRIGGER IF EXISTS update_crm_campaigns_updated_at ON crm_campaigns CASCADE;
+DROP TRIGGER IF EXISTS update_crm_tasks_updated_at ON crm_tasks CASCADE;
+DROP TRIGGER IF EXISTS update_crm_notes_updated_at ON crm_notes CASCADE;
+
 CREATE TRIGGER update_crm_customers_updated_at BEFORE UPDATE ON crm_customers FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_segments_updated_at ON crm_segments CASCADE;
+DROP TRIGGER IF EXISTS update_crm_campaigns_updated_at ON crm_campaigns CASCADE;
+DROP TRIGGER IF EXISTS update_crm_tasks_updated_at ON crm_tasks CASCADE;
+DROP TRIGGER IF EXISTS update_crm_notes_updated_at ON crm_notes CASCADE;
+
 CREATE TRIGGER update_crm_segments_updated_at BEFORE UPDATE ON crm_segments FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_segments_updated_at ON crm_segments CASCADE;
+DROP TRIGGER IF EXISTS update_crm_campaigns_updated_at ON crm_campaigns CASCADE;
+DROP TRIGGER IF EXISTS update_crm_tasks_updated_at ON crm_tasks CASCADE;
+DROP TRIGGER IF EXISTS update_crm_notes_updated_at ON crm_notes CASCADE;
+
 CREATE TRIGGER update_crm_campaigns_updated_at BEFORE UPDATE ON crm_campaigns FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_segments_updated_at ON crm_segments CASCADE;
+DROP TRIGGER IF EXISTS update_crm_campaigns_updated_at ON crm_campaigns CASCADE;
+DROP TRIGGER IF EXISTS update_crm_tasks_updated_at ON crm_tasks CASCADE;
+DROP TRIGGER IF EXISTS update_crm_notes_updated_at ON crm_notes CASCADE;
+
 CREATE TRIGGER update_crm_tasks_updated_at BEFORE UPDATE ON crm_tasks FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_customers_updated_at ON crm_customers CASCADE;
+DROP TRIGGER IF EXISTS update_crm_segments_updated_at ON crm_segments CASCADE;
+DROP TRIGGER IF EXISTS update_crm_campaigns_updated_at ON crm_campaigns CASCADE;
+DROP TRIGGER IF EXISTS update_crm_tasks_updated_at ON crm_tasks CASCADE;
+DROP TRIGGER IF EXISTS update_crm_notes_updated_at ON crm_notes CASCADE;
+
 CREATE TRIGGER update_crm_notes_updated_at BEFORE UPDATE ON crm_notes FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
