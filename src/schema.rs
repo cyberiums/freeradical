@@ -380,7 +380,7 @@ diesel::table! {
         price -> Nullable<Numeric>,
         stock_quantity -> Nullable<Integer>,
         weight -> Nullable<Numeric>,
-        attributes -> Nullable<Jsonb>,
+        attributes -> Nullable<Text>,
         #[max_length = 500]
         image_url -> Nullable<Varchar>,
         is_active -> Nullable<Bool>,

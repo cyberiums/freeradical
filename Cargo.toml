@@ -1,6 +1,6 @@
 [package]
 name = "freeradical"
-version = "1.2.0"
+version = "1.2.1"
 authors = ["fastbuilder <team@fastbuilder.ai>"]
 edition = "2018"
 
@@ -25,7 +25,7 @@ serde = {version = "1.0", features = ["derive"] }
 serde_json = "1.0.60"
 
 # database
-diesel = { version = "2.3.5", features = ["mysql", "postgres", "chrono", "r2d2"] }
+diesel = { version = "2.2", features = ["postgres", "chrono", "r2d2", "numeric"] }
 diesel_migrations = "2.2"
 chrono = { version = "0.4", features = ["serde"] }
 
@@ -41,6 +41,7 @@ envy = "0.4"
 dotenv = "*"
 uuid = { version = "1.19.0", features = ["v4", "serde"] }
 rust_decimal = "1.36"
+bigdecimal = { version = "0.4", features = ["serde"] }
 futures = "*"
 futures-util = "0.3"  # For async file I/O
 tokio = { version = "1", features = ["time"] }  # For async runtime

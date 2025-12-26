@@ -1,8 +1,9 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use diesel::sql_types::{Jsonb, Numeric};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use rust_decimal::Decimal;
+use bigdecimal::BigDecimal;
 
 use crate::schema::{inventory_audit_log, product_variants};
 
@@ -15,10 +16,10 @@ pub struct ProductVariant {
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
-    pub price: Option<Decimal>,
+    pub price: Option<BigDecimal>,
     pub stock_quantity: Option<i32>,
-    pub weight: Option<Decimal>,
-    pub attributes: Option<serde_json::Value>,
+    pub weight: Option<BigDecimal>,
+    pub attributes: Option<String>,  // JSON stored as TEXT
     pub image_url: Option<String>,
     pub is_active: Option<bool>,
     pub created_at: Option<NaiveDateTime>,
@@ -33,10 +34,10 @@ pub struct NewProductVariant {
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
-    pub price: Option<Decimal>,
+    pub price: Option<BigDecimal>,
     pub stock_quantity: Option<i32>,
-    pub weight: Option<Decimal>,
-    pub attributes: Option<serde_json::Value>,
+    pub weight: Option<BigDecimal>,
+    pub attributes: Option<String>,  // JSON as String
     pub image_url: Option<String>,
     pub is_active: Option<bool>,
 }

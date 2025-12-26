@@ -2,7 +2,7 @@ use actix_web::http::header::HeaderValue;
 use actix_web::{dev::Payload, web, FromRequest, HttpRequest};
 use argon2::{Argon2, PasswordHasher};
 use password_hash::{SaltString, PasswordHash, PasswordVerifier};
-use diesel::MysqlConnection;
+use diesel::prelude::*;
 use futures::{future::LocalBoxFuture, Future};
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use rand_core::OsRng;

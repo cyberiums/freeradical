@@ -1,0 +1,255 @@
+use actix_web::{web, HttpResponse};
+use diesel::prelude::*;
+use serde::{Deserialize, Serialize};
+use chrono::NaiveDateTime;
+
+use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
+use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
+use crate::services::errors_service::CustomHttpError;
+use crate::services::auth_service::Claims;
+use crate::schema::{orders, order_items, products};
+
+#[derive(Deserialize)]
+pub struct CreateOrderRequest {
+    pub items: Vec<OrderItemInput>,
+    pub currency: String,
+}
+
+#[derive(Deserialize)]
+pub struct OrderItemInput {
+    pub product_id: i64,
+    pub quantity: i32,
+}
+
+#[derive(Serialize)]
+pub struct OrderResponse {
+    pub order: Order,
+    pub items: Vec<OrderItemWithProduct>,
+    pub total_cents: i64,
+}
+
+#[derive(Serialize)]
+pub struct OrderItemWithProduct {
+    pub id: i64,
+    pub product_id: i64,
+    pub product_name: String,
+    pub quantity: i32,
+    pub price_cents: i64,
+    pub subtotal_cents: i64,
+}
+
+// List user's orders
+pub async fn list_orders(
+    pool: web::Data<DatabasePool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut conn = pool_handler(pool)?;
+    
+    let user_orders = orders::table
+        .filter(orders::user_uuid.eq(&claim.sub))
+        .order(orders::created_at.desc())
+        .load::<Order>(&mut conn)?;
+    
+    Ok(HttpResponse::Ok().json(user_orders))
+}
+
+// Get single order with items
+pub async fn get_order(
+    id: web::Path<i64>,
+    pool: web::Data<DatabasePool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut conn = pool_handler(pool)?;
+    
+    let ord = orders::table
+        .find(*id)
+        .filter(orders::user_uuid.eq(&claim.sub))
+        .first::<Order>(&mut conn)
+        .map_err(|_| CustomHttpError::NotFound("Order not found".to_string()))?;
+    
+    let itms = order_items::table
+        .inner_join(products::table)
+        .filter(order_items::order_id.eq(ord.id))
+        .select((
+            order_items::id,
+            order_items::product_id,
+            products::name,
+            order_items::quantity,
+            order_items::price_cents,
+        ))
+        .load::<(i64, i64, String, i32, i64)>(&mut conn)?
+        .into_iter()
+        .map(|(id, product_id, product_name, quantity, price_cents)| OrderItemWithProduct {
+            id,
+            product_id,
+            product_name,
+            quantity,
+            price_cents,
+            subtotal_cents: price_cents * quantity as i64,
+        })
+        .collect();
+    
+    let (order, items) = (ord, itms);
+    
+    let response = OrderResponse {
+        order: order.clone(),
+        items,
+        total_cents: order.total_cents,
+    };
+    
+    Ok(HttpResponse::Ok().json(response))
+}
+
+// Create order
+pub async fn create_order(
+    body: web::Json<CreateOrderRequest>,
+    pool: web::Data<DatabasePool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut conn = pool_handler(pool)?;
+    
+    // Validate all products exist and calculate total
+    let product_ids: Vec<i64> = body.items.iter().map(|item| item.product_id).collect();
+    let products_list = products::table
+        .filter(products::id.eq_any(&product_ids))
+        .filter(products::is_active.eq(true))
+        .load::<Product>(&mut conn)?;
+    
+    if products_list.len() != product_ids.len() {
+        return Err(CustomHttpError::BadRequest("Some products not found".to_string()));
+    }
+    
+    // Calculate total
+    let mut total_cents: i64 = 0;
+    let mut order_item_data = Vec::new();
+    
+    for item_input in &body.items {
+        let product = products_list
+            .iter()
+            .find(|p| p.id == item_input.product_id)
+            .ok_or(CustomHttpError::BadRequest("Product not found".to_string()))?;
+        
+        let subtotal = product.price_cents * item_input.quantity as i64;
+        total_cents += subtotal;
+        
+        order_item_data.push((item_input.product_id, item_input.quantity, product.price_cents));
+    }
+    
+    // Create order
+    let new_order = NewOrder {
+        user_uuid: claim.sub.clone(),
+        total_cents,
+        currency: body.currency.clone(),
+        status: "pending".to_string(),
+        payment_provider: None,
+        payment_intent_id: None,
+        metadata: None,
+    };
+    
+    diesel::insert_into(orders::table)
+        .values(&new_order)
+        .execute(&mut conn)?;
+    
+    let order_id = orders::table
+        .order(orders::id.desc())
+        .select(orders::id)
+        .first::<i64>(&mut conn)?;
+    
+    // Create order items
+    for (product_id, quantity, price_cents) in order_item_data {
+        let new_item = NewOrderItem {
+            order_id,
+            product_id,
+            quantity,
+            price_cents,
+        };
+        
+        diesel::insert_into(order_items::table)
+            .values(&new_item)
+            .execute(&mut conn)?;
+    }
+    
+    let (order_id, total_cents) = (order_id, total_cents);
+    
+    Ok(HttpResponse::Created().json(serde_json::json!({
+        "order_id": order_id,
+        "total_cents": total_cents,
+        "status": "pending",
+        "message": "Order created successfully"
+    })))
+}
+
+// Update order status
+#[derive(Deserialize)]
+pub struct UpdateOrderStatusRequest {
+    pub status: String,
+}
+
+pub async fn update_order_status(
+    id: web::Path<i64>,
+    body: web::Json<UpdateOrderStatusRequest>,
+    pool: web::Data<DatabasePool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut conn = pool_handler(pool)?;
+    
+    // Valid statuses
+    let valid_statuses = vec!["pending", "processing", "completed", "cancelled"];
+    if !valid_statuses.contains(&body.status.as_str()) {
+        return Err(CustomHttpError::BadRequest("Missing product information".to_string()));
+    }
+    
+    let updated = diesel::update(
+            orders::table
+                .find(*id)
+                .filter(orders::user_uuid.eq(&claim.sub))
+        )
+        .set(orders::status.eq(&body.status))
+        .execute(&mut conn)?;
+    
+    if updated == 0 {
+        return Err(CustomHttpError::NotFound("Product not found".to_string()));
+    }
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "message": "Order status updated",
+        "status": body.status
+    })))
+}
+
+// Link payment to order
+#[derive(Deserialize)]
+pub struct LinkPaymentRequest {
+    pub payment_provider: String,
+    pub payment_intent_id: String,
+}
+
+pub async fn link_payment_to_order(
+    id: web::Path<i64>,
+    body: web::Json<LinkPaymentRequest>,
+    pool: web::Data<DatabasePool>,
+    claim: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut conn = pool_handler(pool)?;
+    
+    let updated = diesel::update(
+            orders::table
+                .find(*id)
+                .filter(orders::user_uuid.eq(&claim.sub))
+        )
+        .set((
+            orders::payment_provider.eq(&body.payment_provider),
+            orders::payment_intent_id.eq(&body.payment_intent_id),
+            orders::status.eq("processing"),
+        ))
+        .execute(&mut conn)?;
+    
+    if updated == 0 {
+        return Err(CustomHttpError::NotFound("Order not found".to_string()));
+    }
+    
+    Ok(HttpResponse::Ok().json(serde_json::json!({
+        "message": "Payment linked to order",
+        "status": "processing"
+    })))
+}
