@@ -7,29 +7,33 @@ use crate::schema::{products, orders, order_items};
 #[diesel(table_name = products)]
 pub struct Product {
     pub id: i64,
+    pub uuid: String,
     pub name: String,
     pub description: Option<String>,
     pub price_cents: i64,
-    pub currency: String,
     pub sku: Option<String>,
     pub inventory_count: Option<i32>,
     pub is_active: bool,
-    pub metadata: Option<String>, // JSON stored as string
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub stock_quantity: i32,
+    pub low_stock_threshold: Option<i32>,
+    pub stock_status: Option<String>,
+    pub track_inventory: Option<bool>,
+    pub allow_backorder: Option<bool>,
+    pub backorder_limit: Option<i32>,
 }
 
 #[derive(Insertable, AsChangeset, Debug, Clone, Serialize, Deserialize)]
 #[diesel(table_name = products)]
 pub struct NewProduct {
+    pub uuid: String,
     pub name: String,
     pub description: Option<String>,
     pub price_cents: i64,
-    pub currency: String,
     pub sku: Option<String>,
     pub inventory_count: Option<i32>,
     pub is_active: Option<bool>,
-    pub metadata: Option<String>,
 }
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
@@ -37,13 +41,13 @@ pub struct NewProduct {
 #[diesel(table_name = orders)]
 pub struct Order {
     pub id: i64,
+    pub uuid: String,
     pub user_uuid: String,
-    pub total_cents: i64,
-    pub currency: String,
     pub status: String,
+    pub total_amount_cents: i64,
+    pub payment_status: Option<String>,
     pub payment_provider: Option<String>,
     pub payment_intent_id: Option<String>,
-    pub metadata: Option<String>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
@@ -51,13 +55,14 @@ pub struct Order {
 #[derive(Insertable, AsChangeset, Debug, Clone, Serialize, Deserialize)]
 #[diesel(table_name = orders)]
 pub struct NewOrder {
+    pub uuid: String,
     pub user_uuid: String,
-    pub total_cents: i64,
-    pub currency: String,
     pub status: String,
+    pub total_amount_cents: i64,
+    pub payment_status: Option<String>,
     pub payment_provider: Option<String>,
     pub payment_intent_id: Option<String>,
-    pub metadata: Option<String>,
+    // metadata excluded - can be set via separate update if needed
 }
 
 #[derive(Queryable, Selectable, Identifiable, Associations, Debug, Clone, Serialize, Deserialize)]

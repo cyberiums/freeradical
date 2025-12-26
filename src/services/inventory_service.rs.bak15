@@ -23,12 +23,12 @@ struct GenericHttpResponse {
     message: String,
 }
 
-
 /// Request body for creating a product variant
 #[derive(Debug, Deserialize)]
 pub struct CreateVariantRequest {
     pub variant_name: Option<String>,
     pub variant_sku: Option<String>,
+    pub attributes: Option<serde_json::Value>,
     pub price: Option<BigDecimal>,
     pub compare_at_price: Option<BigDecimal>,
     pub weight: Option<BigDecimal>,
@@ -58,7 +58,6 @@ pub async fn get_product_variants(
                 Box::new(e.to_string())
             ))?;
         product_variants::table
-            .select((product_variants::id, product_variants::uuid, product_variants::product_id, product_variants::sku, product_variants::variant_name, product_variants::price, product_variants::stock_quantity, product_variants::weight, product_variants::image_url, product_variants::is_active, product_variants::created_at, product_variants::updated_at))
             .filter(product_variants::product_id.eq(product_id))
             .filter(product_variants::is_active.eq(true))
             .load::<ProductVariant>(&mut conn)
@@ -87,6 +86,7 @@ pub async fn create_variant(
         price: payload.price,
         stock_quantity: Some(payload.stock_quantity),
         weight: payload.weight,
+        attributes: payload.attributes.map(|v| v.to_string()),  // Serialize JSON to string
         image_url: payload.image_url,
         is_active: Some(true),
     };
@@ -104,7 +104,6 @@ pub async fn create_variant(
         
         // Get the last inserted variant
         product_variants::table
-            .select((product_variants::id, product_variants::uuid, product_variants::product_id, product_variants::sku, product_variants::variant_name, product_variants::price, product_variants::stock_quantity, product_variants::weight, product_variants::image_url, product_variants::is_active, product_variants::created_at, product_variants::updated_at))
             .order(product_variants::id.desc())
             .first::<ProductVariant>(&mut conn)
     })
@@ -136,7 +135,6 @@ pub async fn update_variant_stock(
         
         // Get current variant
         let current: ProductVariant = product_variants::table
-            .select((product_variants::id, product_variants::uuid, product_variants::product_id, product_variants::sku, product_variants::variant_name, product_variants::price, product_variants::stock_quantity, product_variants::weight, product_variants::image_url, product_variants::is_active, product_variants::created_at, product_variants::updated_at))
             .find(variant_id)
             .first(&mut conn)?;
         
@@ -174,7 +172,6 @@ pub async fn update_variant_stock(
         
         // Return updated variant
         product_variants::table
-            .select((product_variants::id, product_variants::uuid, product_variants::product_id, product_variants::sku, product_variants::variant_name, product_variants::price, product_variants::stock_quantity, product_variants::weight, product_variants::image_url, product_variants::is_active, product_variants::created_at, product_variants::updated_at))
             .find(variant_id)
             .first::<ProductVariant>(&mut conn)
     })

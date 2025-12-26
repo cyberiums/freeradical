@@ -2,64 +2,152 @@
 
 pub mod sql_types {
     #[derive(diesel::sql_types::SqlType)]
-    #[diesel(mysql_type(name = "Enum"))]
-    #[diesel(postgres_type(name = "varchar"))]
-    pub struct PagesStatusEnum;
+    #[diesel(postgres_type(name = "tsvector", schema = "pg_catalog"))]
+    pub struct Tsvector;
 }
 
 diesel::table! {
-    analytics_summary (id) {
-        id -> Integer,
-        #[max_length = 500]
-        page_url -> Varchar,
-        date -> Date,
-        view_count -> Nullable<Integer>,
-        unique_visitors -> Nullable<Integer>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    media (id) {
-        id -> Integer,
-        #[max_length = 36]
-        uuid -> Varchar,
-        #[max_length = 255]
-        filename -> Varchar,
-        #[max_length = 255]
-        original_filename -> Varchar,
-        #[max_length = 100]
-        mime_type -> Varchar,
-        file_size -> Bigint,
-        width -> Nullable<Integer>,
-        height -> Nullable<Integer>,
-        #[max_length = 255]
-        folder -> Nullable<Varchar>,
-        #[max_length = 500]
-        storage_path -> Varchar,
-        #[max_length = 500]
-        cdn_url -> Nullable<Varchar>,
-        upload_user_id -> Nullable<Integer>,
-        #[max_length = 255]
-        alt_text -> Nullable<Varchar>,
-        caption -> Nullable<Text>,
-        created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    media_variants (id) {
-        id -> Integer,
-        media_id -> Integer,
+    crm_campaigns (id) {
+        id -> Int4,
+        #[max_length = 200]
+        name -> Varchar,
         #[max_length = 50]
-        variant_name -> Varchar,
-        #[max_length = 500]
-        file_path -> Varchar,
-        width -> Nullable<Integer>,
-        height -> Nullable<Integer>,
-        file_size -> Nullable<Bigint>,
-        created_at -> Nullable<Timestamp>,
+        campaign_type -> Varchar,
+        #[max_length = 20]
+        status -> Nullable<Varchar>,
+        segment_id -> Nullable<Int4>,
+        target_customer_count -> Nullable<Int4>,
+        #[max_length = 255]
+        subject -> Nullable<Varchar>,
+        content -> Nullable<Text>,
+        template_id -> Nullable<Int4>,
+        scheduled_at -> Nullable<Timestamp>,
+        started_at -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+        sent_count -> Nullable<Int4>,
+        delivered_count -> Nullable<Int4>,
+        opened_count -> Nullable<Int4>,
+        clicked_count -> Nullable<Int4>,
+        converted_count -> Nullable<Int4>,
+        revenue_generated -> Nullable<Numeric>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    crm_customers (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        lifecycle_stage -> Varchar,
+        customer_since -> Nullable<Timestamp>,
+        last_purchase_date -> Nullable<Timestamp>,
+        rfm_recency_score -> Nullable<Int4>,
+        rfm_frequency_score -> Nullable<Int4>,
+        rfm_monetary_score -> Nullable<Int4>,
+        rfm_total_score -> Nullable<Int4>,
+        total_orders -> Nullable<Int4>,
+        total_revenue -> Nullable<Numeric>,
+        average_order_value -> Nullable<Numeric>,
+        customer_lifetime_value -> Nullable<Numeric>,
+        last_interaction_date -> Nullable<Timestamp>,
+        interaction_count -> Nullable<Int4>,
+        email_open_rate -> Nullable<Numeric>,
+        email_click_rate -> Nullable<Numeric>,
+        health_score -> Nullable<Int4>,
+        #[max_length = 20]
+        churn_risk -> Nullable<Varchar>,
+        primary_segment_id -> Nullable<Int4>,
+        tags -> Nullable<Array<Nullable<Text>>>,
+        notes -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::Tsvector;
+
+    crm_interactions (id) {
+        id -> Int4,
+        customer_id -> Int4,
+        #[max_length = 50]
+        interaction_type -> Varchar,
+        #[max_length = 50]
+        interaction_channel -> Nullable<Varchar>,
+        #[max_length = 255]
+        subject -> Nullable<Varchar>,
+        description -> Nullable<Text>,
+        #[max_length = 100]
+        outcome -> Nullable<Varchar>,
+        order_id -> Nullable<Int4>,
+        #[max_length = 50]
+        related_entity_type -> Nullable<Varchar>,
+        related_entity_id -> Nullable<Int4>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        search_vector -> Nullable<Tsvector>,
+    }
+}
+
+diesel::table! {
+    crm_notes (id) {
+        id -> Int4,
+        customer_id -> Int4,
+        note_text -> Text,
+        is_pinned -> Nullable<Bool>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    crm_segment_members (segment_id, customer_id) {
+        segment_id -> Int4,
+        customer_id -> Int4,
+        added_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    crm_segments (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        criteria -> Jsonb,
+        is_dynamic -> Nullable<Bool>,
+        customer_count -> Nullable<Int4>,
+        last_calculated_at -> Nullable<Timestamp>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    crm_tasks (id) {
+        id -> Int4,
+        customer_id -> Nullable<Int4>,
+        #[max_length = 200]
+        title -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        task_type -> Nullable<Varchar>,
+        #[max_length = 20]
+        priority -> Nullable<Varchar>,
+        #[max_length = 20]
+        status -> Nullable<Varchar>,
+        due_date -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+        assigned_to -> Nullable<Int4>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -71,6 +159,49 @@ diesel::table! {
         page_uuid -> Varchar,
         #[max_length = 255]
         title -> Varchar,
+    }
+}
+
+diesel::table! {
+    media (id) {
+        id -> Int4,
+        #[max_length = 36]
+        uuid -> Varchar,
+        #[max_length = 255]
+        filename -> Varchar,
+        #[max_length = 255]
+        original_filename -> Varchar,
+        file_path -> Text,
+        #[max_length = 127]
+        mime_type -> Varchar,
+        file_size -> Int8,
+        width -> Nullable<Int4>,
+        height -> Nullable<Int4>,
+        alt_text -> Nullable<Text>,
+        #[max_length = 255]
+        title -> Nullable<Varchar>,
+        description -> Nullable<Text>,
+        tags -> Nullable<Array<Nullable<Text>>>,
+        uploaded_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    page_views (id) {
+        id -> Int8,
+        #[max_length = 500]
+        page_url -> Varchar,
+        #[max_length = 36]
+        page_uuid -> Nullable<Varchar>,
+        #[max_length = 64]
+        visitor_hash -> Varchar,
+        #[max_length = 500]
+        referrer -> Nullable<Varchar>,
+        #[max_length = 500]
+        user_agent -> Nullable<Varchar>,
+        viewed_at -> Timestamp,
     }
 }
 
@@ -89,11 +220,43 @@ diesel::table! {
 }
 
 diesel::table! {
+    order_items (id) {
+        id -> Int8,
+        order_id -> Int8,
+        product_id -> Int8,
+        quantity -> Int4,
+        price_cents -> Int8,
+    }
+}
+
+diesel::table! {
+    orders (id) {
+        id -> Int8,
+        #[max_length = 36]
+        uuid -> Varchar,
+        #[max_length = 36]
+        user_uuid -> Varchar,
+        #[max_length = 50]
+        status -> Varchar,
+        total_amount_cents -> Int8,
+        #[max_length = 50]
+        payment_status -> Nullable<Varchar>,
+        #[max_length = 50]
+        payment_provider -> Nullable<Varchar>,
+        #[max_length = 255]
+        payment_intent_id -> Nullable<Varchar>,
+        metadata -> Nullable<Jsonb>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
     page_revisions (id) {
-        id -> Bigint,
+        id -> Int8,
         #[max_length = 36]
         page_uuid -> Varchar,
-        revision_number -> Integer,
+        revision_number -> Int4,
         #[max_length = 255]
         page_title -> Varchar,
         #[max_length = 500]
@@ -110,32 +273,12 @@ diesel::table! {
         full_snapshot -> Text,
         #[max_length = 500]
         change_summary -> Nullable<Varchar>,
-        changed_by_user_id -> Nullable<Integer>,
+        changed_by_user_id -> Nullable<Int4>,
         created_at -> Nullable<Timestamp>,
     }
 }
 
 diesel::table! {
-    page_views (id) {
-        id -> Bigint,
-        #[max_length = 500]
-        page_url -> Varchar,
-        #[max_length = 36]
-        page_uuid -> Nullable<Varchar>,
-        #[max_length = 64]
-        visitor_hash -> Varchar,
-        #[max_length = 500]
-        referrer -> Nullable<Varchar>,
-        #[max_length = 500]
-        user_agent -> Nullable<Varchar>,
-        viewed_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    use diesel::sql_types::*;
-    use super::sql_types::PagesStatusEnum;
-
     pages (uuid) {
         #[max_length = 255]
         uuid -> Varchar,
@@ -172,29 +315,33 @@ diesel::table! {
         article_type -> Nullable<Varchar>,
         #[max_length = 500]
         featured_image -> Nullable<Varchar>,
-        word_count -> Nullable<Integer>,
-        reading_time -> Nullable<Integer>,
-        current_revision -> Nullable<Integer>,
-        last_modified_by -> Nullable<Integer>,
+        word_count -> Nullable<Int4>,
+        reading_time -> Nullable<Int4>,
+        current_revision -> Nullable<Int4>,
+        last_modified_by -> Nullable<Int4>,
         #[max_length = 9]
-        status -> Nullable<PagesStatusEnum>,
+        status -> Nullable<Varchar>,
         publish_at -> Nullable<Timestamp>,
         unpublish_at -> Nullable<Timestamp>,
     }
 }
 
 diesel::table! {
-    robots_rules (id) {
-        id -> Integer,
+    product_variants (id) {
+        id -> Int4,
+        #[max_length = 36]
+        uuid -> Varchar,
+        product_id -> Int4,
         #[max_length = 100]
-        user_agent -> Varchar,
-        #[max_length = 20]
-        directive -> Varchar,
+        sku -> Nullable<Varchar>,
+        #[max_length = 255]
+        variant_name -> Varchar,
+        price -> Nullable<Numeric>,
+        stock_quantity -> Nullable<Int4>,
+        weight -> Nullable<Numeric>,
+        attributes -> Nullable<Jsonb>,
         #[max_length = 500]
-        path -> Varchar,
-        crawl_delay -> Nullable<Integer>,
-        #[max_length = 200]
-        comment -> Nullable<Varchar>,
+        image_url -> Nullable<Varchar>,
         is_active -> Nullable<Bool>,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
@@ -202,26 +349,33 @@ diesel::table! {
 }
 
 diesel::table! {
-    content_relationships (id) {
-        id -> Bigint,
+    products (id) {
+        id -> Int8,
+        #[max_length = 36]
+        uuid -> Varchar,
         #[max_length = 255]
-        source_type -> Varchar,
-        #[max_length = 255]
-        source_id -> Varchar,
-        #[max_length = 255]
-        target_type -> Varchar,
-        #[max_length = 255]
-        target_id -> Varchar,
-        #[max_length = 50]
-        relationship_type -> Nullable<Varchar>,
-        metadata -> Nullable<Json>,
-        created_at -> Nullable<Timestamp>,
+        name -> Varchar,
+        description -> Nullable<Text>,
+        price_cents -> Int8,
+        #[max_length = 100]
+        sku -> Nullable<Varchar>,
+        inventory_count -> Nullable<Int4>,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        stock_quantity -> Int4,
+        low_stock_threshold -> Nullable<Int4>,
+        #[max_length = 20]
+        stock_status -> Nullable<Varchar>,
+        track_inventory -> Nullable<Bool>,
+        allow_backorder -> Nullable<Bool>,
+        backorder_limit -> Nullable<Int4>,
     }
 }
 
 diesel::table! {
     roles (id) {
-        id -> Integer,
+        id -> Int4,
         #[max_length = 50]
         name -> Varchar,
         description -> Nullable<Text>,
@@ -235,7 +389,7 @@ diesel::table! {
     user_roles (user_id, role_id) {
         #[max_length = 255]
         user_id -> Varchar,
-        role_id -> Integer,
+        role_id -> Int4,
         assigned_at -> Nullable<Timestamp>,
         #[max_length = 255]
         assigned_by -> Nullable<Varchar>,
@@ -243,36 +397,8 @@ diesel::table! {
 }
 
 diesel::table! {
-    webhooks (id) {
-        id -> Integer,
-        #[max_length = 500]
-        url -> Varchar,
-        events -> Json,
-        #[max_length = 255]
-        secret -> Nullable<Varchar>,
-        active -> Nullable<Bool>,
-        created_at -> Nullable<Timestamp>,
-        last_triggered_at -> Nullable<Timestamp>,
-        failure_count -> Nullable<Integer>,
-    }
-}
-
-diesel::table! {
-    webhook_logs (id) {
-        id -> Bigint,
-        webhook_id -> Integer,
-        #[max_length = 100]
-        event_type -> Varchar,
-        payload -> Nullable<Json>,
-        response_status -> Nullable<Integer>,
-        response_body -> Nullable<Text>,
-        created_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
     users (uuid) {
-        id -> Integer,
+        id -> Int4,
         #[max_length = 255]
         uuid -> Varchar,
         #[max_length = 255]
@@ -287,129 +413,39 @@ diesel::table! {
     }
 }
 
-diesel::joinable!(media_variants -> media (media_id));
+diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
+diesel::joinable!(crm_interactions -> crm_customers (customer_id));
+// diesel::joinable!(crm_interactions -> orders (order_id));
+diesel::joinable!(crm_notes -> crm_customers (customer_id));
+diesel::joinable!(crm_segment_members -> crm_customers (customer_id));
+diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
+diesel::joinable!(crm_tasks -> crm_customers (customer_id));
 diesel::joinable!(module_category -> pages (page_uuid));
 diesel::joinable!(modules -> module_category (category_uuid));
 diesel::joinable!(modules -> pages (page_uuid));
-diesel::joinable!(user_roles -> users (user_id));
-diesel::joinable!(user_roles -> roles (role_id));
-diesel::joinable!(webhook_logs -> webhooks (webhook_id));
+// diesel::joinable!(order_items -> orders (order_id));
+// diesel::joinable!(order_items -> products (product_id));
+// diesel::joinable!(product_variants -> products (product_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
-    analytics_summary,
-    content_relationships,
+    crm_campaigns,
+    crm_customers,
+    crm_interactions,
+    crm_notes,
+    crm_segment_members,
+    crm_segments,
+    crm_tasks,
     media,
-    media_variants,
     module_category,
     modules,
+    order_items,
+    orders,
     page_revisions,
     page_views,
     pages,
-    robots_rules,
+    product_variants,
+    products,
     roles,
     user_roles,
     users,
-    webhooks,
-    webhook_logs,
-    products,
-    orders,
-    order_items,
 );
-
-// Commerce tables
-diesel::table! {
-    products (id) {
-        id -> BigInt,
-        #[max_length = 255]
-        name -> Varchar,
-        description -> Nullable<Text>,
-        price_cents -> BigInt,
-        #[max_length = 3]
-        currency -> Varchar,
-        #[max_length = 100]
-        sku -> Nullable<Varchar>,
-        inventory_count -> Nullable<Integer>,
-        is_active -> Bool,
-        metadata -> Nullable<Text>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    orders (id) {
-        id -> BigInt,
-        #[max_length = 255]
-        user_uuid -> Varchar,
-        total_cents -> BigInt,
-        #[max_length = 3]
-        currency -> Varchar,
-        #[max_length = 50]
-        status -> Varchar,
-        #[max_length = 50]
-        payment_provider -> Nullable<Varchar>,
-        #[max_length = 255]
-        payment_intent_id -> Nullable<Varchar>,
-        metadata -> Nullable<Text>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    order_items (id) {
-        id -> BigInt,
-        order_id -> BigInt,
-        product_id -> BigInt,
-        quantity -> Integer,
-        price_cents -> BigInt,
-    }
-}
-
-
-diesel::table! {
-    product_variants (id) {
-        id -> Integer,
-        #[max_length = 36]
-        uuid -> Varchar,
-        product_id -> Integer,
-        #[max_length = 100]
-        sku -> Nullable<Varchar>,
-        #[max_length = 255]
-        variant_name -> Varchar,
-        price -> Nullable<Numeric>,
-        stock_quantity -> Nullable<Integer>,
-        weight -> Nullable<Numeric>,
-        attributes -> Nullable<Text>,
-        #[max_length = 500]
-        image_url -> Nullable<Varchar>,
-        is_active -> Nullable<Bool>,
-        created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    inventory_audit_log (id) {
-        id -> Integer,
-        product_id -> Nullable<Integer>,
-        variant_id -> Nullable<Integer>,
-        user_id -> Nullable<Integer>,
-        order_id -> Nullable<Integer>,
-        #[max_length = 20]
-        change_type -> Varchar,
-        quantity_before -> Integer,
-        quantity_after -> Integer,
-        quantity_change -> Integer,
-        #[max_length = 500]
-        reason -> Nullable<Varchar>,
-        created_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::joinable!(orders -> users (user_uuid));
-diesel::joinable!(order_items -> orders (order_id));
-diesel::joinable!(order_items -> products (product_id));
-// diesel::joinable!(product_variants -> products (product_id));
-
-

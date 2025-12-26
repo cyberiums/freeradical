@@ -1,3 +1,6 @@
+-- Enable UUID extension for PostgreSQL
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS pages (
     uuid varchar(255) PRIMARY KEY,
     page_name varchar(500) NOT NULL,
@@ -6,16 +9,20 @@ CREATE TABLE IF NOT EXISTS pages (
     time_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-INSERT IGNORE INTO pages (page_name, uuid, page_url, page_title) VALUES ("index", (SELECT UUID()), "/", "Home");
+INSERT INTO pages (page_name, uuid, page_url, page_title) 
+VALUES ('index', uuid_generate_v4()::varchar, '/', 'Home')
+ON CONFLICT (uuid) DO NOTHING;
 
-CREATE TABLE module_category (
+CREATE TABLE IF NOT EXISTS module_category (
     uuid varchar(255) PRIMARY KEY,
     page_uuid varchar(255) NOT NULL,
     title varchar(255) NOT NULL,
     FOREIGN KEY (page_uuid) REFERENCES pages(uuid) ON DELETE CASCADE
 );
 
-insert ignore into module_category (uuid, page_uuid, title) VALUES ((SELECT UUID()), (SELECT uuid FROM pages LIMIT 1), "colors");
+INSERT INTO module_category (uuid, page_uuid, title) 
+VALUES (uuid_generate_v4()::varchar, (SELECT uuid FROM pages LIMIT 1), 'colors')
+ON CONFLICT (uuid) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS modules (
     uuid varchar(255) PRIMARY KEY,
@@ -27,14 +34,33 @@ CREATE TABLE IF NOT EXISTS modules (
     FOREIGN KEY (category_uuid) REFERENCES module_category(uuid) ON DELETE CASCADE
 );
 
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content) VALUES ((SELECT UUID()), "title", (SELECT uuid FROM pages LIMIT 1), "Welcome to Radical.");
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content) VALUES ((SELECT UUID()), "small", (SELECT uuid FROM pages LIMIT 1), "A Rusty Wordpress Replacement");
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content) VALUES ((SELECT UUID()), "githublink", (SELECT uuid FROM pages LIMIT 1), "https://github.com/Rust-CMS/radical");
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content) VALUES ((SELECT UUID()), "githublink_tooling", (SELECT uuid FROM pages LIMIT 1), "https://github.com/Rust-CMS/tooling");
+INSERT INTO modules (uuid, title, page_uuid, content) 
+VALUES (uuid_generate_v4()::varchar, 'title', (SELECT uuid FROM pages LIMIT 1), 'Welcome to Radical.')
+ON  CONFLICT (uuid) DO NOTHING;
 
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content, category_uuid) VALUES ((SELECT UUID()), "color1", (SELECT uuid FROM pages LIMIT 1), "red", (SELECT uuid FROM module_category LIMIT 1));
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content, category_uuid) VALUES ((SELECT UUID()), "color2", (SELECT uuid FROM pages LIMIT 1), "blue", (SELECT uuid FROM module_category LIMIT 1));
-INSERT IGNORE INTO modules (uuid, title, page_uuid, content, category_uuid) VALUES ((SELECT UUID()), "color3", (SELECT uuid FROM pages LIMIT 1), "green", (SELECT uuid from module_category LIMIT 1));
+INSERT INTO modules (uuid, title, page_uuid, content) 
+VALUES (uuid_generate_v4()::varchar, 'small', (SELECT uuid FROM pages LIMIT 1), 'A Rusty Wordpress Replacement')
+ON CONFLICT (uuid) DO NOTHING;
+
+INSERT INTO modules (uuid, title, page_uuid, content) 
+VALUES (uuid_generate_v4()::varchar, 'githublink', (SELECT uuid FROM pages LIMIT 1), 'https://github.com/Rust-CMS/radical')
+ON CONFLICT (uuid) DO NOTHING;
+
+INSERT INTO modules (uuid, title, page_uuid, content) 
+VALUES (uuid_generate_v4()::varchar, 'githublink_tooling', (SELECT uuid FROM pages LIMIT 1), 'https://github.com/Rust-CMS/tooling')
+ON CONFLICT (uuid) DO NOTHING;
+
+INSERT INTO modules (uuid, title, page_uuid, content, category_uuid) 
+VALUES (uuid_generate_v4()::varchar, 'color1', (SELECT uuid FROM pages LIMIT 1), 'red', (SELECT uuid FROM module_category LIMIT 1))
+ON CONFLICT (uuid) DO NOTHING;
+
+INSERT INTO modules (uuid, title, page_uuid, content, category_uuid) 
+VALUES (uuid_generate_v4()::varchar, 'color2', (SELECT uuid FROM pages LIMIT 1), 'blue', (SELECT uuid FROM module_category LIMIT 1))
+ON CONFLICT (uuid) DO NOTHING;
+
+INSERT INTO modules (uuid, title, page_uuid, content, category_uuid) 
+VALUES (uuid_generate_v4()::varchar, 'color3', (SELECT uuid FROM pages LIMIT 1), 'green', (SELECT uuid from module_category LIMIT 1))
+ON CONFLICT (uuid) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS users (
     uuid varchar(255) PRIMARY KEY,
@@ -43,4 +69,6 @@ CREATE TABLE IF NOT EXISTS users (
     token varchar(511)
 );
 
-INSERT IGNORE INTO users (uuid, username, password) VALUES ((SELECT UUID()), "root", "");
+INSERT INTO users (uuid, username, password) 
+VALUES (uuid_generate_v4()::varchar, 'root', '')
+ON CONFLICT (uuid) DO NOTHING;
