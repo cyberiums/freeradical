@@ -1,0 +1,82 @@
+use actix_web::{test, web, App};
+use diesel::prelude::*;
+
+use crate::models::DbPool;
+use crate::services::ai_provider_service;
+
+#[actix_rt::test]
+async fn test_list_providers() {
+    // Setup test database pool
+    let pool = create_test_pool();
+    
+    // Create test app
+    let app = test::init_service(
+        App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .route("/admin/ai/providers", web::get().to(ai_provider_service::list_providers))
+    ).await;
+    
+    // Make request
+    let req = test::TestRequest::get()
+        .uri("/admin/ai/providers")
+        .insert_header(("Authorization", "Bearer test_admin_token"))
+        .to_request();
+    
+    let resp = test::call_service(&app, req).await;
+    assert!(resp.status().is_success());
+}
+
+#[actix_rt::test]
+async fn test_create_provider() {
+    let pool = create_test_pool();
+    
+    let app = test::init_service(
+        App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .route("/admin/ai/providers", web::post().to(ai_provider_service::create_provider))
+    ).await;
+    
+    let payload = r#"{
+        "provider_type": "openai",
+        "name": "Test OpenAI",
+        "api_key": "sk-test123",
+        "is_default": false,
+        "config": {}
+    }"#;
+    
+    let req = test::TestRequest::post()
+        .uri("/admin/ai/providers")
+        .insert_header(("Authorization", "Bearer test_admin_token"))
+        .insert_header(("Content-Type", "application/json"))
+        .set_payload(payload)
+        .to_request();
+    
+    let resp = test::call_service(&app, req).await;
+    assert_eq!(resp.status(), 201);
+}
+
+#[actix_rt::test]
+async fn test_provider_requires_admin() {
+    let pool = create_test_pool();
+    
+    let app = test::init_service(
+        App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .route("/admin/ai/providers", web::get().to(ai_provider_service::list_providers))
+    ).await;
+    
+    // Request without admin token
+    let req = test::TestRequest::get()
+        .uri("/admin/ai/providers")
+        .insert_header(("Authorization", "Bearer test_user_token"))
+        .to_request();
+    
+    let resp = test::call_service(&app, req).await;
+    assert_eq!(resp.status(), 403); // Forbidden
+}
+
+fn create_test_pool() -> DbPool {
+    // Create test database pool
+    // Implementation depends on test database setup
+    todo!("Implement test pool creation")
+}

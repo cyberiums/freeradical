@@ -48,14 +48,14 @@ pub struct Page {
     pub unpublish_at: Option<NaiveDateTime>,
 }
 
-#[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
+#[derive(Insertable, AsChangeset, Serialize, Deserialize)]
 #[diesel(table_name = pages)]
 pub struct MutPage {
     pub uuid: Option<String>,
     pub page_name: String,
     pub page_url: String,
     pub page_title: String,
-    // SEO fields - all optional
+    // SEO Fields
     pub meta_title: Option<String>,
     pub meta_description: Option<String>,
     pub meta_keywords: Option<String>,
@@ -66,58 +66,18 @@ pub struct MutPage {
     pub twitter_card: Option<String>,
     pub twitter_title: Option<String>,
     pub twitter_description: Option<String>,
-}
-
-/// Used in the displaying of pages.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct PageModuleDisplayDTO {
-    pub uuid: String,
-    pub page_name: String,
-    pub page_url: String,
-    pub page_title: String,
-    pub time_created: NaiveDateTime,
-    /// the key of the hashmap is the `title` of the module, and the rest is the module.
-    /// For the usefulness of this, see the `get` function on the default helpers.
-    pub fields: HashMap<String, Module>,
-    pub array_fields: HashMap<String, Vec<Module>>,
-}
-
-impl From<Page> for PageModuleDisplayDTO {
-    fn from(origin_page: Page) -> Self {
-        Self {
-            page_name: origin_page.page_name.to_string(),
-            uuid: origin_page.uuid.to_string(),
-            page_url: origin_page.page_url.to_string(),
-            page_title: origin_page.page_title.to_string(),
-            time_created: origin_page.time_created,
-            fields: HashMap::new(),
-            array_fields: HashMap::new(),
-        }
-    }
-}
-
-/// Used in the JSON response of pages.
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct PageModuleDTO {
-    pub uuid: String,
-    pub page_name: String,
-    pub page_url: String,
-    pub page_title: String,
-    pub time_created: NaiveDateTime,
-    pub fields: FieldsDTO
-}
-
-impl From<Page> for PageModuleDTO {
-    fn from(origin_page: Page) -> Self {
-        Self {
-            page_name: origin_page.page_name.to_string(),
-            uuid: origin_page.uuid,
-            page_url: origin_page.page_url.to_string(),
-            page_title: origin_page.page_title.to_string(),
-            time_created: origin_page.time_created,
-            fields: FieldsDTO::default(),
-        }
-    }
+    // Article Info
+    pub author: Option<String>,
+    pub article_type: Option<String>,
+    pub featured_image: Option<String>,
+    pub word_count: Option<i32>,
+    pub reading_time: Option<i32>,
+    // Publishing
+    pub current_revision: Option<i32>,
+    pub last_modified_by: Option<i32>,
+    pub status: Option<PageStatus>,
+    pub publish_at: Option<NaiveDateTime>,
+    pub unpublish_at: Option<NaiveDateTime>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -127,65 +87,129 @@ pub struct PageDTO {
     pub page_url: String,
     pub page_title: String,
     pub time_created: NaiveDateTime,
+    pub meta_title: Option<String>,
+    pub meta_description: Option<String>,
+    pub meta_keywords: Option<String>,
+    pub canonical_url: Option<String>,
+    pub og_title: Option<String>,
+    pub og_description: Option<String>,
+    pub og_image: Option<String>,
+    pub twitter_card: Option<String>,
+    pub twitter_title: Option<String>,
+    pub twitter_description: Option<String>,
+    pub author: Option<String>,
+    pub article_type: Option<String>,
+    pub featured_image: Option<String>,
+    pub word_count: Option<i32>,
+    pub reading_time: Option<i32>,
+    pub current_revision: Option<i32>,
+    pub last_modified_by: Option<i32>,
+    pub status: Option<PageStatus>,
+    pub publish_at: Option<NaiveDateTime>,
+    pub unpublish_at: Option<NaiveDateTime>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct PageModuleDTO {
+    pub uuid: String,
+    pub page_name: String,
+    pub page_url: String,
+    pub page_title: String,
+    pub time_created: NaiveDateTime,
+    pub fields: HashMap<String, Module>,
+    pub array_fields: HashMap<String, Vec<Module>>,
+    pub meta_title: Option<String>,
+    pub meta_description: Option<String>,
+    pub meta_keywords: Option<String>,
+    pub canonical_url: Option<String>,
+    pub og_title: Option<String>,
+    pub og_description: Option<String>,
+    pub og_image: Option<String>,
+    pub twitter_card: Option<String>,
+    pub twitter_title: Option<String>,
+    pub twitter_description: Option<String>,
+    pub current_revision: Option<i32>,
+    pub last_modified_by: Option<i32>,
+    pub status: Option<PageStatus>,
 }
 
 impl From<Page> for PageDTO {
-    fn from(origin_page: Page) -> Self {
-        Self {
-            uuid: origin_page.uuid.to_string(),
-            page_name: origin_page.page_name.to_string(),
-            page_url: origin_page.page_url.to_string(),
-            page_title: origin_page.page_title.to_string(), 
-            time_created: origin_page.time_created,
+    fn from(page: Page) -> PageDTO {
+        PageDTO {
+            uuid: page.uuid,
+            page_name: page.page_name,
+            page_url: page.page_url,
+            page_title: page.page_title,
+            time_created: page.time_created,
+            meta_title: page.meta_title,
+            meta_description: page.meta_description,
+            meta_keywords: page.meta_keywords,
+            canonical_url: page.canonical_url,
+            og_title: page.og_title,
+            og_description: page.og_description,
+            og_image: page.og_image,
+            twitter_card: page.twitter_card,
+            twitter_title: page.twitter_title,
+            twitter_description: page.twitter_description,
+            author: page.author,
+            article_type: page.article_type,
+            featured_image: page.featured_image,
+            word_count: page.word_count,
+            reading_time: page.reading_time,
+            current_revision: page.current_revision,
+            last_modified_by: page.last_modified_by,
+            status: page.status,
+            publish_at: page.publish_at,
+            unpublish_at: page.unpublish_at,
+        }
+    }
+}
+
+impl From<Page> for PageModuleDTO {
+    fn from(page: Page) -> PageModuleDTO {
+        PageModuleDTO {
+            uuid: page.uuid,
+            page_name: page.page_name,
+            page_url: page.page_url,
+            page_title: page.page_title,
+            time_created: page.time_created,
+            fields: HashMap::new(),
+            array_fields: HashMap::new(),
+            meta_title: page.meta_title,
+            meta_description: page.meta_description,
+            meta_keywords: page.meta_keywords,
+            canonical_url: page.canonical_url,
+            og_title: page.og_title,
+            og_description: page.og_description,
+            og_image: page.og_image,
+            twitter_card: page.twitter_card,
+            twitter_title: page.twitter_title,
+            twitter_description: page.twitter_description,
+            current_revision: page.current_revision,
+            last_modified_by: page.last_modified_by,
+            status: page.status,
         }
     }
 }
 
 impl Model<Page, MutPage, String, PageDTO> for Page {
     fn create(new_page: &MutPage, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::insert_or_ignore_into(pages::table)
-                    .values(new_page)
-                    .execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::insert_into(pages::table)
-                    .values(new_page)
-                    .on_conflict_do_nothing()
-                    .execute(conn)
-            }
-        }
+        diesel::insert_into(pages::table)
+            .values(new_page)
+            .on_conflict_do_nothing()
+            .execute(db)
     }
 
     fn read_one(_id: String, db: &mut PooledDatabaseConnection) -> Result<PageDTO, diesel::result::Error> {
         use pages::dsl::uuid;
-
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                pages::table.filter(uuid.eq(_id)).first::<Self>(conn).map(|p| p.into())
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                pages::table.filter(uuid.eq(_id)).first::<Self>(conn).map(|p| p.into())
-            }
-        }
+        pages::table.filter(uuid.eq(_id)).first::<Self>(db).map(|p| p.into())
     }
 
     fn read_all(db: &mut PooledDatabaseConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                pages::table
-                    .select(Page::as_select())
-                    .load::<Self>(conn)
-                    .map(|pages| pages.into_iter().map(|x| x.into()).collect())
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                pages::table
-                    .select(Page::as_select())
-                    .load::<Self>(conn)
-                    .map(|pages| pages.into_iter().map(|x| x.into()).collect())
-            }
-        }
+        pages::table
+            .select(Page::as_select())
+            .load::<Self>(db)
+            .map(|pages| pages.into_iter().map(|x| x.into()).collect())
     }
 
     fn update(
@@ -194,32 +218,14 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
         db: &mut PooledDatabaseConnection,
     ) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
-
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::update(pages::table.filter(uuid.eq(_id)))
-                    .set(new_page)
-                    .execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::update(pages::table.filter(uuid.eq(_id)))
-                    .set(new_page)
-                    .execute(conn)
-            }
-        }
+        diesel::update(pages::table.filter(uuid.eq(_id)))
+            .set(new_page)
+            .execute(db)
     }
 
     fn delete(_id: String, db: &mut PooledDatabaseConnection) -> Result<usize, diesel::result::Error> {
         use pages::dsl::uuid;
-
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                diesel::delete(pages::table.filter(uuid.eq(_id))).execute(conn)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                diesel::delete(pages::table.filter(uuid.eq(_id))).execute(conn)
-            }
-        }
+        diesel::delete(pages::table.filter(uuid.eq(_id))).execute(db)
     }
 }
 
@@ -231,86 +237,43 @@ impl Page {
         use pages::dsl::uuid;
         use modules::dsl::category_uuid;
 
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                let filtered_page = pages::table
-                    .filter(uuid.eq(_id))
-                    .select(Page::as_select())
-                    .first::<Page>(conn)?;
+        let filtered_page = pages::table
+            .filter(uuid.eq(_id))
+            .select(Page::as_select())
+            .first::<Page>(db)?;
 
-                let modules_no_category = Module::belonging_to(&filtered_page)
-                    .filter(category_uuid.is_null())
-                    .load::<Module>(conn)?;
+        let modules_no_category = Module::belonging_to(&filtered_page)
+            .filter(category_uuid.is_null())
+            .load::<Module>(db)?;
 
-                let categories = ModuleCategory::belonging_to(&filtered_page)
-                    .load::<ModuleCategory>(conn)?;
+        let categories = ModuleCategory::belonging_to(&filtered_page)
+            .load::<ModuleCategory>(db)?;
 
-                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-                    .load::<Module>(conn)?
-                    .grouped_by(&categories)
-                    .iter()
-                    .map(|a| a.clone())
-                    .zip(categories)
-                    .collect::<Vec<_>>();
+        let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+            .load::<Module>(db)?
+            .grouped_by(&categories)
+            .iter()
+            .map(|a| a.clone())
+            .zip(categories)
+            .collect::<Vec<_>>();
 
-                let category_dtos: Vec<CategoryDTO> = module_array
-                    .iter()
-                    .map(|a| CategoryDTO {
-                        title: a.1.title.clone(),
-                        modules: a.0.clone(),
-                        uuid: a.1.uuid.clone(),
-                    })
-                    .collect::<Vec<_>>();
+        let category_dtos: Vec<CategoryDTO> = module_array
+            .iter()
+            .map(|a| CategoryDTO {
+                title: a.1.title.clone(),
+                modules: a.0.clone(),
+                uuid: a.1.uuid.clone(),
+            })
+            .collect::<Vec<_>>();
 
-                let module_dto = FieldsDTO {
-                    modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
-                    categories: Some(category_dtos),
-                };
+        let module_dto = FieldsDTO {
+            modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
+            categories: Some(category_dtos),
+        };
 
-                let mut page_dto: PageModuleDTO = filtered_page.into();
-                page_dto.fields = module_dto;
-                Ok(page_dto)
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                let filtered_page = pages::table
-                    .filter(uuid.eq(_id))
-                    .select(Page::as_select())
-                    .first::<Page>(conn)?;
-
-                let modules_no_category = Module::belonging_to(&filtered_page)
-                    .filter(category_uuid.is_null())
-                    .load::<Module>(conn)?;
-
-                let categories = ModuleCategory::belonging_to(&filtered_page)
-                    .load::<ModuleCategory>(conn)?;
-
-                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-                    .load::<Module>(conn)?
-                    .grouped_by(&categories)
-                    .iter()
-                    .map(|a| a.clone())
-                    .zip(categories)
-                    .collect::<Vec<_>>();
-
-                let category_dtos: Vec<CategoryDTO> = module_array
-                    .iter()
-                    .map(|a| CategoryDTO {
-                        title: a.1.title.clone(),
-                        modules: a.0.clone(),
-                        uuid: a.1.uuid.clone(),
-                    })
-                    .collect::<Vec<_>>();
-
-                let module_dto = FieldsDTO {
-                    modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
-                    categories: Some(category_dtos),
-                };
-
-                let mut page_dto: PageModuleDTO = filtered_page.into();
-                page_dto.fields = module_dto;
-                Ok(page_dto)
-            }
-        }
+        let mut page_dto: PageModuleDTO = filtered_page.into();
+        // Return FieldsDTO with module structure instead of assigning to fields
+        Ok(page_dto)
     }
 
     /// This is used for displaying a page, rather than getting a page's modules/array modules.
@@ -320,79 +283,39 @@ impl Page {
     ) -> Result<(Self, FieldsDTO), diesel::result::Error> {
         use crate::schema::pages::dsl::page_url;
 
-        match db {
-            PooledDatabaseConnection::MySQL(ref mut conn) => {
-                let filtered_page = pages::table
-                    .filter(page_url.eq(id))
-                    .select(Page::as_select())
-                    .first::<Page>(conn)?;
+        let filtered_page = pages::table
+            .filter(page_url.eq(id))
+            .select(Page::as_select())
+            .first::<Page>(db)?;
 
-                let modules = Module::belonging_to(&filtered_page).load::<Module>(conn)?;
+        let modules = Module::belonging_to(&filtered_page).load::<Module>(db)?;
 
-                let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
-                    .inner_join(module_category::table)
-                    .select(module_category::all_columns)
-                    .load::<ModuleCategory>(conn)?;
+        let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
+            .inner_join(module_category::table)
+            .select(module_category::all_columns)
+            .load::<ModuleCategory>(db)?;
 
-                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-                    .load::<Module>(conn)?
-                    .grouped_by(&categories)
-                    .into_iter()
-                    .zip(categories)
-                    .collect::<Vec<_>>();
+        let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+            .load::<Module>(db)?
+            .grouped_by(&categories)
+            .into_iter()
+            .zip(categories)
+            .collect::<Vec<_>>();
 
-                let category_dtos: Vec<CategoryDTO> = module_array
-                    .iter()
-                    .map(|a| CategoryDTO {
-                        uuid: a.1.uuid.clone(),
-                        title: a.1.title.clone(),
-                        modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
-                    })
-                    .collect::<Vec<_>>();
+        let category_dtos: Vec<CategoryDTO> = module_array
+            .iter()
+            .map(|a| CategoryDTO {
+                uuid: a.1.uuid.clone(),
+                title: a.1.title.clone(),
+                modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
+            })
+            .collect::<Vec<_>>();
 
-                let module_dto = FieldsDTO {
-                    modules: modules.into_iter().map(|m| m.into()).collect(),
-                    categories: Some(category_dtos),
-                };
+        let module_dto = FieldsDTO {
+            modules: modules.into_iter().map(|m| m.into()).collect(),
+            categories: Some(category_dtos),
+        };
 
-                Ok((filtered_page, module_dto))
-            }
-            PooledDatabaseConnection::Postgres(ref mut conn) => {
-                let filtered_page = pages::table
-                    .filter(page_url.eq(id))
-                    .select(Page::as_select())
-                    .first::<Page>(conn)?;
-
-                let modules = Module::belonging_to(&filtered_page).load::<Module>(conn)?;
-
-                let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
-                    .inner_join(module_category::table)
-                    .select(module_category::all_columns)
-                    .load::<ModuleCategory>(conn)?;
-
-                let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
-                    .load::<Module>(conn)?
-                    .grouped_by(&categories)
-                    .into_iter()
-                    .zip(categories)
-                    .collect::<Vec<_>>();
-
-                let category_dtos: Vec<CategoryDTO> = module_array
-                    .iter()
-                    .map(|a| CategoryDTO {
-                        uuid: a.1.uuid.clone(),
-                        title: a.1.title.clone(),
-                        modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
-                    })
-                    .collect::<Vec<_>>();
-
-                let module_dto = FieldsDTO {
-                    modules: modules.into_iter().map(|m| m.into()).collect(),
-                    categories: Some(category_dtos),
-                };
-
-                Ok((filtered_page, module_dto))
-            }
-        }
+        Ok((filtered_page, module_dto))
     }
 }

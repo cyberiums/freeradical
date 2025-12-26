@@ -410,19 +410,6 @@ diesel::table! {
 diesel::joinable!(orders -> users (user_uuid));
 diesel::joinable!(order_items -> orders (order_id));
 diesel::joinable!(order_items -> products (product_id));
-diesel::joinable!(product_variants -> products (product_id));
+// diesel::joinable!(product_variants -> products (product_id));
 
-diesel::allow_tables_to_appear_in_same_query!(
-    modules,
-    pages,
-    users,
-    roles,
-    user_roles,
-    page_revisions,
-    products,
-    orders,
-    order_items,
-    product_variants,
-    inventory_audit_log,
-);
 

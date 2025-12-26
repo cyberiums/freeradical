@@ -1,4 +1,4 @@
-// Search Service - Database agnostic
+// Search Service - PostgreSQL
 
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -50,13 +50,12 @@ pub struct SearchResponse {
     pub per_page: i64,
 }
 
-/// Simple keyword search (database agnostic)
+/// Simple keyword search
 pub fn search(
     query: &SearchQuery,
     conn: &mut crate::models::PooledDatabaseConnection
 ) -> Result<SearchResponse, diesel::result::Error> {
     use crate::schema::{pages, modules, media};
-    use crate::models::PooledDatabaseConnection;
     
     let page = query.page.unwrap_or(1);
     let per_page = query.per_page.unwrap_or(20).min(100);
@@ -64,140 +63,69 @@ pub fn search(
     
     let mut all_results: Vec<SearchResult> = Vec::new();
     
-    // Execute queries based on database type
-    match conn {
-        PooledDatabaseConnection::MySQL(ref mut c) => {
-            // Search pages
-            let page_results: Vec<PageSearchResult> = pages::table
-                .filter(
-                    pages::page_title.like(&search_term)
-                    .or(pages::page_name.like(&search_term))
-                    .or(pages::meta_description.like(&search_term))
-                )
-                .limit(20)
-                .select((pages::uuid, pages::page_title, pages::page_url, pages::meta_description))
-                .load(c)?;
-            
-            for p in page_results {
-                all_results.push(SearchResult {
-                    resource_type: "pages".to_string(),
-                    id: p.uuid,
-                    title: p.page_title,
-                    snippet: p.meta_description.unwrap_or_default(),
-                });
-            }
-            
-            // Search modules
-            let module_results: Vec<ModuleSearchResult> = modules::table
-                .filter(
-                    modules::title.like(&search_term)
-                    .or(modules::content.like(&search_term))
-                )
-                .limit(20)
-                .select((modules::uuid, modules::title, modules::content))
-                .load(c)?;
-            
-            for m in module_results {
-                let snippet = if m.content.len() > 150 {
-                    format!("{}...", &m.content[..150])
-                } else {
-                    m.content
-                };
-                
-                all_results.push(SearchResult {
-                    resource_type: "modules".to_string(),
-                    id: m.uuid,
-                    title: m.title,
-                    snippet,
-                });
-            }
-            
-            // Search media
-            let media_results: Vec<MediaSearchResult> = media::table
-                .filter(
-                    media::filename.like(&search_term)
-                    .or(media::original_filename.like(&search_term))
-                    .or(media::alt_text.like(&search_term))
-                )
-                .limit(20)
-                .select((media::uuid, media::filename, media::original_filename, media::alt_text))
-                .load(c)?;
-            
-            for m in media_results {
-                all_results.push(SearchResult {
-                    resource_type: "media".to_string(),
-                    id: m.uuid,
-                    title: m.filename.clone(),
-                    snippet: m.alt_text.unwrap_or(m.original_filename),
-                });
-            }
-        }
-        PooledDatabaseConnection::Postgres(ref mut c) => {
-            // Search pages
-            let page_results: Vec<PageSearchResult> = pages::table
-                .filter(
-                    pages::page_title.like(&search_term)
-                    .or(pages::page_name.like(&search_term))
-                    .or(pages::meta_description.like(&search_term))
-                )
-                .limit(20)
-                .select((pages::uuid, pages::page_title, pages::page_url, pages::meta_description))
-                .load(c)?;
-            
-            for p in page_results {
-                all_results.push(SearchResult {
-                    resource_type: "pages".to_string(),
-                    id: p.uuid,
-                    title: p.page_title,
-                    snippet: p.meta_description.unwrap_or_default(),
-                });
-            }
-            
-            // Search modules
-            let module_results: Vec<ModuleSearchResult> = modules::table
-                .filter(
-                    modules::title.like(&search_term)
-                    .or(modules::content.like(&search_term))
-                )
-                .limit(20)
-                .select((modules::uuid, modules::title, modules::content))
-                .load(c)?;
-            
-            for m in module_results {
-                let snippet = if m.content.len() > 150 {
-                    format!("{}...", &m.content[..150])
-                } else {
-                    m.content
-                };
-                
-                all_results.push(SearchResult {
-                    resource_type: "modules".to_string(),
-                    id: m.uuid,
-                    title: m.title,
-                    snippet,
-                });
-            }
-            
-            // Search media
-            let media_results: Vec<MediaSearchResult> = media::table
-                .filter(
-                    media::filename.like(&search_term)
-                    .or(media::original_filename.like(&search_term))
-                    .or(media::alt_text.like(&search_term))
-                )
-                .limit(20)
-                .select((media::uuid, media::filename, media::original_filename, media::alt_text))
-                .load(c)?;
-            
-            for m in media_results {
-                all_results.push(SearchResult {
-                    resource_type: "media".to_string(),
-                    id: m.uuid,
-                    title: m.filename.clone(),
-                    snippet: m.alt_text.unwrap_or(m.original_filename),
-                });
-            }
-        }
+    // Search pages
+    let page_results: Vec<PageSearchResult> = pages::table
+        .filter(
+            pages::page_title.like(&search_term)
+            .or(pages::page_name.like(&search_term))
+            .or(pages::meta_description.like(&search_term))
+        )
+        .limit(20)
+        .select((pages::uuid, pages::page_title, pages::page_url, pages::meta_description))
+        .load(conn)?;
+    
+    for p in page_results {
+        all_results.push(SearchResult {
+            resource_type: "pages".to_string(),
+            id: p.uuid,
+            title: p.page_title,
+            snippet: p.meta_description.unwrap_or_default(),
+        });
+    }
+    
+    // Search modules
+    let module_results: Vec<ModuleSearchResult> = modules::table
+        .filter(
+            modules::title.like(&search_term)
+            .or(modules::content.like(&search_term))
+        )
+        .limit(20)
+        .select((modules::uuid, modules::title, modules::content))
+        .load(conn)?;
+    
+    for m in module_results {
+        let snippet = if m.content.len() > 150 {
+            format!("{}...", &m.content[..150])
+        } else {
+            m.content
+        };
+        
+        all_results.push(SearchResult {
+            resource_type: "modules".to_string(),
+            id: m.uuid,
+            title: m.title,
+            snippet,
+        });
+    }
+    
+    // Search media
+    let media_results: Vec<MediaSearchResult> = media::table
+        .filter(
+            media::filename.like(&search_term)
+            .or(media::original_filename.like(&search_term))
+            .or(media::alt_text.like(&search_term))
+        )
+        .limit(20)
+        .select((media::uuid, media::filename, media::original_filename, media::alt_text))
+        .load(conn)?;
+    
+    for m in media_results {
+        all_results.push(SearchResult {
+            resource_type: "media".to_string(),
+            id: m.uuid,
+            title: m.filename.clone(),
+            snippet: m.alt_text.unwrap_or(m.original_filename),
+        });
     }
     
     let total = all_results.len();

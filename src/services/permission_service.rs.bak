@@ -1,4 +1,4 @@
-// Permission Service - RBAC Implementation (PostgreSQL)
+// Permission Service - RBAC Implementation
 
 use serde::{Deserialize, Serialize};
 use diesel::prelude::*;
@@ -76,10 +76,20 @@ pub fn user_has_permission(
 ) -> Result<bool, diesel::result::Error> {
     use crate::schema::{user_roles, roles};
     
-    let role_count: i64 = user_roles::table
-        .filter(user_roles::user_id.eq(user_uuid))
-        .count()
-        .get_result(conn)?;
+    let role_count: i64 = match conn {
+        PooledDatabaseConnection::MySQL(ref mut c) => {
+            user_roles::table
+                .filter(user_roles::user_id.eq(user_uuid))
+                .count()
+                .get_result(c)?
+        }
+        PooledDatabaseConnection::Postgres(ref mut c) => {
+            user_roles::table
+                .filter(user_roles::user_id.eq(user_uuid))
+                .count()
+                .get_result(c)?
+        }
+    };
     
     if role_count > 0 {
         return Ok(true);
@@ -97,7 +107,7 @@ pub fn user_has_permission(
     
     let required = Permission::from_str(required_permission);
     
-    for perms_json in use_permissions.iter() {
+    for perms_json in user_permissions.iter() {
         if let Some(perms_array) = perms_json.as_array() {
             for perm_value in perms_array {
                 if let Some(perm_str) = perm_value.as_str() {
@@ -128,11 +138,22 @@ pub fn user_owns_resource(
             Ok(false)
         }
         "modules" => {
-            let page_uuid: Option<String> = modules::table
-                .filter(modules::uuid.eq(resource_id))
-                .select(modules::page_uuid)
-                .first(conn)
-                .ok();
+            let page_uuid: Option<String> = match conn {
+                PooledDatabaseConnection::MySQL(ref mut c) => {
+                    modules::table
+                        .filter(modules::uuid.eq(resource_id))
+                        .select(modules::page_uuid)
+                        .first(c)
+                        .ok()
+                }
+                PooledDatabaseConnection::Postgres(ref mut c) => {
+                    modules::table
+                        .filter(modules::uuid.eq(resource_id))
+                        .select(modules::page_uuid)
+                        .first(c)
+                        .ok()
+                }
+            };
             
             if let Some(pid) = page_uuid {
                 user_owns_resource(user_uuid, "pages", &pid, conn)

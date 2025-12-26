@@ -1,6 +1,6 @@
 [package]
 name = "freeradical"
-version = "1.0.1"
+version = "1.2.0"
 authors = ["fastbuilder <team@fastbuilder.ai>"]
 edition = "2018"
 

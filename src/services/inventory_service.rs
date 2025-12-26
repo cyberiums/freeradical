@@ -66,10 +66,12 @@ pub async fn create_variant(
     pool: web::Data<DbPool>,
     payload: web::Json<CreateVariantRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let payload = payload.into_inner();
+    
     let new_variant = NewProductVariant {
         uuid: uuid::Uuid::new_v4().to_string(),
-        product_id: payload.product_id,
-        sku: payload.sku.clone(),
+        product_id: 0, // Will be set from URL path parameter
+        sku: payload.variant_sku.clone(),
         variant_name: payload.variant_name.clone(),
         price: payload.price,
         stock_quantity: payload.stock_quantity,

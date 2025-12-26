@@ -53,7 +53,7 @@ pub async fn update_user(
 
     // if you're trying to change someone elses data, don't allow it.
     if id.clone() != claim.sub {
-        return Err(CustomHttpError::Unauthorized);
+        return Err(CustomHttpError::Unauthorized("Cannot update another user's data".to_string()));
     }
 
     let encrypted_password = encrypt_password(&salted_user.password.unwrap())?;
@@ -218,12 +218,12 @@ pub async fn setup_2fa(
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     if path.clone() != claim.sub {
-         return Err(CustomHttpError::Unauthorized);
+         return Err(CustomHttpError::Unauthorized("Unauthorized access".to_string()));
     }
     
     let (secret, qr) = TotpService::generate_secret(&path).map_err(|e| {
          log::error!("2FA Gen Error: {}", e);
-         CustomHttpError::BadRequest
+         CustomHttpError::BadRequest("2FA generation failed".to_string())
     })?;
     
     Ok(HttpResponse::Ok().json(serde_json::json!({
@@ -239,7 +239,7 @@ pub async fn enable_2fa(
     claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     if path.clone() != claim.sub {
-        return Err(CustomHttpError::Unauthorized);
+        return Err(CustomHttpError::Unauthorized("Unauthorized access".to_string()));
     }
     
     if !TotpService::verify(&body.secret, &body.code).unwrap_or(false) {

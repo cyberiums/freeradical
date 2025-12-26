@@ -2,8 +2,9 @@ use actix_cors::Cors;
 use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
-use diesel::mysql::MysqlConnection;
-use diesel::{Connection};
+use diesel::pg::PgConnection;
+use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::Connection;
 use handlebars::Handlebars;
 use std::sync::Mutex;
 use std::time::Duration;
@@ -62,14 +63,21 @@ async fn main() -> std::io::Result<()> {
     
     // println!("Running migrations...");
     // match connection.run_pending_migrations(MIGRATIONS) {
-    //     Ok(_) => println!("Ran migrations."),
+    //     Ok(_) => println!("Migrations complete"),
     //     Err(e) => println!("Migrations error: {}", e)
     // };
 
-    let pool = models::establish_database_connection(conf.clone()).unwrap();
+    // Create database URL from config
+    let db_url = std::env::var("DATABASE_URL")
+        .expect("DATABASE_URL must be set");
 
-    std::env::set_var("RUST_LOG", "actix_web=info");
-    // env_logger::init();  // REMOVED - already called above at line 47
+    let pool = match models::db_connection::create_pool(&db_url) {
+        Ok(pool) => pool,
+        Err(e) => {
+            eprintln!("Failed to create database pool: {:?}", e);
+            std::process::exit(1);
+        }
+    };// REMOVED - already called above at line 47
 
     // Initialize Template Service (Supports Handlebars + Liquid)
     let template_service = services::template_service::TemplateService::new();
@@ -199,50 +207,50 @@ async fn main() -> std::io::Result<()> {
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
             // Admin/Backup endpoints
-            .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup))
+                // .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup)) // Module disabled
             // Payment endpoints
                 .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
                 .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
                 .route("/payments/providers", web::get().to(controllers::payment_controller::list_payment_handlers))
                 // Product management routes
-                .route("/products", web::get().to(controllers::product_controller::list_products))
-                .route("/products/{id}", web::get().to(controllers::product_controller::get_product))
-                .route("/products", web::post().to(controllers::product_controller::create_product))
-                .route("/products/{id}", web::put().to(controllers::product_controller::update_product))
-                .route("/products/{id}", web::delete().to(controllers::product_controller::delete_product))
+                // .route("/products", web::get().to(controllers::product_controller::list_products)) // Commerce disabled
+                // .route("/products/{id}", web::get().to(controllers::product_controller::get_product)) // Commerce disabled
+                // .route("/products", web::post().to(controllers::product_controller::create_product)) // Commerce disabled
+                // .route("/products/{id}", web::put().to(controllers::product_controller::update_product)) // Commerce disabled
+                // .route("/products/{id}", web::delete().to(controllers::product_controller::delete_product)) // Commerce disabled
                 // Order management routes
-                .route("/orders", web::get().to(controllers::order_controller::list_orders))
-                .route("/orders/{id}", web::get().to(controllers::order_controller::get_order))
-                .route("/orders", web::post().to(controllers::order_controller::create_order))
-                .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status))
-                .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order))
+                // .route("/orders", web::get().to(controllers::order_controller::list_orders)) // Commerce disabled
+                // .route("/orders/{id}", web::get().to(controllers::order_controller::get_order)) // Commerce disabled
+                // .route("/orders", web::post().to(controllers::order_controller::create_order)) // Commerce disabled
+                // .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status)) // Commerce disabled
+                // .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order)) // Commerce disabled
                 // Inventory management routes
-                .route("/products/{id}/variants", web::get().to(services::inventory_service::get_product_variants))
-                .route("/variants", web::post().to(services::inventory_service::create_variant))
-                .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock))
-                .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
-                .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant))
+                // .route("/products/{id}/variants", web::get().to(services::inventory_service::get_product_variants)) // Inventory disabled
+                 // .route("/variants", web::post().to(services::inventory_service::create_variant)) // Inventory disabled // Inventory disabled
+                // .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock)) // Inventory disabled
+                // .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
+                // .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant)) // Inventory disabled
                 // AI Provider management routes (admin only)
-                .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers))
-                .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider))
-                .route("/admin/ai/providers", web::post().to(services::ai_provider_service::create_provider))
-                .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider))
-                .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider))
-                .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
+                // .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers)) // AI services disabled
+                // .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider)) // AI services disabled
+                // .route("/admin/ai/providers", web::post().to(services::ai_provider_service::create_provider)) // AI services disabled
+                // .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider)) // AI services disabled
+                // .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider)) // AI services disabled
+                // .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider)) // AI services disabled
                 // AI Content Generation routes
-                .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
+                // .route("/ai/generate", web::post().to(services::ai_content_service::generate_content)) // AI services disabled
                 // AI Metadata Automation routes
-                .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords))
-                .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags))
-                .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories))
-                .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
-                .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
+                // .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords)) // AI services disabled
+                // .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags)) // AI services disabled
+                // .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories)) // AI services disabled
+                // .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text)) // AI services disabled
+                // .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata)) // AI services disabled
                 // Semantic Search routes
-                .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
-                .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
+                // .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding)) // AI services disabled
+                // .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search)) // AI services disabled
                 // AI Recommendations routes
-                .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
-                .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
+                // .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content)) // Service disabled
+                // .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending)) // Service disabled
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
