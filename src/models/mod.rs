@@ -8,13 +8,13 @@ pub mod media_models;
 pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
-// pub mod inventory_models;  // Inventory management models
+pub mod inventory_models;  // Inventory management models
 // pub mod ai_provider_models;  // AI provider configuration
 pub mod db_connection;  // Database abstraction layer
 pub mod db_macros;      // Helper macros for database operations
 
 use actix_web::web;
-use diesel::{MysqlConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
+use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
 
 use crate::services::errors_service::CustomHttpError;
 
@@ -89,11 +89,11 @@ pub fn establish_database_connection(conf: LocalConfig) -> Option<DatabasePool> 
     Some(db_connection::create_pool(&db_url).expect("Failed to create pool"))
 }
 
-pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::MysqlConnection> {
-    ConnectionManager::<MysqlConnection>::new(db_url)
+pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::PgConnection> {
+    ConnectionManager::<PgConnection>::new(db_url)
 }
 
-pub fn init_pool(db_url: &str) -> Result<Pool<ConnectionManager<MysqlConnection>>, PoolError> {
+pub fn init_pool(db_url: &str) -> Result<Pool<ConnectionManager<PgConnection>>, PoolError> {
     let manager = init_connection(db_url);
     Pool::builder().max_size(2).build(manager)
 }

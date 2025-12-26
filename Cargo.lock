@@ -565,6 +565,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e050f626429857a27ddccb31e0aca21356bfa709c04041aefddac081a8f068a"
 
 [[package]]
+name = "bigdecimal"
+version = "0.4.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "560f42649de9fa436b73517378a147ec21f6c997a546581df4b4b31677828934"
+dependencies = [
+ "autocfg",
+ "libm",
+ "num-bigint",
+ "num-integer",
+ "num-traits",
+ "serde",
+]
+
+[[package]]
 name = "bit_field"
 version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1125,17 +1139,18 @@ version = "2.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e130c806dccc85428c564f2dc5a96e05b6615a27c9a28776bd7761a9af4bb552"
 dependencies = [
+ "bigdecimal",
  "bitflags 2.10.0",
  "byteorder",
  "chrono",
  "diesel_derives",
  "downcast-rs",
  "itoa",
- "mysqlclient-sys",
- "percent-encoding",
+ "num-bigint",
+ "num-integer",
+ "num-traits",
  "pq-sys",
  "r2d2",
- "url",
 ]
 
 [[package]]
@@ -1395,7 +1410,7 @@ dependencies = [
 
 [[package]]
 name = "freeradical"
-version = "1.0.1"
+version = "1.2.0"
 dependencies = [
  "actix-cors",
  "actix-files",
@@ -1406,6 +1421,7 @@ dependencies = [
  "async-graphql",
  "async-trait",
  "base64 0.22.1",
+ "bigdecimal",
  "chrono",
  "deadpool-redis",
  "diesel",
@@ -2210,6 +2226,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "37c93d8daa9d8a012fd8ab92f088405fb202ea0b6ab73ee2482ae66af4f42091"
 
 [[package]]
+name = "libm"
+version = "0.2.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9fbbcab51052fe104eb5e5d351cf728d30a5be1fe14d9be8a3b097481fb97de"
+
+[[package]]
 name = "libredox"
 version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2457,17 +2479,6 @@ dependencies = [
  "mime",
  "spin",
  "version_check",
-]
-
-[[package]]
-name = "mysqlclient-sys"
-version = "0.4.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86a34a2bdec189f1060343ba712983e14cad7e87515cfd9ac4653e207535b6b1"
-dependencies = [
- "pkg-config",
- "semver 1.0.27",
- "vcpkg",
 ]
 
 [[package]]

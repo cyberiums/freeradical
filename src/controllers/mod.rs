@@ -1,10 +1,12 @@
 pub mod page_controllers;
+pub mod product_controller;
+pub mod order_controller;
 pub mod module_controllers;
 pub mod media_controller;
 pub mod user_controllers;
 pub mod relationship_controller;
 pub mod webhook_controller;
-// pub mod backup_controller;
+pub mod backup_controller;
 pub mod payment_controller;
 pub mod category_controllers;
 pub mod sitemap_controller;

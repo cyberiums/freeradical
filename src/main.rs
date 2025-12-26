@@ -213,23 +213,23 @@ async fn main() -> std::io::Result<()> {
                 .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
                 .route("/payments/providers", web::get().to(controllers::payment_controller::list_payment_handlers))
                 // Product management routes
-                // .route("/products", web::get().to(controllers::product_controller::list_products)) // Commerce disabled
-                // .route("/products/{id}", web::get().to(controllers::product_controller::get_product)) // Commerce disabled
-                // .route("/products", web::post().to(controllers::product_controller::create_product)) // Commerce disabled
-                // .route("/products/{id}", web::put().to(controllers::product_controller::update_product)) // Commerce disabled
-                // .route("/products/{id}", web::delete().to(controllers::product_controller::delete_product)) // Commerce disabled
+                .route("/products", web::get().to(controllers::product_controller::list_products)) // Commerce disabled
+                .route("/products/{id}", web::get().to(controllers::product_controller::get_product)) // Commerce disabled
+                .route("/products", web::post().to(controllers::product_controller::create_product)) // Commerce disabled
+                .route("/products/{id}", web::put().to(controllers::product_controller::update_product)) // Commerce disabled
+                .route("/products/{id}", web::delete().to(controllers::product_controller::delete_product)) // Commerce disabled
                 // Order management routes
-                // .route("/orders", web::get().to(controllers::order_controller::list_orders)) // Commerce disabled
-                // .route("/orders/{id}", web::get().to(controllers::order_controller::get_order)) // Commerce disabled
-                // .route("/orders", web::post().to(controllers::order_controller::create_order)) // Commerce disabled
-                // .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status)) // Commerce disabled
-                // .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order)) // Commerce disabled
+                .route("/orders", web::get().to(controllers::order_controller::list_orders)) // Commerce disabled
+                .route("/orders/{id}", web::get().to(controllers::order_controller::get_order)) // Commerce disabled
+                .route("/orders", web::post().to(controllers::order_controller::create_order)) // Commerce disabled
+                .route("/orders/{id}/status", web::put().to(controllers::order_controller::update_order_status)) // Commerce disabled
+                .route("/orders/{id}/payment", web::post().to(controllers::order_controller::link_payment_to_order)) // Commerce disabled
                 // Inventory management routes
-                // .route("/products/{id}/variants", web::get().to(services::inventory_service::get_product_variants)) // Inventory disabled
-                 // .route("/variants", web::post().to(services::inventory_service::create_variant)) // Inventory disabled // Inventory disabled
-                // .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock)) // Inventory disabled
-                // .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
-                // .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant)) // Inventory disabled
+                .route("/products/{id}/variants", web::get().to(services::inventory_service::get_product_variants))
+                .route("/variants", web::post().to(services::inventory_service::create_variant))
+                .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock))
+                .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
+                .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant))
                 // AI Provider management routes (admin only)
                 // .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers)) // AI services disabled
                 // .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider)) // AI services disabled

@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use rust_decimal::Decimal;
+use bigdecimal::BigDecimal;
 
 use crate::models::inventory_models::{
     InventoryAuditLog, NewInventoryAuditLog, NewProductVariant, ProductVariant,
@@ -23,9 +23,9 @@ pub struct CreateVariantRequest {
     pub variant_name: Option<String>,
     pub variant_sku: Option<String>,
     pub attributes: Option<serde_json::Value>,
-    pub price: Option<Decimal>,
-    pub compare_at_price: Option<Decimal>,
-    pub weight: Option<Decimal>,
+    pub price: Option<BigDecimal>,
+    pub compare_at_price: Option<BigDecimal>,
+    pub weight: Option<BigDecimal>,
     pub stock_quantity: i32,
     pub image_url: Option<String>,
     pub is_active: Option<bool>,
@@ -45,18 +45,22 @@ pub async fn get_product_variants(
 ) -> Result<HttpResponse, CustomHttpError> {
     let product_id = product_id.into_inner();
     
-    let variants = web::block(move || -> Result<Vec<ProductVariant>, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
-            diesel::result::DatabaseErrorKind::Unknown,
-            Box::new("Database connection error".to_string())
-        ))?;
+    let variants = match web::block(move || -> Result<Vec<ProductVariant>, diesel::result::Error> {
+        let mut conn = pool.get()
+            .map_err(|e| diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::UnableToSendCommand,
+                Box::new(e.to_string())
+            ))?;
         product_variants::table
             .filter(product_variants::product_id.eq(product_id))
             .filter(product_variants::is_active.eq(true))
             .load::<ProductVariant>(&mut conn)
     })
-    .await?
-    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+    .await {
+        Ok(Ok(value)) => value,
+        Ok(Err(e)) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+        Err(e) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+    };
 
     Ok(HttpResponse::Ok().json(variants))
 }
@@ -71,28 +75,37 @@ pub async fn create_variant(
     let new_variant = NewProductVariant {
         uuid: uuid::Uuid::new_v4().to_string(),
         product_id: 0, // Will be set from URL path parameter
-        sku: payload.variant_sku.clone(),
-        variant_name: payload.variant_name.clone(),
+        sku: payload.variant_sku,
+        variant_name: payload.variant_name.unwrap_or_else(|| "Default".to_string()),
         price: payload.price,
-        stock_quantity: payload.stock_quantity,
+        stock_quantity: Some(payload.stock_quantity),
         weight: payload.weight,
-        attributes: payload.attributes.clone(),
-        image_url: payload.image_url.clone(),
+        attributes: payload.attributes.map(|v| v.to_string()),  // Serialize JSON to string
+        image_url: payload.image_url,
         is_active: Some(true),
     };
 
-    let variant = web::block(move || {
-        let mut conn = pool.get()?;
+    let variant = match web::block(move || -> Result<ProductVariant, diesel::result::Error> {
+        let mut conn = pool.get()
+            .map_err(|e| diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::UnableToSendCommand,
+                Box::new(e.to_string())
+            ))?;
+        
         diesel::insert_into(product_variants::table)
             .values(&new_variant)
             .execute(&mut conn)?;
         
+        // Get the last inserted variant
         product_variants::table
             .order(product_variants::id.desc())
             .first::<ProductVariant>(&mut conn)
     })
-    .await?
-    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+    .await {
+        Ok(Ok(value)) => value,
+        Ok(Err(e)) => return Err(CustomHttpError::InternalServerError(format!("DB error: {}", e))),
+        Err(e) => return Err(CustomHttpError::InternalServerError(format!("Block error: {}", e))),
+    };
 
     Ok(HttpResponse::Created().json(variant))
 }
@@ -107,8 +120,12 @@ pub async fn update_variant_stock(
     let quantity_change = payload.quantity_change;
     let reason = payload.reason.clone();
 
-    let variant = web::block(move || {
-        let mut conn = pool.get()?;
+    let variant = match web::block(move || -> Result<ProductVariant, diesel::result::Error> {
+        let mut conn = pool.get()
+            .map_err(|e| diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::UnableToSendCommand,
+                Box::new(e.to_string())
+            ))?;
         
         // Get current variant
         let current: ProductVariant = product_variants::table
@@ -149,8 +166,11 @@ pub async fn update_variant_stock(
             .find(variant_id)
             .first::<ProductVariant>(&mut conn)
     })
-    .await?
-    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+    .await {
+        Ok(Ok(value)) => value,
+        Ok(Err(e)) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+        Err(e) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+    };
 
     Ok(HttpResponse::Ok().json(variant))
 }
@@ -162,16 +182,23 @@ pub async fn get_inventory_audit_log(
 ) -> Result<HttpResponse, CustomHttpError> {
     let product_id = product_id.into_inner();
     
-    let logs = web::block(move || {
-        let mut conn = pool.get()?;
+    let logs = match web::block(move || -> Result<Vec<InventoryAuditLog>, diesel::result::Error> {
+        let mut conn = pool.get()
+            .map_err(|e| diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::UnableToSendCommand,
+                Box::new(e.to_string())
+            ))?;
         inventory_audit_log::table
             .filter(inventory_audit_log::product_id.eq(product_id))
             .order(inventory_audit_log::created_at.desc())
             .limit(100)
             .load::<InventoryAuditLog>(&mut conn)
     })
-    .await?
-    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+    .await {
+        Ok(Ok(value)) => value,
+        Ok(Err(e)) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+        Err(e) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+    };
 
     Ok(HttpResponse::Ok().json(logs))
 }
@@ -183,14 +210,21 @@ pub async fn delete_variant(
 ) -> Result<HttpResponse, CustomHttpError> {
     let variant_id = variant_id.into_inner();
     
-    web::block(move || {
-        let mut conn = pool.get()?;
+    match web::block(move || -> Result<usize, diesel::result::Error> {
+        let mut conn = pool.get()
+            .map_err(|e| diesel::result::Error::DatabaseError(
+                diesel::result::DatabaseErrorKind::UnableToSendCommand,
+                Box::new(e.to_string())
+            ))?;
         diesel::update(product_variants::table.find(variant_id))
             .set(product_variants::is_active.eq(false))
             .execute(&mut conn)
     })
-    .await?
-    .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
+    .await {
+        Ok(Ok(_)) => {},
+        Ok(Err(e)) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+        Err(e) => return Err(CustomHttpError::InternalServerError(e.to_string())),
+    }
 
     Ok(HttpResponse::Ok().json(GenericHttpResponse {
         message: "Variant deleted successfully".to_string(),

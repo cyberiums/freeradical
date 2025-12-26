@@ -1,10 +1,10 @@
 pub mod errors_service;
 pub mod cache_service;
-// pub mod analytics_service;
+pub mod analytics_service;
 pub mod auth_service;
 pub mod database_service;
 pub mod revision_service;
-// pub mod inventory_service;
+pub mod inventory_service;
 // pub mod ai_provider_service; // Temporarily disabled
 // pub mod ai_content_service; // Temporarily disabled
 // pub mod ai_recommendations_service; // Temporarily disabled
