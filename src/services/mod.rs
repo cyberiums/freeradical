@@ -5,15 +5,14 @@ pub mod auth_service;
 pub mod database_service;
 pub mod revision_service;
 pub mod inventory_service;
-// pub mod ai_provider_service; // Temporarily disabled
-// pub mod ai_content_service; // Temporarily disabled
-// pub mod ai_recommendations_service; // Temporarily disabled
-// pub mod ai_metadata_service; // Temporarily disabled
-// pub mod ai_authorization_service; // Temporarily disabled
-// pub mod semantic_search_service;  // Vector-based semantic search - TEMPORARILY DISABLED
-// pub mod recommendation_service;  // AI recommendations - TEMPORARILY DISABLED
-// pub mod ai_authorization_service;  // AI feature authorization - TEMPORARILY DISABLED
-pub mod scheduler_service;
+// AI/MCP Services - Planned for v1.4.0 (requires migrations)
+// pub mod ai_provider_service;
+// pub mod ai_content_service;
+// pub mod ai_recommendations_service;
+// pub mod ai_metadata_service;
+// pub mod ai_authorization_service;
+// pub mod semantic_search_service;
+// pub mod recommendation_service;
 pub mod monitoring_service;
 pub mod field_validation_service;
 pub mod permission_service;
@@ -26,8 +25,10 @@ pub mod template_service;
 pub mod totp_service;
 pub mod backup_service;
 pub mod payment_service;
+pub mod scheduler_service;
 // Services below require migrations to be run first
 // pub mod language_service;
 // pub mod analytics_service_v2;
 // pub mod oauth_service;
 // pub mod hreflang_service;
+pub mod crm_service; // CRM modules below require migrations to be run first

@@ -1,7 +1,6 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 use chrono::NaiveDateTime;
 
 use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
@@ -13,6 +12,7 @@ use crate::schema::{orders, order_items, products};
 #[derive(Deserialize)]
 pub struct CreateOrderRequest {
     pub items: Vec<OrderItemInput>,
+    pub currency: String,
 }
 
 #[derive(Deserialize)]
@@ -45,24 +45,12 @@ pub async fn list_orders(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
-    let orders_list = orders::table
-        .select((
-            orders::id,
-            orders::uuid,
-            orders::user_uuid,
-            orders::status,
-            orders::total_amount_cents,
-            orders::payment_status,
-            orders::payment_provider,
-            orders::payment_intent_id,
-            orders::created_at,
-            orders::updated_at,
-        ))
+    let user_orders = orders::table
         .filter(orders::user_uuid.eq(&claim.sub))
         .order(orders::created_at.desc())
         .load::<Order>(&mut conn)?;
     
-    Ok(HttpResponse::Ok().json(orders_list))
+    Ok(HttpResponse::Ok().json(user_orders))
 }
 
 // Get single order with items
@@ -74,52 +62,30 @@ pub async fn get_order(
     let mut conn = pool_handler(pool)?;
     
     let ord = orders::table
-        .select((
-            orders::id,
-            orders::uuid,
-            orders::user_uuid,
-            orders::status,
-            orders::total_amount_cents,
-            orders::payment_status,
-            orders::payment_provider,
-            orders::payment_intent_id,
-            orders::created_at,
-            orders::updated_at,
-        ))
         .find(*id)
         .filter(orders::user_uuid.eq(&claim.sub))
         .first::<Order>(&mut conn)
         .map_err(|_| CustomHttpError::NotFound("Order not found".to_string()))?;
     
-    // Fetch order items (without join since joinables are commented)
-    let items_data = order_items::table
+    let itms = order_items::table
+        .inner_join(products::table)
         .filter(order_items::order_id.eq(ord.id))
         .select((
             order_items::id,
             order_items::product_id,
+            products::name,
             order_items::quantity,
             order_items::price_cents,
         ))
-        .load::<(i64, i64, i32, i64)>(&mut conn)?;
-    
-    // Fetch product names separately
-    let itms = items_data
+        .load::<(i64, i64, String, i32, i64)>(&mut conn)?
         .into_iter()
-        .map(|(id, product_id, quantity, price_cents)| {
-            let product_name = products::table
-                .find(product_id)
-                .select(products::name)
-                .first::<String>(&mut conn)
-                .unwrap_or_else(|_| "Unknown Product".to_string());
-                
-            OrderItemWithProduct {
-                id,
-                product_id,
-                product_name,
-                quantity,
-                price_cents,
-                subtotal_amount_cents: price_cents * quantity as i64,
-            }
+        .map(|(id, product_id, product_name, quantity, price_cents)| OrderItemWithProduct {
+            id,
+            product_id,
+            product_name,
+            quantity,
+            price_cents,
+            subtotal_amount_cents: price_cents * quantity as i64,
         })
         .collect();
     
@@ -171,13 +137,13 @@ pub async fn create_order(
     
     // Create order
     let new_order = NewOrder {
-        uuid: Uuid::new_v4().to_string(),
         user_uuid: claim.sub.clone(),
-        status: "pending".to_string(),
         total_amount_cents,
-        payment_status: Some("pending".to_string()),
+        currency: body.currency.clone(),
+        status: "pending".to_string(),
         payment_provider: None,
         payment_intent_id: None,
+        metadata: None,
     };
     
     diesel::insert_into(orders::table)
@@ -185,21 +151,9 @@ pub async fn create_order(
         .execute(&mut conn)?;
     
     let order_id = orders::table
-        .select((
-            orders::id,
-            orders::uuid,
-            orders::user_uuid,
-            orders::status,
-            orders::total_amount_cents,
-            orders::payment_status,
-            orders::payment_provider,
-            orders::payment_intent_id,
-            orders::created_at,
-            orders::updated_at,
-        ))
         .order(orders::id.desc())
-        .first::<Order>(&mut conn)?
-        .id;
+        .select(orders::id)
+        .first::<i64>(&mut conn)?;
     
     // Create order items
     for (product_id, quantity, price_cents) in order_item_data {

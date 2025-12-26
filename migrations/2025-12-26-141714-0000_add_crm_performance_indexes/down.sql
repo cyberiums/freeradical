@@ -1,0 +1,14 @@
+-- Remove CRM performance indexes
+DROP INDEX IF EXISTS idx_crm_notes_pinned;
+DROP INDEX IF EXISTS idx_crm_notes_customer;
+DROP INDEX IF EXISTS idx_crm_campaigns_segment;
+DROP INDEX IF EXISTS idx_crm_segment_members_customer;
+DROP INDEX IF EXISTS idx_crm_segment_members_segment;
+DROP INDEX IF EXISTS idx_crm_tasks_assigned_due;
+DROP INDEX IF EXISTS idx_crm_tasks_customer_status;
+DROP INDEX IF EXISTS idx_crm_interactions_type;
+DROP INDEX IF EXISTS idx_crm_interactions_customer_timeline;
+DROP INDEX IF EXISTS idx_crm_customers_churn_risk;
+DROP INDEX IF EXISTS idx_crm_customers_user_id;
+DROP INDEX IF EXISTS idx_crm_customers_health_score;
+DROP INDEX IF EXISTS idx_crm_customers_lifecycle;
