@@ -279,10 +279,15 @@ async fn main() -> std::io::Result<()> {
             // .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
-            // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed
-            // .service(controllers::dashboard_controller::analytics_summary)
-            // .service(controllers::dashboard_controller::seo_health)
-            // .service(controllers::dashboard_controller::top_pages)
+            .service(controllers::dashboard_controller::dashboard_summary)
+            .service(controllers::dashboard_controller::analytics_summary)
+            .service(controllers::dashboard_controller::seo_health)
+            .service(controllers::dashboard_controller::top_pages)
+            // SEO Tools
+            .service(controllers::seo_controller::audit_url)
+            // Backups
+            .service(controllers::backup_controller::list_backups)
+            .service(controllers::backup_controller::create_backup)
             .route("/", web::get().to(|| async {
                 actix_files::NamedFile::open_async("./static/index.html").await
             }))
