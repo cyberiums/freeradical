@@ -115,6 +115,8 @@ pub async fn invite_member(
     use crate::schema::tenant_members;
     use crate::schema::users;
     
+    use crate::models::rbac::{has_permission, Permission};
+
     // 1. Verify requester is admin/owner of tenant
     let membership = tenant_members::table
         .filter(tenant_members::tenant_id.eq(tenant_id))
@@ -123,8 +125,12 @@ pub async fn invite_member(
         .first::<String>(&mut conn);
 
     match membership {
-        Ok(role) if role == "owner" || role == "admin" => {},
-        _ => return HttpResponse::Forbidden().json("Insufficient permissions: Must be owner or admin"),
+        Ok(role_str) => {
+            if !has_permission(&role_str, Permission::ManageMembers) {
+                return HttpResponse::Forbidden().json("Insufficient permissions: ManageMembers required");
+            }
+        },
+        Err(_) => return HttpResponse::Forbidden().json("Access denied"),
     }
 
     // 2. Find user by username/email
