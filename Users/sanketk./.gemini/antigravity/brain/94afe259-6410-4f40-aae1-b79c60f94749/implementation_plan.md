@@ -1,45 +1,38 @@
-# Theme Management UI Implementation Plan
+# Final Deployment & Documentation Plan
 
 ## Goal
-Implement the Theme Management User Interface for Oxidly, allowing users to view available themes, upload new ones (UI flow), and activate a theme.
+Standardize the deployment process and provide comprehensive documentation for the newly implemented features.
 
 ## User Review Required
 None.
 
 ## Proposed Changes
 
-### Oxidly Service Layer
-#### [MODIFY] [services/api.js](file:///Users/sanketk./freeradical/oxidly/services/api.js)
--   Add `themes` namespace.
--   `list(req)`: Get available themes.
--   `upload(formData, req)`: Upload a theme zip.
--   `activate(id, req)`: Activate a theme.
+### Scripts
+#### [NEW] [deploy.sh](file:///Users/sanketk./freeradical/deploy.sh)
+-   Shell script to pull changes, build Docker images, and restart services.
+-   Includes health checks.
 
-### Oxidly Controllers
-#### [NEW] [controllers/theme_controller.js](file:///Users/sanketk./freeradical/oxidly/controllers/theme_controller.js)
--   `index(req, res)`: List themes (Mock data if backend API fails/missing, or handling empty list).
--   `new(req, res)`: Render upload form.
--   `create(req, res)`: Handle upload.
--   `activate(req, res)`: Handle activation.
+### Documentation
+#### [NEW] [docs/deployment.md](file:///Users/sanketk./freeradical/docs/deployment.md)
+-   Prerequisites (Docker, Git).
+-   Environment configuration (.env).
+-   Running `deploy.sh`.
+-   Troubleshooting.
 
-### Oxidly Views
-#### [NEW] [views/themes/index.hbs](file:///Users/sanketk./freeradical/oxidly/views/themes/index.hbs)
--   Grid of theme cards (Screenshot placeholder, Title, Version).
--   "Active" badge on current theme.
--   "Activate" button on others.
--   "Upload New" button.
+#### [NEW] [docs/user_guide.md](file:///Users/sanketk./freeradical/docs/user_guide.md)
+-   Overview of Oxidly Features.
+-   Store Setup Wizard.
+-   Product & Order Management.
+-   AI Content Tools.
+-   SEO Audit Tool.
+-   Backup & Recovery.
 
-#### [NEW] [views/themes/upload.hbs](file:///Users/sanketk./freeradical/oxidly/views/themes/upload.hbs)
--   File input (accept .zip).
--   Submit button.
-
-### Oxidly Routing
-#### [MODIFY] [server.js](file:///Users/sanketk./freeradical/oxidly/server.js)
--   Register theme routes.
+### Task Management
+#### [MODIFY] [task.md](file:///Users/sanketk./freeradical/task.md)
+-   Mark Task 19 (AI Content) as Complete.
+-   Mark Task 25 (Deployment/Docs) as Complete.
 
 ## Verification
--   Visit `/themes`.
--   Verify mock/real themes are listed.
--   Click "Upload".
--   Submit form.
--   Verify redirect.
+-   Run `deploy.sh` (simulate/dry-run).
+-   Read generated docs.

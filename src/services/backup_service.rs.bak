@@ -83,25 +83,6 @@ impl BackupService {
         log::info!("Backup compressed: {}", compressed_path);
         Ok(compressed_path)
     }
-    /// List all backup files in directory
-    pub fn list_backups(backup_dir: &str) -> Result<Vec<String>, String> {
-        let entries = std::fs::read_dir(backup_dir)
-            .map_err(|e| format!("Failed to read backup dir: {}", e))?;
-            
-        let mut backups = Vec::new();
-        for entry in entries {
-            let entry = entry.map_err(|e| format!("Error reading entry: {}", e))?;
-            let path = entry.path();
-            if path.is_file() {
-                if let Some(name) = path.file_name() {
-                    backups.push(name.to_string_lossy().to_string());
-                }
-            }
-        }
-        // Sort newest first
-        backups.sort_by(|a, b| b.cmp(a));
-        Ok(backups)
-    }
 }
 
 #[cfg(test)]
