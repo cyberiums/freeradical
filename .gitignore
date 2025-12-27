@@ -1,3 +1,4 @@
+
 # Rust build artifacts
 /target/
 **/target/
@@ -37,3 +38,4 @@ task.md
 .gemini
 */.gemini
 **/.gemini
+oxidly/

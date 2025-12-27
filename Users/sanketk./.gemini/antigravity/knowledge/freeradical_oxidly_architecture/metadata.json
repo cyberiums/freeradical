@@ -1,0 +1,119 @@
+{
+    "title": "FreeRadical CMS & Oxidly Cloud Platform Architecture",
+    "summary": "Comprehensive overview of FreeRadical CMS v1.7.0 (high-performance Rust backend) and the Oxidly.com Cloud Platform. Includes backend module summaries (AI/MCP, SEO, E-commerce, Content Management), performance benchmarks, and detailed requirements for the hybrid frontend architecture. Covers pluggable payment architecture, project structure, site and content management implementation details (including full CRUD for pages/posts, relational Module mapping, Editor Integration, Theme Management, completed User Profile Management, Store Setup Wizard, completed Product Management UI, completed Order Management UI, basic Inventory Tracking, completed Payment & Shipping Configuration, completed AI features: Content Generation, Alt Text Analysis, SEO Metadata Optimization, and the AI Store Architect interface, completed Analytics Dashboard Integration, a Detailed SEO Audit Tool, a system for Automated Backups and Scheduled Publishing, detailed CRM, Campaign Management, and mocked Billing & Subscription system architecture, Docker port 5000 configuration, and the Root Context build strategy for Docker), and current implementation progress tracked against the v2.0.0 and v2.1.0 roadmaps.",
+    "references": [
+        {
+            "type": "file",
+            "value": "docs/roadmaps/FEATURE-GAP-ANALYSIS.md"
+        },
+        {
+            "type": "file",
+            "value": "docs/architecture/payment_architecture.md"
+        },
+        {
+            "type": "file",
+            "value": "specs.md"
+        },
+        {
+            "type": "conversation_id",
+            "value": "71f8c2a2-b8e9-4eaf-82f2-85c70fc9680f"
+        },
+        {
+            "type": "conversation_id",
+            "value": "1f0ba211-4c40-4cbb-b638-47cb7b29f717"
+        },
+        {
+            "type": "conversation_id",
+            "value": "258a7261-3daf-4b5e-b940-8ac912602647"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-bd3d689b-cb89-4f8c-a38b-d7393e2fb70b"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-c593dbeb-2899-4a5e-84c1-bd3e04f9952d"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-bc5fbf91-6b06-4853-a876-96a1e761d009"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-83e82ba2-def7-49f1-a453-39cee54b4443"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-55531957-c228-4aa8-8dcb-60e88ad4f145"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-68836df4-2168-4840-9c27-4eb88741ae4c"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-e13464dc-4924-4391-beb9-f360f414e327"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-2281a896-180b-426b-80cb-327c157fbe19"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-391b843c-e174-4c0b-acfd-17c7bf23fbee"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-164bc391-42c5-430b-896f-2b42ceb927e6"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-cbcbfc2c-848f-4ea4-8402-8a96b0ee4d52"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-54e62cae-8618-4c8f-8500-9788f97bddda"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-1356f359-d032-4c0d-98a3-e15d883d6b38"
+        },
+        {
+            "type": "conversation_id",
+            "value": "94afe259-6410-4f40-aae1-b79c60f94749"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-c80da697-d3dc-47ab-8baa-0bede019d6c7"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-e2428454-cbc2-4f10-a065-01e6f309c1b1"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-5aa7f29b-4e54-464c-bd95-3e7c45b4db99"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-78d89ccf-733b-40ba-8da8-3c1bc1eda9ee"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-f3bf85ad-1229-4656-a905-1e665e0cdf5f"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-f3f1e941-cd4c-474c-8f4b-18a7a9779df3"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-5b12ce52-b399-4665-b3b2-26a85eb7e207"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-0d5cf57e-3243-4e4b-9725-d71680199e19"
+        }
+    ]
+}
+```
