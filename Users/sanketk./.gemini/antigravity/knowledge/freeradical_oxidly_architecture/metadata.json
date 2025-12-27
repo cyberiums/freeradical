@@ -1,0 +1,46 @@
+{
+    "title": "FreeRadical CMS & Oxidly Cloud Platform Architecture",
+    "summary": "Comprehensive overview of FreeRadical CMS v1.7.0 (high-performance Rust backend) and the Oxidly.com Cloud Platform. Includes backend module summaries (AI/MCP, SEO, E-commerce, Content Management), performance benchmarks, and detailed requirements for the hybrid frontend architecture. Covers pluggable payment architecture, project structure, site and content management implementation details (including full CRUD for pages/posts, relational Module mapping, and Editor Integration), and current implementation progress tracked against the v2.0.0 roadmap.",
+    "references": [
+        {
+            "type": "file",
+            "value": "docs/roadmaps/FEATURE-GAP-ANALYSIS.md"
+        },
+        {
+            "type": "file",
+            "value": "docs/architecture/payment_architecture.md"
+        },
+        {
+            "type": "file",
+            "value": "specs.md"
+        },
+        {
+            "type": "conversation_id",
+            "value": "71f8c2a2-b8e9-4eaf-82f2-85c70fc9680f"
+        },
+        {
+            "type": "conversation_id",
+            "value": "1f0ba211-4c40-4cbb-b638-47cb7b29f717"
+        },
+        {
+            "type": "conversation_id",
+            "value": "258a7261-3daf-4b5e-b940-8ac912602647"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-bd3d689b-cb89-4f8c-a38b-d7393e2fb70b"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-c593dbeb-2899-4a5e-84c1-bd3e04f9952d"
+        },
+        {
+            "type": "conversation_id",
+            "value": "83c16223-9c8c-4a3e-8c3e-8c3e8c3e8c3e"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-bc5fbf91-6b06-4853-a876-96a1e761d009"
+        }
+    ]
+}

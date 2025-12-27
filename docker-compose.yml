@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: ankane/pgvector:latest  # Official pgvector image (PostgreSQL 17 + pgvector)
+    image: ankane/pgvector:latest # Official pgvector image (PostgreSQL 17 + pgvector)
     container_name: freeradical_postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-freeradical}
@@ -13,7 +13,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,7 +26,7 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -58,6 +58,20 @@ services:
       - "${APP_PORT:-8000}:8000"
     volumes:
       - ./uploads:/app/uploads
+    restart: unless-stopped
+
+  oxidly:
+    build: ./oxidly
+    container_name: freeradical_oxidly
+    depends_on:
+      - cms
+    environment:
+      - API_URL=http://cms:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./oxidly:/app
+      - /app/node_modules
     restart: unless-stopped
 
   admin:
