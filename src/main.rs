@@ -29,6 +29,7 @@ mod schema;
 mod watch;
 mod graphql;
 mod api_docs;
+mod middleware;
 
 use routers::module_routers::ModuleRouter;
 use routers::page_routers::PageRouter;
@@ -159,9 +160,12 @@ async fn main() -> std::io::Result<()> {
             .service(CategoryRouter::new());
 
         App::new()
+            // Middleware
+            .wrap(Logger::default())
             .wrap(cors)
-            .wrap(Logger::new("%a -> %U | %Dms "))
             .wrap(Governor::new(&governor_conf))
+            .wrap(middleware::AuthMiddleware::new())  // JWT authentication
+            // App data
             .service(api_scope)
             // OpenAPI/Swagger Documentation
             .service(
@@ -207,7 +211,7 @@ async fn main() -> std::io::Result<()> {
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
             // Admin/Backup endpoints
-                // .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup)) // Module disabled
+                .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup))
             // Payment endpoints
                 .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
                 .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
@@ -250,26 +254,29 @@ async fn main() -> std::io::Result<()> {
                 .route("/api/crm/tasks", web::get().to(controllers::crm_controller::list_tasks))
                 .route("/api/crm/tasks/{id}", web::put().to(controllers::crm_controller::update_task))
                 // AI Provider management routes (admin only)
-                // .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers)) // AI services disabled
-                // .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider)) // AI services disabled
-                // .route("/admin/ai/providers", web::post().to(services::ai_provider_service::create_provider)) // AI services disabled
-                // .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider)) // AI services disabled
-                // .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider)) // AI services disabled
-                // .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider)) // AI services disabled
+                .route("/admin/ai/providers", web::get().to(services::ai_provider_service::list_providers))
+                .route("/admin/ai/providers/{id}", web::get().to(services::ai_provider_service::get_provider))
+                .route("/admin/ai/providers", web::post().to(services::ai_provider_service::create_provider))
+                .route("/admin/ai/providers/{id}", web::put().to(services::ai_provider_service::update_provider))
+                .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider))
+                .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
                 // AI Content Generation routes
-                // .route("/ai/generate", web::post().to(services::ai_content_service::generate_content)) // AI services disabled
+                .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
                 // AI Metadata Automation routes
-                // .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords)) // AI services disabled
-                // .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags)) // AI services disabled
-                // .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories)) // AI services disabled
-                // .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text)) // AI services disabled
-                // .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata)) // AI services disabled
-                // Semantic Search routes
-                // .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding)) // AI services disabled
-                // .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search)) // AI services disabled
-                // AI Recommendations routes
-                // .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content)) // Service disabled
-                // .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending)) // Service disabled
+                .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords))
+                .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags))
+                .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories))
+                .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
+                .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
+            // AI/ML Services
+            .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
+            // TEMPORARILY DISABLED - Vector type issues need fixing
+            // .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
+            // .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
+            // .route("/ai/analyze", web::post().to(services::ai_content_service::analyze_content))
+            // TEMPORARILY DISABLED - Vector type issues need fixing
+            // .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
+            // .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             // .service(controllers::dashboard_controller::dashboard_summary)  // Commented - controller removed

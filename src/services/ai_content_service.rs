@@ -97,6 +97,7 @@ struct AnthropicUsage {
 
 /// Generate content using AI
 pub async fn generate_content(
+    req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
     payload: web::Json<GenerateContentRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
@@ -137,7 +138,9 @@ pub async fn generate_content(
     let provider_id = provider.id;
     let provider_type = provider.provider_type.clone();
     let log = NewAIUsageLog {
-        user_id: None, // TODO: Get from auth context
+        user_id: crate::middleware::auth_middleware::get_user_context(&req)
+            .map(|ctx| Some(ctx.user_id))
+            .unwrap_or(None),
         operation: "generate_content".to_string(),
         provider_type: Some(provider_type),
         tokens_used: Some(result.tokens_used as i32),

@@ -41,9 +41,42 @@ pub async fn graphql_handler(
         })));
     }
     
-    // TODO: Add actual JWT verification here
-    // For now, just check that a token is present
-    // In production, verify signature with JWT_SECRET
+    // Verify JWT token
+    if let Some(token) = auth_header {
+        // Validate token
+        use jsonwebtoken::{decode, DecodingKey, Validation, Algorithm};
+        use std::env;
+        
+        let secret = env::var("JWT_SECRET").unwrap_or_else(|_| "your-secret-key".to_string());
+        let key = DecodingKey::from_secret(secret.as_bytes());
+        let mut validation = Validation::new(Algorithm::HS256);
+        validation.validate_exp = true;
+        
+        match decode::<serde_json::Value>(token, &key, &validation) {
+            Ok(_) => {
+                // Token is valid, proceed
+            }
+            Err(_) => {
+                return Ok(HttpResponse::Unauthorized().json(serde_json::json!({
+                    "errors": [{
+                        "message": "Invalid or expired JWT token",
+                        "extensions": {
+                            "code": "UNAUTHENTICATED"
+                        }
+                    }]
+                })));
+            }
+        }
+    } else {
+        return Ok(HttpResponse::Unauthorized().json(serde_json::json!({
+            "errors": [{
+                "message": "Authentication required",
+                "extensions": {
+                    "code": "UNAUTHENTICATED"
+                }
+            }]
+        })));
+    }
     
     let mut request = async_graphql::Request::new(&req.query);
     

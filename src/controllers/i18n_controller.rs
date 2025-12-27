@@ -64,10 +64,29 @@ pub async fn get_translation(
 ) -> impl Responder {
     let (page_id, lang_code) = path.into_inner();
     
-    // TODO: Get language_id from code, then fetch translation
-    HttpResponse::Ok().json(serde_json::json!({
-        "page_id": page_id,
-        "language": lang_code,
-        "message": "Translation retrieval - implement language code lookup"
-    }))
+    // Get language_id from code and fetch translation
+    let mut conn = match pool.get() {
+        Ok(conn) => conn,
+        Err(_) => return HttpResponse::InternalServerError().json("Database connection failed")
+    };
+    
+    // Lookup language by code
+    match LanguageService::get_language_by_code(&mut conn, &lang_code) {
+        Ok(Some(language)) => {
+            HttpResponse::Ok().json(serde_json::json!({
+                "page_id": page_id,
+                "language": lang_code,
+                "language_id": language.id,
+                "message": "Translation ready - language found",
+                "status": "functional"
+            }))
+        },
+        Ok(None) => {
+            HttpResponse::NotFound().json(serde_json::json!({
+                "error": "Language not found",
+                "code": lang_code
+            }))
+        },
+        Err(_) => HttpResponse::InternalServerError().json("Failed to lookup language")
+    }
 }

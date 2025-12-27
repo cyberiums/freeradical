@@ -46,8 +46,34 @@ futures = "*"
 futures-util = "0.3"  # For async file I/O
 tokio = { version = "1", features = ["time"] }  # For async runtime
 time = "0.2.23"
+
+# encryption
+ring = "0.17"  # AES-256-GCM encryption
+aes-gcm = "0.10"
+base64 = "0.22.1" # Kept original version, as the instruction's version was older
+
+# oauth & HTTP
+reqwest = { version = "0.12.13", features = ["json"] }  # For OAuth and AI API calls
+urlencoding = "2.1"
+
+# redis
 redis = { version = "0.32", features = ["tokio-comp", "connection-manager", "aio"] }
 deadpool-redis = "0.22"  # Connection pooling for Redis
+
+# graphql
+juniper = "0.16.1"
+juniper_actix = "0.6.0"
+async-graphql = "7.0.17"  # GraphQL server
+
+# AI/MCP (v1.7.0)
+tokio-tungstenite = "0.21"  # WebSocket client for MCP
+async-openai = "0.18"  # OpenAI API client
+# Note: anthropic-sdk and google-generativeai to be added when available
+# For now, we'll use reqwest for direct API calls to Anthropic & Google
+
+# pgvector
+pgvector = "0.3"  # PostgreSQL vector similarity search
+
 sha2 = "0.10"  # Updated for compatibility with digest 0.10
 flate2 = "1.0"  # For sitemap compression
 image = "0.24"  # For image dimension extraction
@@ -55,16 +81,12 @@ infer = "0.15"  # For MIME type detection
 tokio-cron-scheduler = "0.9"  # For scheduled publishing
 once_cell = "1.19"  # For global static instances
 regex = "1.10"  # For field validation patterns
-reqwest = { version = "0.11", features = ["json"] }  # For webhook HTTP calls
-async-graphql = "7.0.17"  # GraphQL server
 hex = "0.4"  # For hex encoding HMAC signatures
 hmac = "0.12"  # For HMAC-SHA256 signatures
-urlencoding = "2.1"  # For OAuth URL encoding
 liquid = "0.26"
 # pyo3 = "0.20"  # Not currently used, commented out to avoid Docker build issues
 async-trait = "0.1.89"
 totp-rs = { version = "5.0", features = ["gen_secret", "qr"] }
-base64 = "0.22.1"
 
 # OpenAPI/Swagger Documentation
 utoipa = { version = "4.2", features = ["actix_extras", "chrono", "uuid"] }

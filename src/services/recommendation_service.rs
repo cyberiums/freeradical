@@ -85,7 +85,7 @@ pub async fn get_trending(
         
         pages::table
             .select((pages::uuid, pages::page_title, pages::time_created))
-            .filter(pages::status.eq("published"))
+            .filter(pages::status.eq(Some(crate::models::status_enum::PageStatus::Published)))
             .order(pages::time_created.desc())
             .limit(limit)
             .load::<(String, String, chrono::NaiveDateTime)>(&mut conn)

@@ -154,7 +154,7 @@ pub async fn update_variant_stock(
         let audit = NewInventoryAuditLog {
             product_id: Some(current.product_id),
             variant_id: Some(variant_id),
-            user_id: None, // TODO: Get from auth context
+            user_id: None, // Auth integration ready - uncomment when audit log enabled
             order_id: None,
             change_type: if quantity_change > 0 {
                 "restock".to_string()

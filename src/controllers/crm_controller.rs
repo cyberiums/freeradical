@@ -142,10 +142,19 @@ pub async fn update_customer(
     request: web::Json<UpdateCustomerRequest>,
     pool: web::Data<DbPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    // TODO: Implement update_customer in service
-    Ok(HttpResponse::Ok().json(serde_json::json!({
-        "message": "Update customer endpoint - to be implemented"
-    })))
+    // Update customer with provided fields
+    crm_service::update_customer_info(
+        pool,
+        *customer_id,
+        request.lifecycle_stage.clone(),
+        request.health_score,
+        request.churn_risk.clone(),
+        request.notes.clone()
+    ).await
+        .map(|_| HttpResponse::Ok().json(serde_json::json!({
+            "message": "Customer updated successfully",
+            "customer_id": *customer_id
+        })))
 }
 
 /// Delete customer (soft delete)
@@ -153,10 +162,12 @@ pub async fn delete_customer(
     customer_id: web::Path<i32>,
     pool: web::Data<DbPool>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    // TODO: Implement soft delete
-    Ok(HttpResponse::Ok().json(serde_json::json!({
-        "message": "Delete customer endpoint - to be implemented"
-    })))
+    // Soft delete customer by setting deleted_at timestamp
+    crm_service::soft_delete_customer(pool, *customer_id).await
+        .map(|_| HttpResponse::Ok().json(serde_json::json!({
+            "message": "Customer deleted successfully",
+            "customer_id": *customer_id
+        })))
 }
 
 // ===== Interaction Endpoints =====
