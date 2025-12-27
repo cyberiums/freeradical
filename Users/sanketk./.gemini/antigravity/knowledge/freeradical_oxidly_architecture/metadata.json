@@ -1,6 +1,6 @@
 {
     "title": "FreeRadical CMS & Oxidly Cloud Platform Architecture",
-    "summary": "Comprehensive overview of FreeRadical CMS v1.7.0 (high-performance Rust backend) and the Oxidly.com Cloud Platform. Includes backend module summaries (AI/MCP, SEO, E-commerce, Content Management), performance benchmarks, and detailed requirements for the hybrid frontend architecture. Covers pluggable payment architecture, project structure, site and content management implementation details (including full CRUD for pages/posts, relational Module mapping, Editor Integration, Theme Management, completed User Profile Management, Store Setup Wizard, completed Product Management UI, completed Order Management UI, basic Inventory Tracking, completed Payment & Shipping Configuration, completed AI features: Content Generation, Alt Text Analysis, SEO Metadata Optimization, and the AI Store Architect interface, completed Analytics Dashboard Integration, a Detailed SEO Audit Tool, a system for Automated Backups and Scheduled Publishing, detailed CRM, Campaign Management, and mocked Billing & Subscription system architecture, Docker port 5000 configuration, and the Root Context build strategy for Docker), and current implementation progress tracked against the v2.0.0 and v2.1.0 roadmaps.",
+    "summary": "Comprehensive overview of the FreeRadical CMS and Oxidly Cloud Platform architecture. Covers the high-performance Rust backend (v1.7.0), hybrid frontend design (Port 5000), and implementation details for core services including AI integration, e-commerce, content management, CRM, and the Plugin Marketplace. Features implementation patterns for AI features (simulation, proxy, mock) and the Plugin Submission & Review system with state-managed (mocked) transitions. Includes operational troubleshooting for Docker and technology stack justifications.",
     "references": [
         {
             "type": "file",
@@ -113,6 +113,42 @@
         {
             "type": "conversation_id",
             "value": "bot-0d5cf57e-3243-4e4b-9725-d71680199e19"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-102559fd-d26b-4e6a-ae7a-02ccda437703"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-8ed63f58-021e-43ce-bf70-303e34adf60e"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-091acfaa-41bf-4c41-bcc6-a84d5262a93b"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-8616dd06-c208-445e-8741-0575d3f86103"
+        },
+        {
+            "type": "conversation_id",
+            "value": "0012c72f-256a-480d-9972-c7e6be25553a"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-fdf92e8e-6f54-428a-8fe4-772752298d00"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-aaf9693a-7194-4869-88cc-ed0242f3024e"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-a9c56fc1-4fa8-476b-9586-85736339c72e"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-21db4ef3-b03c-47c7-beb0-8cc8437e1ade"
         }
     ]
 }

@@ -82,7 +82,7 @@ This document tracks the current progress of the Oxidly Cloud Platform implement
     - [x] `StoreController` settings management.
     - [x] `settings.hbs` view for commerce preferences.
 
-### 4. AI Integration & CRM ⏳ (In Progress)
+### 4. AI Integration & CRM ✅ (Completed)
 - [x] AI content generation UI.
     - [x] Backend AI service analysis (OpenAI/Anthropic).
     - [x] Implementation plan drafted (`oxidly_ai_integration_plan.md`).
@@ -123,7 +123,48 @@ This document tracks the current progress of the Oxidly Cloud Platform implement
     - [x] Campaign list view (`index.hbs`).
     - [x] Segment management UI (`segments.hbs`).
     - [x] Campaign creation workflow (`form.hbs`).
-- [ ] AI-enabled CRM features.
+- [x] Billing & subscription UI ✅ (Completed - Mocked).
+    - [x] SaaS platform discovery (`saas_platform_discovery.md`).
+    - [x] Implementation plan drafted (`oxidly_billing_system_guide.md`).
+    - [x] `BillingController` implementation with mock data for plans, payment methods, and invoices.
+    - [x] `index.hbs` (Dashboard), `plans.hbs` (Pricing Grid), and `invoices.hbs` (History) views.
+    - [x] Sidebar navigation restored with "Settings" linking to `/settings/billing`.
+- [x] AI-enabled CRM features.
+    - [x] Natural language generation for campaigns (Integrated in Campaign controller).
+
+## Phase 6: AI E-commerce UI (v2.1.0) ✅ (Completed)
+- [x] AI Store Architect interface ✅ (Completed).
+    - [x] Implementation plan drafted.
+    - [x] `ai_architect_controller.js` with visual structure simulation.
+    - [x] `architect.hbs` interactive chat and tree-view blueprint.
+    - [x] Batch "Apply" functionality placeholder.
+- [x] AI Merchant Tools ✅ (Completed).
+    - [x] Product description generator UI <!-- id: 21b -->
+    - [x] Image studio (AI background removal/generation) <!-- id: 21c -->
+- [x] AI Customer Features ✅ (Completed).
+    - [x] Conversational shopping assistant widget <!-- id: 22a -->
+    - [x] Visual search interface <!-- id: 22b -->
+    - [x] Personalization engine UI <!-- id: 22c -->
+- [x] AI Operations ✅ (Completed).
+    - [x] Fraud detection dashboard <!-- id: 23a -->
+    - [x] Dynamic pricing controls <!-- id: 23b -->
+
+*Code-level verification (Dec 27, 2025): Verified controllers and views for all Phase 6 features in `oxidly/controllers` and `oxidly/views/ai`.*
+
+## Phase 7: Plugin Marketplace (v2.2.0) ✅ (Completed - Mocked)
+- [x] Plugin discovery UI ✅ (Completed).
+    - [x] Implementation plan drafted (`oxidly_plugin_marketplace_plan.md`).
+    - [x] `plugin_controller.js` and marketplace views (`index.hbs`, `details.hbs`) implemented.
+    - [x] Mock installation logic with latency simulation.
+- [x] Plugin submission workflow ✅ (Completed).
+    - [x] Submission form and processing logic.
+    - [x] Admin Review console for moderators.
+    - [x] Approval/Rejection state transitions.
+
+## Verified Infrastructure
+- **Docker Port**: `oxidly` service migrated to Port 5000.
+- **Build Strategy**: Implemented "Root Context Strategy" using `Dockerfile.root` and `context: .` in `docker-compose.yml` to ensure reliable builds in the monorepo.
+- **Multi-Repo Sync**: Successfully initialized `oxidly` as a standalone Git repo synced with `git@bitbucket.org:samskritam/oxidly.git` using unrelated-histories merge strategy.
 
 ## Verified Components
 - **Server**: `oxidly/server.js` uses `express-handlebars` and `cookie-parser`.
