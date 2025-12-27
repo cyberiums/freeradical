@@ -210,8 +210,7 @@ async fn main() -> std::io::Result<()> {
             // SEO endpoints - standardized manual routing
             .route("/sitemap.xml", web::get().to(controllers::sitemap_controller::sitemap))
             .route("/image-sitemap.xml", web::get().to(controllers::image_sitemap_controller::image_sitemap))
-            // Admin/Backup endpoints
-                .route("/admin/backup", web::post().to(controllers::backup_controller::create_backup))
+
             // Payment endpoints
                 .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
                 .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
@@ -268,8 +267,7 @@ async fn main() -> std::io::Result<()> {
                 .route("/ai/metadata/categories", web::post().to(services::metadata_automation_service::suggest_categories))
                 .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
                 .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
-            // AI/ML Services
-            .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
+
             // TEMPORARILY DISABLED - Vector type issues need fixing
             // .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
             // .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
