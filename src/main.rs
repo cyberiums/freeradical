@@ -233,6 +233,10 @@ async fn main() -> std::io::Result<()> {
                 .route("/variants/{id}/stock", web::put().to(services::inventory_service::update_variant_stock))
 //                 .route("/products/{id}/inventory/audit", web::get().to(services::inventory_service::get_inventory_audit_log))
                 .route("/variants/{id}", web::delete().to(services::inventory_service::delete_variant))
+                // Tenant routes
+                .route("/api/tenants", web::post().to(controllers::tenant_controller::create_tenant))
+                .route("/api/tenants", web::get().to(controllers::tenant_controller::list_my_tenants))
+                .route("/api/tenants/{id}/members", web::post().to(controllers::tenant_controller::invite_member))
                 // CRM API Routes
                 .route("/api/crm/customers", web::get().to(controllers::crm_controller::list_customers))
                 .route("/api/crm/customers/{id}", web::get().to(controllers::crm_controller::get_customer_profile))

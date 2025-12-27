@@ -3,6 +3,7 @@ pub mod module_models;
 pub mod page_models;
 pub mod status_enum;  // Re-enabled with PagesStatus in schema
 pub mod user_models;
+pub mod tenant_models;
 pub mod commerce_models;
 pub mod media_models;
 pub mod revision_models;

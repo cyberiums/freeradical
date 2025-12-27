@@ -19,3 +19,4 @@ pub mod i18n_controller;
 pub mod oauth_controller;
 pub mod dashboard_controller;
 pub mod seo_controller;
+pub mod tenant_controller;

@@ -380,6 +380,7 @@ diesel::table! {
         width -> Nullable<Int4>,
         height -> Nullable<Int4>,
         alt_text -> Nullable<Text>,
+        tenant_id -> Nullable<Int4>,
         #[max_length = 255]
         title -> Nullable<Varchar>,
         description -> Nullable<Text>,
@@ -467,6 +468,7 @@ diesel::table! {
         #[max_length = 50]
         status -> Varchar,
         total_amount_cents -> Int8,
+        tenant_id -> Nullable<Int4>,
         #[max_length = 50]
         payment_status -> Nullable<Varchar>,
         #[max_length = 50]
@@ -586,6 +588,7 @@ diesel::table! {
         twitter_description -> Nullable<Varchar>,
         #[max_length = 100]
         author -> Nullable<Varchar>,
+        tenant_id -> Nullable<Int4>,
         #[max_length = 50]
         article_type -> Nullable<Varchar>,
         #[max_length = 500]
@@ -633,6 +636,7 @@ diesel::table! {
         price_cents -> Int8,
         #[max_length = 100]
         sku -> Nullable<Varchar>,
+        tenant_id -> Nullable<Int4>,
         inventory_count -> Nullable<Int4>,
         is_active -> Bool,
         created_at -> Timestamp,
@@ -704,6 +708,20 @@ diesel::table! {
         plan -> Nullable<Varchar>,
         is_active -> Nullable<Bool>,
         settings -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    tenant_members (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        role -> Varchar,
+        #[max_length = 20]
+        status -> Varchar,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
     }
@@ -842,6 +860,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     robots_rules,
     roles,
     search_history,
+    tenant_members,
     tenants,
     user_oauth_connections,
     user_roles,
