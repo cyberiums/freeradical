@@ -5,31 +5,52 @@ use std::path::PathBuf;
 pub struct BackupService;
 
 impl BackupService {
-    /// Creates a MySQL dump backup file with timestamp
+    /// Creates a backup file (MySQL dump or Postgres dump)
     pub fn create_backup(db_url: &str, output_dir: &str) -> Result<String, String> {
         let timestamp = Utc::now().format("%Y%m%d_%H%M%S");
-        let filename = format!("freeradical_backup_{}.sql", timestamp);
+        // Parse DB URL to extract connection params
+        let (protocol, host, user, password, database) = Self::parse_db_url(db_url)?;
+
+        let filename = if protocol == "mysql" {
+            format!("freeradical_backup_{}.sql", timestamp)
+        } else {
+            format!("freeradical_backup_{}.sql", timestamp)
+        };
         let output_path = PathBuf::from(output_dir).join(&filename);
         
-        // Parse DB URL to extract connection params
-        let (host, user, password, database) = Self::parse_db_url(db_url)?;
-        
-        let output = Command::new("mysqldump")
-            .args(&[
-                "-h", &host,
-                "-u", &user,
-                &format!("--password={}", password),
-                &database,
-                "--single-transaction",
-                "--routines",
-                "--triggers",
-            ])
-            .output()
-            .map_err(|e| format!("Failed to execute mysqldump: {}", e))?;
+        let output = if protocol == "mysql" {
+            Command::new("mysqldump")
+                .args(&[
+                    "-h", &host,
+                    "-u", &user,
+                    &format!("--password={}", password),
+                    &database,
+                    "--single-transaction",
+                    "--routines",
+                    "--triggers",
+                ])
+                .output()
+                .map_err(|e| format!("Failed to execute mysqldump: {}", e))?
+        } else {
+            // Postgres (pg_dump)
+            // PGPASSWORD env var is preferred over passing password in args
+            Command::new("pg_dump")
+                .env("PGPASSWORD", &password)
+                .args(&[
+                    "-h", &host,
+                    "-U", &user,
+                    "-d", &database,
+                    "-F", "p", // Plain text format (SQL)
+                    "--clean", // Include drop commands
+                    "--if-exists",
+                ])
+                .output()
+                .map_err(|e| format!("Failed to execute pg_dump: {}", e))?
+        };
         
         if !output.status.success() {
             return Err(format!(
-                "mysqldump failed: {}",
+                "Backup tool failed: {}",
                 String::from_utf8_lossy(&output.stderr)
             ));
         }
@@ -41,12 +62,19 @@ impl BackupService {
         Ok(output_path.to_string_lossy().to_string())
     }
     
-    fn parse_db_url(url: &str) -> Result<(String, String, String, String), String> {
-        // Format: mysql://user:password@host:port/database
-        let without_protocol = url.strip_prefix("mysql://")
-            .ok_or("Invalid DB URL format")?;
+    fn parse_db_url(url: &str) -> Result<(String, String, String, String, String), String> {
+        // Format: protocol://user:password@host:port/database
+        let (protocol, rest) = if let Some(stripped) = url.strip_prefix("mysql://") {
+            ("mysql", stripped)
+        } else if let Some(stripped) = url.strip_prefix("postgres://") {
+            ("postgres", stripped)
+        } else if let Some(stripped) = url.strip_prefix("postgresql://") {
+            ("postgres", stripped)
+        } else {
+            return Err("Invalid DB URL format (must be mysql:// or postgres://)".to_string());
+        };
         
-        let (credentials, rest) = without_protocol.split_once('@')
+        let (credentials, rest) = rest.split_once('@')
             .ok_or("Missing @ separator")?;
         
         let (user, password) = credentials.split_once(':')
@@ -58,6 +86,7 @@ impl BackupService {
         let host = host_port.split(':').next().unwrap_or(host_port);
         
         Ok((
+            protocol.to_string(),
             host.to_string(),
             user.to_string(),
             password.to_string(),
@@ -111,11 +140,20 @@ mod tests {
     #[test]
     fn test_parse_db_url() {
         let url = "mysql://root:password@localhost:3306/freeradical";
-        let (host, user, pass, db) = BackupService::parse_db_url(url).unwrap();
+        let (proto, host, user, pass, db) = BackupService::parse_db_url(url).unwrap();
         
+        assert_eq!(proto, "mysql");
         assert_eq!(host, "localhost");
         assert_eq!(user, "root");
         assert_eq!(pass, "password");
+        assert_eq!(db, "freeradical");
+        
+        let url_pg = "postgres://postgres:secret@postgres:5432/freeradical";
+        let (proto, host, user, pass, db) = BackupService::parse_db_url(url_pg).unwrap();
+        assert_eq!(proto, "postgres");
+        assert_eq!(host, "postgres");
+        assert_eq!(user, "postgres");
+        assert_eq!(pass, "secret");
         assert_eq!(db, "freeradical");
     }
 }

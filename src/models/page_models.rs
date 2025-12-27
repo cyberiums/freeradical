@@ -36,6 +36,7 @@ pub struct Page {
     pub twitter_description: Option<String>,
     // Group 2: Article Info - CLEAN ✅
     pub author: Option<String>,
+    pub tenant_id: Option<i32>,
     pub article_type: Option<String>,
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,

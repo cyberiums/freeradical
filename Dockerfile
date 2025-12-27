@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
     libssl3 \
     default-libmysqlclient-dev \
     libpq5 \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

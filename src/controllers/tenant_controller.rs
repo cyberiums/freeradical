@@ -19,7 +19,7 @@ pub struct InviteMemberRequest {
 
 pub async fn create_tenant(
     req: HttpRequest,
-    pool: web::Data<db_connection::DbPool>,
+    pool: web::Data<db_connection::DatabasePool>,
     item: web::Json<NewTenantRequest>
 ) -> impl Responder {
     let user_ctx = match get_user_context(&req) {
@@ -74,7 +74,7 @@ pub async fn create_tenant(
 
 pub async fn list_my_tenants(
     req: HttpRequest,
-    pool: web::Data<db_connection::DbPool>
+    pool: web::Data<db_connection::DatabasePool>
 ) -> impl Responder {
     let user_ctx = match get_user_context(&req) {
         Some(ctx) => ctx,
@@ -100,7 +100,7 @@ pub async fn list_my_tenants(
 
 pub async fn invite_member(
     req: HttpRequest,
-    pool: web::Data<db_connection::DbPool>,
+    pool: web::Data<db_connection::DatabasePool>,
     path: web::Path<i32>,
     item: web::Json<InviteMemberRequest>
 ) -> impl Responder {

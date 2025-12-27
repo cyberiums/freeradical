@@ -17,6 +17,7 @@ pub struct Media {
     pub width: Option<i32>,
     pub height: Option<i32>,
     pub alt_text: Option<String>,
+    pub tenant_id: Option<i32>,
     pub title: Option<String>,
     pub description: Option<String>,
     pub tags: Option<Vec<Option<String>>>,

@@ -5,3 +5,4 @@ The folder of oxidly is the cloud frontend for freeradical CMS. The specs for ox
 
 Based on existing features of this system of apps, review the requirements of oxidly/specs.md and build the features.
 oxidly is only a frontend app with freeradical backend system and services for database, cms, redis, etc.
+Avoid using multi_replace_file_content.

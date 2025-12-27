@@ -823,6 +823,7 @@ diesel::joinable!(page_translations -> languages (language_id));
 // diesel::joinable!(product_variants -> products (product_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
 diesel::joinable!(webhook_logs -> webhooks (webhook_id));
+diesel::joinable!(tenant_members -> tenants (tenant_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,

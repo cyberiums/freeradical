@@ -20,7 +20,7 @@ pub struct Tenant {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[derive(Debug, Insertable, AsChangeset, Clone, Serialize, Deserialize)]
 #[diesel(table_name = tenants)]
 pub struct NewTenant {
     pub uuid: String,
