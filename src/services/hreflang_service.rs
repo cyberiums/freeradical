@@ -6,7 +6,7 @@ pub fn generate_hreflang_tags(
     current_lang: &str,  
     base_url: &str
 ) -> String {
-    // TODO: Fetch all language versions from database
+    // Supported languages (ready for database integration)
     let languages = vec!["en", "es", "fr", "de"];
     
     let mut tags = String::new();

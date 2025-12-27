@@ -1,4 +1,4 @@
-use actix_web::{web, HttpResponse};
+use actix_web::{web, HttpResponse, HttpRequest};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -85,12 +85,16 @@ pub async fn get_provider(
     Ok(HttpResponse::Ok().json(provider))
 }
 
-/// Create new AI provider
 pub async fn create_provider(
+    req: HttpRequest,
     pool: web::Data<DatabasePool>,
     payload: web::Json<CreateProviderRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let user_id = None; // TODO: Get from auth context
+    use crate::middleware::auth_middleware::get_user_context;
+    
+    let user_id = get_user_context(&req)
+        .map(|ctx| Some(ctx.user_id))
+        .unwrap_or(None);
     
     let api_key_encrypted = encrypt_api_key(&payload.api_key)?;
     
@@ -210,8 +214,11 @@ pub async fn test_provider(
 }
 
 fn encrypt_api_key(api_key: &str) -> Result<Vec<u8>, CustomHttpError> {
-    // TODO: Implement proper encryption
-    Ok(api_key.as_bytes().to_vec())
+    use crate::services::encryption_service;
+    
+    encryption_service::encrypt(api_key)
+        .map(|encrypted| encrypted.into_bytes())
+        .map_err(|e| CustomHttpError::InternalServerError(format!("Encryption failed: {}", e)))
 }
 
 #[allow(dead_code)]

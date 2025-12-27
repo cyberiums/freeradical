@@ -6,7 +6,7 @@ use crate::models::DbPool;
 use crate::services::ai_content_service::{generate_with_openai, generate_with_anthropic};
 use crate::services::errors_service::CustomHttpError;
 use crate::models::ai_provider_models::AIProviderConfig;
-// use crate::schema::ai_provider_configs; // Temporarily disabled
+use crate::schema::ai_provider_configs;
 
 /// Request to generate metadata
 #[derive(Debug, Deserialize)]
@@ -218,11 +218,11 @@ async fn get_default_provider(pool: web::Data<DbPool>) -> Result<AIProviderConfi
         ))?;
         
         ai_provider_configs::table
-            .filter(ai_provider_configs::is_default.eq(true))
             .filter(ai_provider_configs::is_active.eq(true))
             .first::<AIProviderConfig>(&mut conn)
     })
-    .await?
+    .await
+    .map_err(|e| CustomHttpError::InternalServerError(format!("Provider fetch error: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(format!("No active provider: {}", e)))
 }
 

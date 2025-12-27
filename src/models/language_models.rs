@@ -8,11 +8,11 @@ pub struct Language {
     pub code: String,
     pub name: String,
     pub native_name: Option<String>,
-    pub is_default: bool,
-    pub is_rtl: bool,
-    pub enabled: bool,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub is_default: Option<bool>,
+    pub is_rtl: Option<bool>,
+    pub enabled: Option<bool>,
+    pub created_at: Option<chrono::NaiveDateTime>,
+    pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
 #[derive(Debug, Insertable, Deserialize)]
