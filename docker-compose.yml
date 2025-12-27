@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres:15-alpine
+    image: ankane/pgvector:latest  # Official pgvector image (PostgreSQL 17 + pgvector)
     container_name: freeradical_postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-freeradical}

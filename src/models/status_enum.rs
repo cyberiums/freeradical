@@ -7,8 +7,8 @@ use diesel::expression::AsExpression;
 use serde::{Deserialize, Serialize};
 use std::io::Write;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, AsExpression)]
-#[diesel(sql_type = crate::schema::sql_types::PagesStatusEnum)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, AsExpression, diesel::query_builder::QueryId)]
+#[diesel(sql_type = crate::schema::sql_types::PagesStatus)]
 #[serde(rename_all = "lowercase")]
 pub enum PageStatus {
     Draft,
@@ -30,7 +30,7 @@ impl PageStatus {
 
 
 // PostgreSQL implementations
-impl FromSql<crate::schema::sql_types::PagesStatusEnum, Pg> for PageStatus {
+impl FromSql<crate::schema::sql_types::PagesStatus, Pg> for PageStatus {
     fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
         let text = <String as FromSql<Text, Pg>>::from_sql(bytes)?;
         
@@ -44,7 +44,7 @@ impl FromSql<crate::schema::sql_types::PagesStatusEnum, Pg> for PageStatus {
     }
 }
 
-impl ToSql<crate::schema::sql_types::PagesStatusEnum, Pg> for PageStatus {
+impl ToSql<crate::schema::sql_types::PagesStatus, Pg> for PageStatus {
     fn to_sql(&self, out: &mut Output<Pg>) -> serialize::Result {
         <str as ToSql<Text, Pg>>::to_sql(self.as_str(), out)
     }

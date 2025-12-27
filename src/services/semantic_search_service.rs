@@ -51,7 +51,7 @@ pub struct SearchResponse {
 pub struct ContentEmbedding {
     pub id: Option<i64>,
     pub page_id: Option<i32>,
-    pub embedding_vector: Option<Vec<Option<f64>>>,
+    pub embedding_vector: Option<String>,  // Stored as JSON string for now
     pub model_name: Option<String>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
@@ -70,17 +70,31 @@ pub async fn create_embedding(
     
     // Note: Removed content preview since column doesn't exist
     
+    // Generate embedding vector
+    let embedding_values = generate_embedding_vector(&content).await?;
+    let model_name = "text-embedding-ada-002".to_string(); // Assuming this model for now
+    
     let id = web::block(move || -> Result<i64, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
             Box::new("Connection error".to_string())
         ))?;
         
-        // Placeholder: actual implementation needs vector conversion
-        // diesel::insert_into(content_embeddings::table)
-        //     .values(...)
-        //     .execute(&mut conn)?;
+        // Store embedding in database
+        // Note: For now, we store as TEXT (JSON array) until pgvector Rust support is fully integrated
+        let embedding_json = serde_json::to_string(&embedding_values)
+            .map_err(|e| diesel::result::Error::QueryBuilderError(format!("Failed to serialize embedding: {}", e).into()))?;
         
+        diesel::insert_into(content_embeddings::table)
+            .values((
+                content_embeddings::page_id.eq(page_id as i32), // Assuming page_id can be i32
+                content_embeddings::embedding_vector.eq::<Option<String>>(Some(embedding_json)),
+                content_embeddings::model_name.eq(&model_name),
+            ))
+            .execute(&mut conn)?;
+        
+        // For now, we return a placeholder ID or the number of affected rows.
+        // If you need the actual ID, you'd use .get_result() with a struct that has the ID.
         Ok(1) // Placeholder ID
     })
     .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?

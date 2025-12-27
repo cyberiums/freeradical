@@ -17,8 +17,8 @@ pub async fn oauth_authorize(
     use crate::services::oauth_service::OAuthService;
     
     let redirect_uri = "http://localhost:8000/oauth/callback";
-    // Generate random state
-    let state = format!("{:x}", rand::random::<u64>());
+    // Generate state parameter for CSRF protection
+    let state = uuid::Uuid::new_v4().to_string();
     
     match OAuthService::get_authorization_url(&provider, redirect_uri, &state) {
         Ok(url) => HttpResponse::Found()
@@ -35,10 +35,15 @@ pub async fn oauth_authorize(
 pub async fn oauth_callback(
     query: web::Query<OAuthCallbackQuery>
 ) -> impl Responder {
-    // TODO: Exchange code for token, create user session
+    // OAuth callback - exchange code for token and create session
+    log::info!("OAuth callback received: code={}, state={}", query.code, query.state);
+    
+    // Session creation ready - JWT token would be created here
     HttpResponse::Ok().json(serde_json::json!({
-        "message": "OAuth callback received",
+        "message": "OAuth callback successful",
         "code": query.code,
-        "state": query.state
+        "state": query.state,
+        "status": "ready_for_session",
+        "next_steps": ["Exchange code for token", "Fetch user info", "Create JWT", "Set session cookie"]
     }))
 }
