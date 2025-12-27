@@ -1,0 +1,2 @@
+Based on existing features of this system of apps, review the requirements of oxidly/specs.md and build the features.
+oxidly is only a frontend app with backend system and services of freeradical database, cms, redis, etc.
