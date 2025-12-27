@@ -1,6 +1,6 @@
 {
     "title": "FreeRadical CMS & Oxidly Cloud Platform Architecture",
-    "summary": "Comprehensive overview of FreeRadical CMS v1.7.0 (high-performance Rust backend) and the Oxidly.com Cloud Platform. Includes backend module summaries (AI/MCP, SEO, E-commerce, Content Management), performance benchmarks, and detailed requirements for the hybrid frontend architecture. Covers pluggable payment architecture, project structure, site and content management implementation details (including full CRUD for pages/posts, relational Module mapping, Editor Integration, Theme Management, completed User Profile Management, Store Setup Wizard, completed Product Management UI, completed Order Management UI, basic Inventory Tracking, completed Payment & Shipping Configuration, completed AI features: Content Generation, Alt Text Analysis, and SEO Metadata Optimization, completed Analytics Dashboard Integration, a Detailed SEO Audit Tool, a system for Automated Backups and Scheduled Publishing, and detailed CRM and Campaign Management system architecture), and current implementation progress tracked against the v2.0.0 roadmap.",
+    "summary": "Comprehensive overview of FreeRadical CMS v1.7.0 (high-performance Rust backend) and the Oxidly.com Cloud Platform. Includes backend module summaries (AI/MCP, SEO, E-commerce, Content Management), performance benchmarks, and detailed requirements for the hybrid frontend architecture. Covers pluggable payment architecture, project structure, site and content management implementation details (including full CRUD for pages/posts, relational Module mapping, Editor Integration, Theme Management, completed User Profile Management, Store Setup Wizard, completed Product Management UI, completed Order Management UI, basic Inventory Tracking, completed Payment & Shipping Configuration, completed AI features: Content Generation, Alt Text Analysis, SEO Metadata Optimization, and the AI Store Architect interface, completed Analytics Dashboard Integration, a Detailed SEO Audit Tool, a system for Automated Backups and Scheduled Publishing, detailed CRM, Campaign Management, and mocked Billing & Subscription system architecture, Docker port 5000 configuration, and the Root Context build strategy for Docker), and current implementation progress tracked against the v2.0.0 and v2.1.0 roadmaps.",
     "references": [
         {
             "type": "file",
@@ -93,6 +93,27 @@
         {
             "type": "conversation_id",
             "value": "bot-5aa7f29b-4e54-464c-bd95-3e7c45b4db99"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-78d89ccf-733b-40ba-8da8-3c1bc1eda9ee"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-f3bf85ad-1229-4656-a905-1e665e0cdf5f"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-f3f1e941-cd4c-474c-8f4b-18a7a9779df3"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-5b12ce52-b399-4665-b3b2-26a85eb7e207"
+        },
+        {
+            "type": "conversation_id",
+            "value": "bot-0d5cf57e-3243-4e4b-9725-d71680199e19"
         }
     ]
 }
+```

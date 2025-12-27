@@ -43,12 +43,21 @@ The scheduler logic is centralized in the Rust backend to ensure consistency acr
 The platform is designed for containerized reliability.
 
 ### Docker Configuration
-- **Dockerfile**: Implements a multi-stage build.
+- **Dockerfile (Backend)**: Implements a multi-stage build.
     - **Builder Stage**: Uses `rustlang/rust:nightly` with Python dependencies for `pyo3` support.
     - **Runner Stage**: Uses `debian:sid-slim` for a minimal production footprint.
 - **Docker Compose**: Orchestrates the multi-service environment:
     - `postgres`: Database (with `pgvector`).
     - `redis`: Caching layer.
-    - `cms`: FreeRadical Rust backend.
-    - `oxidly`: Node.js frontend wrapper. 
-    - `admin`: Static administrative interface.
+    - `cms`: FreeRadical Rust backend (Port 8000).
+    - `oxidly`: Node.js frontend (Port 5000). 
+    - `admin`: Static administrative interface (Port 3000).
+
+### Root Context Build Strategy
+To ensure build reliability in the monorepo structure, the `oxidly` service uses a **Root Context Strategy**:
+- **Problem**: Individual service directories can sometimes fail to resolve the Dockerfile or local dependencies in specific environments.
+- **Solution**: 
+    1. A specialized `Dockerfile.root` is placed in the service directory (e.g., `oxidly/Dockerfile.root`).
+    2. The `docker-compose.yml` is configured with `context: .` (project root) and `dockerfile: oxidly/Dockerfile.root`.
+    3. The Dockerfile uses project-relative paths (e.g., `COPY oxidly/package*.json ./`) for its operations.
+- **Port 5000 Migration**: The `oxidly` service was migrated to **Port 5000** to differentiate it from other services and follow standard cloud platform conventions.

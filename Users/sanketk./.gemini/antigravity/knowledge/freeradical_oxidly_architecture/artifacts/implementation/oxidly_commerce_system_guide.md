@@ -20,6 +20,9 @@ Complete lifecycle management for products with integer-based price handling.
     - **ID Management**: Uses integer IDs for updates/deletes, but requires a UUID (generated client-side via `crypto.randomUUID()`) for creation.
     - **Price Handling**: Prices are stored as `price_cents` (integer). The UI converts these to/from decimal units (e.g., `value * 100`).
 - **Views**: Responsive table for listing and a unified form for Creation/Editing.
+- **AI Enhancement**: 
+    - **Description Generator**: Integrated "Generate with AI" button on the product form.
+    - **Logic**: Uses the product name as a prompt to call the AI service, fetching a professional sales description via the `/ai/generate` endpoint.
 
 ## 3. Order Management
 Merchant interface for tracking sales and managing fulfillment.

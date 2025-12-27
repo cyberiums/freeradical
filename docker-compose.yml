@@ -62,8 +62,8 @@ services:
 
   oxidly:
     build:
-      context: ./oxidly
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: oxidly/Dockerfile.root
     container_name: freeradical_oxidly
     depends_on:
       - cms
