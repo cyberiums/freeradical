@@ -29,6 +29,47 @@ pub mod ai_response_handler; // Response processing & formatting
 pub mod workflow_orchestrator; // Multi-step workflow orchestration
 pub mod content_templates; // Pre-built content templates
 pub mod content_scheduler; // Task queue & scheduling
+pub mod error_recovery; // Error handling & recovery
+
+// v1.7.0 Phase 2: Advanced SEO/AEO/GEO
+pub mod keyword_research; // Keyword research & analysis
+pub mod aeo_service; // Answer Engine Optimization
+pub mod geo_service; // Generative Engine Optimization
+pub mod seo_meta_generator; // SEO metadata generation
+pub mod schema_markup; // Schema.org structured data
+pub mod content_quality; // Content quality analysis
+pub mod link_builder; // Link building & analysis
+pub mod seo_auditor; // Comprehensive SEO audit
+pub mod competitor_analyzer; // Competitor SEO analysis
+pub mod content_optimizer; // AI content optimization
+pub mod performance_monitor; // Performance & Core Web Vitals
+pub mod content_calendar; // Content planning & scheduling
+pub mod rank_tracker; // Keyword ranking monitor
+pub mod local_seo; // Local SEO & GMB optimization
+pub mod voice_search; // Voice search optimization
+
+// v1.7.0 Phase 3: E-commerce Pro
+pub mod inventory_analytics; // Inventory analytics & insights
+pub mod product_reviews; // Product reviews & ratings
+pub mod cart_abandonment; // Cart abandonment tracking
+pub mod wishlist; // Wishlist system
+pub mod product_bundles; // Product bundling
+pub mod conversion_analytics; // Conversion funnel analytics
+pub mod product_import_export; // Bulk import/export
+pub mod order_management; // Order processing
+pub mod payment_processor; // Payment handling
+pub mod shipping_manager; // Shipping & fulfillment
+pub mod customer_support; // Support tickets
+
+// v1.7.0 Phase 4: Performance & Benchmarking
+pub mod performance_benchmark; // Performance benchmarking
+pub mod load_tester; // Load testing
+pub mod system_profiler; // CPU/Memory profiling
+pub mod metrics_collector; // Prometheus metrics
+pub mod performance_optimizer; // Query optimization
+pub mod cache_manager; // Caching layer
+pub mod monitoring_setup; // Monitoring configuration
+pub mod documentation_generator; // Doc generation
 
 pub mod monitoring_service;
 pub mod field_validation_service;
