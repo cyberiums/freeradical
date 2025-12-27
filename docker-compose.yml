@@ -61,7 +61,9 @@ services:
     restart: unless-stopped
 
   oxidly:
-    build: ./oxidly
+    build:
+      context: ./oxidly
+      dockerfile: Dockerfile
     container_name: freeradical_oxidly
     depends_on:
       - cms
