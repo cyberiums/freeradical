@@ -2,8 +2,51 @@
 
 pub mod sql_types {
     #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "pages_status"))]
+    pub struct PagesStatus;
+
+    #[derive(diesel::sql_types::SqlType)]
     #[diesel(postgres_type(name = "tsvector", schema = "pg_catalog"))]
     pub struct Tsvector;
+
+    #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "vector"))]
+    pub struct Vector;
+}
+
+diesel::table! {
+    ai_generated_content (id) {
+        id -> Int8,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        #[max_length = 50]
+        content_type -> Varchar,
+        prompt_used -> Nullable<Text>,
+        generated_text -> Text,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        #[max_length = 50]
+        provider_type -> Nullable<Varchar>,
+        tokens_used -> Nullable<Int4>,
+        quality_score -> Nullable<Numeric>,
+        was_accepted -> Nullable<Bool>,
+        generated_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    ai_key_rotation_history (id) {
+        id -> Int4,
+        provider_key_id -> Int4,
+        rotated_at -> Timestamp,
+        #[max_length = 255]
+        reason -> Nullable<Varchar>,
+        rotated_by -> Nullable<Int4>,
+        #[max_length = 64]
+        old_key_hash -> Nullable<Varchar>,
+    }
 }
 
 diesel::table! {
@@ -20,6 +63,25 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    ai_provider_keys (id) {
+        id -> Int4,
+        #[max_length = 50]
+        provider_name -> Varchar,
+        #[max_length = 100]
+        key_name -> Varchar,
+        encrypted_key -> Text,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        rotated_at -> Nullable<Timestamp>,
+        last_used_at -> Nullable<Timestamp>,
+        request_count -> Int4,
+        token_count -> Int8,
+        notes -> Nullable<Text>,
     }
 }
 
@@ -90,10 +152,13 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::Vector;
+
     content_embeddings (id) {
         id -> Int8,
         page_id -> Nullable<Int4>,
-        embedding_vector -> Nullable<Array<Nullable<Float8>>>,
+        embedding_vector -> Nullable<Vector>,
         #[max_length = 100]
         model_name -> Nullable<Varchar>,
         created_at -> Timestamp,
@@ -486,6 +551,9 @@ diesel::table! {
 }
 
 diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::PagesStatus;
+
     pages (uuid) {
         #[max_length = 255]
         uuid -> Varchar,
@@ -526,8 +594,7 @@ diesel::table! {
         reading_time -> Nullable<Int4>,
         current_revision -> Nullable<Int4>,
         last_modified_by -> Nullable<Int4>,
-        #[max_length = 9]
-        status -> Nullable<Varchar>,
+        status -> Nullable<PagesStatus>,
         publish_at -> Nullable<Timestamp>,
         unpublish_at -> Nullable<Timestamp>,
     }
@@ -713,16 +780,20 @@ diesel::table! {
     }
 }
 
+diesel::joinable!(ai_key_rotation_history -> ai_provider_keys (provider_key_id));
 diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
 diesel::joinable!(crm_interactions -> crm_customers (customer_id));
-// diesel::joinable!(crm_interactions -> orders (order_id)); // Type mismatch: order_id is INT4 but orders.id is INT8
+// TEMPORARILY DISABLED - optional FK joinable issue
+// diesel::joinable!(crm_interactions -> orders (order_id));
 diesel::joinable!(crm_notes -> crm_customers (customer_id));
 diesel::joinable!(crm_segment_members -> crm_customers (customer_id));
 diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
 diesel::joinable!(crm_tasks -> crm_customers (customer_id));
-// diesel::joinable!(inventory_audit_log -> orders (order_id)); // Type mismatch: order_id is INT4 but orders.id is INT8
+// TEMPORARILY DISABLED - optional FK joinable issue
+// diesel::joinable!(inventory_audit_log -> orders (order_id));
 diesel::joinable!(inventory_audit_log -> product_variants (variant_id));
-// diesel::joinable!(inventory_audit_log -> products (product_id)); // Type mismatch: product_id is INT4 but products.id is INT8
+// TEMPORARILY DISABLED - optional FK joinable issue
+// diesel::joinable!(inventory_audit_log -> products (product_id));
 diesel::joinable!(module_category -> pages (page_uuid));
 diesel::joinable!(module_translations -> languages (language_id));
 diesel::joinable!(modules -> module_category (category_uuid));
@@ -730,12 +801,16 @@ diesel::joinable!(modules -> pages (page_uuid));
 diesel::joinable!(order_items -> orders (order_id));
 diesel::joinable!(order_items -> products (product_id));
 diesel::joinable!(page_translations -> languages (language_id));
-// diesel::joinable!(product_variants -> products (product_id)); // Type mismatch: product_id is INT4 but products.id is INT8
+// TEMPORARILY DISABLED - optional FK joinable issue
+// diesel::joinable!(product_variants -> products (product_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
 diesel::joinable!(webhook_logs -> webhooks (webhook_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
+    ai_generated_content,
+    ai_key_rotation_history,
     ai_provider_configs,
+    ai_provider_keys,
     ai_usage_log,
     analytics_events,
     analytics_summary,

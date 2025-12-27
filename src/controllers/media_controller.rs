@@ -69,8 +69,8 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
         .execute(&mut conn)
     {
         Ok(_) => {
-            // Try to delete file from filesystem (storage_path is not Option)
-            let _ = fs::remove_file(&media_item.storage_path); // Ignore error if file doesn't exist
+            // Try to delete file from filesystem
+            let _ = fs::remove_file(&media_item.file_path); // Ignore error if file doesn't exist
             HttpResponse::Ok().json("Media deleted")
         }
         Err(_) => HttpResponse::InternalServerError().json("Failed to delete media"),
@@ -85,7 +85,7 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
 /// - alt_text: Alt text for accessibility (optional)
 /// - caption: Image caption (optional)
 /// - folder: Folder/category (optional)
-pub async fn upload_media(mut payload: Multipart) -> impl Responder {
+pub async fn upload_media(req: actix_web::HttpRequest, mut payload: Multipart) -> impl Responder {
     let mut filename = String::new();
     let mut file_data: Vec<u8> = Vec::new();
     let mut alt_text = None;
@@ -254,16 +254,18 @@ pub async fn upload_media(mut payload: Multipart) -> impl Responder {
         uuid: new_uuid.clone(),
         filename: new_filename.clone(),
         original_filename: filename.clone(),
+        file_path: storage_path.clone(),
         mime_type: mime_type.clone(),
         file_size: optimized_data.len() as i64,  // Size of optimized file
         width: opt_width,
         height: opt_height,
-        folder,
-        storage_path: storage_path.clone(),
-        cdn_url: None,
-        upload_user_id: None,  // TODO: Get from auth Claims
         alt_text,
-        caption,
+        title: None,
+        description: None,
+        tags: None,
+        uploaded_by: crate::middleware::auth_middleware::get_user_context(&req)
+            .map(|ctx| Some(ctx.user_id))
+            .unwrap_or(None),
     };
     
     let mut conn = database_service::establish_connection();

@@ -5,8 +5,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
 
-use crate::schema::product_variants;
-// use crate::schema::inventory_audit_log; // TODO: Table missing from current schema, product_variants};
+use crate::schema::{product_variants, inventory_audit_log};
 
 /// Product variant for SKU-level inventory management
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable)]
@@ -59,8 +58,7 @@ impl Default for NewProductVariant {
     }
 }
 
-// TODO: Re-enable when inventory_audit_log table is added to schema
-/*
+
 /// Inventory audit log entry
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable)]
 #[diesel(table_name = inventory_audit_log)]
@@ -71,9 +69,9 @@ pub struct InventoryAuditLog {
     pub user_id: Option<i32>,
     pub order_id: Option<i32>,
     pub change_type: String,
-    pub quantity_before: i32,
-    pub quantity_after: i32,
-    pub quantity_change: i32,
+    pub quantity_before: Option<i32>,
+    pub quantity_after: Option<i32>,
+    pub quantity_change: Option<i32>,
     pub reason: Option<String>,
     pub created_at: Option<NaiveDateTime>,
 }
@@ -114,4 +112,3 @@ impl NewInventoryAuditLog {
         }
     }
 }
-*/

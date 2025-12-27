@@ -16,8 +16,8 @@ pub struct PageTranslation {
     pub og_description: Option<String>,
     pub twitter_title: Option<String>,
     pub twitter_description: Option<String>,
-    pub created_at: chrono::NaiveDateTime,
-    pub updated_at: chrono::NaiveDateTime,
+    pub created_at: Option<chrono::NaiveDateTime>,
+    pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
 #[derive(Debug, Insertable, Deserialize)]

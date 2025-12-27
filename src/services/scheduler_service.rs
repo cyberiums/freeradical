@@ -37,10 +37,10 @@ async fn process_scheduled_pages() -> Result<(), diesel::result::Error> {
     // TODO: Re-enable when PageStatus enum is added back
     let published_count = diesel::update(
         pages::table
-            .filter(pages::status.eq("scheduled"))
+            .filter(pages::status.eq(Some(crate::models::status_enum::PageStatus::Scheduled)))
             .filter(pages::publish_at.le(now).and(pages::publish_at.is_not_null()))
     )
-    .set(pages::status.eq("published"))
+    .set(pages::status.eq(Some(crate::models::status_enum::PageStatus::Published)))
     .execute(&mut conn)?;
     
     if published_count > 0 {
@@ -50,10 +50,10 @@ async fn process_scheduled_pages() -> Result<(), diesel::result::Error> {
     // Auto-unpublish: published → archived
     let archived_count = diesel::update(
         pages::table
-            .filter(pages::status.eq("published"))
+            .filter(pages::status.eq(Some(crate::models::status_enum::PageStatus::Published)))
             .filter(pages::unpublish_at.le(now).and(pages::unpublish_at.is_not_null()))
     )
-    .set(pages::status.eq("archived"))
+    .set(pages::status.eq(Some(crate::models::status_enum::PageStatus::Archived)))
     .execute(&mut conn)?;
     
     if archived_count > 0 {

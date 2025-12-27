@@ -1,20 +1,20 @@
 pub mod config_models;
 pub mod module_models;
 pub mod page_models;
-// Temporarily disabled - PagesStatus Enum missing from schema
-// TODO: Re-enable when schema includes sql_types::PagesStatusEnum
-/*
-pub mod status_enum;
-*/
+pub mod status_enum;  // Re-enabled with PagesStatus in schema
 pub mod user_models;
 pub mod commerce_models;
-// pub mod media_models; // Temporarily disabled - missing media table
+pub mod media_models;
 pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
 pub mod inventory_models;  // Inventory management models
 pub mod crm_models; // CRM module
-pub mod ai_provider_models; // Temporarily disabled - missing media table
+pub mod language_models; // Language support
+pub mod translation_models; // Translation support
+pub mod ai_provider_models; // AI provider configs
+pub mod ai_generated_content_models; // AI generated content tracking
+pub mod analytics_models; // Analytics event tracking
 pub mod db_connection;  // Database abstraction layer
 pub mod db_macros;      // Helper macros for database operations
 

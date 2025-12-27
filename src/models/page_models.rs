@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use super::module_models::Module;
-// use super::status_enum::PageStatus;
+use super::status_enum::PageStatus;  // Re-enabled
 use super::Model;
 use super::PooledDatabaseConnection;
 use crate::models::module_models::CategoryDTO;
@@ -43,7 +43,7 @@ pub struct Page {
     // Iteration 4 fields - MUST match schema.rs exact order!
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
-    pub status: Option<String>,
+    pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
 }
@@ -75,7 +75,7 @@ pub struct MutPage {
     // Publishing
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
-    pub status: Option<String>,
+    pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
 }
@@ -104,7 +104,7 @@ pub struct PageDTO {
     pub reading_time: Option<i32>,
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
-    pub status: Option<String>,
+    pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
 }
@@ -130,7 +130,7 @@ pub struct PageModuleDTO {
     pub twitter_description: Option<String>,
     pub current_revision: Option<i32>,
     pub last_modified_by: Option<i32>,
-    pub status: Option<String>,
+    pub status: Option<PageStatus>,
 }
 
 impl From<Page> for PageDTO {
