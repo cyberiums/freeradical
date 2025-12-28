@@ -14,9 +14,8 @@ pub mod ai_provider_service; // Provider CRUD operations
 pub mod ai_content_service; // Content generation
 pub mod ai_authorization_service; // Budget and permission checks
 pub mod storage_service; // Multi-region storage (S3/Local)
-// TEMPORARILY DISABLED - Vector type issues need fixing
-// pub mod semantic_search_service; // Vector search with content_embeddings
-// pub mod recommendation_service; // Content recommendations
+pub mod semantic_search_service; // Vector search with content_embeddings
+pub mod recommendation_service; // Content recommendations
 
 // v1.7.0: MCP/AI Automation Foundation
 pub mod mcp_client; // Model Context Protocol client
@@ -92,4 +91,5 @@ pub mod language_service;
 pub mod analytics_service_v2;
 pub mod oauth_service;
 pub mod hreflang_service;
+pub mod audit_service;
 pub mod crm_service; // CRM modules below require migrations to be run first

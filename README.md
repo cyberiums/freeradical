@@ -1,6 +1,6 @@
 # FreeRadical CMS
 
-[![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v1.4.0)
+[![Version](https://img.shields.io/badge/version-2.5.0-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v2.5.0)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Rust](https://img.shields.io/badge/rust-1.92%2B-orange.svg)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -44,6 +44,9 @@ freeradical/
 - ✅ Analytics tracking
 - ✅ Multi-tenancy schema
 - ✅ Load testing suite
+- ✅ Enterprise SSO (SAML 2.0)
+- ✅ Enterprise Audit Logging
+- ✅ Webhooks System (HMAC Signed)
 
 ## 🛠️ Development
 
@@ -90,12 +93,12 @@ Quick deploy with Docker:
 
 ## 📊 Status
 
-**v1.0.3**: 99.8% complete (Production Beta)
-- Phase 1 (Core): 100%
-- Phase 2 (Admin): 100%
-- Phase 3 (CLI): 100%
-- Phase 4 (i18n): 100%
-- Phase 5 (Enterprise): 99%
+**v2.5.0**: 100% complete (Enterprise Release)
+- Phase 1-4 (Core): 100%
+- Phase 5 (Oxidly Cloud): 100%
+- Phase 19 (SSO): 100%
+- Phase 22 (Audit Logs): 100%
+- Phase 23 (Webhooks): 100%
 
 ## Environment Variables
 

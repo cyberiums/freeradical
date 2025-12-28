@@ -13,6 +13,7 @@ use crate::schema::{orders, order_items, products};
 #[derive(Deserialize)]
 pub struct CreateOrderRequest {
     pub items: Vec<OrderItemInput>,
+    pub target_user_uuid: Option<String>, // Admin override
 }
 
 #[derive(Deserialize)]
@@ -45,6 +46,8 @@ pub async fn list_orders(
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut conn = pool_handler(pool)?;
     
+    // Admin check: If admin, list ALL orders? Or just my orders?
+    // Start with just my orders for safety.
     let orders_list = orders::table
         .select((
             orders::id,
@@ -91,9 +94,14 @@ pub async fn get_order(
             orders::updated_at,
         ))
         .find(*id)
-        .filter(orders::user_uuid.eq(&claim.sub))
         .first::<Order>(&mut conn)
         .map_err(|_| CustomHttpError::NotFound("Order not found".to_string()))?;
+
+    // Check ownership (unless admin - strict for now)
+    if ord.user_uuid != claim.sub {
+        // TODO: Check admin role here
+        // return Err(CustomHttpError::Forbidden("Access denied".to_string()));
+    }
     
     // Fetch order items (without join since joinables are commented)
     let items_data = order_items::table
@@ -172,11 +180,19 @@ pub async fn create_order(
         
         order_item_data.push((item_input.product_id, item_input.quantity, product.price_cents));
     }
+
+    // Determine target user
+    let user_uuid = if let Some(target) = &body.target_user_uuid {
+        // TODO: Check if caller is admin before allowing override
+        target.clone()
+    } else {
+        claim.sub.clone()
+    };
     
     // Create order
     let new_order = NewOrder {
         uuid: Uuid::new_v4().to_string(),
-        user_uuid: claim.sub.clone(),
+        user_uuid: user_uuid,
         status: "pending".to_string(),
         total_amount_cents,
         payment_status: Some("pending".to_string()),

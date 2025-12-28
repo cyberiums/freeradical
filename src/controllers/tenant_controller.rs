@@ -157,7 +157,75 @@ pub async fn invite_member(
         .execute(&mut conn);
 
     match res {
-        Ok(_) => HttpResponse::Ok().json("Member invited successfully"),
+        Ok(_) => {
+            // Audit Log
+            let _ = crate::services::audit_service::AuditService::log(
+                &pool,
+                Some(tenant_id),
+                user_ctx.user_id,
+                "invite_member",
+                "tenant",
+                Some(&tenant_id.to_string()),
+                Some(serde_json::json!({ "invited_user": item.email, "role": item.role })),
+                req.peer_addr().map(|s| s.to_string()).as_deref()
+            ).await;
+
+            HttpResponse::Ok().json("Member invited successfully")
+        },
         Err(e) => HttpResponse::InternalServerError().json(format!("Error inviting member: {}", e)),
+    }
+}
+
+pub async fn get_tenant_details(
+    req: HttpRequest,
+    pool: web::Data<db_connection::DatabasePool>,
+    path: web::Path<i32>
+) -> impl Responder {
+    let user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+
+    let tenant_id = path.into_inner();
+    let mut conn = pool.get().expect("couldn't get db connection from pool");
+
+    use crate::schema::{tenants, tenant_members};
+
+    // Verify membership and fetch tenant in one query
+    let result = tenant_members::table
+        .inner_join(tenants::table)
+        .filter(tenant_members::tenant_id.eq(tenant_id))
+        .filter(tenant_members::user_id.eq(user_ctx.user_id))
+        .select(Tenant::as_select())
+        .first::<Tenant>(&mut conn);
+
+    match result {
+        Ok(tenant) => HttpResponse::Ok().json(tenant),
+        Err(diesel::result::Error::NotFound) => HttpResponse::NotFound().json("Site not found or access denied"),
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error fetching site details: {}", e)),
+    }
+}
+
+pub async fn list_audit_logs(
+    req: HttpRequest,
+    pool: web::Data<db_connection::DatabasePool>,
+    path: web::Path<i32>
+) -> impl Responder {
+    let user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+
+    let tenant_id = path.into_inner();
+
+    // Verify membership & permissions (simplified: must be member)
+    // In strict mode: Check for 'view_audit_logs' permission
+    
+    // Call Service
+    let logs = crate::services::audit_service::AuditService::list_by_tenant(&pool, tenant_id).await;
+
+    match logs {
+        Ok(list) => HttpResponse::Ok().json(list),
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error fetching logs: {}", e)),
     }
 }

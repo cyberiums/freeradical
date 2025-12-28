@@ -157,8 +157,9 @@ diesel::table! {
 
     content_embeddings (id) {
         id -> Int8,
-        page_id -> Nullable<Int4>,
-        embedding_vector -> Nullable<Vector>,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        embedding_vector -> Nullable<Text>,
         #[max_length = 100]
         model_name -> Nullable<Varchar>,
         created_at -> Timestamp,
@@ -719,6 +720,7 @@ diesel::table! {
     }
 }
 
+
 diesel::table! {
     tenant_members (id) {
         id -> Int4,
@@ -730,6 +732,21 @@ diesel::table! {
         status -> Varchar,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    tenant_sso_configs (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        #[max_length = 255]
+        idp_entity_id -> Varchar,
+        #[max_length = 500]
+        idp_sso_url -> Varchar,
+        x509_certificate -> Text,
+        is_enabled -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -779,7 +796,7 @@ diesel::table! {
 diesel::table! {
     webhook_logs (id) {
         id -> Int8,
-        webhook_id -> Int4,
+        webhook_id -> Uuid,
         #[max_length = 100]
         event_type -> Varchar,
         payload -> Nullable<Json>,
@@ -790,17 +807,77 @@ diesel::table! {
 }
 
 diesel::table! {
-    webhooks (id) {
+    audit_logs (id) {
         id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        user_id -> Int4,
+        #[max_length = 50]
+        action -> Varchar,
+        #[max_length = 50]
+        resource_type -> Varchar,
+        #[max_length = 255]
+        resource_id -> Nullable<Varchar>,
+        details -> Nullable<Jsonb>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    tenant_webhooks (id) {
+        id -> Uuid,
+        tenant_id -> Int4,
         #[max_length = 500]
         url -> Varchar,
-        events -> Json,
+        events -> Jsonb,
         #[max_length = 255]
-        secret -> Nullable<Varchar>,
-        active -> Nullable<Bool>,
+        secret -> Varchar,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    themes (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        #[max_length = 500]
+        thumbnail_url -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        is_default -> Nullable<Bool>,
+        tenant_id -> Nullable<Int4>,
         created_at -> Nullable<Timestamp>,
-        last_triggered_at -> Nullable<Timestamp>,
-        failure_count -> Nullable<Int4>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    marketplace_plugins (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        #[max_length = 500]
+        icon_url -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        developer_id -> Nullable<Int4>,
+        price_cents -> Nullable<Int4>,
+        downloads_count -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
     }
 }
 
@@ -827,8 +904,11 @@ diesel::joinable!(order_items -> products (product_id));
 diesel::joinable!(page_translations -> languages (language_id));
 // TEMPORARILY DISABLED - optional FK joinable issue
 // diesel::joinable!(product_variants -> products (product_id));
+diesel::joinable!(tenant_sso_configs -> tenants (tenant_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
-diesel::joinable!(webhook_logs -> webhooks (webhook_id));
+diesel::joinable!(webhook_logs -> tenant_webhooks (webhook_id));
+diesel::joinable!(audit_logs -> tenants (tenant_id));
+diesel::joinable!(tenant_webhooks -> tenants (tenant_id));
 diesel::joinable!(tenant_members -> tenants (tenant_id));
 diesel::joinable!(crm_campaigns -> tenants (tenant_id));
 diesel::joinable!(crm_customers -> tenants (tenant_id));
@@ -873,11 +953,14 @@ diesel::allow_tables_to_appear_in_same_query!(
     robots_rules,
     roles,
     search_history,
+    audit_logs,
     tenant_members,
     tenants,
     user_oauth_connections,
     user_roles,
     users,
     webhook_logs,
-    webhooks,
+    tenant_webhooks,
+    themes,
+    marketplace_plugins,
 );

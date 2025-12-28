@@ -193,6 +193,8 @@ async fn main() -> std::io::Result<()> {
             // Middleware
             .wrap(Logger::default())
             .wrap(cors)
+            .wrap(actix_web::middleware::Compress::default()) // Compression (Gzip/Brotli)
+            .wrap(middleware::security_headers::SecurityHeaders) // Security Headers
             .wrap(Governor::new(&governor_conf))
             .wrap(middleware::AuthMiddleware::new())  // JWT authentication
             // App data
@@ -267,6 +269,29 @@ async fn main() -> std::io::Result<()> {
                 .route("/api/tenants", web::post().to(controllers::tenant_controller::create_tenant))
                 .route("/api/tenants", web::get().to(controllers::tenant_controller::list_my_tenants))
                 .route("/api/tenants/{id}/members", web::post().to(controllers::tenant_controller::invite_member))
+                .route("/api/tenants/{id}", web::get().to(controllers::tenant_controller::get_tenant_details))
+                // SAML Routes
+                .route("/saml/metadata", web::get().to(controllers::saml_controller::metadata))
+                .route("/saml/login/{tenant_id}", web::get().to(controllers::saml_controller::login))
+                .route("/saml/acs", web::post().to(controllers::saml_controller::acs))
+                .route("/api/tenants/{id}/sso", web::post().to(controllers::saml_controller::update_config))
+                .route("/api/tenants/{id}/audit-logs", web::get().to(controllers::tenant_controller::list_audit_logs))
+                .route("/api/tenants/{id}/webhooks", web::get().to(controllers::webhook_controller::list_webhooks))
+                .route("/api/tenants/{id}/webhooks", web::post().to(controllers::webhook_controller::create_webhook))
+                .route("/api/tenants/{id}/webhooks/{hook_id}", web::delete().to(controllers::webhook_controller::delete_webhook))
+                // Site routes (Oxidly alias)
+                .route("/sites", web::get().to(controllers::site_controller::list_sites))
+                .route("/sites", web::post().to(controllers::site_controller::create_site))
+                .route("/sites/validate-cname", web::post().to(controllers::site_controller::validate_cname))
+                .route("/sites/{id}", web::get().to(controllers::site_controller::get_site))
+                // Theme routes
+                .route("/themes", web::get().to(controllers::theme_controller::list_themes))
+                .route("/themes/upload", web::post().to(controllers::theme_controller::upload_theme))
+                .route("/themes/{id}/activate", web::post().to(controllers::theme_controller::activate_theme))
+                // Plugin Marketplace routes
+                .route("/plugins", web::get().to(controllers::marketplace_plugin_controller::list_plugins))
+                .route("/plugins/submit", web::post().to(controllers::marketplace_plugin_controller::submit_plugin))
+                .route("/plugins/install", web::post().to(controllers::marketplace_plugin_controller::install_plugin))
                 // CRM API Routes
                 .route("/api/crm/customers", web::get().to(controllers::crm_controller::list_customers))
                 .route("/api/crm/customers/{id}", web::get().to(controllers::crm_controller::get_customer_profile))
@@ -305,6 +330,8 @@ async fn main() -> std::io::Result<()> {
             .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
             .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
             .route("/ai/analyze", web::post().to(services::ai_content_service::generate_content)) // Mapped to correct function
+            .route("/ai/analyze/sentiment", web::post().to(services::ai_content_service::analyze_sentiment))
+            .route("/ai/analyze/fraud", web::post().to(services::ai_content_service::detect_fraud))
             
             .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
             .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))

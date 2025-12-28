@@ -1,97 +1,95 @@
-// Webhook Controller - Webhook Management API
+use actix_web::{web, HttpResponse, Responder, HttpRequest};
+use serde::{Deserialize, Serialize};
+use crate::models::db_connection::DatabasePool;
+use crate::middleware::auth_middleware::get_user_context;
+use crate::models::webhook_models::{NewTenantWebhook, TenantWebhook};
+use crate::schema::tenant_webhooks;
+use diesel::prelude::*;
+use uuid::Uuid;
 
-use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
-use serde::{Serialize, Deserialize};
-use crate::models::{DatabasePool, pool_handler};
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Webhook {
-    pub id: Option<i32>,
+#[derive(Deserialize)]
+pub struct CreateWebhookRequest {
     pub url: String,
-    pub events: serde_json::Value,  // JSON field from schema
-    pub secret: Option<String>,
-    pub active: bool,
+    pub events: Vec<String>,
+    pub secret: String,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct CreateWebhookInput {
-    pub url: String,
-    pub events: serde_json::Value,  // JSON field from schema
-    pub secret: Option<String>,
+pub async fn list_webhooks(
+    req: HttpRequest,
+    pool: web::Data<DatabasePool>,
+    path: web::Path<i32>
+) -> impl Responder {
+    let _user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+    
+    let tenant_id = path.into_inner();
+    let mut conn = pool.get().expect("db conn");
+
+    let items = tenant_webhooks::table
+        .filter(tenant_webhooks::tenant_id.eq(tenant_id))
+        .load::<TenantWebhook>(&mut conn);
+
+    match items {
+        Ok(list) => HttpResponse::Ok().json(list),
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error: {}", e)),
+    }
 }
 
-/// List all webhooks
-#[get("/webhooks")]
-pub async fn list_webhooks(pool: web::Data<DatabasePool>) -> impl Responder {
-    // Mock implementation
-    HttpResponse::Ok().json(serde_json::json!({
-        "webhooks": [],
-        "total": 0
-    }))
-}
-
-/// Create a webhook
-#[post("/webhooks")]
 pub async fn create_webhook(
-    input: web::Json<CreateWebhookInput>,
-    pool: web::Data<DatabasePool>
+    req: HttpRequest,
+    pool: web::Data<DatabasePool>,
+    path: web::Path<i32>,
+    body: web::Json<CreateWebhookRequest>
 ) -> impl Responder {
-    HttpResponse::Created().json(serde_json::json!({
-        "id": 1,
-        "url": input.url,
-        "events": input.events,
-        "active": true,
-        "message": "Webhook created"
-    }))
+    let _user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+    
+    let tenant_id = path.into_inner();
+    let mut conn = pool.get().expect("db conn");
+
+    let new_hook = NewTenantWebhook {
+        id: Uuid::new_v4(),
+        tenant_id,
+        url: body.url.clone(),
+        secret: body.secret.clone(),
+        events: serde_json::to_value(&body.events).unwrap(),
+        is_active: true,
+    };
+
+    let res = diesel::insert_into(tenant_webhooks::table)
+        .values(&new_hook)
+        .get_result::<TenantWebhook>(&mut conn);
+
+    match res {
+        Ok(hook) => HttpResponse::Created().json(hook),
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error: {}", e)),
+    }
 }
 
-/// Update a webhook
-#[put("/webhooks/{id}")]
-pub async fn update_webhook(
-    id: web::Path<i32>,
-    input: web::Json<CreateWebhookInput>,
-    pool: web::Data<DatabasePool>
-) -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({
-        "id": id.into_inner(),
-        "url": input.url,
-        "events": input.events,
-        "message": "Webhook updated"
-    }))
-}
-
-/// Delete a webhook
-#[delete("/webhooks/{id}")]
 pub async fn delete_webhook(
-    id: web::Path<i32>,
-    pool: web::Data<DatabasePool>
+    req: HttpRequest,
+    pool: web::Data<DatabasePool>,
+    path: web::Path<(i32, Uuid)>
 ) -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({
-        "success": true,
-        "message": "Webhook deleted"
-    }))
-}
+    let _user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+    
+    let (tenant_id, hook_id) = path.into_inner();
+    let mut conn = pool.get().expect("db conn");
 
-/// Test webhook delivery
-#[post("/webhooks/{id}/test")]
-pub async fn test_webhook(
-    id: web::Path<i32>,
-    pool: web::Data<DatabasePool>
-) -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({
-        "success": true,
-        "message": "Test webhook sent"
-    }))
-}
+    let res = diesel::delete(tenant_webhooks::table)
+        .filter(tenant_webhooks::id.eq(hook_id))
+        .filter(tenant_webhooks::tenant_id.eq(tenant_id))
+        .execute(&mut conn);
 
-/// Get webhook logs
-#[get("/webhooks/{id}/logs")]
-pub async fn get_webhook_logs(
-    id: web::Path<i32>,
-    pool: web::Data<DatabasePool>
-) -> impl Responder {
-    HttpResponse::Ok().json(serde_json::json!({
-        "webhook_id": id.into_inner(),
-        "logs": []
-    }))
+    match res {
+        Ok(_) => HttpResponse::Ok().json(serde_json::json!({"status": "deleted"})),
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error: {}", e)),
+    }
 }

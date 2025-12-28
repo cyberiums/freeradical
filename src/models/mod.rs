@@ -19,6 +19,10 @@ pub mod ai_generated_content_models; // AI generated content tracking
 pub mod analytics_models; // Analytics event tracking
 pub mod db_connection;  // Database abstraction layer
 pub mod db_macros;      // Helper macros for database operations
+pub mod theme_models;
+pub mod marketplace_plugin_models;
+pub mod webhook_models;
+pub mod audit_models;
 
 use actix_web::web;
 use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};

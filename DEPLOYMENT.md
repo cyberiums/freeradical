@@ -34,14 +34,14 @@ curl http://localhost:8000/api/health
 ### Option 2: Manual Deployment
 
 **Requirements**:
-- Rust 1.75+
-- Node.js 18+
-- MySQL 8.0+
+- Rust 1.92+
+- Node.js 20+ (LTS)
+- PostgreSQL 15+ (Recommended) or MySQL 8.0+
 - Redis 7+
 
 **Steps**:
 
-1. **Build CMS**:
+1. **Build CMS (Backend)**:
 ```bash
 cargo build --release
 ```
@@ -51,10 +51,11 @@ cargo build --release
 diesel migration run
 ```
 
-3. **Build CLI**:
+3. **Install Oxidly (Frontend)**:
 ```bash
-cd ../cli
-cargo build --release
+cd oxidly
+npm install
+# Configure .env in oxidly/
 ```
 
 4. **Build Admin**:
@@ -66,12 +67,14 @@ npm run build
 
 5. **Start services**:
 ```bash
-# CMS
+# Terminal 1: CMS
 ./target/release/freeradical
 
-# Admin (with static server)
-cd admin/dist
-python3 -m http.server 3000
+# Terminal 2: Oxidly
+cd oxidly && npm start
+
+# Terminal 3: Admin (Static)
+cd admin/dist && python3 -m http.server 3000
 ```
 
 ### Option 3: Kubernetes
@@ -85,9 +88,15 @@ See `k8s/` directory for Kubernetes manifests.
 ### Required Variables
 
 ```bash
-DATABASE_URL=mysql://user:pass@host/db
+# Database (Postgres recommended)
+DATABASE_URL=postgres://user:pass@host/db
+
+# Security
 JWT_SECRET=random-64-char-string
-APP_BASE_URL=https://your-domain.com
+
+# Connectivity
+APP_BASE_URL=https://api.oxidly.com
+OXIDLY_URL=https://oxidly.com
 ```
 
 ### Optional Variables
@@ -103,15 +112,17 @@ See `.env.production.example` for all options.
 ```nginx
 server {
     listen 443 ssl http2;
-    server_name your-domain.com;
-
-    ssl_certificate /path/to/cert.pem;
-    ssl_certificate_key /path/to/key.pem;
+    server_name oxidly.com; # Main Marketing/SaaS Site
 
     location / {
-        proxy_pass http://localhost:8000;
+        proxy_pass http://localhost:5005; # Oxidly Node.js Frontend
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    location /api {
+        proxy_pass http://localhost:8000; # FreeRadical Rust Backend
+        proxy_set_header Host $host;
     }
 }
 ```

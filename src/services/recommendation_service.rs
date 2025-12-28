@@ -11,7 +11,7 @@ use crate::services::errors_service::CustomHttpError;
 /// Request for recommendations
 #[derive(Debug, Deserialize)]
 pub struct RecommendationRequest {
-    pub page_id: i64,
+    pub page_uuid: String,
     pub limit: Option<i64>,
     pub recommendation_type: Option<String>, // 'similar', 'related', 'personalized'
 }
@@ -19,8 +19,8 @@ pub struct RecommendationRequest {
 /// Recommendation result
 #[derive(Debug, Serialize, QueryableByName)]
 pub struct Recommendation {
-    #[diesel(sql_type = BigInt)]
-    pub page_id: i64,
+    #[diesel(sql_type = Text)]
+    pub page_id: String,
     #[diesel(sql_type = Text)]
     pub title: String,
     #[diesel(sql_type = Float4)]
@@ -34,7 +34,7 @@ pub struct Recommendation {
 /// Recommendation response
 #[derive(Debug, Serialize)]
 pub struct RecommendationResponse {
-    pub source_page_id: i64,
+    pub source_page_id: String,
     pub recommendations: Vec<Recommendation>,
     pub total: usize,
     pub algorithm: String,
@@ -45,7 +45,8 @@ pub async fn get_related_content(
     pool: web::Data<DbPool>,
     payload: web::Json<RecommendationRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let source_id = payload.page_id;
+    let source_uuid = payload.page_uuid.clone();
+    let source_uuid_query = source_uuid.clone(); // Clone for query closure
     let limit = payload.limit.unwrap_or(5);
     
     // Get similar content using vector similarity
@@ -59,26 +60,20 @@ pub async fn get_related_content(
         // Requires source embedding
         
         let sql = "SELECT 
-                p.id::bigint as page_id,
+                p.uuid as page_id,
                 p.page_title as title,
-                (1 - (ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1)))::real as score,
+                (1 - (ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_uuid = $1 LIMIT 1)))::real as score,
                 0::integer as rank,
                 'Similarity'::text as reason
              FROM content_embeddings ce
-             JOIN pages p ON p.id = ce.page_id
-             WHERE ce.page_id != $1
-               AND (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1) IS NOT NULL
-             ORDER BY ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1)
+             JOIN pages p ON p.uuid = ce.page_uuid
+             WHERE ce.page_uuid != $1
+               AND (SELECT embedding_vector FROM content_embeddings WHERE page_uuid = $1 LIMIT 1) IS NOT NULL
+             ORDER BY ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_uuid = $1 LIMIT 1)
              LIMIT $2";
 
-        // Note: Casting limit to BigInt
-        // Since $1 is integer page_id, bind integer. 
-        // Warning: pages table uses uuid as primary key in some contexts, but schema says content_embeddings has page_id as Int4. 
-        // Assuming pages table has id column (Int4/Int8).
-        // If pages uses uuid, then we need to join on uuid.
-        
         diesel::sql_query(sql)
-            .bind::<diesel::sql_types::Integer, _>(source_id as i32)
+            .bind::<diesel::sql_types::Text, _>(source_uuid_query)
             .bind::<diesel::sql_types::BigInt, _>(limit)
             .load::<Recommendation>(&mut conn)
             .map(|rows| {
@@ -97,7 +92,7 @@ pub async fn get_related_content(
     let total = recommendations.len();
     
     Ok(HttpResponse::Ok().json(RecommendationResponse {
-        source_page_id: source_id,
+        source_page_id: source_uuid,
         recommendations,
         total,
         algorithm: "collaborative_filtering".to_string(),
@@ -128,16 +123,15 @@ pub async fn get_trending(
         ))?;
         
         pages::table
-            .select((pages::id, pages::page_title, pages::time_created))
-            .filter(pages::status.eq(Some(crate::models::status_enum::PageStatus::Published)))
+            .select((pages::uuid, pages::page_title, pages::time_created))
             .order(pages::time_created.desc())
             .limit(limit)
-            .load::<(i32, String, chrono::NaiveDateTime)>(&mut conn)
+            .load::<(String, String, chrono::NaiveDateTime)>(&mut conn)
             .map(|rows| {
                 rows.into_iter()
                     .enumerate()
                     .map(|(idx, (id, title, _))| Recommendation {
-                        page_id: id as i64,
+                        page_id: id,
                         title,
                         score: 1.0 - (idx as f32 * 0.1),
                         rank: (idx + 1) as i32,

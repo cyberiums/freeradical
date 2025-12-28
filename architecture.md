@@ -1,9 +1,9 @@
 # FreeRadical CMS & Oxidly Cloud Platform - Comprehensive Architecture
 
-> **Version**: 2.0.0 (Target)
+> **Version**: 2.0.0 (Release Candidate)
 > **Backend**: FreeRadical v1.7.0 (Rust)
 > **Frontend**: Oxidly v1.0.0 (Node.js)
-> **Date**: December 27, 2025
+> **Date**: December 28, 2025
 
 ## 1. Executive Summary
 
@@ -76,7 +76,9 @@ graph TD
 *   **Key Features**:
     *   **Site Management**: Create/Manage subdomains (`*.oxidly.com`) and Custom Domains (CNAME).
     *   **Dashboard**: Analytics visualization.
-    *   **Theme Engine**: Upload/Activate themes (future).
+    *   **Team Management**: RBAC (Owner, Admin, Editor) and Member Invites.
+    *   **Commerce UI**: Product Catalog, Manual Order Entry, Inventory.
+    *   **Settings**: SSO Configuration (Stub), Profile.
 
 ---
 

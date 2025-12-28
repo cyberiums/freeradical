@@ -16,7 +16,7 @@ pub type Embedding = Vec<f32>;
 /// Request to create embedding
 #[derive(Debug, Deserialize)]
 pub struct CreateEmbeddingRequest {
-    pub page_id: i64,
+    pub page_uuid: String,
     pub content: String,
 }
 
@@ -31,8 +31,8 @@ pub struct SemanticSearchRequest {
 /// Search result
 #[derive(Debug, Serialize, QueryableByName)]
 pub struct SearchResult {
-    #[diesel(sql_type = diesel::sql_types::BigInt)]
-    pub page_id: i64,
+    #[diesel(sql_type = diesel::sql_types::Text)]
+    pub page_id: String,
     #[diesel(sql_type = diesel::sql_types::Text)]
     pub content_preview: String,
     #[diesel(sql_type = diesel::sql_types::Float4)]
@@ -55,8 +55,8 @@ pub struct SearchResponse {
 #[diesel(table_name = content_embeddings)]
 pub struct ContentEmbedding {
     pub id: Option<i64>,
-    pub page_id: Option<i32>,
-    pub embedding_vector: Option<Vector>,
+    pub page_uuid: Option<String>,
+    pub embedding_vector: Option<String>,
     pub model_name: Option<String>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
@@ -68,7 +68,7 @@ pub async fn create_embedding(
     payload: web::Json<CreateEmbeddingRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let content = payload.content.clone();
-    let page_id = payload.page_id;
+    let page_uuid = payload.page_uuid.clone();
     
     // Simplified: skip hash check since content_hash doesn't exist in schema
     // Generate embedding and store directly
@@ -83,18 +83,17 @@ pub async fn create_embedding(
             Box::new("Connection error".to_string())
         ))?;
         
-        let vector = Vector::from(embedding_values);
+        let vector_str = vector_to_string(&embedding_values);
+        let vector_formatted = format!("[{}]", vector_str);
         
-        diesel::insert_into(content_embeddings::table)
-            .values((
-                content_embeddings::page_id.eq(page_id as i32), // Assuming page_id can be i32
-                content_embeddings::embedding_vector.eq(Some(vector)),
-                content_embeddings::model_name.eq(&model_name),
-            ))
+        // Use raw SQL insert to cast to vector type
+        // schema.rs treats it as Text, DB treats it as vector
+        diesel::sql_query("INSERT INTO content_embeddings (page_uuid, embedding_vector, model_name, created_at, updated_at) VALUES ($1, $2::vector, $3, NOW(), NOW())")
+            .bind::<diesel::sql_types::Text, _>(page_uuid)
+            .bind::<diesel::sql_types::Text, _>(vector_formatted)
+            .bind::<diesel::sql_types::Text, _>(model_name)
             .execute(&mut conn)?;
         
-        // For now, we return a placeholder ID or the number of affected rows.
-        // If you need the actual ID, you'd use .get_result() with a struct that has the ID.
         Ok(1) // Placeholder ID
     })
     .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
@@ -117,7 +116,6 @@ pub async fn semantic_search(
     
     // Generate query embedding
     let query_embedding = generate_embedding_vector(&query).await?;
-    let query_vector = Vector::from(query_embedding);
     
     // Perform vector similarity search
     let results = web::block(move || -> Result<Vec<SearchResult>, diesel::result::Error> {
@@ -126,24 +124,24 @@ pub async fn semantic_search(
             Box::new("Connection error".to_string())
         ))?;
         
+        let query_str = vector_to_string(&query_embedding);
+        let query_formatted = format!("[{}]", query_str);
+        
         // Use cosine similarity search (1 - cosine distance)
-        // Ensure content_preview is handled (using empty string if not present/join)
-        // Since content_preview doesn't exist in content_embeddings, we might need to join or return placeholder.
-        // Returning placeholder for now as per schema provided.
-        // SQL: SELECT page_id::bigint, '' as content_preview, 1 - (embedding_vector <=> $1) as similarity, 0 as rank
+        // SQL: SELECT page_uuid as page_id, '' as content_preview, 1 - (embedding_vector <=> $1) as similarity, 0 as rank
         
         let sql = "SELECT 
-                page_id::bigint, 
+                page_uuid as page_id, 
                 ''::text as content_preview, 
-                (1 - (embedding_vector <=> $1))::real as similarity,
+                (1 - (embedding_vector <=> $1::vector))::real as similarity,
                 0::integer as rank
              FROM content_embeddings 
-             WHERE 1 - (embedding_vector <=> $1) > $2
-             ORDER BY embedding_vector <=> $1
+             WHERE 1 - (embedding_vector <=> $1::vector) > $2
+             ORDER BY embedding_vector <=> $1::vector
              LIMIT $3";
         
         diesel::sql_query(sql)
-            .bind::<crate::sql_types::Vector, _>(query_vector.clone())
+            .bind::<diesel::sql_types::Text, _>(query_formatted)
             .bind::<diesel::sql_types::Float4, _>(min_similarity)
             .bind::<diesel::sql_types::BigInt, _>(limit)
             .load::<SearchResult>(&mut conn)
@@ -229,4 +227,12 @@ async fn generate_embedding_vector(text: &str) -> Result<Embedding, CustomHttpEr
         .first()
         .map(|d| d.embedding.clone())
         .ok_or_else(|| CustomHttpError::InternalServerError("No embedding in response".to_string()))
+}
+
+/// Convert vector to PostgreSQL array string
+fn vector_to_string(vec: &[f32]) -> String {
+    vec.iter()
+        .map(|v| v.to_string())
+        .collect::<Vec<_>>()
+        .join(",")
 }
