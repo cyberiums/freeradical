@@ -36,7 +36,6 @@ pub struct Page {
     pub twitter_description: Option<String>,
     // Group 2: Article Info - CLEAN ✅
     pub author: Option<String>,
-    pub tenant_id: Option<i32>,
     pub article_type: Option<String>,
     pub featured_image: Option<String>,
     pub word_count: Option<i32>,
@@ -47,6 +46,7 @@ pub struct Page {
     pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Insertable, AsChangeset, Serialize, Deserialize)]
@@ -79,6 +79,7 @@ pub struct MutPage {
     pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -108,6 +109,7 @@ pub struct PageDTO {
     pub status: Option<PageStatus>,
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -162,6 +164,7 @@ impl From<Page> for PageDTO {
             status: page.status,
             publish_at: page.publish_at,
             unpublish_at: page.unpublish_at,
+            tenant_id: page.tenant_id,
         }
     }
 }
@@ -212,6 +215,7 @@ impl Model<Page, MutPage, String, PageDTO> for Page {
             .load::<Self>(db)
             .map(|pages| pages.into_iter().map(|x| x.into()).collect())
     }
+
 
     fn update(
         _id: String,
@@ -318,5 +322,57 @@ impl Page {
         };
 
         Ok((filtered_page, module_dto))
+    }
+
+    pub fn read_one_by_tenant_and_url(
+        tid: i32,
+        url_path: String,
+        db: &mut PooledDatabaseConnection,
+    ) -> Result<(Self, FieldsDTO), diesel::result::Error> {
+        use crate::schema::pages::dsl::{page_url, tenant_id};
+
+        let filtered_page = pages::table
+            .filter(page_url.eq(url_path))
+            .filter(tenant_id.eq(tid))
+            .select(Page::as_select())
+            .first::<Page>(db)?;
+
+        let modules = Module::belonging_to(&filtered_page).load::<Module>(db)?;
+
+        let categories: Vec<ModuleCategory> = Module::belonging_to(&filtered_page)
+            .inner_join(module_category::table)
+            .select(module_category::all_columns)
+            .load::<ModuleCategory>(db)?;
+
+        let module_array: Vec<(Vec<Module>, ModuleCategory)> = Module::belonging_to(&categories)
+            .load::<Module>(db)?
+            .grouped_by(&categories)
+            .into_iter()
+            .zip(categories)
+            .collect::<Vec<_>>();
+
+        let category_dtos: Vec<CategoryDTO> = module_array
+            .iter()
+            .map(|a| CategoryDTO {
+                uuid: a.1.uuid.clone(),
+                title: a.1.title.clone(),
+                modules: a.0.clone().into_iter().map(|m| m.into()).collect(),
+            })
+            .collect::<Vec<_>>();
+
+        let module_dto = FieldsDTO {
+            modules: modules.into_iter().map(|m| m.into()).collect(),
+            categories: Some(category_dtos),
+        };
+
+        Ok((filtered_page, module_dto))
+    }
+
+    pub fn read_all_by_tenant(tenant_id: i32, db: &mut PooledDatabaseConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
+        pages::table
+            .filter(pages::tenant_id.eq(tenant_id))
+            .select(Page::as_select())
+            .load::<Self>(db)
+            .map(|pages| pages.into_iter().map(|x| x.into()).collect())
     }
 }

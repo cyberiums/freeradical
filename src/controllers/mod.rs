@@ -17,6 +17,8 @@ pub mod search_controller;
 // i18n and OAuth controllers require migrations to be run first
 pub mod i18n_controller;
 pub mod oauth_controller;
+pub mod oauth_callback_controller;
+pub mod oauth_connections_controller;
 pub mod dashboard_controller;
 pub mod seo_controller;
 pub mod tenant_controller;

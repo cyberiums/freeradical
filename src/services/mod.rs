@@ -13,6 +13,7 @@ pub mod ai_scope_service; // AI security and scoping
 pub mod ai_provider_service; // Provider CRUD operations
 pub mod ai_content_service; // Content generation
 pub mod ai_authorization_service; // Budget and permission checks
+pub mod storage_service; // Multi-region storage (S3/Local)
 // TEMPORARILY DISABLED - Vector type issues need fixing
 // pub mod semantic_search_service; // Vector search with content_embeddings
 // pub mod recommendation_service; // Content recommendations

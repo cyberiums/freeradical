@@ -30,6 +30,7 @@ use self::config_models::LocalConfig;
 // Re-export database pool types (PostgreSQL only)
 pub use db_connection::DatabasePool;
 pub use db_connection::PooledDatabaseConnection;
+pub use db_connection::ReadDatabasePool;
 
 pub type DbPool = DatabasePool;
 

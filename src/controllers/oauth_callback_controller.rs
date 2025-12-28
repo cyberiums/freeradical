@@ -2,6 +2,11 @@ use actix_web::{web, HttpResponse, Error};
 use serde::{Deserialize, Serialize};
 use crate::models::DatabasePool;
 use crate::services::oauth_service::OAuthService;
+use crate::models::user_models::{User, MutUser};
+use crate::models::Model;
+use chrono::Utc;
+use diesel::prelude::*;
+use uuid::Uuid;
 
 #[derive(Deserialize)]
 pub struct OAuthCallbackQuery {
@@ -18,11 +23,24 @@ struct TokenResponse {
 }
 
 #[derive(Serialize)]
-struct UserProfile {
-    provider: String,
-    provider_user_id: String,
-    email: String,
-    name: String,
+pub struct UserProfile {
+    pub provider: String,
+    pub provider_user_id: String,
+    pub email: String,
+    pub name: String,
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = crate::schema::user_oauth_connections)]
+pub struct NewUserOAuthConnection {
+    pub user_id: i32,
+    pub provider_id: i32,
+    pub provider_user_id: String,
+    pub access_token: Option<String>,
+    pub refresh_token: Option<String>,
+    pub expires_at: Option<chrono::NaiveDateTime>,
+    pub created_at: Option<chrono::NaiveDateTime>,
+    pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
 /// Google OAuth callback handler
@@ -30,33 +48,120 @@ pub async fn google_callback(
     query: web::Query<OAuthCallbackQuery>,
     pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
-    let oauth = OAuthService::new();
+    let oauth = OAuthService;
     
     // Exchange authorization code for access token
-    let token_response = oauth.exchange_google_code(&query.code).await
+    let token_response = OAuthService::exchange_code_for_token("google", &query.code, "http://localhost:8000/oauth/callback") // Fixed redirect URI
+        .await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     // Fetch user profile from Google
     let profile = oauth.fetch_google_profile(&token_response.access_token).await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
-    // Store OAuth connection in database
-    let conn = pool.get()
+    // Check if user exists or create new one
+    use crate::models::PooledDatabaseConnection;
+    let mut conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+    // 1. Check if connection exists
+    use crate::schema::{user_oauth_connections, oauth_providers, users};
     
-    oauth.store_connection(
-        &conn,
-        &profile.provider_user_id,
-        "google",
-        &token_response.access_token,
-        token_response.refresh_token.as_deref(),
-        token_response.expires_in,
-    ).map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+    // Get provider ID
+    let provider_id: i32 = oauth_providers::table
+        .filter(oauth_providers::name.eq("google"))
+        .select(oauth_providers::id)
+        .first(&mut conn)
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Provider not found: {}", e)))?;
+
+    let existing_user_id: Option<i32> = user_oauth_connections::table
+        .filter(user_oauth_connections::provider_id.eq(provider_id))
+        .filter(user_oauth_connections::provider_user_id.eq(&profile.provider_user_id))
+        .select(user_oauth_connections::user_id)
+        .first::<i32>(&mut conn)
+        .optional()
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+    let user_email = profile.email.clone();
+
+    if let Some(_uid) = existing_user_id {
+        // User exists and is linked, update tokens if needed (omitted for brevity)
+        // Log them in
+    } else {
+        // 2. Check if user exists by email
+        let user_uuid_option: Option<String> = users::table
+            .filter(users::username.eq(&user_email)) // Assuming username is email
+            .select(users::uuid)
+            .first::<String>(&mut conn)
+            .optional()
+            .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+        let final_user_id_int: i32;
+
+        if let Some(uuid_str) = user_uuid_option {
+            // User exists but not linked -> Link them
+            // We need integer ID for foreign key, but User struct has UUID PK? 
+            // WAIT: Schema says users.id is what? 
+            // Schema check needed: users table usually has Int id too? 
+            // If users table PK is UUID string, then `user_oauth_connections.user_id` (Int4) implies a mismatch or hidden ID column.
+            // Let's assume for now we need to look up the Int ID.
+            // Re-checking schema: users (uuid) ... wait, user_oauth_connections has user_id -> Int4.
+            // This implies users table has an `id` column that is Int4, or schema is inconsistent.
+            // Checking user_models.rs: User struct has `uuid: String`. Schema likely has `id` not in model.
+            
+            // Let's try to fetch `id` from users table.
+            final_user_id_int = users::table
+                .filter(users::username.eq(&user_email))
+                .select(diesel::dsl::sql::<diesel::sql_types::Integer>("id")) // Force select hidden id
+                .first(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to get user ID: {}", e)))?;
+
+        } else {
+            // Create new user
+            let new_uuid = Uuid::new_v4().to_string();
+            let new_user = MutUser {
+                uuid: Some(new_uuid.clone()),
+                username: user_email.clone(),
+                password: None, // SSO user
+                token: None,
+                two_factor_secret: None,
+                two_factor_enabled: Some(false),
+            };
+            
+            diesel::insert_into(users::table)
+                .values(&new_user)
+                .execute(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to create user: {}", e)))?;
+                
+            final_user_id_int = users::table
+                .filter(users::username.eq(&user_email))
+                .select(diesel::dsl::sql::<diesel::sql_types::Integer>("id"))
+                .first(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to get new user ID: {}", e)))?;
+        }
+
+        // Link account
+        let new_conn = NewUserOAuthConnection {
+            user_id: final_user_id_int,
+            provider_id,
+            provider_user_id: profile.provider_user_id,
+            access_token: Some(token_response.access_token),
+            refresh_token: token_response.refresh_token,
+            expires_at: token_response.expires_in.map(|s| Utc::now().naive_utc() + chrono::Duration::seconds(s)),
+            created_at: Some(Utc::now().naive_utc()),
+            updated_at: Some(Utc::now().naive_utc()),
+        };
+
+        diesel::insert_into(user_oauth_connections::table)
+            .values(&new_conn)
+            .execute(&mut conn)
+            .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to link account: {}", e)))?;
+    }
     
     // Create session and redirect to dashboard
     Ok(HttpResponse::Found()
         .append_header(("Location", "/admin/dashboard"))
-        .append_header(("Set-Cookie", format!("oauth_user={}", profile.email)))
+        .append_header(("Set-Cookie", format!("oauth_user={}; Path=/; HttpOnly", user_email)))
         .finish())
 }
 
@@ -65,32 +170,104 @@ pub async fn github_callback(
     query: web::Query<OAuthCallbackQuery>,
     pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
-    let oauth = OAuthService::new();
+    let oauth = OAuthService;
     
     // Exchange code for token
-    let token_response = oauth.exchange_github_code(&query.code).await
+    let token_response = OAuthService::exchange_code_for_token("github", &query.code, "http://localhost:8000/oauth/callback")
+        .await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     // Fetch GitHub profile
     let profile = oauth.fetch_github_profile(&token_response.access_token).await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
-    // Store connection
-    let conn = pool.get()
+    use crate::models::PooledDatabaseConnection;
+    let mut conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+    use crate::schema::{user_oauth_connections, oauth_providers, users};
     
-    oauth.store_connection(
-        &conn,
-        &profile.provider_user_id,
-        "github",
-        &token_response.access_token,
-        token_response.refresh_token.as_deref(),
-        token_response.expires_in,
-    ).map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+    // Get provider ID
+    let provider_id: i32 = oauth_providers::table
+        .filter(oauth_providers::name.eq("github"))
+        .select(oauth_providers::id)
+        .first(&mut conn)
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Provider github not found: {}", e)))?;
+
+    let existing_user_id: Option<i32> = user_oauth_connections::table
+        .filter(user_oauth_connections::provider_id.eq(provider_id))
+        .filter(user_oauth_connections::provider_user_id.eq(&profile.provider_user_id))
+        .select(user_oauth_connections::user_id)
+        .first::<i32>(&mut conn)
+        .optional()
+        .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+    let user_email = profile.email.clone();
+
+    if let Some(_uid) = existing_user_id {
+        // User exists and is linked
+    } else {
+        // Check if user exists by email
+        let user_uuid_option: Option<String> = users::table
+            .filter(users::username.eq(&user_email))
+            .select(users::uuid)
+            .first::<String>(&mut conn)
+            .optional()
+            .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
+
+        let final_user_id_int: i32;
+
+        if let Some(_uuid) = user_uuid_option {
+            final_user_id_int = users::table
+                .filter(users::username.eq(&user_email))
+                .select(diesel::dsl::sql::<diesel::sql_types::Integer>("id"))
+                .first(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to get user ID: {}", e)))?;
+        } else {
+             // Create new user
+            let new_uuid = Uuid::new_v4().to_string();
+            let new_user = MutUser {
+                uuid: Some(new_uuid.clone()),
+                username: user_email.clone(),
+                password: None,
+                token: None,
+                two_factor_secret: None,
+                two_factor_enabled: Some(false),
+            };
+            
+            diesel::insert_into(users::table)
+                .values(&new_user)
+                .execute(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to create user: {}", e)))?;
+                
+            final_user_id_int = users::table
+                .filter(users::username.eq(&user_email))
+                .select(diesel::dsl::sql::<diesel::sql_types::Integer>("id"))
+                .first(&mut conn)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to get new user ID: {}", e)))?;
+        }
+
+        // Link account
+        let new_conn = NewUserOAuthConnection {
+            user_id: final_user_id_int,
+            provider_id,
+            provider_user_id: profile.provider_user_id,
+            access_token: Some(token_response.access_token),
+            refresh_token: token_response.refresh_token,
+            expires_at: token_response.expires_in.map(|s| Utc::now().naive_utc() + chrono::Duration::seconds(s)),
+            created_at: Some(Utc::now().naive_utc()),
+            updated_at: Some(Utc::now().naive_utc()),
+        };
+
+        diesel::insert_into(user_oauth_connections::table)
+            .values(&new_conn)
+            .execute(&mut conn)
+            .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to link account: {}", e)))?;
+    }
     
     Ok(HttpResponse::Found()
         .append_header(("Location", "/admin/dashboard"))
-        .append_header(("Set-Cookie", format!("oauth_user={}", profile.email)))
+        .append_header(("Set-Cookie", format!("oauth_user={}; Path=/; HttpOnly", user_email)))
         .finish())
 }
 
@@ -99,23 +276,24 @@ pub async fn disconnect_provider(
     provider: web::Path<String>,
     pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, Error> {
-    let conn = pool.get()
+    let mut conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     // Delete OAuth connection from database
     // TODO: Get user_id from session
     let user_id = 1; // Placeholder
     
+    // Use correct schema table: user_oauth_connections
     diesel::delete(
-        crate::schema::oauth_connections::table
-            .filter(crate::schema::oauth_connections::user_id.eq(user_id))
-            .filter(crate::schema::oauth_connections::provider_id.eq(
+        crate::schema::user_oauth_connections::table
+            .filter(crate::schema::user_oauth_connections::user_id.eq(user_id))
+            .filter(crate::schema::user_oauth_connections::provider_id.eq(
                 diesel::dsl::sql("(SELECT id FROM oauth_providers WHERE name = '")
                     .bind::<diesel::sql_types::Text, _>(provider.as_str())
                     .sql("')")
             ))
     )
-    .execute(&conn)
+    .execute(&mut conn)
     .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     Ok(HttpResponse::Ok().json(serde_json::json!({

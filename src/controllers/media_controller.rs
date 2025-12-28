@@ -11,9 +11,9 @@ use crate::models::media_models::{Media, NewMedia};
 use crate::schema::media;
 use crate::services::database_service;
 use crate::services::image_service;
+use crate::services::storage_service::{StorageService, StorageBackend};
 
 const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10MB
-const UPLOAD_DIR: &str = "uploads";
 
 /// List all media files
 /// GET /api/media
@@ -50,7 +50,12 @@ pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
 
 /// Delete media file
 /// DELETE /api/media/:uuid
-pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
+/// Delete media file
+/// DELETE /api/media/:uuid
+pub async fn delete_media(
+    media_uuid: web::Path<String>,
+    storage: web::Data<StorageBackend>,
+) -> impl Responder {
     use crate::schema::media::dsl::*;
     
     let mut conn = database_service::establish_connection();
@@ -69,8 +74,21 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
         .execute(&mut conn)
     {
         Ok(_) => {
-            // Try to delete file from filesystem
-            let _ = fs::remove_file(&media_item.file_path); // Ignore error if file doesn't exist
+            // Delete file from storage
+            // Extract filename from file_path or store simple filename in DB? 
+            // Currently file_path stores "uploads/filename". S3 implementation expects "filename".
+            // We should ideally store the key/filename in the DB.
+            // For now, let's assume file_path might be a full path or just filename.
+            // But verify: upload_media stores `storage_path`.
+            
+            // FIXME: The DB stores `file_path`. If it was "uploads/uuid.ext", 
+            // we need to extract "uuid.ext" for S3.
+            let target_filename = std::path::Path::new(&media_item.file_path)
+                .file_name()
+                .and_then(|s| s.to_str())
+                .unwrap_or("unknown");
+                
+            let _ = storage.delete(target_filename).await;
             HttpResponse::Ok().json("Media deleted")
         }
         Err(_) => HttpResponse::InternalServerError().json("Failed to delete media"),
@@ -85,7 +103,11 @@ pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
 /// - alt_text: Alt text for accessibility (optional)
 /// - caption: Image caption (optional)
 /// - folder: Folder/category (optional)
-pub async fn upload_media(req: actix_web::HttpRequest, mut payload: Multipart) -> impl Responder {
+pub async fn upload_media(
+    req: actix_web::HttpRequest, 
+    mut payload: Multipart,
+    storage: web::Data<StorageBackend>,
+) -> impl Responder {
     let mut filename = String::new();
     let mut file_data: Vec<u8> = Vec::new();
     let mut alt_text = None;
@@ -213,35 +235,20 @@ pub async fn upload_media(req: actix_web::HttpRequest, mut payload: Multipart) -
         (file_data.clone(), None, width, height)
     };
     
-    // Create upload directory if it doesn't exist
-    fs::create_dir_all(UPLOAD_DIR).ok();
-    
-    // Save optimized file to disk
-    let file_path = PathBuf::from(UPLOAD_DIR).join(&new_filename);
-    let storage_path = file_path.to_str().unwrap().to_string();
-    
-    match fs::File::create(&file_path) {
-        Ok(mut file) => {
-            if let Err(_) = file.write_all(&optimized_data) {
-                return HttpResponse::InternalServerError().json("Failed to write file");
-            }
-        }
-        Err(_) => return HttpResponse::InternalServerError().json("Failed to create file"),
-    }
+    // Save optimized file to storage
+    let storage_path = match storage.save(&new_filename, &optimized_data, &mime_type).await {
+        Ok(path) => path, // For S3 this is the key, for Local it is uploads/filename
+        Err(e) => return HttpResponse::InternalServerError().json(format!("Failed to save file: {}", e)),
+    };
     
     // Save WebP variant if generated
     let webp_path = match webp_data {
         Some(webp_bytes) => {
             let webp_filename = format!("{}.webp", new_uuid);
-            let webp_file_path = PathBuf::from(UPLOAD_DIR).join(&webp_filename);
-            match fs::File::create(&webp_file_path) {
-                Ok(mut file) => {
-                    if file.write_all(&webp_bytes).is_ok() {
-                        log::info!("WebP variant saved: {}", webp_filename);
-                        Some(webp_file_path.to_str().unwrap().to_string())
-                    } else {
-                        None
-                    }
+            match storage.save(&webp_filename, &webp_bytes, "image/webp").await {
+                Ok(path) => {
+                    log::info!("WebP variant saved: {}", webp_filename);
+                    Some(path)
                 }
                 Err(_) => None,
             }
@@ -290,9 +297,10 @@ pub async fn upload_media(req: actix_web::HttpRequest, mut payload: Multipart) -
         })),
         Err(e) => {
             // Delete files if database insert fails
-            let _ = fs::remove_file(&file_path);
-            if let Some(wp_path) = webp_path {
-                let _ = fs::remove_file(wp_path);
+            let _ = storage.delete(&new_filename).await;
+            if let Some(_) = webp_path {
+                 let webp_filename = format!("{}.webp", new_uuid);
+                let _ = storage.delete(&webp_filename).await;
             }
             HttpResponse::InternalServerError()
                 .json(format!("Failed to save media metadata: {}", e))

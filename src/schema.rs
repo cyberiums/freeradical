@@ -211,6 +211,7 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -242,6 +243,7 @@ diesel::table! {
         notes -> Nullable<Text>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -268,6 +270,7 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         search_vector -> Nullable<Tsvector>,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -280,6 +283,7 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -304,6 +308,7 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -326,6 +331,7 @@ diesel::table! {
         created_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -588,7 +594,6 @@ diesel::table! {
         twitter_description -> Nullable<Varchar>,
         #[max_length = 100]
         author -> Nullable<Varchar>,
-        tenant_id -> Nullable<Int4>,
         #[max_length = 50]
         article_type -> Nullable<Varchar>,
         #[max_length = 500]
@@ -600,6 +605,7 @@ diesel::table! {
         status -> Nullable<PagesStatus>,
         publish_at -> Nullable<Timestamp>,
         unpublish_at -> Nullable<Timestamp>,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -824,6 +830,12 @@ diesel::joinable!(page_translations -> languages (language_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
 diesel::joinable!(webhook_logs -> webhooks (webhook_id));
 diesel::joinable!(tenant_members -> tenants (tenant_id));
+diesel::joinable!(crm_campaigns -> tenants (tenant_id));
+diesel::joinable!(crm_customers -> tenants (tenant_id));
+diesel::joinable!(crm_interactions -> tenants (tenant_id));
+diesel::joinable!(crm_notes -> tenants (tenant_id));
+diesel::joinable!(crm_segments -> tenants (tenant_id));
+diesel::joinable!(crm_tasks -> tenants (tenant_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,

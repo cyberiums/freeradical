@@ -79,6 +79,7 @@ pub fn calculate_health_score(rfm_total: i32, days_since_interaction: i32, email
 pub async fn get_or_create_customer(
     pool: web::Data<DbPool>,
     user_id: i32,
+    tenant_id: Option<i32>,
 ) -> Result<CrmCustomer, CustomHttpError> {
     web::block(move || -> Result<CrmCustomer, diesel::result::Error> {
         let mut conn = pool.get()
@@ -103,6 +104,7 @@ pub async fn get_or_create_customer(
             customer_since: Some(Utc::now().naive_utc()),
             health_score: Some(50),
             churn_risk: Some("low".to_string()),
+            tenant_id,
         };
         
         diesel::insert_into(crm_customers::table)
@@ -120,6 +122,7 @@ pub async fn list_customers(
     pool: web::Data<DbPool>,
     lifecycle_stage: Option<String>,
     min_health_score: Option<i32>,
+    tenant_id_param: Option<i32>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let customers = web::block(move || -> Result<Vec<CrmCustomer>, diesel::result::Error> {
         let mut conn = pool.get()
@@ -136,6 +139,10 @@ pub async fn list_customers(
         
         if let Some(min_score) = min_health_score {
             query = query.filter(crm_customers::health_score.ge(min_score));
+        }
+
+        if let Some(tid) = tenant_id_param {
+            query = query.filter(crm_customers::tenant_id.eq(tid));
         }
         
         query
@@ -276,12 +283,18 @@ pub async fn add_customer_note(
 /// List all segments
 pub async fn list_segments(
     pool: web::Data<DbPool>,
+    tenant_id_param: Option<i32>,
 ) -> Result<HttpResponse, CustomHttpError> {
     use crate::schema::crm_segments::dsl::*;
     
     let mut conn = pool.get().map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
     
-    let segments = crm_segments
+    let mut query = crm_segments.into_boxed();
+    if let Some(tid) = tenant_id_param {
+        query = query.filter(tenant_id.eq(tid));
+    }
+
+    let segments = query
         .select(CrmSegment::as_select())
         .order(created_at.desc())
         .load::<CrmSegment>(&mut conn)
@@ -357,12 +370,18 @@ pub async fn create_campaign(
 /// List all campaigns
 pub async fn list_campaigns(
     pool: web::Data<DbPool>,
+    tenant_id_param: Option<i32>,
 ) -> Result<HttpResponse, CustomHttpError> {
     use crate::schema::crm_campaigns::dsl::*;
     
     let mut conn = pool.get().map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
     
-    let campaigns = crm_campaigns
+    let mut query = crm_campaigns.into_boxed();
+    if let Some(tid) = tenant_id_param {
+        query = query.filter(tenant_id.eq(tid));
+    }
+
+    let campaigns = query
         .select(CrmCampaign::as_select())
         .order(created_at.desc())
         .load::<CrmCampaign>(&mut conn)
@@ -379,6 +398,7 @@ pub async fn list_tasks_filtered(
     filter_customer_id: Option<i32>,
     filter_assigned_to: Option<i32>,
     filter_status: Option<String>,
+    tenant_id_param: Option<i32>,
 ) -> Result<HttpResponse, CustomHttpError> {
     use crate::schema::crm_tasks::dsl::*;
     
@@ -396,6 +416,10 @@ pub async fn list_tasks_filtered(
     
     if let Some(task_status) = filter_status {
         query = query.filter(status.eq(task_status));
+    }
+
+    if let Some(tid) = tenant_id_param {
+        query = query.filter(tenant_id.eq(tid));
     }
     
     let tasks = query

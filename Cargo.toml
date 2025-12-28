@@ -57,7 +57,7 @@ reqwest = { version = "0.12.13", features = ["json"] }  # For OAuth and AI API c
 urlencoding = "2.1"
 
 # redis
-redis = { version = "0.32", features = ["tokio-comp", "connection-manager", "aio"] }
+redis = { version = "0.32", features = ["tokio-comp", "connection-manager", "aio", "cluster-async"] }
 deadpool-redis = "0.22"  # Connection pooling for Redis
 
 # graphql
@@ -72,7 +72,7 @@ async-openai = "0.18"  # OpenAI API client
 # For now, we'll use reqwest for direct API calls to Anthropic & Google
 
 # pgvector
-pgvector = "0.3"  # PostgreSQL vector similarity search
+pgvector = { version = "0.4", features = ["diesel"] }  # PostgreSQL vector similarity search
 
 sha2 = "0.10"  # Updated for compatibility with digest 0.10
 flate2 = "1.0"  # For sitemap compression
@@ -92,6 +92,15 @@ totp-rs = { version = "5.0", features = ["gen_secret", "qr"] }
 utoipa = { version = "4.2", features = ["actix_extras", "chrono", "uuid"] }
 utoipa-swagger-ui = { version = "6.0", features = ["actix-web"] }
 utoipa-redoc = { version = "3.0", features = ["actix-web"] }
+
+[dependencies.aws-config]
+version = "1.1.7"
+
+[dependencies.aws-sdk-s3]
+version = "1.17.0"
+
+[dependencies.aws-types]
+version = "1.1.7"
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

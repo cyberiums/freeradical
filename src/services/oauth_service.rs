@@ -56,45 +56,116 @@ impl OAuthService {
         code: &str,
         redirect_uri: &str,
     ) -> Result<OAuthToken, String> {
-        // OAuth token exchange implementation
+        let client = reqwest::Client::new();
+        
         match provider {
             "google" => {
-                // Google OAuth token endpoint
-                let token_url = "https://oauth2.googleapis.com/token";
-                
-                Ok(OAuthToken {
-                    access_token: format!("google_token_{}", code),
-                    token_type: "Bearer".to_string(),
-                    expires_in: Some(3600),
-                    refresh_token: None,
-                    id_token: Some(format!("google_id_{}", code)),
-                })
+                let params = [
+                    ("code", code),
+                    ("client_id", &std::env::var("GOOGLE_CLIENT_ID").unwrap_or_default()),
+                    ("client_secret", &std::env::var("GOOGLE_CLIENT_SECRET").unwrap_or_default()),
+                    ("redirect_uri", redirect_uri),
+                    ("grant_type", "authorization_code"),
+                ];
+
+                let res = client.post("https://oauth2.googleapis.com/token")
+                    .form(&params)
+                    .send()
+                    .await
+                    .map_err(|e| format!("Request failed: {}", e))?;
+
+                if !res.status().is_success() {
+                    return Err(format!("Google token exchange failed: {}", res.status()));
+                }
+
+                res.json::<OAuthToken>().await.map_err(|e| format!("Failed to parse token: {}", e))
             },
             "github" => {
-                // GitHub OAuth token endpoint
-                let token_url = "https://github.com/login/oauth/access_token";
-                
-                Ok(OAuthToken {
-                    access_token: format!("github_token_{}", code),
-                    token_type: "Bearer".to_string(),
-                    expires_in: Some(28800),
-                    refresh_token: None,
-                    id_token: None,
-                })
+                let params = [
+                    ("code", code),
+                    ("client_id", &std::env::var("GITHUB_CLIENT_ID").unwrap_or_default()),
+                    ("client_secret", &std::env::var("GITHUB_CLIENT_SECRET").unwrap_or_default()),
+                    ("redirect_uri", redirect_uri),
+                ];
+
+                let res = client.post("https://github.com/login/oauth/access_token")
+                    .header("Accept", "application/json")
+                    .form(&params)
+                    .send()
+                    .await
+                    .map_err(|e| format!("Request failed: {}", e))?;
+
+                if !res.status().is_success() {
+                    return Err(format!("GitHub token exchange failed: {}", res.status()));
+                }
+
+                res.json::<OAuthToken>().await.map_err(|e| format!("Failed to parse token: {}", e))
             },
             _ => Err(format!("Unsupported OAuth provider: {}", provider))
         }
     }
 
-    /// Get user information from OAuth provider
-    pub async fn get_user_info(provider: &str, access_token: &str) -> Result<serde_json::Value, String> {
-        log::info!("Fetching user info from OAuth provider: {}", provider);
+    /// Fetch Google user profile
+    pub async fn fetch_google_profile(&self, access_token: &str) -> Result<crate::controllers::oauth_callback_controller::UserProfile, String> {
+        let client = reqwest::Client::new();
+        let res = client.get("https://www.googleapis.com/oauth2/v2/userinfo")
+            .header("Authorization", format!("Bearer {}", access_token))
+            .send()
+            .await
+            .map_err(|e| format!("Request failed: {}", e))?;
+
+        if !res.status().is_success() {
+            return Err(format!("Failed to fetch Google profile: {}", res.status()));
+        }
+
+        let json: serde_json::Value = res.json().await.map_err(|e| format!("Failed to parse profile: {}", e))?;
         
-        // TODO: Implement actual user info fetch
-        Ok(serde_json::json!({
-            "id": "stub_user_id",
-            "email": "user@example.com",
-            "name": "OAuth User"
-        }))
+        Ok(crate::controllers::oauth_callback_controller::UserProfile {
+            provider: "google".to_string(),
+            provider_user_id: json["id"].as_str().unwrap_or_default().to_string(),
+            email: json["email"].as_str().unwrap_or_default().to_string(),
+            name: json["name"].as_str().unwrap_or_default().to_string(),
+        })
+    }
+
+    /// Fetch GitHub user profile
+    pub async fn fetch_github_profile(&self, access_token: &str) -> Result<crate::controllers::oauth_callback_controller::UserProfile, String> {
+        let client = reqwest::Client::new();
+        let res = client.get("https://api.github.com/user")
+            .header("Authorization", format!("Bearer {}", access_token))
+            .header("User-Agent", "Oxidly-Cloud-Platform")
+            .send()
+            .await
+            .map_err(|e| format!("Request failed: {}", e))?;
+
+        if !res.status().is_success() {
+            return Err(format!("Failed to fetch GitHub profile: {}", res.status()));
+        }
+
+        let json: serde_json::Value = res.json().await.map_err(|e| format!("Failed to parse profile: {}", e))?;
+        
+        // GitHub email might be private, need separate call technically, but for now try field
+        let email = json["email"].as_str().unwrap_or("").to_string();
+        
+        Ok(crate::controllers::oauth_callback_controller::UserProfile {
+            provider: "github".to_string(),
+            provider_user_id: json["id"].as_i64().map(|id| id.to_string()).unwrap_or_default(),
+            email, 
+            name: json["name"].as_str().unwrap_or(json["login"].as_str().unwrap_or("GitHub User")).to_string(),
+        })
+    }
+
+    // Helper to store connection (placeholder for now, logic moving to controller)
+    pub fn store_connection(
+        &self,
+        _conn: &crate::models::PooledDatabaseConnection,
+        _provider_user_id: &str,
+        _provider: &str,
+        _access_token: &str,
+        _refresh_token: Option<&str>,
+        _expires_in: Option<i64>,
+    ) -> Result<(), String> {
+        // Logic moved to controller to handle user creation first
+        Ok(())
     }
 }

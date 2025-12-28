@@ -1,0 +1,83 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.07kB done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rustlang/rust:nightly
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/debian:sid-slim
+#3 DONE 0.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 66B done
+#4 DONE 0.0s
+
+#5 [builder 1/9] FROM docker.io/rustlang/rust:nightly
+#5 DONE 0.0s
+
+#6 [stage-1 1/9] FROM docker.io/library/debian:sid-slim@sha256:c0f1b3716686ee452f7c62c82d8aee5f79feccba7402e967b79658100d5bd6cf
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 43.43kB 0.0s done
+#7 DONE 0.0s
+
+#8 [builder 2/9] WORKDIR /app
+#8 CACHED
+
+#9 [stage-1 2/9] RUN apt-get update && apt-get install -y     ca-certificates     libssl3     default-libmysqlclient-dev     libpq5     postgresql-client     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [stage-1 5/9] COPY templates ./templates
+#10 CACHED
+
+#11 [stage-1 3/9] WORKDIR /app
+#11 CACHED
+
+#12 [builder 9/9] RUN cargo build --release
+#12 CACHED
+
+#13 [builder 6/9] COPY migrations ./migrations
+#13 CACHED
+
+#14 [builder 3/9] RUN apt-get update && apt-get install -y     python3-dev     python3-pip     pkg-config     && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [builder 5/9] COPY src ./src
+#15 CACHED
+
+#16 [builder 7/9] COPY migrations_postgres ./migrations_postgres
+#16 CACHED
+
+#17 [builder 8/9] COPY static ./static
+#17 CACHED
+
+#18 [stage-1 6/9] COPY migrations ./migrations
+#18 CACHED
+
+#19 [stage-1 7/9] COPY migrations_postgres ./migrations_postgres
+#19 CACHED
+
+#20 [builder 4/9] COPY Cargo.toml Cargo.lock ./
+#20 CACHED
+
+#21 [stage-1 4/9] COPY --from=builder /app/target/release/freeradical /app/freeradical
+#21 CACHED
+
+#22 [stage-1 8/9] COPY static ./static
+#22 CACHED
+
+#23 [stage-1 9/9] RUN mkdir -p /app/uploads
+#23 CACHED
+
+#24 exporting to image
+#24 exporting layers done
+#24 writing image sha256:74f9bbc980247f3dc4869c9e229acfc127176526b724bf641c618a0f9a7e9298 done
+#24 naming to docker.io/library/freeradical done
+#24 DONE 0.0s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)

@@ -26,6 +26,7 @@ mod services;
 mod models;
 mod routers;
 mod schema;
+mod sql_types;
 mod watch;
 mod graphql;
 mod api_docs;
@@ -33,6 +34,7 @@ mod middleware;
 
 use routers::module_routers::ModuleRouter;
 use routers::page_routers::PageRouter;
+use services::storage_service::StorageBackend;
 
 use models::config_models::LocalConfig;
 use routers::category_routers::CategoryRouter;
@@ -78,7 +80,35 @@ async fn main() -> std::io::Result<()> {
             eprintln!("Failed to create database pool: {:?}", e);
             std::process::exit(1);
         }
-    };// REMOVED - already called above at line 47
+    };
+
+    // Initialize Read Replica Pool (or fallback to primary)
+    let read_pool = match conf.database_url_read.as_ref() {
+        Some(url) => {
+            log::info!("Initializing Read Replica Pool...");
+            match models::db_connection::create_pool(url) {
+                Ok(p) => models::db_connection::ReadDatabasePool(p),
+                Err(e) => {
+                     log::error!("Failed to connect to Read Replica: {}, falling back to primary", e);
+                     models::db_connection::ReadDatabasePool(pool.clone())
+                }
+            }
+        },
+        None => models::db_connection::ReadDatabasePool(pool.clone())
+    };
+
+    // Initialize Storage Backend
+    let storage_backend = StorageBackend::from_config(&conf).await;
+
+    // Initialize Cache Service
+    let redis_url = std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1:6379".to_string());
+    // Default TTL: 300 seconds (5 mins)
+    let cache_service = services::cache_service_v2::CacheServiceV2::new(
+        &redis_url, 
+        conf.redis_cluster_nodes.clone(),
+        300
+    ).await.expect("Failed to initialize Cache Service");
+    let cache_service = web::Data::new(cache_service);
 
     // Initialize Template Service (Supports Handlebars + Liquid)
     let template_service = services::template_service::TemplateService::new();
@@ -272,13 +302,12 @@ async fn main() -> std::io::Result<()> {
                 .route("/ai/metadata/alt-text", web::post().to(services::metadata_automation_service::generate_alt_text))
                 .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
 
-            // TEMPORARILY DISABLED - Vector type issues need fixing
-            // .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
-            // .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
-            // .route("/ai/analyze", web::post().to(services::ai_content_service::analyze_content))
-            // TEMPORARILY DISABLED - Vector type issues need fixing
-            // .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
-            // .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
+            .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
+            .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
+            .route("/ai/analyze", web::post().to(services::ai_content_service::generate_content)) // Mapped to correct function
+            
+            .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
+            .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // .service(controllers::robots_controller::robots)  // Commented - controller removed
             // Admin Dashboard API
             .service(controllers::dashboard_controller::dashboard_summary)
@@ -298,7 +327,11 @@ async fn main() -> std::io::Result<()> {
             }))
             .service(fs::Files::new("/assets", "./templates/assets").show_files_listing())
             .service(fs::Files::new("/static", "./static"))
+            .default_service(web::get().to(controllers::page_controllers::display_page))
             .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(read_pool.clone())) // Read Replica
+            .app_data(web::Data::new(storage_backend.clone())) // Storage Backend
+            .app_data(cache_service.clone()) // Cache Service
             .app_data(handlebars_ref.clone())
             .app_data(payment_registry.clone())
     })
@@ -310,3 +343,4 @@ async fn main() -> std::io::Result<()> {
 
     http_server.await
 }
+// force rebuild

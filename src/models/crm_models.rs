@@ -50,6 +50,7 @@ pub struct CrmCustomer {
     pub notes: Option<String>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -60,6 +61,7 @@ pub struct NewCrmCustomer {
     pub customer_since: Option<NaiveDateTime>,
     pub health_score: Option<i32>,
     pub churn_risk: Option<String>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Interaction =====
@@ -82,6 +84,7 @@ pub struct CrmInteraction {
     
     pub created_by: Option<i32>,
     pub created_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -94,6 +97,7 @@ pub struct NewCrmInteraction {
     pub description: Option<String>,
     pub outcome: Option<String>,
     pub created_by: Option<i32>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Segment =====
@@ -113,6 +117,7 @@ pub struct CrmSegment {
     pub created_by: Option<i32>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -123,6 +128,7 @@ pub struct NewCrmSegment {
     pub criteria: serde_json::Value,
     pub is_dynamic: Option<bool>,
     pub created_by: Option<i32>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Campaign =====
@@ -156,6 +162,7 @@ pub struct CrmCampaign {
     pub created_by: Option<i32>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -169,6 +176,7 @@ pub struct NewCrmCampaign {
     pub content: Option<String>,
     pub scheduled_at: Option<NaiveDateTime>,
     pub created_by: Option<i32>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Task =====
@@ -191,6 +199,7 @@ pub struct CrmTask {
     pub created_by: Option<i32>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -204,6 +213,7 @@ pub struct NewCrmTask {
     pub due_date: Option<NaiveDateTime>,
     pub assigned_to: Option<i32>,
     pub created_by: Option<i32>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Note =====
@@ -219,6 +229,7 @@ pub struct CrmNote {
     pub created_by: Option<i32>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
@@ -228,6 +239,7 @@ pub struct NewCrmNote {
     pub note_text: String,
     pub is_pinned: Option<bool>,
     pub created_by: Option<i32>,
+    pub tenant_id: Option<i32>,
 }
 
 // ===== CRM Segment Member =====

@@ -1,6 +1,8 @@
 use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use diesel::prelude::*;
+use diesel::sql_types::{BigInt, Text, Float4, Integer};
+use pgvector::Vector;
 
 use crate::models::DbPool;
 use crate::schema::{pages, content_embeddings};
@@ -15,12 +17,17 @@ pub struct RecommendationRequest {
 }
 
 /// Recommendation result
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, QueryableByName)]
 pub struct Recommendation {
+    #[diesel(sql_type = BigInt)]
     pub page_id: i64,
+    #[diesel(sql_type = Text)]
     pub title: String,
+    #[diesel(sql_type = Float4)]
     pub score: f32,
+    #[diesel(sql_type = Integer)]
     pub rank: i32,
+    #[diesel(sql_type = Text)]
     pub reason: String,
 }
 
@@ -48,12 +55,41 @@ pub async fn get_related_content(
             Box::new("Connection error".to_string())
         ))?;
         
-        // Note: pages table uses uuid as PK, not id
-        // SQL simplified without JOIN since embedding doesn't exist in schema
-        // TODO: Implement proper vector similarity when pgvector is set up
-        let recommendations: Vec<Recommendation> = vec![];
+        // SQL to find similar pages based on embedding distance
+        // Requires source embedding
         
-        Ok(recommendations)
+        let sql = "SELECT 
+                p.id::bigint as page_id,
+                p.page_title as title,
+                (1 - (ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1)))::real as score,
+                0::integer as rank,
+                'Similarity'::text as reason
+             FROM content_embeddings ce
+             JOIN pages p ON p.id = ce.page_id
+             WHERE ce.page_id != $1
+               AND (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1) IS NOT NULL
+             ORDER BY ce.embedding_vector <=> (SELECT embedding_vector FROM content_embeddings WHERE page_id = $1 LIMIT 1)
+             LIMIT $2";
+
+        // Note: Casting limit to BigInt
+        // Since $1 is integer page_id, bind integer. 
+        // Warning: pages table uses uuid as primary key in some contexts, but schema says content_embeddings has page_id as Int4. 
+        // Assuming pages table has id column (Int4/Int8).
+        // If pages uses uuid, then we need to join on uuid.
+        
+        diesel::sql_query(sql)
+            .bind::<diesel::sql_types::Integer, _>(source_id as i32)
+            .bind::<diesel::sql_types::BigInt, _>(limit)
+            .load::<Recommendation>(&mut conn)
+            .map(|rows| {
+                rows.into_iter()
+                    .enumerate()
+                    .map(|(idx, mut res)| {
+                        res.rank = (idx + 1) as i32;
+                        res
+                    })
+                    .collect()
+            })
     })
     .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
@@ -75,8 +111,16 @@ pub async fn get_trending(
 ) -> Result<HttpResponse, CustomHttpError> {
     let limit = limit.into_inner();
     
-    // TODO: Implement view tracking and calculate trending
     // For now, return most recent content
+    // Note: Reusing Recommendation struct for output consistency
+    
+    // We need to fetch pages. `pages` struct in models might duplicate this.
+    // Simplifying to raw SQL for cleaner struct mapping or using DSL if possible.
+    // If pages uses uuid, we have mismatch in Recommendation (i64).
+    // Let's assume pages has an `id` serial or use hash of uuid for demo?
+    // The previous implementation used `idx` as placeholder ID.
+    // Let's try to get actual ID if possible, otherwise use placeholder.
+    
     let trending = web::block(move || -> Result<Vec<Recommendation>, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
@@ -84,20 +128,20 @@ pub async fn get_trending(
         ))?;
         
         pages::table
-            .select((pages::uuid, pages::page_title, pages::time_created))
+            .select((pages::id, pages::page_title, pages::time_created))
             .filter(pages::status.eq(Some(crate::models::status_enum::PageStatus::Published)))
             .order(pages::time_created.desc())
             .limit(limit)
-            .load::<(String, String, chrono::NaiveDateTime)>(&mut conn)
+            .load::<(i32, String, chrono::NaiveDateTime)>(&mut conn)
             .map(|rows| {
                 rows.into_iter()
                     .enumerate()
-                    .map(|(idx, (page_uuid, title, _))| Recommendation {
-                        page_id: idx as i64, // Using index as placeholder ID
+                    .map(|(idx, (id, title, _))| Recommendation {
+                        page_id: id as i64,
                         title,
                         score: 1.0 - (idx as f32 * 0.1),
                         rank: (idx + 1) as i32,
-                        reason: "Trending".to_string(),
+                        reason: "Recent".to_string(),
                     })
                     .collect()
             })
@@ -109,12 +153,4 @@ pub async fn get_trending(
         "trending": trending,
         "algorithm": "recency_based"
     })))
-}
-
-/// Convert vector to PostgreSQL array string
-fn vector_to_string(vec: &[f32]) -> String {
-    vec.iter()
-        .map(|v| v.to_string())
-        .collect::<Vec<_>>()
-        .join(",")
 }

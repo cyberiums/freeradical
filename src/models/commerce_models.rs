@@ -35,6 +35,7 @@ pub struct NewProduct {
     pub sku: Option<String>,
     pub inventory_count: Option<i32>,
     pub is_active: Option<bool>,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]

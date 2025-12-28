@@ -1,0 +1,2331 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.07kB done
+#1 WARN: FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/rustlang/rust:nightly
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/debian:sid-slim
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 66B done
+#4 DONE 0.0s
+
+#5 [builder 1/9] FROM docker.io/rustlang/rust:nightly
+#5 DONE 0.0s
+
+#6 [stage-1 1/9] FROM docker.io/library/debian:sid-slim@sha256:c0f1b3716686ee452f7c62c82d8aee5f79feccba7402e967b79658100d5bd6cf
+#6 DONE 0.0s
+
+#7 [internal] load build context
+#7 transferring context: 54.87kB 0.0s done
+#7 DONE 0.0s
+
+#8 [builder 3/9] RUN apt-get update && apt-get install -y     python3-dev     python3-pip     pkg-config     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [builder 2/9] WORKDIR /app
+#9 CACHED
+
+#10 [builder 4/9] COPY Cargo.toml Cargo.lock ./
+#10 CACHED
+
+#11 [builder 5/9] COPY src ./src
+#11 DONE 0.0s
+
+#12 [builder 6/9] COPY migrations ./migrations
+#12 DONE 0.0s
+
+#13 [builder 7/9] COPY migrations_postgres ./migrations_postgres
+#13 DONE 0.0s
+
+#14 [builder 8/9] COPY static ./static
+#14 DONE 0.0s
+
+#15 [builder 9/9] RUN cargo build --release
+#15 0.202     Updating crates.io index
+#15 3.520  Downloading crates ...
+#15 3.702   Downloaded actix-codec v0.5.2
+#15 3.720   Downloaded Inflector v0.11.4
+#15 3.728   Downloaded alloc-no-stdlib v2.0.4
+#15 3.732   Downloaded aead v0.5.2
+#15 3.737   Downloaded actix-utils v3.0.1
+#15 3.746   Downloaded actix-multipart-derive v0.7.0
+#15 3.750   Downloaded alloc-stdlib v0.2.2
+#15 3.753   Downloaded adler2 v2.0.1
+#15 3.756   Downloaded actix-service v2.0.3
+#15 3.759   Downloaded actix-macros v0.2.4
+#15 3.763   Downloaded byteorder-lite v0.1.0
+#15 3.766   Downloaded bytecheck v0.6.12
+#15 3.769   Downloaded actix-cors v0.7.1
+#15 3.773   Downloaded color_quant v1.1.0
+#15 3.775   Downloaded cpufeatures v0.2.17
+#15 3.778   Downloaded cfg_aliases v0.2.1
+#15 3.780   Downloaded convert_case v0.4.0
+#15 3.783   Downloaded actix-server v2.6.0
+#15 3.788   Downloaded darling_macro v0.14.4
+#15 3.790   Downloaded darling_macro v0.21.3
+#15 3.792   Downloaded actix-multipart v0.7.2
+#15 3.796   Downloaded ahash v0.7.8
+#15 3.802   Downloaded const_fn v0.4.11
+#15 3.806   Downloaded darling_macro v0.20.11
+#15 3.809   Downloaded atomic-waker v1.1.2
+#15 3.813   Downloaded async-stream-impl v0.3.6
+#15 3.816   Downloaded async-convert v1.0.0
+#15 3.823   Downloaded darling v0.14.4
+#15 3.829   Downloaded dashmap v6.1.0
+#15 3.835   Downloaded diesel_migrations v2.3.1
+#15 3.838   Downloaded eventsource-stream v0.2.3
+#15 3.842   Downloaded inotify-sys v0.1.5
+#15 3.845   Downloaded crossbeam-deque v0.8.6
+#15 3.848   Downloaded crossbeam-utils v0.8.21
+#15 3.852   Downloaded cfb v0.7.3
+#15 3.859   Downloaded iovec v0.1.4
+#15 3.862   Downloaded derive_builder v0.20.2
+#15 3.868   Downloaded darling_core v0.14.4
+#15 3.874   Downloaded itoa v1.0.16
+#15 3.878   Downloaded cc v1.2.50
+#15 3.884   Downloaded jobserver v0.1.34
+#15 3.889   Downloaded juniper_actix v0.6.0
+#15 3.893   Downloaded local-channel v0.1.5
+#15 3.896   Downloaded foreign-types-shared v0.1.1
+#15 3.897   Downloaded downcast-rs v2.0.2
+#15 3.901   Downloaded fastrand v2.3.0
+#15 3.906   Downloaded kstring v2.0.2
+#15 3.908   Downloaded liquid-derive v0.26.10
+#15 3.912   Downloaded migrations_macros v2.3.0
+#15 3.914   Downloaded mime v0.3.17
+#15 3.916   Downloaded aes v0.8.4
+#15 3.921   Downloaded migrations_internals v2.3.0
+#15 3.924   Downloaded jsonwebtoken v10.2.0
+#15 3.931   Downloaded mio-extras v2.0.6
+#15 3.933   Downloaded bigdecimal v0.4.9
+#15 3.941   Downloaded nonzero_ext v0.3.0
+#15 3.946   Downloaded lock_api v0.4.14
+#15 3.949   Downloaded native-tls v0.2.14
+#15 3.957   Downloaded openssl-macros v0.1.1
+#15 3.959   Downloaded num_cpus v1.17.0
+#15 3.965   Downloaded parse-size v1.1.0
+#15 3.969   Downloaded percent-encoding v2.3.2
+#15 3.971   Downloaded openssl-probe v0.1.6
+#15 3.974   Downloaded aho-corasick v1.1.4
+#15 3.982   Downloaded pin-utils v0.1.0
+#15 3.986   Downloaded juniper_codegen v0.16.0
+#15 3.992   Downloaded net2 v0.2.39
+#15 3.995   Downloaded idna_adapter v1.2.1
+#15 3.998   Downloaded dsl_auto_type v0.2.0
+#15 4.000   Downloaded http-body v0.4.6
+#15 4.005   Downloaded equivalent v1.0.2
+#15 4.007   Downloaded dunce v1.0.5
+#15 4.009   Downloaded num-derive v0.3.3
+#15 4.012   Downloaded multer v3.1.0
+#15 4.016   Downloaded impl-more v0.1.9
+#15 4.019   Downloaded local-waker v0.1.4
+#15 4.021   Downloaded http-body v1.0.1
+#15 4.025   Downloaded funty v2.0.0
+#15 4.027   Downloaded futures-macro v0.3.31
+#15 4.029   Downloaded futures-core v0.3.31
+#15 4.031   Downloaded ghash v0.5.1
+#15 4.033   Downloaded envy v0.4.2
+#15 4.036   Downloaded liquid-lib v0.26.11
+#15 4.041   Downloaded ident_case v1.0.1
+#15 4.042   Downloaded futures-task v0.3.31
+#15 4.044   Downloaded language-tags v0.3.2
+#15 4.047   Downloaded hyper-tls v0.6.0
+#15 4.049   Downloaded futures-sink v0.3.31
+#15 4.051   Downloaded num-conv v0.1.0
+#15 4.052   Downloaded deranged v0.5.5
+#15 4.055   Downloaded find-msvc-tools v0.1.5
+#15 4.057   Downloaded derive_builder_core v0.20.2
+#15 4.060   Downloaded derive_builder_core v0.12.0
+#15 4.062   Downloaded digest v0.10.7
+#15 4.064   Downloaded futures-executor v0.3.31
+#15 4.066   Downloaded futures-io v0.3.31
+#15 4.068   Downloaded mime_guess v2.0.5
+#15 4.070   Downloaded generic-array v0.14.7
+#15 4.072   Downloaded foldhash v0.2.0
+#15 4.074   Downloaded aes-gcm v0.10.3
+#15 4.078   Downloaded num-order v1.2.0
+#15 4.080   Downloaded log v0.4.29
+#15 4.084   Downloaded filetime v0.2.26
+#15 4.087   Downloaded proc-macro-crate v3.4.0
+#15 4.089   Downloaded powerfmt v0.2.0
+#15 4.091   Downloaded ptr_meta v0.1.4
+#15 4.093   Downloaded indexmap v2.12.1
+#15 4.099   Downloaded password-hash v0.5.0
+#15 4.101   Downloaded num-modular v0.6.1
+#15 4.104   Downloaded actix-http v3.11.2
+#15 4.116   Downloaded radium v0.7.0
+#15 4.117   Downloaded qrcodegen-image v1.5.0
+#15 4.119   Downloaded qrcodegen v1.8.0
+#15 4.121   Downloaded ptr_meta_derive v0.1.4
+#15 4.122   Downloaded pgvector v0.3.4
+#15 4.125   Downloaded rand_chacha v0.3.1
+#15 4.126   Downloaded proc-macro-hack v0.5.20+deprecated
+#15 4.129   Downloaded pkg-config v0.3.32
+#15 4.131   Downloaded pest_generator v2.8.4
+#15 4.133   Downloaded pem v3.0.6
+#15 4.134   Downloaded parking_lot_core v0.9.12
+#15 4.137   Downloaded proc-macro-error-attr v1.0.4
+#15 4.139   Downloaded proc-macro-error v1.0.4
+#15 4.142   Downloaded ppv-lite86 v0.2.21
+#15 4.144   Downloaded combine v4.6.7
+#15 4.151   Downloaded pin-project-lite v0.2.16
+#15 4.157   Downloaded rend v0.4.2
+#15 4.159   Downloaded pest_derive v2.8.4
+#15 4.161   Downloaded parking_lot v0.12.5
+#15 4.165   Downloaded miniz_oxide v0.8.9
+#15 4.171   Downloaded once_cell v1.21.3
+#15 4.178   Downloaded hyper-rustls v0.24.2
+#15 4.182   Downloaded http-body-util v0.1.3
+#15 4.185   Downloaded notify v4.0.18
+#15 4.190   Downloaded memchr v2.7.6
+#15 4.196   Downloaded pq-sys v0.7.5
+#15 4.199   Downloaded iri-string v0.7.9
+#15 4.209   Downloaded errno v0.3.14
+#15 4.211   Downloaded displaydoc v0.2.5
+#15 4.216   Downloaded rkyv_derive v0.7.45
+#15 4.219   Downloaded quanta v0.12.6
+#15 4.223   Downloaded pest_meta v2.8.4
+#15 4.226   Downloaded rust-embed-utils v8.9.0
+#15 4.227   Downloaded rust-embed-impl v8.9.0
+#15 4.229   Downloaded rustc_version v0.4.1
+#15 4.230   Downloaded proc-macro2 v1.0.103
+#15 4.234   Downloaded secrecy v0.8.0
+#15 4.236   Downloaded openssl-sys v0.9.111
+#15 4.241   Downloaded scopeguard v1.2.0
+#15 4.243   Downloaded scheduled-thread-pool v0.2.7
+#15 4.244   Downloaded same-file v1.0.6
+#15 4.246   Downloaded num-traits v0.2.19
+#15 4.250   Downloaded num-bigint v0.4.6
+#15 4.256   Downloaded humantime v2.3.0
+#15 4.258   Downloaded actix-web v4.12.1
+#15 4.271   Downloaded subtle v2.6.1
+#15 4.273   Downloaded minimal-lexical v0.2.1
+#15 4.280   Downloaded sync_wrapper v0.1.2
+#15 4.281   Downloaded tap v1.0.1
+#15 4.282   Downloaded bitvec v1.0.1
+#15 4.299   Downloaded tinyvec_macros v0.1.1
+#15 4.301   Downloaded rand_core v0.9.3
+#15 4.303   Downloaded thiserror-impl v2.0.17
+#15 4.305   Downloaded signature v2.2.0
+#15 4.306   Downloaded aws-lc-rs v1.15.2
+#15 4.318   Downloaded regex-lite v0.1.8
+#15 4.322   Downloaded qoi v0.4.1
+#15 4.326   Downloaded tinystr v0.8.2
+#15 4.328   Downloaded strsim v0.10.0
+#15 4.330   Downloaded tokio-macros v2.6.0
+#15 4.331   Downloaded tower-service v0.3.3
+#15 4.332   Downloaded tempfile v3.24.0
+#15 4.336   Downloaded tokio-tungstenite v0.21.0
+#15 4.339   Downloaded tokio-native-tls v0.3.1
+#15 4.341   Downloaded try-lock v0.2.5
+#15 4.343   Downloaded rand v0.9.2
+#15 4.347   Downloaded toml_datetime v0.7.5+spec-1.1.0
+#15 4.348   Downloaded totp-rs v5.7.0
+#15 4.351   Downloaded time v0.2.27
+#15 4.364   Downloaded untrusted v0.9.0
+#15 4.366   Downloaded utoipa-redoc v3.0.0
+#15 4.369   Downloaded tracing-attributes v0.1.31
+#15 4.373   Downloaded version_check v0.9.5
+#15 4.375   Downloaded v_htmlescape v0.15.8
+#15 4.376   Downloaded urlencoding v2.1.3
+#15 4.378   Downloaded tokio-cron-scheduler v0.9.4
+#15 4.384   Downloaded unicode-ident v1.0.22
+#15 4.390   Downloaded want v0.3.1
+#15 4.391   Downloaded walkdir v2.5.0
+#15 4.394   Downloaded env_logger v0.8.4
+#15 4.398   Downloaded sync_wrapper v1.0.2
+#15 4.399   Downloaded toml_edit v0.23.10+spec-1.0.0
+#15 4.406   Downloaded utoipa v4.2.3
+#15 4.409   Downloaded zerofrom-derive v0.1.6
+#15 4.410   Downloaded zerofrom v0.1.6
+#15 4.411   Downloaded web-time v1.1.0
+#15 4.413   Downloaded tower-layer v0.3.3
+#15 4.415   Downloaded simd-adler32 v0.3.8
+#15 4.417   Downloaded portable-atomic v1.12.0
+#15 4.426   Downloaded zeroize v1.8.2
+#15 4.428   Downloaded smartstring v1.0.1
+#15 4.430   Downloaded slab v0.4.11
+#15 4.432   Downloaded simple_asn1 v0.6.3
+#15 4.433   Downloaded zerovec-derive v0.11.2
+#15 4.435   Downloaded weezl v0.1.12
+#15 4.438   Downloaded zstd-safe v7.2.4
+#15 4.440   Downloaded time v0.3.44
+#15 4.448   Downloaded utf8_iter v1.0.4
+#15 4.449   Downloaded zmij v0.1.8
+#15 4.451   Downloaded tokio-util v0.7.17
+#15 4.458   Downloaded unicode-segmentation v1.12.0
+#15 4.462   Downloaded half v2.7.1
+#15 4.466   Downloaded getrandom v0.3.4
+#15 4.469   Downloaded standback v0.2.17
+#15 4.472   Downloaded url v2.5.7
+#15 4.476   Downloaded tower v0.5.2
+#15 4.487   Downloaded strum_macros v0.26.4
+#15 4.490   Downloaded thiserror-impl v1.0.69
+#15 4.491   Downloaded synstructure v0.13.2
+#15 4.493   Downloaded openssl v0.10.75
+#15 4.512   Downloaded zerotrie v0.2.3
+#15 4.515   Downloaded utoipa-gen v4.3.1
+#15 4.523   Downloaded zip v0.6.6
+#15 4.527   Downloaded utf-8 v0.7.6
+#15 4.529   Downloaded syn v1.0.109
+#15 4.543   Downloaded zerocopy-derive v0.8.31
+#15 4.550   Downloaded static_assertions v1.1.0
+#15 4.552   Downloaded smallvec v1.15.1
+#15 4.554   Downloaded rustls v0.21.12
+#15 4.566   Downloaded zerovec v0.11.5
+#15 4.572   Downloaded regex-syntax v0.8.8
+#15 4.584   Downloaded vcpkg v0.2.15
+#15 4.621   Downloaded yoke v0.8.1
+#15 4.623   Downloaded spin v0.9.8
+#15 4.626   Downloaded rustls v0.23.35
+#15 4.637   Downloaded rustix v1.1.3
+#15 4.660   Downloaded socket2 v0.5.10
+#15 4.663   Downloaded diesel_derives v2.3.6
+#15 4.668   Downloaded writeable v0.6.2
+#15 4.671   Downloaded ryu v1.0.21
+#15 4.675   Downloaded tracing v0.1.44
+#15 4.701   Downloaded wyz v0.5.1
+#15 4.703   Downloaded derive_more-impl v2.1.1
+#15 4.709   Downloaded tungstenite v0.21.0
+#15 4.712   Downloaded regex-automata v0.4.13
+#15 4.729   Downloaded icu_normalizer v2.1.1
+#15 4.732   Downloaded brotli v8.0.2
+#15 4.748   Downloaded zune-inflate v0.2.54
+#15 4.750   Downloaded rayon-core v1.13.0
+#15 4.754   Downloaded jpeg-decoder v0.3.2
+#15 4.761   Downloaded typenum v1.19.0
+#15 4.765   Downloaded http v0.2.12
+#15 4.771   Downloaded libc v0.2.178
+#15 4.807   Downloaded uuid v1.19.0
+#15 4.810   Downloaded serde v1.0.228
+#15 4.814   Downloaded hashbrown v0.12.3
+#15 4.819   Downloaded handlebars v5.1.2
+#15 4.825   Downloaded hyper-util v0.1.19
+#15 4.831   Downloaded http v1.4.0
+#15 4.835   Downloaded pxfm v0.1.27
+#15 4.857   Downloaded futures-util v0.3.31
+#15 4.866   Downloaded rust-embed v8.9.0
+#15 4.878   Downloaded hyper v1.8.1
+#15 4.884   Downloaded hashbrown v0.14.5
+#15 4.889   Downloaded zstd-sys v2.0.16+zstd.1.5.7
+#15 4.905   Downloaded reqwest v0.11.27
+#15 4.913   Downloaded tower-http v0.6.8
+#15 4.921   Downloaded rustls-webpki v0.101.7
+#15 4.932   Downloaded reqwest v0.12.28
+#15 4.937   Downloaded hyper v0.14.32
+#15 4.944   Downloaded rayon v1.11.0
+#15 4.950   Downloaded hashbrown v0.16.1
+#15 4.955   Downloaded h2 v0.3.27
+#15 4.961   Downloaded regex v1.12.2
+#15 4.966   Downloaded icu_properties_data v2.1.2
+#15 4.974   Downloaded h2 v0.4.12
+#15 4.979   Downloaded exr v1.74.0
+#15 4.989   Downloaded governor v0.10.4
+#15 4.994   Downloaded idna v1.1.0
+#15 4.998   Downloaded handlebars v6.3.2
+#15 5.004   Downloaded derive_more v2.1.1
+#15 5.013   Downloaded tracing-core v0.1.36
+#15 5.016   Downloaded spinning_top v0.3.0
+#15 5.018   Downloaded socket2 v0.6.1
+#15 5.020   Downloaded icu_collections v2.1.1
+#15 5.025   Downloaded icu_properties v2.1.2
+#15 5.027   Downloaded icu_normalizer_data v2.1.1
+#15 5.029   Downloaded tiff v0.9.1
+#15 5.042   Downloaded zerocopy v0.8.31
+#15 5.062   Downloaded image v0.25.9
+#15 5.070   Downloaded icu_provider v2.1.1
+#15 5.073   Downloaded ring v0.17.14
+#15 5.110   Downloaded redis v0.32.7
+#15 5.119   Downloaded winnow v0.7.14
+#15 5.127   Downloaded syn v2.0.111
+#15 5.136   Downloaded icu_locale_core v2.1.1
+#15 5.141   Downloaded diesel v2.3.5
+#15 5.158   Downloaded futures v0.3.31
+#15 5.161   Downloaded yoke-derive v0.8.1
+#15 5.162   Downloaded thiserror v2.0.17
+#15 5.166   Downloaded flate2 v1.1.5
+#15 5.170   Downloaded static_assertions_next v1.1.2
+#15 5.172   Downloaded rustls-pki-types v1.13.2
+#15 5.174   Downloaded rustls-native-certs v0.6.3
+#15 5.176   Downloaded serde_json v1.0.147
+#15 5.181   Downloaded rust_decimal v1.39.0
+#15 5.187   Downloaded zstd v0.13.3
+#15 5.189   Downloaded simdutf8 v0.1.5
+#15 5.191   Downloaded async-graphql v7.0.17
+#15 5.207   Downloaded signal-hook-registry v1.4.7
+#15 5.208   Downloaded shlex v1.3.0
+#15 5.210   Downloaded sha2 v0.10.9
+#15 5.212   Downloaded polyval v0.6.2
+#15 5.214   Downloaded num-integer v0.1.46
+#15 5.215   Downloaded ucd-trie v0.1.7
+#15 5.217   Downloaded strsim v0.11.1
+#15 5.218   Downloaded tokio v1.48.0
+#15 5.247   Downloaded stable_deref_trait v1.2.1
+#15 5.248   Downloaded semver v1.0.27
+#15 5.250   Downloaded moxcms v0.7.11
+#15 5.257   Downloaded unicase v2.8.1
+#15 5.259   Downloaded toml v0.9.10+spec-1.1.0
+#15 5.262   Downloaded rustls-pemfile v1.0.4
+#15 5.265   Downloaded toml_parser v1.0.6+spec-1.1.0
+#15 5.267   Downloaded rkyv v0.7.45
+#15 5.273   Downloaded untrusted v0.7.1
+#15 5.275   Downloaded universal-hash v0.5.1
+#15 5.276   Downloaded unicode-xid v0.2.6
+#15 5.277   Downloaded tokio-stream v0.1.17
+#15 5.280   Downloaded tokio-rustls v0.26.4
+#15 5.282   Downloaded tokio-rustls v0.24.1
+#15 5.283   Downloaded tinyvec v1.10.0
+#15 5.286   Downloaded serde_derive v1.0.228
+#15 5.289   Downloaded rustls-webpki v0.103.8
+#15 5.291   Downloaded iana-time-zone v0.1.64
+#15 5.294   Downloaded chrono v0.4.42
+#15 5.300   Downloaded httparse v1.10.1
+#15 5.303   Downloaded getrandom v0.2.16
+#15 5.305   Downloaded serde_core v1.0.228
+#15 5.308   Downloaded pest v2.8.4
+#15 5.312   Downloaded hmac v0.12.1
+#15 5.314   Downloaded futures-timer v3.0.3
+#15 5.316   Downloaded strum v0.26.3
+#15 5.316   Downloaded libm v0.2.15
+#15 5.324   Downloaded time-macros v0.2.24
+#15 5.326   Downloaded encoding_rs v0.8.35
+#15 5.347   Downloaded juniper v0.16.2
+#15 5.355   Downloaded png v0.18.0
+#15 5.359   Downloaded linux-raw-sys v0.11.0
+#15 5.420   Downloaded thiserror v1.0.69
+#15 5.423   Downloaded termcolor v1.4.1
+#15 5.425   Downloaded png v0.17.16
+#15 5.428   Downloaded mio v1.1.1
+#15 5.433   Downloaded mio v0.6.23
+#15 5.436   Downloaded itertools v0.14.0
+#15 5.441   Downloaded time-macros-impl v0.1.2
+#15 5.444   Downloaded time-macros v0.1.1
+#15 5.444   Downloaded time-core v0.1.6
+#15 5.446   Downloaded serde_plain v1.0.2
+#15 5.448   Downloaded rand_core v0.6.4
+#15 5.449   Downloaded rand_chacha v0.9.0
+#15 5.450   Downloaded rand v0.8.5
+#15 5.454   Downloaded r2d2 v0.8.10
+#15 5.455   Downloaded quote v1.0.42
+#15 5.457   Downloaded sct v0.7.1
+#15 5.460   Downloaded nom v7.1.3
+#15 5.464   Downloaded sha1_smol v1.0.1
+#15 5.465   Downloaded sha1 v0.10.6
+#15 5.467   Downloaded serde_urlencoded v0.7.1
+#15 5.468   Downloaded serde_spanned v1.0.4
+#15 5.469   Downloaded seahash v4.1.0
+#15 5.471   Downloaded rustversion v1.0.22
+#15 5.473   Downloaded hyper-rustls v0.27.7
+#15 5.475   Downloaded gif v0.13.3
+#15 5.476   Downloaded fs_extra v1.3.0
+#15 5.478   Downloaded foldhash v0.1.5
+#15 5.479   Downloaded derive_builder v0.12.0
+#15 5.482   Downloaded reqwest-eventsource v0.4.0
+#15 5.483   Downloaded brotli-decompressor v5.0.0
+#15 5.491   Downloaded either v1.15.0
+#15 5.492   Downloaded futures-channel v0.3.31
+#15 5.495   Downloaded potential_utf v0.1.4
+#15 5.497   Downloaded opaque-debug v0.3.1
+#15 5.497   Downloaded http-range v0.1.5
+#15 5.499   Downloaded fdeflate v0.3.7
+#15 5.503   Downloaded liquid-core v0.26.11
+#15 5.509   Downloaded fnv v1.0.7
+#15 5.510   Downloaded derive_more v0.99.20
+#15 5.515   Downloaded derive_builder_macro v0.12.0
+#15 5.516   Downloaded litemap v0.8.1
+#15 5.520   Downloaded hex v0.4.3
+#15 5.522   Downloaded darling_core v0.20.11
+#15 5.525   Downloaded liquid v0.26.11
+#15 5.527   Downloaded form_urlencoded v1.2.2
+#15 5.528   Downloaded foreign-types v0.3.2
+#15 5.529   Downloaded darling_core v0.21.3
+#15 5.533   Downloaded fast_chemail v0.9.6
+#15 5.534   Downloaded derive_builder_macro v0.20.2
+#15 5.535   Downloaded lebe v0.5.3
+#15 5.537   Downloaded lazycell v1.3.0
+#15 5.538   Downloaded lazy_static v1.5.0
+#15 5.539   Downloaded httpdate v1.0.3
+#15 5.540   Downloaded heck v0.5.0
+#15 5.541   Downloaded diesel_table_macro_syntax v0.3.0
+#15 5.542   Downloaded derive_utils v0.15.0
+#15 5.544   Downloaded deadpool v0.12.3
+#15 5.546   Downloaded borsh v1.6.0
+#15 5.551   Downloaded async-openai v0.18.3
+#15 5.555   Downloaded ipnet v2.11.0
+#15 5.556   Downloaded inotify v0.7.1
+#15 5.558   Downloaded bytemuck v1.24.0
+#15 5.560   Downloaded auto_enums v0.8.7
+#15 5.566   Downloaded async-graphql-derive v7.0.17
+#15 5.568   Downloaded bytes v1.11.0
+#15 5.571   Downloaded blake2 v0.10.6
+#15 5.573   Downloaded base64 v0.22.1
+#15 5.576   Downloaded base64 v0.21.7
+#15 5.579   Downloaded anymap2 v0.13.0
+#15 5.580   Downloaded arc-swap v1.8.0
+#15 5.583   Downloaded allocator-api2 v0.2.21
+#15 5.586   Downloaded instant v0.1.13
+#15 5.587   Downloaded inout v0.1.4
+#15 5.588   Downloaded infer v0.15.0
+#15 5.590   Downloaded deadpool-runtime v0.1.4
+#15 5.590   Downloaded crossbeam-epoch v0.9.18
+#15 5.592   Downloaded bitflags v2.10.0
+#15 5.595   Downloaded backoff v0.4.0
+#15 5.597   Downloaded base64ct v1.8.1
+#15 5.598   Downloaded async-graphql-parser v7.0.17
+#15 5.601   Downloaded cron v0.12.1
+#15 5.603   Downloaded cookie v0.16.2
+#15 5.605   Downloaded cipher v0.4.4
+#15 5.606   Downloaded argon2 v0.5.3
+#15 5.608   Downloaded dotenv v0.15.0
+#15 5.609   Downloaded darling v0.21.3
+#15 5.612   Downloaded darling v0.20.11
+#15 5.615   Downloaded bitflags v1.3.2
+#15 5.617   Downloaded backon v1.6.0
+#15 5.620   Downloaded anyhow v1.0.100
+#15 5.622   Downloaded deadpool-redis v0.22.0
+#15 5.624   Downloaded data-encoding v2.9.0
+#15 5.625   Downloaded crc32fast v1.5.0
+#15 5.627   Downloaded byteorder v1.5.0
+#15 5.628   Downloaded autocfg v1.5.0
+#15 5.629   Downloaded async-trait v0.1.89
+#15 5.632   Downloaded async-graphql-value v7.0.17
+#15 5.633   Downloaded arrayvec v0.7.6
+#15 5.634   Downloaded actix-web-codegen v4.3.0
+#15 5.636   Downloaded crypto-common v0.1.7
+#15 5.637   Downloaded constant_time_eq v0.3.1
+#15 5.638   Downloaded cfg-if v1.0.4
+#15 5.639   Downloaded async-stream v0.3.6
+#15 5.641   Downloaded ascii_utils v0.9.3
+#15 5.641   Downloaded ctr v0.9.2
+#15 5.643   Downloaded utoipa-swagger-ui v6.0.0
+#15 5.665   Downloaded convert_case v0.10.0
+#15 5.667   Downloaded cmake v0.1.57
+#15 5.668   Downloaded base32 v0.5.1
+#15 5.669   Downloaded actix-rt v2.11.0
+#15 5.670   Downloaded actix-router v0.5.3
+#15 5.671   Downloaded actix-governor v0.10.0
+#15 5.673   Downloaded borsh-derive v1.6.0
+#15 5.675   Downloaded cfg-if v0.1.10
+#15 5.676   Downloaded bytestring v1.5.0
+#15 5.677   Downloaded atty v0.2.14
+#15 5.678   Downloaded actix-files v0.6.9
+#15 5.680   Downloaded bytecheck_derive v0.6.12
+#15 5.681   Downloaded block-buffer v0.10.4
+#15 5.681   Downloaded bit_field v0.10.3
+#15 5.700   Downloaded aws-lc-sys v0.35.0
+#15 5.916   Downloaded image v0.24.9
+#15 6.136    Compiling proc-macro2 v1.0.103
+#15 6.136    Compiling unicode-ident v1.0.22
+#15 6.136    Compiling quote v1.0.42
+#15 6.137    Compiling libc v0.2.178
+#15 6.137    Compiling serde_core v1.0.228
+#15 6.137    Compiling cfg-if v1.0.4
+#15 6.137    Compiling serde v1.0.228
+#15 6.140    Compiling version_check v0.9.5
+#15 6.324    Compiling memchr v2.7.6
+#15 6.370    Compiling smallvec v1.15.1
+#15 6.770    Compiling log v0.4.29
+#15 6.798    Compiling pin-project-lite v0.2.16
+#15 6.817    Compiling itoa v1.0.16
+#15 6.890    Compiling scopeguard v1.2.0
+#15 6.931    Compiling parking_lot_core v0.9.12
+#15 7.029    Compiling lock_api v0.4.14
+#15 7.037    Compiling futures-core v0.3.31
+#15 7.136    Compiling find-msvc-tools v0.1.5
+#15 7.162    Compiling shlex v1.3.0
+#15 7.283    Compiling typenum v1.19.0
+#15 7.373    Compiling generic-array v0.14.7
+#15 7.415    Compiling futures-sink v0.3.31
+#15 7.490    Compiling slab v0.4.11
+#15 7.554    Compiling syn v2.0.111
+#15 7.583    Compiling once_cell v1.21.3
+#15 7.589    Compiling fnv v1.0.7
+#15 7.715    Compiling futures-channel v0.3.31
+#15 7.906    Compiling jobserver v0.1.34
+#15 7.939    Compiling getrandom v0.2.16
+#15 7.966    Compiling signal-hook-registry v1.4.7
+#15 8.105    Compiling cc v1.2.50
+#15 8.187    Compiling parking_lot v0.12.5
+#15 8.238    Compiling mio v1.1.1
+#15 8.305    Compiling socket2 v0.6.1
+#15 8.893    Compiling rand_core v0.6.4
+#15 8.942    Compiling pin-utils v0.1.0
+#15 9.301    Compiling icu_properties_data v2.1.2
+#15 9.327    Compiling futures-task v0.3.31
+#15 9.345    Compiling futures-io v0.3.31
+#15 9.397    Compiling icu_normalizer_data v2.1.1
+#15 9.431    Compiling pkg-config v0.3.32
+#15 9.475    Compiling autocfg v1.5.0
+#15 9.483    Compiling stable_deref_trait v1.2.1
+#15 9.527    Compiling foldhash v0.2.0
+#15 9.547    Compiling equivalent v1.0.2
+#15 9.582    Compiling allocator-api2 v0.2.21
+#15 9.631    Compiling serde_json v1.0.147
+#15 9.694    Compiling crypto-common v0.1.7
+#15 9.714    Compiling getrandom v0.3.4
+#15 9.716    Compiling percent-encoding v2.3.2
+#15 9.800    Compiling tracing-core v0.1.36
+#15 9.811    Compiling crc32fast v1.5.0
+#15 9.825    Compiling bitflags v2.10.0
+#15 9.874    Compiling zerocopy v0.8.31
+#15 9.929    Compiling hashbrown v0.16.1
+#15 9.940    Compiling ident_case v1.0.1
+#15 9.957    Compiling subtle v2.6.1
+#15 10.03    Compiling litemap v0.8.1
+#15 10.05    Compiling writeable v0.6.2
+#15 10.10    Compiling httparse v1.10.1
+#15 10.14    Compiling num-traits v0.2.19
+#15 10.22    Compiling zmij v0.1.8
+#15 10.35    Compiling simd-adler32 v0.3.8
+#15 10.44    Compiling form_urlencoded v1.2.2
+#15 10.61    Compiling indexmap v2.12.1
+#15 10.62    Compiling block-buffer v0.10.4
+#15 10.66    Compiling cpufeatures v0.2.17
+#15 10.74    Compiling digest v0.10.7
+#15 10.75    Compiling aho-corasick v1.1.4
+#15 10.78    Compiling utf8_iter v1.0.4
+#15 10.91    Compiling synstructure v0.13.2
+#15 10.93    Compiling syn v1.0.109
+#15 11.01    Compiling regex-syntax v0.8.8
+#15 11.15    Compiling adler2 v2.0.1
+#15 11.25    Compiling miniz_oxide v0.8.9
+#15 11.32    Compiling strsim v0.11.1
+#15 11.59    Compiling base64 v0.22.1
+#15 12.29    Compiling flate2 v1.1.5
+#15 12.39    Compiling powerfmt v0.2.0
+#15 12.47    Compiling serde_derive v1.0.228
+#15 12.60    Compiling zerofrom-derive v0.1.6
+#15 12.83    Compiling yoke-derive v0.8.1
+#15 13.05    Compiling zerovec-derive v0.11.2
+#15 13.34    Compiling displaydoc v0.2.5
+#15 13.40    Compiling tokio-macros v2.6.0
+#15 13.97    Compiling futures-macro v0.3.31
+#15 14.02    Compiling zerofrom v0.1.6
+#15 14.10    Compiling yoke v0.8.1
+#15 14.23    Compiling tracing-attributes v0.1.31
+#15 14.30    Compiling zerocopy-derive v0.8.31
+#15 14.36    Compiling zerotrie v0.2.3
+#15 14.40    Compiling zerovec v0.11.5
+#15 14.72    Compiling regex-automata v0.4.13
+#15 14.81    Compiling futures-util v0.3.31
+#15 14.96    Compiling tinystr v0.8.2
+#15 15.13    Compiling icu_locale_core v2.1.1
+#15 15.80    Compiling tracing v0.1.44
+#15 16.22    Compiling potential_utf v0.1.4
+#15 16.35    Compiling icu_collections v2.1.1
+#15 16.60    Compiling bytes v1.11.0
+#15 16.62    Compiling icu_provider v2.1.1
+#15 16.93    Compiling icu_properties v2.1.2
+#15 16.98    Compiling icu_normalizer v2.1.1
+#15 17.18    Compiling tokio v1.48.0
+#15 17.61    Compiling ppv-lite86 v0.2.21
+#15 17.87    Compiling http v0.2.12
+#15 18.09    Compiling regex v1.12.2
+#15 18.53    Compiling idna_adapter v1.2.1
+#15 18.66    Compiling idna v1.1.0
+#15 18.71    Compiling num-conv v0.1.0
+#15 18.73    Compiling mime v0.3.17
+#15 18.93    Compiling ryu v1.0.21
+#15 19.07    Compiling url v2.5.7
+#15 19.16    Compiling time-core v0.1.6
+#15 19.26    Compiling deranged v0.5.5
+#15 19.27    Compiling time-macros v0.2.24
+#15 19.41    Compiling encoding_rs v0.8.35
+#15 20.45    Compiling zstd-sys v2.0.16+zstd.1.5.7
+#15 20.51    Compiling time v0.3.44
+#15 20.51    Compiling socket2 v0.5.10
+#15 21.37    Compiling httpdate v1.0.3
+#15 21.62    Compiling crossbeam-utils v0.8.21
+#15 22.09    Compiling serde_urlencoded v0.7.1
+#15 22.34    Compiling tokio-util v0.7.17
+#15 22.35    Compiling rand_core v0.9.3
+#15 22.64    Compiling rand_chacha v0.9.0
+#15 23.97    Compiling h2 v0.3.27
+#15 24.60    Compiling http v1.4.0
+#15 24.79    Compiling sha1 v0.10.6
+#15 25.06    Compiling ucd-trie v0.1.7
+#15 25.20    Compiling local-waker v0.1.4
+#15 25.23    Compiling alloc-no-stdlib v2.0.4
+#15 25.25    Compiling unicode-segmentation v1.12.0
+#15 25.44    Compiling zstd-safe v7.2.4
+#15 25.59    Compiling convert_case v0.10.0
+#15 25.82    Compiling alloc-stdlib v0.2.2
+#15 25.91    Compiling pest v2.8.4
+#15 26.08    Compiling rand v0.9.2
+#15 26.44    Compiling ring v0.17.14
+#15 26.95    Compiling thiserror v1.0.69
+#15 27.17    Compiling unicode-xid v0.2.6
+#15 27.27    Compiling derive_more-impl v2.1.1
+#15 27.68    Compiling brotli-decompressor v5.0.0
+#15 27.85    Compiling actix-utils v3.0.1
+#15 28.12    Compiling actix-rt v2.11.0
+#15 31.11    Compiling bytestring v1.5.0
+#15 31.33    Compiling darling_core v0.20.11
+#15 32.01    Compiling actix-service v2.0.3
+#15 32.33    Compiling cookie v0.16.2
+#15 32.50    Compiling try-lock v0.2.5
+#15 32.59    Compiling regex-lite v0.1.8
+#15 32.69    Compiling tower-service v0.3.3
+#15 32.74    Compiling vcpkg v0.2.15
+#15 33.50    Compiling openssl-sys v0.9.111
+#15 33.60    Compiling darling_macro v0.20.11
+#15 33.74    Compiling actix-router v0.5.3
+#15 34.07    Compiling want v0.3.1
+#15 34.17    Compiling derive_more v2.1.1
+#15 34.24    Compiling brotli v8.0.2
+#15 34.29    Compiling local-channel v0.1.5
+#15 34.37    Compiling actix-codec v0.5.2
+#15 34.55    Compiling thiserror-impl v1.0.69
+#15 34.71    Compiling foldhash v0.1.5
+#15 34.73    Compiling language-tags v0.3.2
+#15 34.87    Compiling untrusted v0.9.0
+#15 34.91    Compiling winnow v0.7.14
+#15 36.04    Compiling rustversion v1.0.22
+#15 36.61    Compiling toml_parser v1.0.6+spec-1.1.0
+#15 36.86    Compiling actix-web-codegen v4.3.0
+#15 37.21    Compiling darling v0.20.11
+#15 37.31    Compiling actix-server v2.6.0
+#15 38.09    Compiling pest_meta v2.8.4
+#15 38.31    Compiling actix-macros v0.2.4
+#15 38.64    Compiling num-integer v0.1.46
+#15 38.95    Compiling toml_datetime v0.7.5+spec-1.1.0
+#15 39.07    Compiling impl-more v0.1.9
+#15 39.12    Compiling unicase v2.8.1
+#15 39.17    Compiling heck v0.5.0
+#15 39.29    Compiling either v1.15.0
+#15 39.38    Compiling openssl-probe v0.1.6
+#15 39.58    Compiling mime_guess v2.0.5
+#15 40.19    Compiling num-bigint v0.4.6
+#15 40.26    Compiling pest_generator v2.8.4
+#15 40.41    Compiling crossbeam-epoch v0.9.18
+#15 40.85    Compiling standback v0.2.17
+#15 40.92    Compiling proc-macro-error-attr v1.0.4
+#15 40.94    Compiling rayon-core v1.13.0
+#15 41.19    Compiling byteorder v1.5.0
+#15 41.20    Compiling strsim v0.10.0
+#15 41.29    Compiling static_assertions v1.1.0
+#15 41.33    Compiling rustls v0.21.12
+#15 41.40    Compiling darling_core v0.14.4
+#15 41.60    Compiling pest_derive v2.8.4
+#15 41.84    Compiling crossbeam-deque v0.8.6
+#15 42.37    Compiling rustls-webpki v0.101.7
+#15 42.77    Compiling sct v0.7.1
+#15 42.95    Compiling http-body v1.0.1
+#15 42.97    Compiling rand_chacha v0.3.1
+#15 43.09    Compiling darling_core v0.21.3
+#15 43.41    Compiling fdeflate v0.3.7
+#15 43.61    Compiling cmake v0.1.57
+#15 43.92    Compiling proc-macro-error v1.0.4
+#15 44.11    Compiling fs_extra v1.3.0
+#15 44.12    Compiling ipnet v2.11.0
+#15 44.29    Compiling zeroize v1.8.2
+#15 44.42    Compiling foreign-types-shared v0.1.1
+#15 44.43    Compiling openssl v0.10.75
+#15 44.48    Compiling minimal-lexical v0.2.1
+#15 44.61    Compiling fastrand v2.3.0
+#15 44.68    Compiling dunce v1.0.5
+#15 44.74    Compiling same-file v1.0.6
+#15 44.79    Compiling walkdir v2.5.0
+#15 44.87    Compiling aws-lc-sys v0.35.0
+#15 44.88    Compiling nom v7.1.3
+#15 45.55    Compiling darling_macro v0.21.3
+#15 45.64    Compiling foreign-types v0.3.2
+#15 45.77    Compiling darling_macro v0.14.4
+#15 45.95    Compiling rand v0.8.5
+#15 46.70    Compiling http-body v0.4.6
+#15 46.77    Compiling futures-executor v0.3.31
+#15 46.98    Compiling async-trait v0.1.89
+#15 47.21    Compiling openssl-macros v0.1.1
+#15 47.32    Compiling proc-macro-hack v0.5.20+deprecated
+#15 47.53    Compiling bytemuck v1.24.0
+#15 47.62    Compiling thiserror v2.0.17
+#15 47.81    Compiling native-tls v0.2.14
+#15 48.01    Compiling base64 v0.21.7
+#15 48.09    Compiling atomic-waker v1.1.2
+#15 48.12    Compiling rustix v1.1.3
+#15 48.15    Compiling futures-timer v3.0.3
+#15 48.17    Compiling libm v0.2.15
+#15 48.24    Compiling iana-time-zone v0.1.64
+#15 48.30    Compiling rustls-pemfile v1.0.4
+#15 48.47    Compiling chrono v0.4.42
+#15 48.51    Compiling h2 v0.4.12
+#15 48.71    Compiling tokio-rustls v0.24.1
+#15 49.32    Compiling sha2 v0.10.9
+#15 49.38    Compiling hyper v0.14.32
+#15 49.53    Compiling futures v0.3.31
+#15 49.97    Compiling darling v0.14.4
+#15 50.01    Compiling darling v0.21.3
+#15 50.06    Compiling uuid v1.19.0
+#15 50.49    Compiling thiserror-impl v2.0.17
+#15 52.25    Compiling pxfm v0.1.27
+#15 54.39    Compiling pq-sys v0.7.5
+#15 54.85    Compiling smartstring v1.0.1
+#15 55.04    Compiling bigdecimal v0.4.9
+#15 55.38    Compiling inout v0.1.4
+#15 55.50    Compiling serde_spanned v1.0.4
+#15 55.61    Compiling diesel_derives v2.3.6
+#15 55.78    Compiling portable-atomic v1.12.0
+#15 56.17    Compiling bitflags v1.3.2
+#15 56.27    Compiling cfg-if v0.1.10
+#15 56.68    Compiling linux-raw-sys v0.11.0
+#15 57.82    Compiling dsl_auto_type v0.2.0
+#15 58.57    Compiling zip v0.6.6
+#15 58.72    Compiling net2 v0.2.39
+#15 59.09    Compiling toml v0.9.10+spec-1.1.0
+#15 59.16    Compiling moxcms v0.7.11
+#15 59.75    Compiling cipher v0.4.4
+#15 60.04    Compiling hyper-rustls v0.24.2
+#15 60.11    Compiling hyper v1.8.1
+#15 60.30    Compiling utoipa-gen v4.3.1
+#15 60.74    Compiling derive_builder_core v0.12.0
+#15 61.03    Compiling async-graphql-value v7.0.17
+#15 61.63    Compiling rust-embed-utils v8.9.0
+#15 62.43    Compiling rustls-native-certs v0.6.3
+#15 62.73    Compiling rayon v1.11.0
+#15 63.45    Compiling png v0.18.0
+#15 64.04    Compiling toml_edit v0.23.10+spec-1.0.0
+#15 64.35    Compiling kstring v2.0.2
+#15 64.54    Compiling strum_macros v0.26.4
+#15 65.17    Compiling itertools v0.14.0
+#15 65.18    Compiling derive_builder_core v0.20.2
+#15 65.45    Compiling liquid-derive v0.26.10
+#15 66.04    Compiling diesel_table_macro_syntax v0.3.0
+#15 66.17    Compiling derive_utils v0.15.0
+#15 66.44    Compiling universal-hash v0.5.1
+#15 66.60    Compiling scheduled-thread-pool v0.2.7
+#15 66.69    Compiling iovec v0.1.4
+#15 66.70    Compiling sync_wrapper v1.0.2
+#15 66.77    Compiling multer v3.1.0
+#15 66.79    Compiling anyhow v1.0.100
+#15 66.85    Compiling hashbrown v0.14.5
+#15 66.88    Compiling anymap2 v0.13.0
+#15 67.00    Compiling const_fn v0.4.11
+#15 67.02    Compiling tower-layer v0.3.3
+#15 67.07    Compiling sync_wrapper v0.1.2
+#15 67.12    Compiling aws-lc-rs v1.15.2
+#15 67.17    Compiling opaque-debug v0.3.1
+#15 67.22    Compiling byteorder-lite v0.1.0
+#15 67.24    Compiling lazy_static v1.5.0
+#15 67.25    Compiling v_htmlescape v0.15.8
+#15 67.30    Compiling weezl v0.1.12
+#15 67.32    Compiling Inflector v0.11.4
+#15 67.40    Compiling image v0.25.9
+#15 67.42    Compiling dashmap v6.1.0
+#15 67.47    Compiling polyval v0.6.2
+#15 67.60    Compiling tower v0.5.2
+#15 67.62    Compiling reqwest v0.11.27
+#15 68.02    Compiling liquid-core v0.26.11
+#15 68.15    Compiling mio v0.6.23
+#15 69.84    Compiling r2d2 v0.8.10
+#15 70.05    Compiling strum v0.26.3
+#15 70.12    Compiling auto_enums v0.8.7
+#15 72.29    Compiling derive_builder_macro v0.20.2
+#15 72.83    Compiling utoipa v4.2.3
+#15 77.22    Compiling jpeg-decoder v0.3.2
+#15 77.68    Compiling proc-macro-crate v3.4.0
+#15 80.55    Compiling juniper_codegen v0.16.0
+#15 83.45    Compiling time-macros-impl v0.1.2
+#15 83.55    Compiling rust-embed-impl v8.9.0
+#15 84.00    Compiling derive_builder_macro v0.12.0
+#15 84.24    Compiling async-graphql-parser v7.0.17
+#15 84.51    Compiling hyper-util v0.1.19
+#15 85.09    Compiling tokio-native-tls v0.3.1
+#15 85.60    Compiling migrations_internals v2.3.0
+#15 86.10    Compiling utoipa-swagger-ui v6.0.0
+#15 86.25    Compiling tempfile v3.24.0
+#15 86.94    Compiling eventsource-stream v0.2.3
+#15 87.14    Compiling backon v1.6.0
+#15 87.32    Compiling http-body-util v0.1.3
+#15 87.47    Compiling arc-swap v1.8.0
+#15 87.51    Compiling quanta v0.12.6
+#15 87.62    Compiling combine v4.6.7
+#15 87.74    Compiling deadpool-runtime v0.1.4
+#15 87.80    Compiling half v2.7.1
+#15 88.01    Compiling async-stream-impl v0.3.6
+#15 88.30    Compiling zune-inflate v0.2.54
+#15 88.38    Compiling inotify-sys v0.1.5
+#15 88.45    Compiling num_cpus v1.17.0
+#15 88.74    Compiling spinning_top v0.3.0
+#15 88.82    Compiling time v0.2.27
+#15 88.89    Compiling instant v0.1.13
+#15 88.94    Compiling spin v0.9.8
+#15 88.99    Compiling lebe v0.5.3
+#15 89.01    Compiling bit_field v0.10.3
+#15 89.10    Compiling ascii_utils v0.9.3
+#15 89.16    Compiling base64ct v1.8.1
+#15 89.20    Compiling tokio-cron-scheduler v0.9.4
+#15 89.32    Compiling rust_decimal v1.39.0
+#15 89.34    Compiling qrcodegen v1.8.0
+#15 89.43    Compiling web-time v1.1.0
+#15 89.48    Compiling parse-size v1.1.0
+#15 89.49    Compiling nonzero_ext v0.3.0
+#15 89.56    Compiling convert_case v0.4.0
+#15 89.57    Compiling sha1_smol v1.0.1
+#15 89.79    Compiling untrusted v0.7.1
+#15 89.86    Compiling num-modular v0.6.1
+#15 89.92    Compiling downcast-rs v2.0.2
+#15 89.99    Compiling utf-8 v0.7.6
+#15 90.14    Compiling data-encoding v2.9.0
+#15 90.18    Compiling lazycell v1.3.0
+#15 90.25    Compiling iri-string v0.7.9
+#15 90.32    Compiling color_quant v1.1.0
+#15 90.37    Compiling deadpool v0.12.3
+#15 90.64    Compiling tungstenite v0.21.0
+#15 90.66    Compiling gif v0.13.3
+#15 90.95    Compiling num-order v1.2.0
+#15 91.18    Compiling mio-extras v2.0.6
+#15 91.77    Compiling diesel v2.3.5
+#15 92.27    Compiling redis v0.32.7
+#15 92.39    Compiling tower-http v0.6.8
+#15 92.89    Compiling derive_more v0.99.20
+#15 93.17    Compiling zstd v0.13.3
+#15 93.19    Compiling liquid-lib v0.26.11
+#15 93.34    Compiling actix-multipart-derive v0.7.0
+#15 93.61    Compiling actix-http v3.11.2
+#15 93.91    Compiling governor v0.10.4
+#15 94.43    Compiling qrcodegen-image v1.5.0
+#15 94.94    Compiling password-hash v0.5.0
+#15 96.05    Compiling fast_chemail v0.9.6
+#15 96.27    Compiling exr v1.74.0
+#15 96.38    Compiling backoff v0.4.0
+#15 96.66    Compiling async-stream v0.3.6
+#15 96.80    Compiling inotify v0.7.1
+#15 98.36    Compiling actix-web v4.12.1
+#15 106.7    Compiling hyper-tls v0.6.0
+#15 107.1    Compiling reqwest-eventsource v0.4.0
+#15 107.6    Compiling rust-embed v8.9.0
+#15 108.0    Compiling async-graphql-derive v7.0.17
+#15 108.1    Compiling migrations_macros v2.3.0
+#15 108.9    Compiling juniper v0.16.2
+#15 109.2    Compiling derive_builder v0.12.0
+#15 109.3    Compiling time-macros v0.1.1
+#15 109.4    Compiling tiff v0.9.1
+#15 111.4    Compiling derive_builder v0.20.2
+#15 113.5    Compiling ghash v0.5.1
+#15 114.2    Compiling cfb v0.7.3
+#15 114.2    Compiling simple_asn1 v0.6.3
+#15 115.6    Compiling aes v0.8.4
+#15 116.3    Compiling ctr v0.9.2
+#15 116.5    Compiling png v0.17.16
+#15 116.5    Compiling cron v0.12.1
+#15 116.9    Compiling async-convert v1.0.0
+#15 117.0    Compiling qoi v0.4.1
+#15 117.3    Compiling rustls-pki-types v1.13.2
+#15 117.3    Compiling secrecy v0.8.0
+#15 117.6    Compiling handlebars v5.1.2
+#15 118.0    Compiling tokio-stream v0.1.17
+#15 118.4    Compiling serde_plain v1.0.2
+#15 118.5    Compiling num-derive v0.3.3
+#15 118.6    Compiling pem v3.0.6
+#15 119.3    Compiling hmac v0.12.1
+#15 119.4    Compiling blake2 v0.10.6
+#15 119.5    Compiling aead v0.5.2
+#15 119.6    Compiling atty v0.2.14
+#15 119.6    Compiling filetime v0.2.26
+#15 119.7    Compiling http-range v0.1.5
+#15 119.7    Compiling humantime v2.3.0
+#15 119.9    Compiling signature v2.2.0
+#15 120.0    Compiling arrayvec v0.7.6
+#15 120.0    Compiling urlencoding v2.1.3
+#15 120.0    Compiling static_assertions_next v1.1.2
+#15 120.1    Compiling termcolor v1.4.1
+#15 120.2    Compiling base32 v0.5.1
+#15 120.2    Compiling constant_time_eq v0.3.1
+#15 120.3    Compiling totp-rs v5.7.0
+#15 120.4    Compiling env_logger v0.8.4
+#15 120.6    Compiling async-graphql v7.0.17
+#15 121.6    Compiling actix-files v0.6.9
+#15 122.3    Compiling notify v4.0.18
+#15 122.3    Compiling argon2 v0.5.3
+#15 123.5    Compiling aes-gcm v0.10.3
+#15 123.7    Compiling actix-multipart v0.7.2
+#15 126.0    Compiling diesel_migrations v2.3.1
+#15 126.5    Compiling async-openai v0.18.3
+#15 126.8    Compiling reqwest v0.12.28
+#15 126.8    Compiling image v0.24.9
+#15 129.0    Compiling juniper_actix v0.6.0
+#15 129.6    Compiling infer v0.15.0
+#15 131.1    Compiling handlebars v6.3.2
+#15 136.6    Compiling deadpool-redis v0.22.0
+#15 137.2    Compiling actix-cors v0.7.1
+#15 138.9    Compiling utoipa-redoc v3.0.0
+#15 139.1    Compiling actix-governor v0.10.0
+#15 139.6    Compiling liquid v0.26.11
+#15 139.7    Compiling tokio-tungstenite v0.21.0
+#15 140.0    Compiling envy v0.4.2
+#15 140.2    Compiling pgvector v0.3.4
+#15 140.3    Compiling hex v0.4.3
+#15 140.6    Compiling dotenv v0.15.0
+#15 149.6    Compiling jsonwebtoken v10.2.0
+#15 150.9    Compiling freeradical v1.4.0 (/app)
+#15 152.0 error[E0449]: visibility qualifiers are not permitted here
+#15 152.0    --> src/models/page_models.rs:222:5
+#15 152.0     |
+#15 152.0 222 |     pub fn read_all_by_tenant(tenant_id: i32, db: &mut PooledDatabaseConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
+#15 152.0     |     ^^^ help: remove the qualifier
+#15 152.0     |
+#15 152.0     = note: trait items always share the visibility of their trait
+#15 152.0 
+#15 152.1 error[E0407]: method `read_all_by_tenant` is not a member of trait `Model`
+#15 152.1    --> src/models/page_models.rs:222:5
+#15 152.1     |
+#15 152.1 222 | /     pub fn read_all_by_tenant(tenant_id: i32, db: &mut PooledDatabaseConnection) -> Result<Vec<PageDTO>, diesel::result::Error> {
+#15 152.1 223 | |         pages::table
+#15 152.1 224 | |             .filter(pages::tenant_id.eq(tenant_id))
+#15 152.1 225 | |             .select(Page::as_select())
+#15 152.1 226 | |             .load::<Self>(db)
+#15 152.1 227 | |             .map(|pages| pages.into_iter().map(|x| x.into()).collect())
+#15 152.1 228 | |     }
+#15 152.1     | |_____^ not a member of trait `Model`
+#15 152.1 
+#15 152.4 warning: unused import: `diesel::pg::PgConnection`
+#15 152.4  --> src/main.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use diesel::pg::PgConnection;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4   |
+#15 152.4   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+#15 152.4 
+#15 152.4 warning: unused imports: `ConnectionManager` and `Pool`
+#15 152.4  --> src/main.rs:6:20
+#15 152.4   |
+#15 152.4 6 | use diesel::r2d2::{ConnectionManager, Pool};
+#15 152.4   |                    ^^^^^^^^^^^^^^^^^  ^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::Connection`
+#15 152.4  --> src/main.rs:7:5
+#15 152.4   |
+#15 152.4 7 | use diesel::Connection;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `handlebars::Handlebars`
+#15 152.4  --> src/main.rs:8:5
+#15 152.4   |
+#15 152.4 8 | use handlebars::Handlebars;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::sync::Mutex`
+#15 152.4  --> src/main.rs:9:5
+#15 152.4   |
+#15 152.4 9 | use std::sync::Mutex;
+#15 152.4   |     ^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::time::Duration`
+#15 152.4   --> src/main.rs:10:5
+#15 152.4    |
+#15 152.4 10 | use std::time::Duration;
+#15 152.4    |     ^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `MigrationHarness`
+#15 152.4   --> src/main.rs:14:63
+#15 152.4    |
+#15 152.4 14 | use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+#15 152.4    |                                                               ^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::services::auth_service::Claims`
+#15 152.4   --> src/controllers/page_controllers.rs:12:5
+#15 152.4    |
+#15 152.4 12 | use crate::services::auth_service::Claims;
+#15 152.4    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::PooledDatabaseConnection`
+#15 152.4   --> src/controllers/product_controller.rs:29:9
+#15 152.4    |
+#15 152.4 29 |     use crate::models::PooledDatabaseConnection;
+#15 152.4    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::PooledDatabaseConnection`
+#15 152.4   --> src/controllers/product_controller.rs:62:9
+#15 152.4    |
+#15 152.4 62 |     use crate::models::PooledDatabaseConnection;
+#15 152.4    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::PooledDatabaseConnection`
+#15 152.4   --> src/controllers/product_controller.rs:81:9
+#15 152.4    |
+#15 152.4 81 |     use crate::models::PooledDatabaseConnection;
+#15 152.4    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unnecessary trailing semicolon
+#15 152.4    --> src/controllers/product_controller.rs:110:9
+#15 152.4     |
+#15 152.4 110 |         ;
+#15 152.4     |         ^ help: remove this semicolon
+#15 152.4     |
+#15 152.4     = note: `#[warn(redundant_semicolons)]` (part of `#[warn(unused)]`) on by default
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::PooledDatabaseConnection`
+#15 152.4    --> src/controllers/product_controller.rs:102:9
+#15 152.4     |
+#15 152.4 102 |     use crate::models::PooledDatabaseConnection;
+#15 152.4     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unnecessary trailing semicolon
+#15 152.4    --> src/controllers/product_controller.rs:134:9
+#15 152.4     |
+#15 152.4 134 |         ;
+#15 152.4     |         ^ help: remove this semicolon
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::PooledDatabaseConnection`
+#15 152.4    --> src/controllers/product_controller.rs:126:9
+#15 152.4     |
+#15 152.4 126 |     use crate::models::PooledDatabaseConnection;
+#15 152.4     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `chrono::NaiveDateTime`
+#15 152.4  --> src/controllers/order_controller.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use chrono::NaiveDateTime;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `PooledDatabaseConnection`
+#15 152.4  --> src/controllers/order_controller.rs:7:49
+#15 152.4   |
+#15 152.4 7 | use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
+#15 152.4   |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `OrderItem`
+#15 152.4  --> src/controllers/order_controller.rs:8:45
+#15 152.4   |
+#15 152.4 8 | use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
+#15 152.4   |                                             ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `pool_handler`
+#15 152.4  --> src/controllers/relationship_controller.rs:6:35
+#15 152.4   |
+#15 152.4 6 | use crate::models::{DatabasePool, pool_handler};
+#15 152.4   |                                   ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `pool_handler`
+#15 152.4  --> src/controllers/webhook_controller.rs:5:35
+#15 152.4   |
+#15 152.4 5 | use crate::models::{DatabasePool, pool_handler};
+#15 152.4   |                                   ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `web`
+#15 152.4  --> src/controllers/backup_controller.rs:1:28
+#15 152.4   |
+#15 152.4 1 | use actix_web::{get, post, web, HttpResponse, Responder};
+#15 152.4   |                            ^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Serialize`
+#15 152.4  --> src/controllers/payment_controller.rs:6:26
+#15 152.4   |
+#15 152.4 6 | use serde::{Deserialize, Serialize};
+#15 152.4   |                          ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `async_graphql::http`
+#15 152.4  --> src/controllers/graphql_controller.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use async_graphql::http;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Serialize`
+#15 152.4  --> src/controllers/graphql_controller.rs:7:26
+#15 152.4   |
+#15 152.4 7 | use serde::{Deserialize, Serialize};
+#15 152.4   |                          ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `pool_handler`
+#15 152.4  --> src/controllers/search_controller.rs:3:35
+#15 152.4   |
+#15 152.4 3 | use crate::models::{DatabasePool, pool_handler};
+#15 152.4   |                                   ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `delete` and `put`
+#15 152.4  --> src/controllers/i18n_controller.rs:1:58
+#15 152.4   |
+#15 152.4 1 | use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
+#15 152.4   |                                                          ^^^  ^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Language`
+#15 152.4  --> src/controllers/i18n_controller.rs:5:58
+#15 152.4   |
+#15 152.4 5 | use crate::services::language_service::{LanguageService, Language, NewLanguage};
+#15 152.4   |                                                          ^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `post`
+#15 152.4  --> src/controllers/oauth_controller.rs:1:52
+#15 152.4   |
+#15 152.4 1 | use actix_web::{web, HttpResponse, Responder, get, post};
+#15 152.4   |                                                    ^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Serialize`
+#15 152.4  --> src/controllers/oauth_controller.rs:2:26
+#15 152.4   |
+#15 152.4 2 | use serde::{Deserialize, Serialize};
+#15 152.4   |                          ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `web`
+#15 152.4  --> src/controllers/dashboard_controller.rs:1:47
+#15 152.4   |
+#15 152.4 1 | use actix_web::{get, HttpResponse, Responder, web};
+#15 152.4   |                                               ^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Deserialize`
+#15 152.4  --> src/controllers/dashboard_controller.rs:2:24
+#15 152.4   |
+#15 152.4 2 | use serde::{Serialize, Deserialize};
+#15 152.4   |                        ^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::schema::tenants`
+#15 152.4  --> src/helpers/tenant_helper.rs:4:5
+#15 152.4   |
+#15 152.4 4 | use crate::schema::tenants;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::time::Duration`
+#15 152.4  --> src/services/cache_service.rs:2:5
+#15 152.4   |
+#15 152.4 2 | use std::time::Duration;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `chrono::NaiveDateTime`
+#15 152.4  --> src/services/analytics_service.rs:2:5
+#15 152.4   |
+#15 152.4 2 | use chrono::NaiveDateTime;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Duration` and `Timelike`
+#15 152.4   --> src/services/analytics_service.rs:83:27
+#15 152.4    |
+#15 152.4 83 |         use chrono::{Utc, Duration, Timelike};
+#15 152.4    |                           ^^^^^^^^  ^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Timelike`
+#15 152.4    --> src/services/analytics_service.rs:128:27
+#15 152.4     |
+#15 152.4 128 |         use chrono::{Utc, Timelike};
+#15 152.4     |                           ^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `PasswordHash` and `PasswordVerifier`
+#15 152.4  --> src/services/auth_service.rs:4:33
+#15 152.4   |
+#15 152.4 4 | use password_hash::{SaltString, PasswordHash, PasswordVerifier};
+#15 152.4   |                                 ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::prelude::*`
+#15 152.4  --> src/services/auth_service.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use diesel::prelude::*;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `pool_handler`
+#15 152.4   --> src/services/auth_service.rs:13:21
+#15 152.4    |
+#15 152.4 13 | use crate::models::{pool_handler, user_models, Model, DatabasePool};
+#15 152.4    |                     ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `page_revisions` and `pages`
+#15 152.4  --> src/services/revision_service.rs:5:21
+#15 152.4   |
+#15 152.4 5 | use crate::schema::{pages, page_revisions};
+#15 152.4   |                     ^^^^^  ^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `chrono::Utc`
+#15 152.4  --> src/services/inventory_service.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use chrono::Utc;
+#15 152.4   |     ^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `uuid::Uuid`
+#15 152.4  --> src/services/inventory_service.rs:6:5
+#15 152.4   |
+#15 152.4 6 | use uuid::Uuid;
+#15 152.4   |     ^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `actix_web::web`
+#15 152.4  --> src/services/ai_scope_service.rs:1:5
+#15 152.4   |
+#15 152.4 1 | use actix_web::web;
+#15 152.4   |     ^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::prelude::*`
+#15 152.4  --> src/services/ai_scope_service.rs:2:5
+#15 152.4   |
+#15 152.4 2 | use diesel::prelude::*;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::DbPool`
+#15 152.4  --> src/services/ai_scope_service.rs:4:5
+#15 152.4   |
+#15 152.4 4 | use crate::models::DbPool;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `AIUsageLog`
+#15 152.4  --> src/services/ai_content_service.rs:6:59
+#15 152.4   |
+#15 152.4 6 | use crate::models::ai_provider_models::{AIProviderConfig, AIUsageLog, NewAIUsageLog};
+#15 152.4   |                                                           ^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `HttpResponse`
+#15 152.4  --> src/services/ai_authorization_service.rs:1:35
+#15 152.4   |
+#15 152.4 1 | use actix_web::{web, HttpRequest, HttpResponse};
+#15 152.4   |                                   ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::prelude::*`
+#15 152.4  --> src/services/ai_authorization_service.rs:3:5
+#15 152.4   |
+#15 152.4 3 | use diesel::prelude::*;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::schema::pages`
+#15 152.4   --> src/services/ai_authorization_service.rs:92:9
+#15 152.4    |
+#15 152.4 92 |     use crate::schema::pages;
+#15 152.4    |         ^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::schema::pages`
+#15 152.4    --> src/services/ai_authorization_service.rs:127:9
+#15 152.4     |
+#15 152.4 127 |     use crate::schema::pages;
+#15 152.4     |         ^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `error`
+#15 152.4  --> src/services/ai_command_executor.rs:2:17
+#15 152.4   |
+#15 152.4 2 | use log::{info, error};
+#15 152.4   |                 ^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `error`
+#15 152.4  --> src/services/ai_response_handler.rs:1:23
+#15 152.4   |
+#15 152.4 1 | use log::{info, warn, error};
+#15 152.4   |                       ^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `error` and `warn`
+#15 152.4  --> src/services/workflow_orchestrator.rs:3:17
+#15 152.4   |
+#15 152.4 3 | use log::{info, warn, error};
+#15 152.4   |                 ^^^^  ^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Duration` and `sleep`
+#15 152.4  --> src/services/content_scheduler.rs:3:19
+#15 152.4   |
+#15 152.4 3 | use tokio::time::{sleep, Duration};
+#15 152.4   |                   ^^^^^  ^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `serde_json::Value`
+#15 152.4  --> src/services/schema_markup.rs:2:5
+#15 152.4   |
+#15 152.4 2 | use serde_json::Value;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::collections::HashMap`
+#15 152.4  --> src/services/link_builder.rs:3:5
+#15 152.4   |
+#15 152.4 3 | use std::collections::HashMap;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::collections::HashMap`
+#15 152.4  --> src/services/competitor_analyzer.rs:3:5
+#15 152.4   |
+#15 152.4 3 | use std::collections::HashMap;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::collections::HashMap`
+#15 152.4  --> src/services/inventory_analytics.rs:3:5
+#15 152.4   |
+#15 152.4 3 | use std::collections::HashMap;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `roles`
+#15 152.4   --> src/services/permission_service.rs:77:37
+#15 152.4    |
+#15 152.4 77 |     use crate::schema::{user_roles, roles};
+#15 152.4    |                                     ^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::schema::pages`
+#15 152.4    --> src/services/permission_service.rs:123:9
+#15 152.4     |
+#15 152.4 123 |     use crate::schema::pages;
+#15 152.4     |         ^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `HttpResponse`
+#15 152.4  --> src/services/plugin_service/mod.rs:1:38
+#15 152.4   |
+#15 152.4 1 | use actix_web::{dev::ServiceRequest, HttpResponse};
+#15 152.4   |                                      ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `body::BoxBody`
+#15 152.4  --> src/services/plugin_service/middleware.rs:2:24
+#15 152.4   |
+#15 152.4 2 | use actix_web::{Error, body::BoxBody};
+#15 152.4   |                        ^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::path::Path`
+#15 152.4  --> src/services/template_service.rs:1:5
+#15 152.4   |
+#15 152.4 1 | use std::path::Path;
+#15 152.4   |     ^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Template`
+#15 152.4  --> src/services/template_service.rs:4:37
+#15 152.4   |
+#15 152.4 4 | use liquid::{Parser, ParserBuilder, Template};
+#15 152.4   |                                     ^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Deserialize` and `Serialize`
+#15 152.4  --> src/services/language_service.rs:2:13
+#15 152.4   |
+#15 152.4 2 | use serde::{Deserialize, Serialize};
+#15 152.4   |             ^^^^^^^^^^^  ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::prelude::*`
+#15 152.4  --> src/services/analytics_service_v2.rs:1:5
+#15 152.4   |
+#15 152.4 1 | use diesel::prelude::*;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `Deserialize`
+#15 152.4  --> src/services/analytics_service_v2.rs:2:13
+#15 152.4   |
+#15 152.4 2 | use serde::{Deserialize, Serialize};
+#15 152.4   |             ^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::services::language_service::LanguageService`
+#15 152.4  --> src/services/hreflang_service.rs:1:5
+#15 152.4   |
+#15 152.4 1 | use crate::services::language_service::LanguageService;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `crm_segments` and `users`
+#15 152.4  --> src/services/crm_service.rs:9:54
+#15 152.4   |
+#15 152.4 9 | use crate::schema::{crm_customers, crm_interactions, crm_segments, crm_tasks, crm_notes, users};
+#15 152.4   |                                                      ^^^^^^^^^^^^                        ^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Deserialize` and `Serialize`
+#15 152.4  --> src/models/config_models.rs:1:13
+#15 152.4   |
+#15 152.4 1 | use serde::{Deserialize, Serialize};
+#15 152.4   |             ^^^^^^^^^^^  ^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `std::io::Write`
+#15 152.4  --> src/models/status_enum.rs:8:5
+#15 152.4   |
+#15 152.4 8 | use std::io::Write;
+#15 152.4   |     ^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::serialize::ToSql`
+#15 152.4  --> src/models/revision_models.rs:6:5
+#15 152.4   |
+#15 152.4 6 | use diesel::serialize::ToSql;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `diesel::deserialize::FromSql`
+#15 152.4  --> src/models/revision_models.rs:7:5
+#15 152.4   |
+#15 152.4 7 | use diesel::deserialize::FromSql;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Jsonb` and `Numeric`
+#15 152.4  --> src/models/inventory_models.rs:3:25
+#15 152.4   |
+#15 152.4 3 | use diesel::sql_types::{Jsonb, Numeric};
+#15 152.4   |                         ^^^^^  ^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `PooledConnection`
+#15 152.4   --> src/models/mod.rs:24:99
+#15 152.4    |
+#15 152.4 24 | use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
+#15 152.4    |                                                                                                   ^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `crate::models::DatabasePool`
+#15 152.4  --> src/graphql/query.rs:5:5
+#15 152.4   |
+#15 152.4 5 | use crate::models::DatabasePool;
+#15 152.4   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `HttpResponse`
+#15 152.4  --> src/middleware/rate_limit.rs:5:12
+#15 152.4   |
+#15 152.4 5 |     Error, HttpResponse,
+#15 152.4   |            ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused import: `HttpResponse`
+#15 152.4  --> src/middleware/auth_middleware.rs:3:25
+#15 152.4   |
+#15 152.4 3 |     Error, HttpMessage, HttpResponse,
+#15 152.4   |                         ^^^^^^^^^^^^
+#15 152.4 
+#15 152.4 warning: unused imports: `Claims`, `UserContext`, `create_jwt_token`, and `get_user_context`
+#15 152.4  --> src/middleware/mod.rs:4:43
+#15 152.4   |
+#15 152.4 4 | pub use auth_middleware::{AuthMiddleware, UserContext, Claims, create_jwt_token, get_user_context};
+#15 152.4   |                                           ^^^^^^^^^^^  ^^^^^^  ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+#15 152.4 
+#15 152.8 warning: use of deprecated type alias `diesel::dsl::count_distinct`
+#15 152.8    --> src/services/analytics_service.rs:129:26
+#15 152.8     |
+#15 152.8 129 |         use diesel::dsl::count_distinct;
+#15 152.8     |                          ^^^^^^^^^^^^^^
+#15 152.8     |
+#15 152.8     = note: `#[warn(deprecated)]` on by default
+#15 152.8 
+#15 152.8 warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+#15 152.8    --> src/services/analytics_service.rs:129:26
+#15 152.8     |
+#15 152.8 129 |         use diesel::dsl::count_distinct;
+#15 152.8     |                          ^^^^^^^^^^^^^^
+#15 152.8 
+#15 152.8 warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+#15 152.8    --> src/services/analytics_service.rs:136:21
+#15 152.8     |
+#15 152.8 136 |             .select(count_distinct(dsl::user_id))
+#15 152.8     |                     ^^^^^^^^^^^^^^
+#15 152.8 
+#15 152.8 warning: use of deprecated function `base64::encode`: Use Engine::encode
+#15 152.8    --> src/services/payment_service/square.rs:237:32
+#15 152.8     |
+#15 152.8 237 |         let expected = base64::encode(mac.finalize().into_bytes());
+#15 152.8     |                                ^^^^^^
+#15 152.8 
+#15 152.8 warning: use of deprecated type alias `diesel::backend::RawValue`: Use `Backend::RawValue` directly
+#15 152.8   --> src/models/status_enum.rs:34:41
+#15 152.8    |
+#15 152.8 34 |     fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
+#15 152.8    |                                         ^^^^^^^^
+#15 152.8 
+#15 152.9 error[E0124]: field `tenant_id` is already declared
+#15 152.9   --> src/models/page_models.rs:84:5
+#15 152.9    |
+#15 152.9 83 |     pub tenant_id: Option<i32>,
+#15 152.9    |     -------------------------- `tenant_id` first declared here
+#15 152.9 84 |     pub tenant_id: Option<i32>,
+#15 152.9    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ field already declared
+#15 152.9 
+#15 152.9 error[E0124]: field `tenant_id` is already declared
+#15 152.9   --> src/models/page_models.rs:50:5
+#15 152.9    |
+#15 152.9 39 |     pub tenant_id: Option<i32>,
+#15 152.9    |     -------------------------- `tenant_id` first declared here
+#15 152.9 ...
+#15 152.9 50 |     pub tenant_id: Option<i32>,
+#15 152.9    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ field already declared
+#15 152.9 
+#15 155.5 error[E0382]: borrow of moved value: `pool`
+#15 155.5    --> src/controllers/page_controllers.rs:101:45
+#15 155.5     |
+#15 155.5  96 |     pool: web::Data<DatabasePool>,
+#15 155.5     |     ---- move occurs because `pool` has type `actix_web::web::Data<Pool<diesel::r2d2::ConnectionManager<PgConnection>>>`, which does not implement the `Copy` trait
+#15 155.5 ...
+#15 155.5  99 |     let mut mysql_pool = pool_handler(pool)?;
+#15 155.5     |                                       ---- value moved here
+#15 155.5 100 |     let path = req.path();
+#15 155.5 101 |     let tenant_id = resolve_tenant_id(&req, &pool).unwrap_or(0); // If 0/error, might be global or 404? default to public/0
+#15 155.5     |                                             ^^^^^ value borrowed here after move
+#15 155.5     |
+#15 155.5 note: consider changing this parameter type in function `pool_handler` to borrow instead if owning the value isn't necessary
+#15 155.5    --> src/models/mod.rs:108:27
+#15 155.5     |
+#15 155.5 108 | pub fn pool_handler(pool: web::Data<DatabasePool>) -> Result<PooledDatabaseConnection, CustomHttpError> {
+#15 155.5     |        ------------       ^^^^^^^^^^^^^^^^^^^^^^^ this parameter takes ownership of the value
+#15 155.5     |        |
+#15 155.5     |        in this function
+#15 155.5     = note: borrow occurs due to deref coercion to `Arc<Pool<diesel::r2d2::ConnectionManager<PgConnection>>>`
+#15 155.5 note: deref defined here
+#15 155.5    --> /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/actix-web-4.12.1/src/data.rs:112:5
+#15 155.5     |
+#15 155.5 112 |     type Target = Arc<T>;
+#15 155.5     |     ^^^^^^^^^^^
+#15 155.5 help: consider cloning the value if the performance cost is acceptable
+#15 155.5     |
+#15 155.5  99 |     let mut mysql_pool = pool_handler(pool.clone())?;
+#15 155.5     |                                           ++++++++
+#15 155.5 
+#15 155.6 error[E0599]: no function or associated item named `read_all_by_tenant` found for struct `Page` in the current scope
+#15 155.6    --> src/controllers/page_controllers.rs:164:37
+#15 155.6     |
+#15 155.6 164 |     let pages: Vec<PageDTO> = Page::read_all_by_tenant(tenant_id, &mut mysql_pool)?;
+#15 155.6     |                                     ^^^^^^^^^^^^^^^^^^ function or associated item not found in `Page`
+#15 155.6     |
+#15 155.6    ::: src/models/page_models.rs:20:1
+#15 155.6     |
+#15 155.6  20 | pub struct Page {
+#15 155.6     | --------------- function or associated item `read_all_by_tenant` not found for this struct
+#15 155.6 
+#15 155.8 warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+#15 155.8   --> src/controllers/sitemap_controller.rs:64:26
+#15 155.8    |
+#15 155.8 64 |                         .set_header("Content-Encoding", "gzip")
+#15 155.8    |                          ^^^^^^^^^^
+#15 155.8 
+#15 155.8 warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+#15 155.8   --> src/controllers/sitemap_controller.rs:65:26
+#15 155.8    |
+#15 155.8 65 |                         .set_header("X-Sitemap-Count", page_count.to_string())
+#15 155.8    |                          ^^^^^^^^^^
+#15 155.8 
+#15 155.8 warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+#15 155.8   --> src/controllers/sitemap_controller.rs:71:30
+#15 155.8    |
+#15 155.8 71 | ...                   .set_header("X-Sitemap-Count", page_count.to_string())
+#15 155.8    |                        ^^^^^^^^^^
+#15 155.8 
+#15 155.8 warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+#15 155.8   --> src/controllers/sitemap_controller.rs:79:22
+#15 155.8    |
+#15 155.8 79 |                     .set_header("X-Sitemap-Count", page_count.to_string())
+#15 155.8    |                      ^^^^^^^^^^
+#15 155.8 
+#15 156.1 warning: variable does not need to be mutable
+#15 156.1    --> src/services/ai_authorization_service.rs:133:13
+#15 156.1     |
+#15 156.1 133 |         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+#15 156.1     |             ----^^^^
+#15 156.1     |             |
+#15 156.1     |             help: remove this `mut`
+#15 156.1     |
+#15 156.1     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+#15 156.1 
+#15 156.2 warning: variable does not need to be mutable
+#15 156.2   --> src/services/aeo_service.rs:79:13
+#15 156.2    |
+#15 156.2 79 |         let mut pairs = vec![
+#15 156.2    |             ----^^^^^
+#15 156.2    |             |
+#15 156.2    |             help: remove this `mut`
+#15 156.2 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:17:29
+#15 156.8    |
+#15 156.8 17 |         .ok_or(RenderError::new(
+#15 156.8    |                             ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:28:33
+#15 156.8    |
+#15 156.8 28 |             .ok_or(RenderError::new("No fields exist on this page."))?
+#15 156.8    |                                 ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:30:33
+#15 156.8    |
+#15 156.8 30 |             .ok_or(RenderError::new(&format!(
+#15 156.8    |                                 ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:61:33
+#15 156.8    |
+#15 156.8 61 |             .ok_or(RenderError::new(
+#15 156.8    |                                 ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:70:37
+#15 156.8    |
+#15 156.8 70 |                 .ok_or(RenderError::new("No fields exist on this page."))?
+#15 156.8    |                                     ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+#15 156.8   --> src/helpers/default.rs:72:37
+#15 156.8    |
+#15 156.8 72 |                 .ok_or(RenderError::new(&format!(
+#15 156.8    |                                     ^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+#15 156.8   --> src/services/analytics_service.rs:86:38
+#15 156.8    |
+#15 156.8 86 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+#15 156.8    |                                      ^^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+#15 156.8   --> src/services/analytics_service.rs:86:45
+#15 156.8    |
+#15 156.8 86 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+#15 156.8    |                                             ^^^^^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+#15 156.8    --> src/services/analytics_service.rs:132:38
+#15 156.8     |
+#15 156.8 132 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+#15 156.8     |                                      ^^^^
+#15 156.8 
+#15 156.8 warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+#15 156.8    --> src/services/analytics_service.rs:132:45
+#15 156.8     |
+#15 156.8 132 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+#15 156.8     |                                             ^^^^^^^
+#15 156.8 
+#15 156.9 error[E0277]: the trait bound `(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...): CompatibleType<..., ...>` is not satisfied
+#15 156.9     --> src/services/revision_service.rs:27:77
+#15 156.9      |
+#15 156.9   27 |     let current_page: Page = pages.filter(uuid.eq(page_uuid)).first::<Page>(conn)?;
+#15 156.9      |                                                               -----         ^^^^ unsatisfied trait bound
+#15 156.9      |                                                               |
+#15 156.9      |                                                               required by a bound introduced by this call
+#15 156.9      |
+#15 156.9      = help: the trait `load_dsl::private::CompatibleType<Page, Pg>` is not implemented for `(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...)`
+#15 156.9      = note: this is a mismatch between what your query returns and what your type expects the query to return
+#15 156.9      = note: the fields in your struct need to match the fields returned by your query in count, order and type
+#15 156.9      = note: consider using `#[diesel(check_for_backend(Pg))]` on either `#[derive(Selectable)]` or `#[derive(QueryableByName)]` 
+#15 156.9              on your struct `Page` and in your query `.select(Page::as_select())` to get a better error message
+#15 156.9      = help: the following other types implement trait `load_dsl::private::CompatibleType<U, DB>`:
+#15 156.9                `Untyped` implements `load_dsl::private::CompatibleType<U, DB>`
+#15 156.9                `diesel::expression::select_by::SelectBy<U, DB>` implements `load_dsl::private::CompatibleType<U, DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1, ST2)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5, ST6)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 156.9              and 26 others
+#15 156.9      = note: required for `SelectStatement<FromClause<table>, ..., ..., ..., ..., ...>` to implement `LoadQuery<'_, _, Page>`
+#15 156.9 note: required by a bound in `diesel::RunQueryDsl::first`
+#15 156.9     --> /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diesel-2.3.5/src/query_dsl/mod.rs:1833:22
+#15 156.9      |
+#15 156.9 1830 |     fn first<'query, U>(self, conn: &mut Conn) -> QueryResult<U>
+#15 156.9      |        ----- required by a bound in this associated function
+#15 156.9 ...
+#15 156.9 1833 |         Limit<Self>: LoadQuery<'query, Conn, U>,
+#15 156.9      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `RunQueryDsl::first`
+#15 156.9      = note: the full name for the type has been written to '/app/target/release/deps/freeradical-db88627b110750a0.long-type-101746790232177412.txt'
+#15 156.9      = note: consider using `--verbose` to print the full type name to the console
+#15 156.9 
+#15 157.8 error[E0062]: field `tenant_id` specified more than once
+#15 157.8   --> src/models/page_models.rs:50:9
+#15 157.8    |
+#15 157.8 17 | #[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone)]
+#15 157.8    |                                          ----------- first use of `tenant_id`
+#15 157.8 ...
+#15 157.8 50 |     pub tenant_id: Option<i32>,
+#15 157.8    |         ^^^^^^^^^ used more than once
+#15 157.8 
+#15 157.8 error[E0062]: field `tenant_id` specified more than once
+#15 157.8   --> src/models/page_models.rs:50:9
+#15 157.8    |
+#15 157.8 17 | #[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone)]
+#15 157.8    |                                                       --------- first use of `tenant_id`
+#15 157.8 ...
+#15 157.8 50 |     pub tenant_id: Option<i32>,
+#15 157.8    |         ^^^^^^^^^ used more than once
+#15 157.8 
+#15 157.8 error[E0062]: field `tenant_id` specified more than once
+#15 157.8   --> src/models/page_models.rs:50:5
+#15 157.8    |
+#15 157.8 39 |     pub tenant_id: Option<i32>,
+#15 157.8    |     -------------------------- first use of `tenant_id`
+#15 157.8 ...
+#15 157.8 50 |     pub tenant_id: Option<i32>,
+#15 157.8    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ used more than once
+#15 157.8 
+#15 157.9 error[E0062]: field `tenant_id` specified more than once
+#15 157.9   --> src/models/page_models.rs:84:9
+#15 157.9    |
+#15 157.9 53 | #[derive(Insertable, AsChangeset, Serialize, Deserialize)]
+#15 157.9    |                                              ----------- first use of `tenant_id`
+#15 157.9 ...
+#15 157.9 84 |     pub tenant_id: Option<i32>,
+#15 157.9    |         ^^^^^^^^^ used more than once
+#15 157.9 
+#15 157.9 error[E0277]: the trait bound `(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...): CompatibleType<..., ...>` is not satisfied
+#15 157.9     --> src/models/page_models.rs:211:57
+#15 157.9      |
+#15 157.9  211 |         pages::table.filter(uuid.eq(_id)).first::<Self>(db).map(|p| p.into())
+#15 157.9      |                                           -----         ^^ unsatisfied trait bound
+#15 157.9      |                                           |
+#15 157.9      |                                           required by a bound introduced by this call
+#15 157.9      |
+#15 157.9      = help: the trait `load_dsl::private::CompatibleType<Page, Pg>` is not implemented for `(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...)`
+#15 157.9      = note: this is a mismatch between what your query returns and what your type expects the query to return
+#15 157.9      = note: the fields in your struct need to match the fields returned by your query in count, order and type
+#15 157.9      = note: consider using `#[diesel(check_for_backend(Pg))]` on either `#[derive(Selectable)]` or `#[derive(QueryableByName)]` 
+#15 157.9              on your struct `Page` and in your query `.select(Page::as_select())` to get a better error message
+#15 157.9      = help: the following other types implement trait `load_dsl::private::CompatibleType<U, DB>`:
+#15 157.9                `Untyped` implements `load_dsl::private::CompatibleType<U, DB>`
+#15 157.9                `diesel::expression::select_by::SelectBy<U, DB>` implements `load_dsl::private::CompatibleType<U, DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1, ST2)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9                `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5, ST6)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+#15 157.9              and 26 others
+#15 157.9      = note: required for `SelectStatement<FromClause<table>, ..., ..., ..., ..., ...>` to implement `LoadQuery<'_, _, Page>`
+#15 157.9 note: required by a bound in `diesel::RunQueryDsl::first`
+#15 157.9     --> /usr/local/cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diesel-2.3.5/src/query_dsl/mod.rs:1833:22
+#15 157.9      |
+#15 157.9 1830 |     fn first<'query, U>(self, conn: &mut Conn) -> QueryResult<U>
+#15 157.9      |        ----- required by a bound in this associated function
+#15 157.9 ...
+#15 157.9 1833 |         Limit<Self>: LoadQuery<'query, Conn, U>,
+#15 157.9      |                      ^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `RunQueryDsl::first`
+#15 157.9      = note: the full name for the type has been written to '/app/target/release/deps/freeradical-db88627b110750a0.long-type-101746790232177412.txt'
+#15 157.9      = note: consider using `--verbose` to print the full type name to the console
+#15 157.9 
+#15 158.8 warning: unused import: `diesel::prelude`
+#15 158.8  --> src/controllers/i18n_controller.rs:2:5
+#15 158.8   |
+#15 158.8 2 | use diesel::prelude::*;
+#15 158.8   |     ^^^^^^^^^^^^^^^
+#15 158.8 
+#15 158.8 warning: unused import: `Digest`
+#15 158.8  --> src/services/webhook_service.rs:5:20
+#15 158.8   |
+#15 158.8 5 | use sha2::{Sha256, Digest};
+#15 158.8   |                    ^^^^^^
+#15 158.8 
+#15 158.9 warning: variable `caption` is assigned to, but never used
+#15 158.9   --> src/controllers/media_controller.rs:92:9
+#15 158.9    |
+#15 158.9 92 |     let mut caption = None;
+#15 158.9    |         ^^^^^^^^^^^
+#15 158.9    |
+#15 158.9    = note: consider using `_caption` instead
+#15 158.9    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+#15 158.9 
+#15 158.9 warning: variable `folder` is assigned to, but never used
+#15 158.9   --> src/controllers/media_controller.rs:93:9
+#15 158.9    |
+#15 158.9 93 |     let mut folder = None;
+#15 158.9    |         ^^^^^^^^^^
+#15 158.9    |
+#15 158.9    = note: consider using `_folder` instead
+#15 158.9 
+#15 158.9 warning: value assigned to `caption` is never read
+#15 158.9    --> src/controllers/media_controller.rs:149:21
+#15 158.9     |
+#15 158.9 149 |                     caption = Some(value);
+#15 158.9     |                     ^^^^^^^
+#15 158.9     |
+#15 158.9     = help: maybe it is overwritten before being read?
+#15 158.9     = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+#15 158.9 
+#15 158.9 warning: value assigned to `folder` is never read
+#15 158.9    --> src/controllers/media_controller.rs:160:21
+#15 158.9     |
+#15 158.9 160 |                     folder = Some(value);
+#15 158.9     |                     ^^^^^^
+#15 158.9     |
+#15 158.9     = help: maybe it is overwritten before being read?
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/relationship_controller.rs:34:5
+#15 158.9    |
+#15 158.9 34 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/relationship_controller.rs:52:5
+#15 158.9    |
+#15 158.9 52 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `id`
+#15 158.9   --> src/controllers/relationship_controller.rs:67:5
+#15 158.9    |
+#15 158.9 67 |     id: web::Path<i64>,
+#15 158.9    |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/relationship_controller.rs:68:5
+#15 158.9    |
+#15 158.9 68 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:25:28
+#15 158.9    |
+#15 158.9 25 | pub async fn list_webhooks(pool: web::Data<DatabasePool>) -> impl Responder {
+#15 158.9    |                            ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:37:5
+#15 158.9    |
+#15 158.9 37 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:53:5
+#15 158.9    |
+#15 158.9 53 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `id`
+#15 158.9   --> src/controllers/webhook_controller.rs:66:5
+#15 158.9    |
+#15 158.9 66 |     id: web::Path<i32>,
+#15 158.9    |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:67:5
+#15 158.9    |
+#15 158.9 67 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `id`
+#15 158.9   --> src/controllers/webhook_controller.rs:78:5
+#15 158.9    |
+#15 158.9 78 |     id: web::Path<i32>,
+#15 158.9    |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:79:5
+#15 158.9    |
+#15 158.9 79 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 158.9 warning: unused variable: `pool`
+#15 158.9   --> src/controllers/webhook_controller.rs:91:5
+#15 158.9    |
+#15 158.9 91 |     pool: web::Data<DatabasePool>
+#15 158.9    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 158.9 
+#15 159.0 warning: unused variable: `e`
+#15 159.0    --> src/services/crm_service.rs:172:15
+#15 159.0     |
+#15 159.0 172 |     .map_err(|e| CustomHttpError::NotFound("Customer not found".to_string()))?;
+#15 159.0     |               ^ help: if this is intentional, prefix it with an underscore: `_e`
+#15 159.0 
+#15 159.1 warning: unused variable: `page_url`
+#15 159.1   --> src/services/analytics_service.rs:44:9
+#15 159.1    |
+#15 159.1 44 |         page_url: String,
+#15 159.1    |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_url`
+#15 159.1 
+#15 159.1 warning: unused variable: `page_uuid`
+#15 159.1   --> src/services/analytics_service.rs:45:9
+#15 159.1    |
+#15 159.1 45 |         page_uuid: Option<String>,
+#15 159.1    |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+#15 159.1 
+#15 159.1 warning: unused variable: `page_url`
+#15 159.1   --> src/services/analytics_service.rs:68:27
+#15 159.1    |
+#15 159.1 68 |     pub fn get_page_views(page_url: &str) -> i64 {
+#15 159.1    |                           ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_url`
+#15 159.1 
+#15 159.1 warning: unused variable: `reason`
+#15 159.1    --> src/services/inventory_service.rs:128:9
+#15 159.1     |
+#15 159.1 128 |     let reason = payload.reason.clone();
+#15 159.1     |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_reason`
+#15 159.1 
+#15 159.1 warning: unused variable: `team_role`
+#15 159.1   --> src/services/ai_scope_service.rs:70:25
+#15 159.1    |
+#15 159.1 70 |             if let Some(team_role) = &user.team_role {
+#15 159.1    |                         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_team_role`
+#15 159.1 
+#15 159.1 warning: unused variable: `payload`
+#15 159.1    --> src/services/ai_provider_service.rs:137:5
+#15 159.1     |
+#15 159.1 137 |     payload: web::Json<UpdateProviderRequest>,
+#15 159.1     |     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+#15 159.1 
+#15 159.2 warning: unused variable: `provider_id`
+#15 159.2    --> src/services/ai_content_service.rs:138:9
+#15 159.2     |
+#15 159.2 138 |     let provider_id = provider.id;
+#15 159.2     |         ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_provider_id`
+#15 159.2 
+#15 159.2 warning: variable does not need to be mutable
+#15 159.2   --> src/services/ai_authorization_service.rs:94:9
+#15 159.2    |
+#15 159.2 94 |     let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+#15 159.2    |         ----^^^^
+#15 159.2    |         |
+#15 159.2    |         help: remove this `mut`
+#15 159.2 
+#15 159.2 warning: unused variable: `conn`
+#15 159.2   --> src/services/ai_authorization_service.rs:94:9
+#15 159.2    |
+#15 159.2 94 |     let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+#15 159.2    |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_conn`
+#15 159.2 
+#15 159.2 warning: unused variable: `conn`
+#15 159.2    --> src/services/ai_authorization_service.rs:133:13
+#15 159.2     |
+#15 159.2 133 |         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+#15 159.2     |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_conn`
+#15 159.2 
+#15 159.2 warning: unused variable: `page_id`
+#15 159.2    --> src/services/ai_authorization_service.rs:124:5
+#15 159.2     |
+#15 159.2 124 |     page_id: i64,
+#15 159.2     |     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_id`
+#15 159.2 
+#15 159.2 warning: unused variable: `user_id`
+#15 159.2    --> src/services/ai_authorization_service.rs:129:9
+#15 159.2     |
+#15 159.2 129 |     let user_id = user.user_id;
+#15 159.2     |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_id`
+#15 159.2 
+#15 159.2 warning: unused variable: `parameters`
+#15 159.2    --> src/services/mcp_client.rs:131:9
+#15 159.2     |
+#15 159.2 131 |         parameters: serde_json::Value
+#15 159.2     |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_parameters`
+#15 159.2 
+#15 159.5 warning: unused variable: `api_key`
+#15 159.5    --> src/services/command_router.rs:101:13
+#15 159.5     |
+#15 159.5 101 |         let api_key = self.key_manager
+#15 159.5     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+#15 159.5 
+#15 159.5 warning: unused variable: `prompt`
+#15 159.5    --> src/services/command_router.rs:111:13
+#15 159.5     |
+#15 159.5 111 |         let prompt = format!(
+#15 159.5     |             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_prompt`
+#15 159.5 
+#15 159.5 warning: unused variable: `api_key`
+#15 159.5    --> src/services/command_router.rs:155:13
+#15 159.5     |
+#15 159.5 155 |         let api_key = self.key_manager
+#15 159.5     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+#15 159.5 
+#15 159.5 warning: unused variable: `api_key`
+#15 159.5    --> src/services/command_router.rs:206:13
+#15 159.5     |
+#15 159.5 206 |         let api_key = self.key_manager
+#15 159.5     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+#15 159.5 
+#15 159.5 warning: unused variable: `api_key`
+#15 159.5    --> src/services/command_router.rs:257:13
+#15 159.5     |
+#15 159.5 257 |         let api_key = self.key_manager
+#15 159.5     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+#15 159.5 
+#15 159.5 warning: unused variable: `api_key`
+#15 159.5    --> src/services/command_router.rs:303:13
+#15 159.5     |
+#15 159.5 303 |         let api_key = self.key_manager
+#15 159.5     |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+#15 159.5 
+#15 159.7 warning: unused variable: `domain`
+#15 159.7   --> src/services/geo_service.rs:32:9
+#15 159.7    |
+#15 159.7 32 |         domain: &str,
+#15 159.7    |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_domain`
+#15 159.7 
+#15 159.7 warning: unused variable: `content`
+#15 159.7   --> src/services/geo_service.rs:60:42
+#15 159.7    |
+#15 159.7 60 |     async fn extract_attributions(&self, content: &str) -> Result<Vec<SourceAttribution>, String> {
+#15 159.7    |                                          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+#15 159.7 
+#15 159.7 warning: unused variable: `content`
+#15 159.7   --> src/services/seo_meta_generator.rs:47:36
+#15 159.7    |
+#15 159.7 47 |     async fn generate_title(&self, content: &str, keyword: &str) -> Result<String, String> {
+#15 159.7    |                                    ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+#15 159.7 
+#15 159.7 warning: unused variable: `content`
+#15 159.7   --> src/services/seo_meta_generator.rs:54:42
+#15 159.7    |
+#15 159.7 54 |     async fn generate_description(&self, content: &str, keyword: &str) -> Result<String, String> {
+#15 159.7    |                                          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+#15 159.7 
+#15 159.7 warning: unused variable: `content`
+#15 159.7   --> src/services/seo_meta_generator.rs:61:38
+#15 159.7    |
+#15 159.7 61 |     async fn extract_keywords(&self, content: &str) -> Result<Vec<String>, String> {
+#15 159.7    |                                      ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+#15 159.7 
+#15 159.8 warning: unused variable: `content`
+#15 159.8   --> src/services/content_quality.rs:81:34
+#15 159.8    |
+#15 159.8 81 |     fn syllables_per_word(&self, content: &str) -> f64 {
+#15 159.8    |                                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+#15 159.8 
+#15 159.8 warning: unused variable: `words`
+#15 159.8    --> src/services/link_builder.rs:165:13
+#15 159.8     |
+#15 159.8 165 |         let words: Vec<&str> = content.split_whitespace().collect();
+#15 159.8     |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_words`
+#15 159.8 
+#15 159.9 warning: unused variable: `total`
+#15 159.9    --> src/services/content_calendar.rs:163:13
+#15 159.9     |
+#15 159.9 163 |         let total = schedule.len() as f64;
+#15 159.9     |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+#15 159.9 
+#15 160.0 warning: unused variable: `keyword`
+#15 160.0   --> src/services/rank_tracker.rs:66:34
+#15 160.0    |
+#15 160.0 66 |     async fn get_rankings(&self, keyword: &str, url: &str) -> Result<Vec<RankingSnapshot>, String> {
+#15 160.0    |                                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_keyword`
+#15 160.0 
+#15 160.1 warning: unused variable: `product_name`
+#15 160.1   --> src/services/wishlist.rs:49:9
+#15 160.1    |
+#15 160.1 49 |         product_name: String,
+#15 160.1    |         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_product_name`
+#15 160.1 
+#15 160.1 warning: unused variable: `price`
+#15 160.1   --> src/services/wishlist.rs:50:9
+#15 160.1    |
+#15 160.1 50 |         price: f64,
+#15 160.1    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_price`
+#15 160.1 
+#15 160.3 warning: unused variable: `required_permission`
+#15 160.3   --> src/services/permission_service.rs:74:5
+#15 160.3    |
+#15 160.3 74 |     required_permission: &str,
+#15 160.3    |     ^^^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_required_permission`
+#15 160.3 
+#15 160.3 warning: unused variable: `quality`
+#15 160.3   --> src/services/image_service.rs:92:44
+#15 160.3    |
+#15 160.3 92 | pub fn convert_to_webp(img: &DynamicImage, quality: u8) -> Result<Vec<u8>, String> {
+#15 160.3    |                                            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_quality`
+#15 160.3 
+#15 160.3 warning: unused variable: `content_type`
+#15 160.3   --> src/services/plugin_service/mod.rs:28:37
+#15 160.3    |
+#15 160.3 28 |     async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+#15 160.3    |                                     ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content_type`
+#15 160.3 
+#15 160.3 warning: unused variable: `data`
+#15 160.3   --> src/services/plugin_service/mod.rs:28:57
+#15 160.3    |
+#15 160.3 28 |     async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+#15 160.3    |                                                         ^^^^ help: if this is intentional, prefix it with an underscore: `_data`
+#15 160.3 
+#15 160.6 warning: unused variable: `payload`
+#15 160.6    --> src/services/payment_service/paypal.rs:242:40
+#15 160.6     |
+#15 160.6 242 |     fn verify_webhook_signature(&self, payload: &[u8], signature: &str) -> Result<bool, String> {
+#15 160.6     |                                        ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+#15 160.6 
+#15 160.7 warning: variable does not need to be mutable
+#15 160.7   --> src/services/encryption_service.rs:79:23
+#15 160.7    |
+#15 160.7 79 |     let (nonce_bytes, mut ciphertext) = combined.split_at(NONCE_LEN);
+#15 160.7    |                       ----^^^^^^^^^^
+#15 160.7    |                       |
+#15 160.7    |                       help: remove this `mut`
+#15 160.7 
+#15 160.7 warning: unused variable: `session_id`
+#15 160.7   --> src/services/analytics_service_v2.rs:24:9
+#15 160.7    |
+#15 160.7 24 |         session_id: String,
+#15 160.7    |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_session_id`
+#15 160.7 
+#15 160.7 warning: unused variable: `user_agent`
+#15 160.7   --> src/services/analytics_service_v2.rs:26:9
+#15 160.7    |
+#15 160.7 26 |         user_agent: String,
+#15 160.7    |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_agent`
+#15 160.7 
+#15 160.7 warning: unused variable: `referer`
+#15 160.7   --> src/services/analytics_service_v2.rs:27:9
+#15 160.7    |
+#15 160.7 27 |         referer: Option<String>
+#15 160.7    |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_referer`
+#15 160.7 
+#15 160.7 warning: unused variable: `page_uuid`
+#15 160.7   --> src/services/analytics_service_v2.rs:36:9
+#15 160.7    |
+#15 160.7 36 |         page_uuid: Option<String>,
+#15 160.7    |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+#15 160.7 
+#15 160.7 warning: unused variable: `metadata`
+#15 160.7   --> src/services/analytics_service_v2.rs:37:9
+#15 160.7    |
+#15 160.7 37 |         metadata: Option<serde_json::Value>
+#15 160.7    |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_metadata`
+#15 160.7 
+#15 160.7 warning: unused variable: `page_uuid`
+#15 160.7   --> src/services/analytics_service_v2.rs:44:9
+#15 160.7    |
+#15 160.7 44 |         page_uuid: &str,
+#15 160.7    |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+#15 160.7 
+#15 160.7 warning: unused variable: `from_date`
+#15 160.7   --> src/services/analytics_service_v2.rs:45:9
+#15 160.7    |
+#15 160.7 45 |         from_date: NaiveDateTime,
+#15 160.7    |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_from_date`
+#15 160.7 
+#15 160.7 warning: unused variable: `to_date`
+#15 160.7   --> src/services/analytics_service_v2.rs:46:9
+#15 160.7    |
+#15 160.7 46 |         to_date: NaiveDateTime
+#15 160.7    |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_to_date`
+#15 160.7 
+#15 160.8 warning: unused variable: `redirect_uri`
+#15 160.8   --> src/services/oauth_service.rs:57:9
+#15 160.8    |
+#15 160.8 57 |         redirect_uri: &str,
+#15 160.8    |         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_redirect_uri`
+#15 160.8 
+#15 160.8 warning: unused variable: `token_url`
+#15 160.8   --> src/services/oauth_service.rs:63:21
+#15 160.8    |
+#15 160.8 63 |                 let token_url = "https://oauth2.googleapis.com/token";
+#15 160.8    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_token_url`
+#15 160.8 
+#15 160.8 warning: unused variable: `token_url`
+#15 160.8   --> src/services/oauth_service.rs:75:21
+#15 160.8    |
+#15 160.8 75 |                 let token_url = "https://github.com/login/oauth/access_token";
+#15 160.8    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_token_url`
+#15 160.8 
+#15 160.8 warning: unused variable: `access_token`
+#15 160.8   --> src/services/oauth_service.rs:90:48
+#15 160.8    |
+#15 160.8 90 |     pub async fn get_user_info(provider: &str, access_token: &str) -> Result<serde_json::Value, String> {
+#15 160.8    |                                                ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_access_token`
+#15 160.8 
+#15 160.8 warning: unused variable: `current_lang`
+#15 160.8  --> src/services/hreflang_service.rs:6:5
+#15 160.8   |
+#15 160.8 6 |     current_lang: &str,  
+#15 160.8   |     ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_current_lang`
+#15 160.8 
+#15 160.9 warning: unreachable pattern
+#15 160.9   --> src/models/page_models.rs:50:9
+#15 160.9    |
+#15 160.9 39 |     pub tenant_id: Option<i32>,
+#15 160.9    |         --------- matches all the relevant values
+#15 160.9 ...
+#15 160.9 50 |     pub tenant_id: Option<i32>,
+#15 160.9    |         ^^^^^^^^^ no value can reach this
+#15 160.9    |
+#15 160.9    = note: `#[warn(unreachable_patterns)]` (part of `#[warn(unused)]`) on by default
+#15 160.9 
+#15 161.0 warning: unreachable pattern
+#15 161.0   --> src/models/page_models.rs:84:9
+#15 161.0    |
+#15 161.0 83 |     pub tenant_id: Option<i32>,
+#15 161.0    |         --------- matches all the relevant values
+#15 161.0 84 |     pub tenant_id: Option<i32>,
+#15 161.0    |         ^^^^^^^^^ no value can reach this
+#15 161.0 
+#15 161.1 warning: variable does not need to be mutable
+#15 161.1    --> src/models/page_models.rs:289:13
+#15 161.1     |
+#15 161.1 289 |         let mut page_dto: PageModuleDTO = filtered_page.into();
+#15 161.1     |             ----^^^^^^^^
+#15 161.1     |             |
+#15 161.1     |             help: remove this `mut`
+#15 161.1 
+#15 161.1 warning: unused variable: `module_dto`
+#15 161.1    --> src/models/page_models.rs:284:13
+#15 161.1     |
+#15 161.1 284 |         let module_dto = FieldsDTO {
+#15 161.1     |             ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_module_dto`
+#15 161.1 
+#15 162.6 warning: unused variable: `pool`
+#15 162.6   --> src/models/db_connection.rs:39:33
+#15 162.6    |
+#15 162.6 39 | pub fn get_database_type_string(pool: &DatabasePool) -> &'static str {
+#15 162.6    |                                 ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+#15 162.6 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/query.rs:12:26
+#15 163.3    |
+#15 163.3 12 |     async fn page(&self, ctx: &Context<'_>, uuid: String) -> Result<Option<GqlPage>> {
+#15 163.3    |                          ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/query.rs:31:9
+#15 163.3    |
+#15 163.3 31 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `page`
+#15 163.3   --> src/graphql/query.rs:34:13
+#15 163.3    |
+#15 163.3 34 |         let page = pagination.as_ref().and_then(|p| p.page).unwrap_or(1);
+#15 163.3    |             ^^^^ help: if this is intentional, prefix it with an underscore: `_page`
+#15 163.3 
+#15 163.3 warning: unused variable: `per_page`
+#15 163.3   --> src/graphql/query.rs:35:13
+#15 163.3    |
+#15 163.3 35 |         let per_page = pagination.as_ref().and_then(|p| p.per_page).unwrap_or(20);
+#15 163.3    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_per_page`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/query.rs:64:9
+#15 163.3    |
+#15 163.3 64 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `resources`
+#15 163.3   --> src/graphql/query.rs:66:9
+#15 163.3    |
+#15 163.3 66 |         resources: Option<Vec<String>>
+#15 163.3    |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_resources`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/query.rs:82:9
+#15 163.3    |
+#15 163.3 82 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3    --> src/graphql/query.rs:100:9
+#15 163.3     |
+#15 163.3 100 |         ctx: &Context<'_>,
+#15 163.3     |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `pagination`
+#15 163.3    --> src/graphql/query.rs:101:9
+#15 163.3     |
+#15 163.3 101 |         pagination: Option<PaginationInput>
+#15 163.3     |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pagination`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/mutation.rs:13:9
+#15 163.3    |
+#15 163.3 13 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/mutation.rs:34:9
+#15 163.3    |
+#15 163.3 34 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `ctx`
+#15 163.3   --> src/graphql/mutation.rs:56:9
+#15 163.3    |
+#15 163.3 56 |         ctx: &Context<'_>,
+#15 163.3    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+#15 163.3 
+#15 163.3 warning: unused variable: `uuid`
+#15 163.3   --> src/graphql/mutation.rs:57:9
+#15 163.3    |
+#15 163.3 57 |         uuid: String
+#15 163.3    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_uuid`
+#15 163.3 
+#15 163.4 Some errors have detailed explanations: E0062, E0124, E0277, E0382, E0407, E0449, E0599.
+#15 163.4 For more information about an error, try `rustc --explain E0062`.
+#15 163.4 warning: `freeradical` (bin "freeradical") generated 186 warnings
+#15 163.4 error: could not compile `freeradical` (bin "freeradical") due to 12 previous errors; 186 warnings emitted
+#15 ERROR: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101
+------
+ > [builder 9/9] RUN cargo build --release:
+163.3 warning: unused variable: `uuid`
+163.3   --> src/graphql/mutation.rs:57:9
+163.3    |
+163.3 57 |         uuid: String
+163.3    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_uuid`
+163.3 
+163.4 Some errors have detailed explanations: E0062, E0124, E0277, E0382, E0407, E0449, E0599.
+163.4 For more information about an error, try `rustc --explain E0062`.
+163.4 warning: `freeradical` (bin "freeradical") generated 186 warnings
+163.4 error: could not compile `freeradical` (bin "freeradical") due to 12 previous errors; 186 warnings emitted
+------
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - FromAsCasing: 'as' and 'FROM' keywords' casing do not match (line 1)
+Dockerfile:22
+--------------------
+  20 |     
+  21 |     # Build release
+  22 | >>> RUN cargo build --release
+  23 |     
+  24 |     # Runtime stage
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c cargo build --release" did not complete successfully: exit code: 101

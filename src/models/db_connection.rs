@@ -13,6 +13,10 @@ pub enum DatabaseType {
 /// Connection pool wrapper
 pub type DatabasePool = Pool<ConnectionManager<PgConnection>>;
 
+/// Read Replica Connection Poll Wrapper (Newtype to distinguish in Actix)
+#[derive(Clone)]
+pub struct ReadDatabasePool(pub DatabasePool);
+
 /// Pooled connection
 pub type PooledDatabaseConnection = PooledConnection<ConnectionManager<PgConnection>>;
 

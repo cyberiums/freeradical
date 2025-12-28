@@ -1,0 +1,5055 @@
+    Updating crates.io index
+ Downloading crates ...
+  Downloaded actix-codec v0.5.2
+  Downloaded actix-macros v0.2.4
+  Downloaded actix-multipart-derive v0.7.0
+  Downloaded actix-utils v3.0.1
+  Downloaded alloc-stdlib v0.2.2
+  Downloaded alloc-no-stdlib v2.0.4
+  Downloaded atty v0.2.14
+  Downloaded derive_utils v0.15.0
+  Downloaded async-stream-impl v0.3.6
+  Downloaded actix-cors v0.7.1
+  Downloaded ascii_utils v0.9.3
+  Downloaded adler2 v2.0.1
+  Downloaded envy v0.4.2
+  Downloaded derive_builder_macro v0.20.2
+  Downloaded atomic-waker v1.1.2
+  Downloaded aead v0.5.2
+  Downloaded actix-service v2.0.3
+  Downloaded bit_field v0.10.3
+  Downloaded actix-governor v0.10.0
+  Downloaded argon2 v0.5.3
+  Downloaded actix-rt v2.11.0
+  Downloaded convert_case v0.4.0
+  Downloaded cfg-if v1.0.4
+  Downloaded deadpool-runtime v0.1.4
+  Downloaded darling_macro v0.21.3
+  Downloaded derive_builder_macro v0.12.0
+  Downloaded darling_macro v0.14.4
+  Downloaded base32 v0.5.1
+  Downloaded darling_macro v0.20.11
+  Downloaded cpufeatures v0.2.17
+  Downloaded const_fn v0.4.11
+  Downloaded color_quant v1.1.0
+  Downloaded bytestring v1.5.0
+  Downloaded crypto-common v0.1.7
+  Downloaded ident_case v1.0.1
+  Downloaded diesel_migrations v2.3.1
+  Downloaded dsl_auto_type v0.2.0
+  Downloaded idna_adapter v1.2.1
+  Downloaded actix-files v0.6.9
+  Downloaded foreign-types-shared v0.1.1
+  Downloaded fnv v1.0.7
+  Downloaded dotenv v0.15.0
+  Downloaded futures-sink v0.3.31
+  Downloaded async-openai v0.18.3
+  Downloaded async-graphql-parser v7.0.17
+  Downloaded iovec v0.1.4
+  Downloaded itoa v1.0.16
+  Downloaded blake2 v0.10.6
+  Downloaded inout v0.1.4
+  Downloaded generic-array v0.14.7
+  Downloaded hyper-tls v0.6.0
+  Downloaded equivalent v1.0.2
+  Downloaded crossbeam-epoch v0.9.18
+  Downloaded infer v0.15.0
+  Downloaded ipnet v2.11.0
+  Downloaded darling_core v0.14.4
+  Downloaded darling v0.21.3
+  Downloaded derive_builder_core v0.20.2
+  Downloaded lebe v0.5.3
+  Downloaded lazy_static v1.5.0
+  Downloaded deranged v0.5.5
+  Downloaded deadpool-redis v0.22.0
+  Downloaded arc-swap v1.8.0
+  Downloaded anyhow v1.0.100
+  Downloaded lazycell v1.3.0
+  Downloaded form_urlencoded v1.2.2
+  Downloaded futures-io v0.3.31
+  Downloaded inotify v0.7.1
+  Downloaded futures-task v0.3.31
+  Downloaded mime v0.3.17
+  Downloaded bytes v1.11.0
+  Downloaded lock_api v0.4.14
+  Downloaded local-waker v0.1.4
+  Downloaded liquid-derive v0.26.10
+  Downloaded nonzero_ext v0.3.0
+  Downloaded mio-extras v2.0.6
+  Downloaded opaque-debug v0.3.1
+  Downloaded num-derive v0.3.3
+  Downloaded num-conv v0.1.0
+  Downloaded percent-encoding v2.3.2
+  Downloaded parse-size v1.1.0
+  Downloaded openssl-probe v0.1.6
+  Downloaded foreign-types v0.3.2
+  Downloaded juniper_actix v0.6.0
+  Downloaded liquid-lib v0.26.11
+  Downloaded mime_guess v2.0.5
+  Downloaded powerfmt v0.2.0
+  Downloaded pgvector v0.3.4
+  Downloaded num-order v1.2.0
+  Downloaded pem v3.0.6
+  Downloaded log v0.4.29
+  Downloaded indexmap v2.12.1
+  Downloaded find-msvc-tools v0.1.5
+  Downloaded ppv-lite86 v0.2.21
+  Downloaded qrcodegen v1.8.0
+  Downloaded ptr_meta v0.1.4
+  Downloaded once_cell v1.21.3
+  Downloaded radium v0.7.0
+  Downloaded pin-project-lite v0.2.16
+  Downloaded bigdecimal v0.4.9
+  Downloaded derive_builder_core v0.12.0
+  Downloaded pkg-config v0.3.32
+  Downloaded quote v1.0.42
+  Downloaded r2d2 v0.8.10
+  Downloaded actix-http v3.11.2
+  Downloaded pest_meta v2.8.4
+  Downloaded rand_core v0.9.3
+  Downloaded rend v0.4.2
+  Downloaded quanta v0.12.6
+  Downloaded rustc_version v0.4.1
+  Downloaded rust-embed-utils v8.9.0
+  Downloaded http-body v0.4.6
+  Downloaded memchr v2.7.6
+  Downloaded hex v0.4.3
+  Downloaded openssl-sys v0.9.111
+  Downloaded same-file v1.0.6
+  Downloaded rust-embed-impl v8.9.0
+  Downloaded rkyv_derive v0.7.45
+  Downloaded reqwest-eventsource v0.4.0
+  Downloaded scheduled-thread-pool v0.2.7
+  Downloaded iri-string v0.7.9
+  Downloaded http-body-util v0.1.3
+  Downloaded foldhash v0.1.5
+  Downloaded rustls-pemfile v1.0.4
+  Downloaded proc-macro-hack v0.5.20+deprecated
+  Downloaded mio v1.1.1
+  Downloaded qrcodegen-image v1.5.0
+  Downloaded futures-channel v0.3.31
+  Downloaded sha1_smol v1.0.1
+  Downloaded httparse v1.10.1
+  Downloaded semver v1.0.27
+  Downloaded rustls-pki-types v1.13.2
+  Downloaded rustversion v1.0.22
+  Downloaded sync_wrapper v0.1.2
+  Downloaded subtle v2.6.1
+  Downloaded aws-lc-rs v1.15.2
+  Downloaded time-macros-impl v0.1.2
+  Downloaded strum v0.26.3
+  Downloaded static_assertions v1.1.0
+  Downloaded strum_macros v0.26.4
+  Downloaded tinyvec_macros v0.1.1
+  Downloaded thiserror v1.0.69
+  Downloaded tinystr v0.8.2
+  Downloaded iana-time-zone v0.1.64
+  Downloaded spin v0.9.8
+  Downloaded tower-service v0.3.3
+  Downloaded getrandom v0.2.16
+  Downloaded toml_datetime v0.7.5+spec-1.1.0
+  Downloaded tempfile v3.24.0
+  Downloaded try-lock v0.2.5
+  Downloaded tokio-tungstenite v0.21.0
+  Downloaded spinning_top v0.3.0
+  Downloaded tower-layer v0.3.3
+  Downloaded socket2 v0.5.10
+  Downloaded rand_chacha v0.9.0
+  Downloaded tinyvec v1.10.0
+  Downloaded juniper v0.16.2
+  Downloaded untrusted v0.9.0
+  Downloaded unicode-xid v0.2.6
+  Downloaded tokio-rustls v0.24.1
+  Downloaded tracing-attributes v0.1.31
+  Downloaded utoipa-redoc v3.0.0
+  Downloaded tap v1.0.1
+  Downloaded toml_parser v1.0.6+spec-1.1.0
+  Downloaded portable-atomic v1.12.0
+  Downloaded want v0.3.1
+  Downloaded parking_lot_core v0.9.12
+  Downloaded slab v0.4.11
+  Downloaded sct v0.7.1
+  Downloaded web-time v1.1.0
+  Downloaded walkdir v2.5.0
+  Downloaded tungstenite v0.21.0
+  Downloaded time-macros v0.1.1
+  Downloaded rayon v1.11.0
+  Downloaded zerofrom-derive v0.1.6
+  Downloaded reqwest v0.12.28
+  Downloaded uuid v1.19.0
+  Downloaded zeroize v1.8.2
+  Downloaded weezl v0.1.12
+  Downloaded wyz v0.5.1
+  Downloaded serde_json v1.0.147
+  Downloaded writeable v0.6.2
+  Downloaded tower v0.5.2
+  Downloaded zstd v0.13.3
+  Downloaded flate2 v1.1.5
+  Downloaded zstd-safe v7.2.4
+  Downloaded utf8_iter v1.0.4
+  Downloaded urlencoding v2.1.3
+  Downloaded icu_normalizer v2.1.1
+  Downloaded zmij v0.1.8
+  Downloaded zune-inflate v0.2.54
+  Downloaded derive_more v2.1.1
+  Downloaded tower-http v0.6.8
+  Downloaded version_check v0.9.5
+  Downloaded url v2.5.7
+  Downloaded zerotrie v0.2.3
+  Downloaded zip v0.6.6
+  Downloaded zerocopy-derive v0.8.31
+  Downloaded untrusted v0.7.1
+  Downloaded redis v0.32.7
+  Downloaded unicase v2.8.1
+  Downloaded icu_normalizer_data v2.1.1
+  Downloaded totp-rs v5.7.0
+  Downloaded tokio-native-tls v0.3.1
+  Downloaded num-traits v0.2.19
+  Downloaded synstructure v0.13.2
+  Downloaded rustls v0.21.12
+  Downloaded rustls v0.23.35
+  Downloaded zerovec-derive v0.11.2
+  Downloaded vcpkg v0.2.15
+  Downloaded unicode-ident v1.0.22
+  Downloaded zerocopy v0.8.31
+  Downloaded minimal-lexical v0.2.1
+  Downloaded handlebars v6.3.2
+  Downloaded diesel_derives v2.3.6
+  Downloaded icu_collections v2.1.1
+  Downloaded typenum v1.19.0
+  Downloaded tracing v0.1.44
+  Downloaded http v1.4.0
+  Downloaded brotli v8.0.2
+  Downloaded mio v0.6.23
+  Downloaded hashbrown v0.16.1
+  Downloaded governor v0.10.4
+  Downloaded hyper v1.8.1
+  Downloaded icu_properties_data v2.1.2
+  Downloaded unicode-segmentation v1.12.0
+  Downloaded hashbrown v0.14.5
+  Downloaded futures-util v0.3.31
+  Downloaded regex v1.12.2
+  Downloaded zerovec v0.11.5
+  Downloaded h2 v0.4.12
+  Downloaded utoipa-gen v4.3.1
+  Downloaded reqwest v0.11.27
+  Downloaded pxfm v0.1.27
+  Downloaded h2 v0.3.27
+  Downloaded rust-embed v8.9.0
+  Downloaded exr v1.74.0
+  Downloaded tokio v1.48.0
+  Downloaded syn v1.0.109
+  Downloaded syn v2.0.111
+  Downloaded hyper v0.14.32
+  Downloaded tracing-core v0.1.36
+  Downloaded toml_edit v0.23.10+spec-1.0.0
+  Downloaded regex-lite v0.1.8
+  Downloaded http v0.2.12
+  Downloaded icu_locale_core v2.1.1
+  Downloaded regex-syntax v0.8.8
+  Downloaded zstd-sys v2.0.16+zstd.1.5.7
+  Downloaded hyper-util v0.1.19
+  Downloaded diesel v2.3.5
+  Downloaded hashbrown v0.12.3
+  Downloaded handlebars v5.1.2
+  Downloaded derive_more-impl v2.1.1
+  Downloaded ucd-trie v0.1.7
+  Downloaded tokio-stream v0.1.17
+  Downloaded socket2 v0.6.1
+  Downloaded rustix v1.1.3
+  Downloaded notify v4.0.18
+  Downloaded winnow v0.7.14
+  Downloaded tokio-rustls v0.26.4
+  Downloaded regex-automata v0.4.13
+  Downloaded liquid-core v0.26.11
+  Downloaded thiserror-impl v1.0.69
+  Downloaded tokio-util v0.7.17
+  Downloaded v_htmlescape v0.15.8
+  Downloaded openssl v0.10.75
+  Downloaded thiserror-impl v2.0.17
+  Downloaded libc v0.2.178
+  Downloaded ring v0.17.14
+  Downloaded jpeg-decoder v0.3.2
+  Downloaded thiserror v2.0.17
+  Downloaded utf-8 v0.7.6
+  Downloaded static_assertions_next v1.1.2
+  Downloaded standback v0.2.17
+  Downloaded futures v0.3.31
+  Downloaded icu_provider v2.1.1
+  Downloaded getrandom v0.3.4
+  Downloaded time v0.3.44
+  Downloaded half v2.7.1
+  Downloaded yoke v0.8.1
+  Downloaded async-graphql v7.0.17
+  Downloaded utoipa v4.2.3
+  Downloaded rustls-webpki v0.101.7
+  Downloaded rust_decimal v1.39.0
+  Downloaded pq-sys v0.7.5
+  Downloaded zerofrom v0.1.6
+  Downloaded yoke-derive v0.8.1
+  Downloaded universal-hash v0.5.1
+  Downloaded tokio-cron-scheduler v0.9.4
+  Downloaded seahash v4.1.0
+  Downloaded image v0.25.9
+  Downloaded time v0.2.27
+  Downloaded toml v0.9.10+spec-1.1.0
+  Downloaded litemap v0.8.1
+  Downloaded rkyv v0.7.45
+  Downloaded icu_properties v2.1.2
+  Downloaded serde v1.0.228
+  Downloaded chrono v0.4.42
+  Downloaded tokio-macros v2.6.0
+  Downloaded rand_core v0.6.4
+  Downloaded tiff v0.9.1
+  Downloaded encoding_rs v0.8.35
+  Downloaded rand_chacha v0.3.1
+  Downloaded proc-macro-error v1.0.4
+  Downloaded rustls-webpki v0.103.8
+  Downloaded moxcms v0.7.11
+  Downloaded actix-web v4.12.1
+  Downloaded serde_core v1.0.228
+  Downloaded hyper-rustls v0.27.7
+  Downloaded futures-timer v3.0.3
+  Downloaded fs_extra v1.3.0
+  Downloaded env_logger v0.8.4
+  Downloaded bitvec v1.0.1
+  Downloaded time-macros v0.2.24
+  Downloaded termcolor v1.4.1
+  Downloaded png v0.18.0
+  Downloaded polyval v0.6.2
+  Downloaded png v0.17.16
+  Downloaded pest v2.8.4
+  Downloaded sha1 v0.10.6
+  Downloaded smallvec v1.15.1
+  Downloaded sha2 v0.10.9
+  Downloaded serde_urlencoded v0.7.1
+  Downloaded serde_spanned v1.0.4
+  Downloaded linux-raw-sys v0.11.0
+  Downloaded serde_plain v1.0.2
+  Downloaded serde_derive v1.0.228
+  Downloaded rand v0.9.2
+  Downloaded libm v0.2.15
+  Downloaded time-core v0.1.6
+  Downloaded sync_wrapper v1.0.2
+  Downloaded strsim v0.10.0
+  Downloaded secrecy v0.8.0
+  Downloaded scopeguard v1.2.0
+  Downloaded ryu v1.0.21
+  Downloaded num-bigint v0.4.6
+  Downloaded nom v7.1.3
+  Downloaded multer v3.1.0
+  Downloaded strsim v0.11.1
+  Downloaded stable_deref_trait v1.2.1
+  Downloaded smartstring v1.0.1
+  Downloaded simple_asn1 v0.6.3
+  Downloaded simdutf8 v0.1.5
+  Downloaded simd-adler32 v0.3.8
+  Downloaded signature v2.2.0
+  Downloaded signal-hook-registry v1.4.7
+  Downloaded shlex v1.3.0
+  Downloaded displaydoc v0.2.5
+  Downloaded derive_more v0.99.20
+  Downloaded rayon-core v1.13.0
+  Downloaded rand v0.8.5
+  Downloaded qoi v0.4.1
+  Downloaded either v1.15.0
+  Downloaded rustls-native-certs v0.6.3
+  Downloaded gif v0.13.3
+  Downloaded brotli-decompressor v5.0.0
+  Downloaded itertools v0.14.0
+  Downloaded hmac v0.12.1
+  Downloaded jobserver v0.1.34
+  Downloaded eventsource-stream v0.2.3
+  Downloaded futures-macro v0.3.31
+  Downloaded futures-executor v0.3.31
+  Downloaded foldhash v0.2.0
+  Downloaded proc-macro2 v1.0.103
+  Downloaded aho-corasick v1.1.4
+  Downloaded proc-macro-crate v3.4.0
+  Downloaded potential_utf v0.1.4
+  Downloaded pin-utils v0.1.0
+  Downloaded idna v1.1.0
+  Downloaded combine v4.6.7
+  Downloaded parking_lot v0.12.5
+  Downloaded juniper_codegen v0.16.0
+  Downloaded num_cpus v1.17.0
+  Downloaded native-tls v0.2.14
+  Downloaded miniz_oxide v0.8.9
+  Downloaded local-channel v0.1.5
+  Downloaded derive_builder v0.20.2
+  Downloaded deadpool v0.12.3
+  Downloaded data-encoding v2.9.0
+  Downloaded aes-gcm v0.10.3
+  Downloaded aes v0.8.4
+  Downloaded derive_builder v0.12.0
+  Downloaded ptr_meta_derive v0.1.4
+  Downloaded proc-macro-error-attr v1.0.4
+  Downloaded pest_generator v2.8.4
+  Downloaded pest_derive v2.8.4
+  Downloaded filetime v0.2.26
+  Downloaded fdeflate v0.3.7
+  Downloaded humantime v2.3.0
+  Downloaded hyper-rustls v0.24.2
+  Downloaded language-tags v0.3.2
+  Downloaded password-hash v0.5.0
+  Downloaded digest v0.10.7
+  Downloaded num-modular v0.6.1
+  Downloaded num-integer v0.1.46
+  Downloaded net2 v0.2.39
+  Downloaded migrations_macros v2.3.0
+  Downloaded jsonwebtoken v10.2.0
+  Downloaded http-body v1.0.1
+  Downloaded funty v2.0.0
+  Downloaded fastrand v2.3.0
+  Downloaded errno v0.3.14
+  Downloaded openssl-macros v0.1.1
+  Downloaded httpdate v1.0.3
+  Downloaded ghash v0.5.1
+  Downloaded dunce v1.0.5
+  Downloaded liquid v0.26.11
+  Downloaded darling_core v0.20.11
+  Downloaded cc v1.2.50
+  Downloaded borsh v1.6.0
+  Downloaded base64 v0.22.1
+  Downloaded base64 v0.21.7
+  Downloaded migrations_internals v2.3.0
+  Downloaded kstring v2.0.2
+  Downloaded utoipa-swagger-ui v6.0.0
+  Downloaded futures-core v0.3.31
+  Downloaded downcast-rs v2.0.2
+  Downloaded darling_core v0.21.3
+  Downloaded darling v0.20.11
+  Downloaded cookie v0.16.2
+  Downloaded dashmap v6.1.0
+  Downloaded cfb v0.7.3
+  Downloaded bitflags v2.10.0
+  Downloaded bytemuck v1.24.0
+  Downloaded auto_enums v0.8.7
+  Downloaded fast_chemail v0.9.6
+  Downloaded crossbeam-utils v0.8.21
+  Downloaded crc32fast v1.5.0
+  Downloaded http-range v0.1.5
+  Downloaded backon v1.6.0
+  Downloaded allocator-api2 v0.2.21
+  Downloaded instant v0.1.13
+  Downloaded inotify-sys v0.1.5
+  Downloaded impl-more v0.1.9
+  Downloaded heck v0.5.0
+  Downloaded async-graphql-derive v7.0.17
+  Downloaded actix-multipart v0.7.2
+  Downloaded arrayvec v0.7.6
+  Downloaded ahash v0.7.8
+  Downloaded ctr v0.9.2
+  Downloaded crossbeam-deque v0.8.6
+  Downloaded cron v0.12.1
+  Downloaded convert_case v0.10.0
+  Downloaded cmake v0.1.57
+  Downloaded cipher v0.4.4
+  Downloaded byteorder-lite v0.1.0
+  Downloaded darling v0.14.4
+  Downloaded constant_time_eq v0.3.1
+  Downloaded byteorder v1.5.0
+  Downloaded bitflags v1.3.2
+  Downloaded base64ct v1.8.1
+  Downloaded backoff v0.4.0
+  Downloaded bytecheck_derive v0.6.12
+  Downloaded borsh-derive v1.6.0
+  Downloaded autocfg v1.5.0
+  Downloaded diesel_table_macro_syntax v0.3.0
+  Downloaded actix-server v2.6.0
+  Downloaded actix-router v0.5.3
+  Downloaded async-trait v0.1.89
+  Downloaded async-graphql-value v7.0.17
+  Downloaded anymap2 v0.13.0
+  Downloaded actix-web-codegen v4.3.0
+  Downloaded cfg_aliases v0.2.1
+  Downloaded block-buffer v0.10.4
+  Downloaded cfg-if v0.1.10
+  Downloaded bytecheck v0.6.12
+  Downloaded Inflector v0.11.4
+  Downloaded async-stream v0.3.6
+  Downloaded async-convert v1.0.0
+  Downloaded image v0.24.9
+  Downloaded aws-lc-sys v0.35.0
+    Checking freeradical v1.4.0 (/app)
+warning: unused import: `diesel::pg::PgConnection`
+ --> src/main.rs:5:5
+  |
+5 | use diesel::pg::PgConnection;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ConnectionManager` and `Pool`
+ --> src/main.rs:6:20
+  |
+6 | use diesel::r2d2::{ConnectionManager, Pool};
+  |                    ^^^^^^^^^^^^^^^^^  ^^^^
+
+warning: unused import: `diesel::Connection`
+ --> src/main.rs:7:5
+  |
+7 | use diesel::Connection;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `handlebars::Handlebars`
+ --> src/main.rs:8:5
+  |
+8 | use handlebars::Handlebars;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::sync::Mutex`
+ --> src/main.rs:9:5
+  |
+9 | use std::sync::Mutex;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::time::Duration`
+  --> src/main.rs:10:5
+   |
+10 | use std::time::Duration;
+   |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `MigrationHarness`
+  --> src/main.rs:14:63
+   |
+14 | use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+   |                                                               ^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::services::auth_service::Claims`
+  --> src/controllers/page_controllers.rs:12:5
+   |
+12 | use crate::services::auth_service::Claims;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+  --> src/controllers/product_controller.rs:38:9
+   |
+38 |     use crate::models::PooledDatabaseConnection;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+  --> src/controllers/product_controller.rs:76:9
+   |
+76 |     use crate::models::PooledDatabaseConnection;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+  --> src/controllers/product_controller.rs:98:9
+   |
+98 |     use crate::models::PooledDatabaseConnection;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:153:9
+    |
+153 |         ;
+    |         ^ help: remove this semicolon
+    |
+    = note: `#[warn(redundant_semicolons)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+   --> src/controllers/product_controller.rs:133:9
+    |
+133 |     use crate::models::PooledDatabaseConnection;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:189:9
+    |
+189 |         ;
+    |         ^ help: remove this semicolon
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+   --> src/controllers/product_controller.rs:172:9
+    |
+172 |     use crate::models::PooledDatabaseConnection;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `chrono::NaiveDateTime`
+ --> src/controllers/order_controller.rs:5:5
+  |
+5 | use chrono::NaiveDateTime;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `PooledDatabaseConnection`
+ --> src/controllers/order_controller.rs:7:49
+  |
+7 | use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
+  |                                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `OrderItem`
+ --> src/controllers/order_controller.rs:8:45
+  |
+8 | use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
+  |                                             ^^^^^^^^^
+
+warning: unused import: `pool_handler`
+ --> src/controllers/relationship_controller.rs:6:35
+  |
+6 | use crate::models::{DatabasePool, pool_handler};
+  |                                   ^^^^^^^^^^^^
+
+warning: unused import: `pool_handler`
+ --> src/controllers/webhook_controller.rs:5:35
+  |
+5 | use crate::models::{DatabasePool, pool_handler};
+  |                                   ^^^^^^^^^^^^
+
+warning: unused import: `web`
+ --> src/controllers/backup_controller.rs:1:28
+  |
+1 | use actix_web::{get, post, web, HttpResponse, Responder};
+  |                            ^^^
+
+warning: unused import: `Serialize`
+ --> src/controllers/payment_controller.rs:6:26
+  |
+6 | use serde::{Deserialize, Serialize};
+  |                          ^^^^^^^^^
+
+warning: unused import: `async_graphql::http`
+ --> src/controllers/graphql_controller.rs:5:5
+  |
+5 | use async_graphql::http;
+  |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Serialize`
+ --> src/controllers/graphql_controller.rs:7:26
+  |
+7 | use serde::{Deserialize, Serialize};
+  |                          ^^^^^^^^^
+
+warning: unused import: `pool_handler`
+ --> src/controllers/search_controller.rs:3:35
+  |
+3 | use crate::models::{DatabasePool, pool_handler};
+  |                                   ^^^^^^^^^^^^
+
+warning: unused imports: `delete` and `put`
+ --> src/controllers/i18n_controller.rs:1:58
+  |
+1 | use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
+  |                                                          ^^^  ^^^^^^
+
+warning: unused import: `Language`
+ --> src/controllers/i18n_controller.rs:5:58
+  |
+5 | use crate::services::language_service::{LanguageService, Language, NewLanguage};
+  |                                                          ^^^^^^^^
+
+warning: unused import: `post`
+ --> src/controllers/oauth_controller.rs:1:52
+  |
+1 | use actix_web::{web, HttpResponse, Responder, get, post};
+  |                                                    ^^^^
+
+warning: unused import: `Serialize`
+ --> src/controllers/oauth_controller.rs:2:26
+  |
+2 | use serde::{Deserialize, Serialize};
+  |                          ^^^^^^^^^
+
+warning: unused import: `User`
+ --> src/controllers/oauth_callback_controller.rs:5:34
+  |
+5 | use crate::models::user_models::{User, MutUser};
+  |                                  ^^^^
+
+warning: unused import: `crate::models::Model`
+ --> src/controllers/oauth_callback_controller.rs:6:5
+  |
+6 | use crate::models::Model;
+  |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+  --> src/controllers/oauth_callback_controller.rs:63:9
+   |
+63 |     use crate::models::PooledDatabaseConnection;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::PooledDatabaseConnection`
+   --> src/controllers/oauth_callback_controller.rs:184:9
+    |
+184 |     use crate::models::PooledDatabaseConnection;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `web`
+ --> src/controllers/dashboard_controller.rs:1:47
+  |
+1 | use actix_web::{get, HttpResponse, Responder, web};
+  |                                               ^^^
+
+warning: unused import: `Deserialize`
+ --> src/controllers/dashboard_controller.rs:2:24
+  |
+2 | use serde::{Serialize, Deserialize};
+  |                        ^^^^^^^^^^^
+
+warning: unused import: `crate::schema::tenants`
+ --> src/helpers/tenant_helper.rs:4:5
+  |
+4 | use crate::schema::tenants;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::time::Duration`
+ --> src/services/cache_service.rs:2:5
+  |
+2 | use std::time::Duration;
+  |     ^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `chrono::NaiveDateTime`
+ --> src/services/analytics_service.rs:2:5
+  |
+2 | use chrono::NaiveDateTime;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Duration` and `Timelike`
+  --> src/services/analytics_service.rs:83:27
+   |
+83 |         use chrono::{Utc, Duration, Timelike};
+   |                           ^^^^^^^^  ^^^^^^^^
+
+warning: unused import: `Timelike`
+   --> src/services/analytics_service.rs:128:27
+    |
+128 |         use chrono::{Utc, Timelike};
+    |                           ^^^^^^^^
+
+warning: unused imports: `PasswordHash` and `PasswordVerifier`
+ --> src/services/auth_service.rs:4:33
+  |
+4 | use password_hash::{SaltString, PasswordHash, PasswordVerifier};
+  |                                 ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::prelude::*`
+ --> src/services/auth_service.rs:5:5
+  |
+5 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `pool_handler`
+  --> src/services/auth_service.rs:13:21
+   |
+13 | use crate::models::{pool_handler, user_models, Model, DatabasePool};
+   |                     ^^^^^^^^^^^^
+
+warning: unused imports: `page_revisions` and `pages`
+ --> src/services/revision_service.rs:5:21
+  |
+5 | use crate::schema::{pages, page_revisions};
+  |                     ^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `chrono::Utc`
+ --> src/services/inventory_service.rs:5:5
+  |
+5 | use chrono::Utc;
+  |     ^^^^^^^^^^^
+
+warning: unused import: `uuid::Uuid`
+ --> src/services/inventory_service.rs:6:5
+  |
+6 | use uuid::Uuid;
+  |     ^^^^^^^^^^
+
+warning: unused import: `actix_web::web`
+ --> src/services/ai_scope_service.rs:1:5
+  |
+1 | use actix_web::web;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::prelude::*`
+ --> src/services/ai_scope_service.rs:2:5
+  |
+2 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::DbPool`
+ --> src/services/ai_scope_service.rs:4:5
+  |
+4 | use crate::models::DbPool;
+  |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `AIUsageLog`
+ --> src/services/ai_content_service.rs:6:59
+  |
+6 | use crate::models::ai_provider_models::{AIProviderConfig, AIUsageLog, NewAIUsageLog};
+  |                                                           ^^^^^^^^^^
+
+warning: unused import: `HttpResponse`
+ --> src/services/ai_authorization_service.rs:1:35
+  |
+1 | use actix_web::{web, HttpRequest, HttpResponse};
+  |                                   ^^^^^^^^^^^^
+
+warning: unused import: `diesel::prelude::*`
+ --> src/services/ai_authorization_service.rs:3:5
+  |
+3 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::schema::pages`
+  --> src/services/ai_authorization_service.rs:92:9
+   |
+92 |     use crate::schema::pages;
+   |         ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::schema::pages`
+   --> src/services/ai_authorization_service.rs:127:9
+    |
+127 |     use crate::schema::pages;
+    |         ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+ --> src/services/ai_command_executor.rs:2:17
+  |
+2 | use log::{info, error};
+  |                 ^^^^^
+
+warning: unused import: `error`
+ --> src/services/ai_response_handler.rs:1:23
+  |
+1 | use log::{info, warn, error};
+  |                       ^^^^^
+
+warning: unused imports: `error` and `warn`
+ --> src/services/workflow_orchestrator.rs:3:17
+  |
+3 | use log::{info, warn, error};
+  |                 ^^^^  ^^^^^
+
+warning: unused imports: `Duration` and `sleep`
+ --> src/services/content_scheduler.rs:3:19
+  |
+3 | use tokio::time::{sleep, Duration};
+  |                   ^^^^^  ^^^^^^^^
+
+warning: unused import: `serde_json::Value`
+ --> src/services/schema_markup.rs:2:5
+  |
+2 | use serde_json::Value;
+  |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> src/services/link_builder.rs:3:5
+  |
+3 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> src/services/competitor_analyzer.rs:3:5
+  |
+3 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> src/services/inventory_analytics.rs:3:5
+  |
+3 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `roles`
+  --> src/services/permission_service.rs:77:37
+   |
+77 |     use crate::schema::{user_roles, roles};
+   |                                     ^^^^^
+
+warning: unused import: `crate::schema::pages`
+   --> src/services/permission_service.rs:123:9
+    |
+123 |     use crate::schema::pages;
+    |         ^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `HttpResponse`
+ --> src/services/plugin_service/mod.rs:1:38
+  |
+1 | use actix_web::{dev::ServiceRequest, HttpResponse};
+  |                                      ^^^^^^^^^^^^
+
+warning: unused import: `body::BoxBody`
+ --> src/services/plugin_service/middleware.rs:2:24
+  |
+2 | use actix_web::{Error, body::BoxBody};
+  |                        ^^^^^^^^^^^^^
+
+warning: unused import: `std::path::Path`
+ --> src/services/template_service.rs:1:5
+  |
+1 | use std::path::Path;
+  |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `Template`
+ --> src/services/template_service.rs:4:37
+  |
+4 | use liquid::{Parser, ParserBuilder, Template};
+  |                                     ^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+ --> src/services/language_service.rs:2:13
+  |
+2 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `diesel::prelude::*`
+ --> src/services/analytics_service_v2.rs:1:5
+  |
+1 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Deserialize`
+ --> src/services/analytics_service_v2.rs:2:13
+  |
+2 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^
+
+warning: unused import: `crate::services::language_service::LanguageService`
+ --> src/services/hreflang_service.rs:1:5
+  |
+1 | use crate::services::language_service::LanguageService;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `crm_segments` and `users`
+ --> src/services/crm_service.rs:9:54
+  |
+9 | use crate::schema::{crm_customers, crm_interactions, crm_segments, crm_tasks, crm_notes, users};
+  |                                                      ^^^^^^^^^^^^                        ^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+ --> src/models/config_models.rs:1:13
+  |
+1 | use serde::{Deserialize, Serialize};
+  |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `std::io::Write`
+ --> src/models/status_enum.rs:8:5
+  |
+8 | use std::io::Write;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::serialize::ToSql`
+ --> src/models/revision_models.rs:6:5
+  |
+6 | use diesel::serialize::ToSql;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::deserialize::FromSql`
+ --> src/models/revision_models.rs:7:5
+  |
+7 | use diesel::deserialize::FromSql;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Jsonb` and `Numeric`
+ --> src/models/inventory_models.rs:3:25
+  |
+3 | use diesel::sql_types::{Jsonb, Numeric};
+  |                         ^^^^^  ^^^^^^^
+
+warning: unused import: `PooledConnection`
+  --> src/models/mod.rs:24:99
+   |
+24 | use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
+   |                                                                                                   ^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::models::DatabasePool`
+ --> src/graphql/query.rs:5:5
+  |
+5 | use crate::models::DatabasePool;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `HttpResponse`
+ --> src/middleware/rate_limit.rs:5:12
+  |
+5 |     Error, HttpResponse,
+  |            ^^^^^^^^^^^^
+
+warning: unused import: `HttpResponse`
+ --> src/middleware/auth_middleware.rs:3:25
+  |
+3 |     Error, HttpMessage, HttpResponse,
+  |                         ^^^^^^^^^^^^
+
+warning: unused imports: `Claims`, `UserContext`, `create_jwt_token`, and `get_user_context`
+ --> src/middleware/mod.rs:4:43
+  |
+4 | pub use auth_middleware::{AuthMiddleware, UserContext, Claims, create_jwt_token, get_user_context};
+  |                                           ^^^^^^^^^^^  ^^^^^^  ^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: use of deprecated type alias `diesel::dsl::count_distinct`
+   --> src/services/analytics_service.rs:129:26
+    |
+129 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:129:26
+    |
+129 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:136:21
+    |
+136 |             .select(count_distinct(dsl::user_id))
+    |                     ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src/services/payment_service/square.rs:237:32
+    |
+237 |         let expected = base64::encode(mac.finalize().into_bytes());
+    |                                ^^^^^^
+
+warning: use of deprecated type alias `diesel::backend::RawValue`: Use `Backend::RawValue` directly
+  --> src/models/status_enum.rs:34:41
+   |
+34 |     fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
+   |                                         ^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:64:26
+   |
+64 |                         .set_header("Content-Encoding", "gzip")
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:65:26
+   |
+65 |                         .set_header("X-Sitemap-Count", page_count.to_string())
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:71:30
+   |
+71 | ...                   .set_header("X-Sitemap-Count", page_count.to_string())
+   |                        ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:79:22
+   |
+79 |                     .set_header("X-Sitemap-Count", page_count.to_string())
+   |                      ^^^^^^^^^^
+
+warning: variable does not need to be mutable
+   --> src/services/ai_authorization_service.rs:133:13
+    |
+133 |         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+    |             ----^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+  --> src/services/aeo_service.rs:79:13
+   |
+79 |         let mut pairs = vec![
+   |             ----^^^^^
+   |             |
+   |             help: remove this `mut`
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:17:29
+   |
+17 |         .ok_or(RenderError::new(
+   |                             ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:28:33
+   |
+28 |             .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:30:33
+   |
+30 |             .ok_or(RenderError::new(&format!(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:61:33
+   |
+61 |             .ok_or(RenderError::new(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:70:37
+   |
+70 |                 .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                     ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:72:37
+   |
+72 |                 .ok_or(RenderError::new(&format!(
+   |                                     ^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+  --> src/services/analytics_service.rs:86:38
+   |
+86 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+  --> src/services/analytics_service.rs:86:45
+   |
+86 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                             ^^^^^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+   --> src/services/analytics_service.rs:132:38
+    |
+132 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+   --> src/services/analytics_service.rs:132:45
+    |
+132 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                             ^^^^^^^
+
+warning: unused import: `diesel::prelude`
+ --> src/controllers/i18n_controller.rs:2:5
+  |
+2 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `Digest`
+ --> src/services/webhook_service.rs:5:20
+  |
+5 | use sha2::{Sha256, Digest};
+  |                    ^^^^^^
+
+warning: variable `caption` is assigned to, but never used
+  --> src/controllers/media_controller.rs:92:9
+   |
+92 |     let mut caption = None;
+   |         ^^^^^^^^^^^
+   |
+   = note: consider using `_caption` instead
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable `folder` is assigned to, but never used
+  --> src/controllers/media_controller.rs:93:9
+   |
+93 |     let mut folder = None;
+   |         ^^^^^^^^^^
+   |
+   = note: consider using `_folder` instead
+
+warning: value assigned to `caption` is never read
+   --> src/controllers/media_controller.rs:149:21
+    |
+149 |                     caption = Some(value);
+    |                     ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `folder` is never read
+   --> src/controllers/media_controller.rs:160:21
+    |
+160 |                     folder = Some(value);
+    |                     ^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unused variable: `pool`
+  --> src/controllers/relationship_controller.rs:34:5
+   |
+34 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `pool`
+  --> src/controllers/relationship_controller.rs:52:5
+   |
+52 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `id`
+  --> src/controllers/relationship_controller.rs:67:5
+   |
+67 |     id: web::Path<i64>,
+   |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+
+warning: unused variable: `pool`
+  --> src/controllers/relationship_controller.rs:68:5
+   |
+68 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:25:28
+   |
+25 | pub async fn list_webhooks(pool: web::Data<DatabasePool>) -> impl Responder {
+   |                            ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:37:5
+   |
+37 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:53:5
+   |
+53 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `id`
+  --> src/controllers/webhook_controller.rs:66:5
+   |
+66 |     id: web::Path<i32>,
+   |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:67:5
+   |
+67 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `id`
+  --> src/controllers/webhook_controller.rs:78:5
+   |
+78 |     id: web::Path<i32>,
+   |     ^^ help: if this is intentional, prefix it with an underscore: `_id`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:79:5
+   |
+79 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `pool`
+  --> src/controllers/webhook_controller.rs:91:5
+   |
+91 |     pool: web::Data<DatabasePool>
+   |     ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `e`
+   --> src/services/crm_service.rs:179:15
+    |
+179 |     .map_err(|e| CustomHttpError::NotFound("Customer not found".to_string()))?;
+    |               ^ help: if this is intentional, prefix it with an underscore: `_e`
+
+warning: unused variable: `uuid_str`
+   --> src/controllers/oauth_callback_controller.rs:101:21
+    |
+101 |         if let Some(uuid_str) = user_uuid_option {
+    |                     ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_uuid_str`
+
+warning: unused variable: `page_url`
+  --> src/services/analytics_service.rs:44:9
+   |
+44 |         page_url: String,
+   |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_url`
+
+warning: unused variable: `page_uuid`
+  --> src/services/analytics_service.rs:45:9
+   |
+45 |         page_uuid: Option<String>,
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+
+warning: unused variable: `page_url`
+  --> src/services/analytics_service.rs:68:27
+   |
+68 |     pub fn get_page_views(page_url: &str) -> i64 {
+   |                           ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_url`
+
+warning: unused variable: `reason`
+   --> src/services/inventory_service.rs:128:9
+    |
+128 |     let reason = payload.reason.clone();
+    |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_reason`
+
+warning: unused variable: `team_role`
+  --> src/services/ai_scope_service.rs:70:25
+   |
+70 |             if let Some(team_role) = &user.team_role {
+   |                         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_team_role`
+
+warning: unused variable: `payload`
+   --> src/services/ai_provider_service.rs:137:5
+    |
+137 |     payload: web::Json<UpdateProviderRequest>,
+    |     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: unused variable: `provider_id`
+   --> src/services/ai_content_service.rs:138:9
+    |
+138 |     let provider_id = provider.id;
+    |         ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_provider_id`
+
+warning: variable does not need to be mutable
+  --> src/services/ai_authorization_service.rs:94:9
+   |
+94 |     let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+   |         ----^^^^
+   |         |
+   |         help: remove this `mut`
+
+warning: unused variable: `conn`
+  --> src/services/ai_authorization_service.rs:94:9
+   |
+94 |     let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+   |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_conn`
+
+warning: unused variable: `conn`
+   --> src/services/ai_authorization_service.rs:133:13
+    |
+133 |         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_conn`
+
+warning: unused variable: `page_id`
+   --> src/services/ai_authorization_service.rs:124:5
+    |
+124 |     page_id: i64,
+    |     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_id`
+
+warning: unused variable: `user_id`
+   --> src/services/ai_authorization_service.rs:129:9
+    |
+129 |     let user_id = user.user_id;
+    |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_id`
+
+warning: unused variable: `parameters`
+   --> src/services/mcp_client.rs:131:9
+    |
+131 |         parameters: serde_json::Value
+    |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_parameters`
+
+warning: unused variable: `api_key`
+   --> src/services/command_router.rs:101:13
+    |
+101 |         let api_key = self.key_manager
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+
+warning: unused variable: `prompt`
+   --> src/services/command_router.rs:111:13
+    |
+111 |         let prompt = format!(
+    |             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_prompt`
+
+warning: unused variable: `api_key`
+   --> src/services/command_router.rs:155:13
+    |
+155 |         let api_key = self.key_manager
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+
+warning: unused variable: `api_key`
+   --> src/services/command_router.rs:206:13
+    |
+206 |         let api_key = self.key_manager
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+
+warning: unused variable: `api_key`
+   --> src/services/command_router.rs:257:13
+    |
+257 |         let api_key = self.key_manager
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+
+warning: unused variable: `api_key`
+   --> src/services/command_router.rs:303:13
+    |
+303 |         let api_key = self.key_manager
+    |             ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_api_key`
+
+warning: unused variable: `domain`
+  --> src/services/geo_service.rs:32:9
+   |
+32 |         domain: &str,
+   |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_domain`
+
+warning: unused variable: `content`
+  --> src/services/geo_service.rs:60:42
+   |
+60 |     async fn extract_attributions(&self, content: &str) -> Result<Vec<SourceAttribution>, String> {
+   |                                          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+
+warning: unused variable: `content`
+  --> src/services/seo_meta_generator.rs:47:36
+   |
+47 |     async fn generate_title(&self, content: &str, keyword: &str) -> Result<String, String> {
+   |                                    ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+
+warning: unused variable: `content`
+  --> src/services/seo_meta_generator.rs:54:42
+   |
+54 |     async fn generate_description(&self, content: &str, keyword: &str) -> Result<String, String> {
+   |                                          ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+
+warning: unused variable: `content`
+  --> src/services/seo_meta_generator.rs:61:38
+   |
+61 |     async fn extract_keywords(&self, content: &str) -> Result<Vec<String>, String> {
+   |                                      ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+
+warning: unused variable: `content`
+  --> src/services/content_quality.rs:81:34
+   |
+81 |     fn syllables_per_word(&self, content: &str) -> f64 {
+   |                                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content`
+
+warning: unused variable: `words`
+   --> src/services/link_builder.rs:165:13
+    |
+165 |         let words: Vec<&str> = content.split_whitespace().collect();
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_words`
+
+warning: unused variable: `total`
+   --> src/services/content_calendar.rs:163:13
+    |
+163 |         let total = schedule.len() as f64;
+    |             ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+warning: unused variable: `keyword`
+  --> src/services/rank_tracker.rs:66:34
+   |
+66 |     async fn get_rankings(&self, keyword: &str, url: &str) -> Result<Vec<RankingSnapshot>, String> {
+   |                                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_keyword`
+
+warning: unused variable: `product_name`
+  --> src/services/wishlist.rs:49:9
+   |
+49 |         product_name: String,
+   |         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_product_name`
+
+warning: unused variable: `price`
+  --> src/services/wishlist.rs:50:9
+   |
+50 |         price: f64,
+   |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_price`
+
+warning: unused variable: `required_permission`
+  --> src/services/permission_service.rs:74:5
+   |
+74 |     required_permission: &str,
+   |     ^^^^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_required_permission`
+
+warning: unused variable: `quality`
+  --> src/services/image_service.rs:92:44
+   |
+92 | pub fn convert_to_webp(img: &DynamicImage, quality: u8) -> Result<Vec<u8>, String> {
+   |                                            ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_quality`
+
+warning: unused variable: `content_type`
+  --> src/services/plugin_service/mod.rs:28:37
+   |
+28 |     async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+   |                                     ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_content_type`
+
+warning: unused variable: `data`
+  --> src/services/plugin_service/mod.rs:28:57
+   |
+28 |     async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+   |                                                         ^^^^ help: if this is intentional, prefix it with an underscore: `_data`
+
+warning: unused variable: `payload`
+   --> src/services/payment_service/paypal.rs:242:40
+    |
+242 |     fn verify_webhook_signature(&self, payload: &[u8], signature: &str) -> Result<bool, String> {
+    |                                        ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_payload`
+
+warning: variable does not need to be mutable
+  --> src/services/encryption_service.rs:79:23
+   |
+79 |     let (nonce_bytes, mut ciphertext) = combined.split_at(NONCE_LEN);
+   |                       ----^^^^^^^^^^
+   |                       |
+   |                       help: remove this `mut`
+
+warning: unused variable: `session_id`
+  --> src/services/analytics_service_v2.rs:24:9
+   |
+24 |         session_id: String,
+   |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_session_id`
+
+warning: unused variable: `user_agent`
+  --> src/services/analytics_service_v2.rs:26:9
+   |
+26 |         user_agent: String,
+   |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_user_agent`
+
+warning: unused variable: `referer`
+  --> src/services/analytics_service_v2.rs:27:9
+   |
+27 |         referer: Option<String>
+   |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_referer`
+
+warning: unused variable: `page_uuid`
+  --> src/services/analytics_service_v2.rs:36:9
+   |
+36 |         page_uuid: Option<String>,
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+
+warning: unused variable: `metadata`
+  --> src/services/analytics_service_v2.rs:37:9
+   |
+37 |         metadata: Option<serde_json::Value>
+   |         ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_metadata`
+
+warning: unused variable: `page_uuid`
+  --> src/services/analytics_service_v2.rs:44:9
+   |
+44 |         page_uuid: &str,
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_uuid`
+
+warning: unused variable: `from_date`
+  --> src/services/analytics_service_v2.rs:45:9
+   |
+45 |         from_date: NaiveDateTime,
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_from_date`
+
+warning: unused variable: `to_date`
+  --> src/services/analytics_service_v2.rs:46:9
+   |
+46 |         to_date: NaiveDateTime
+   |         ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_to_date`
+
+warning: unused variable: `current_lang`
+ --> src/services/hreflang_service.rs:6:5
+  |
+6 |     current_lang: &str,  
+  |     ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_current_lang`
+
+warning: variable does not need to be mutable
+   --> src/models/page_models.rs:279:13
+    |
+279 |         let mut page_dto: PageModuleDTO = filtered_page.into();
+    |             ----^^^^^^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: unused variable: `module_dto`
+   --> src/models/page_models.rs:274:13
+    |
+274 |         let module_dto = FieldsDTO {
+    |             ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_module_dto`
+
+warning: unused variable: `pool`
+  --> src/models/db_connection.rs:39:33
+   |
+39 | pub fn get_database_type_string(pool: &DatabasePool) -> &'static str {
+   |                                 ^^^^ help: if this is intentional, prefix it with an underscore: `_pool`
+
+warning: unused variable: `ctx`
+  --> src/graphql/query.rs:12:26
+   |
+12 |     async fn page(&self, ctx: &Context<'_>, uuid: String) -> Result<Option<GqlPage>> {
+   |                          ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `ctx`
+  --> src/graphql/query.rs:31:9
+   |
+31 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `page`
+  --> src/graphql/query.rs:34:13
+   |
+34 |         let page = pagination.as_ref().and_then(|p| p.page).unwrap_or(1);
+   |             ^^^^ help: if this is intentional, prefix it with an underscore: `_page`
+
+warning: unused variable: `per_page`
+  --> src/graphql/query.rs:35:13
+   |
+35 |         let per_page = pagination.as_ref().and_then(|p| p.per_page).unwrap_or(20);
+   |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_per_page`
+
+warning: unused variable: `ctx`
+  --> src/graphql/query.rs:64:9
+   |
+64 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `resources`
+  --> src/graphql/query.rs:66:9
+   |
+66 |         resources: Option<Vec<String>>
+   |         ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_resources`
+
+warning: unused variable: `ctx`
+  --> src/graphql/query.rs:82:9
+   |
+82 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `ctx`
+   --> src/graphql/query.rs:100:9
+    |
+100 |         ctx: &Context<'_>,
+    |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `pagination`
+   --> src/graphql/query.rs:101:9
+    |
+101 |         pagination: Option<PaginationInput>
+    |         ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pagination`
+
+warning: unused variable: `ctx`
+  --> src/graphql/mutation.rs:13:9
+   |
+13 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `ctx`
+  --> src/graphql/mutation.rs:34:9
+   |
+34 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `ctx`
+  --> src/graphql/mutation.rs:56:9
+   |
+56 |         ctx: &Context<'_>,
+   |         ^^^ help: if this is intentional, prefix it with an underscore: `_ctx`
+
+warning: unused variable: `uuid`
+  --> src/graphql/mutation.rs:57:9
+   |
+57 |         uuid: String
+   |         ^^^^ help: if this is intentional, prefix it with an underscore: `_uuid`
+
+warning: function `parse_page` is never used
+  --> src/controllers/page_controllers.rs:72:4
+   |
+72 | fn parse_page(page: (Page, FieldsDTO)) -> Result<PageModuleDTO, CustomHttpError> {
+   |    ^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `display_page` is never used
+  --> src/controllers/page_controllers.rs:94:14
+   |
+94 | pub async fn display_page(
+   |              ^^^^^^^^^^^^
+
+warning: constant `MAX_FILE_SIZE` is never used
+  --> src/controllers/media_controller.rs:15:7
+   |
+15 | const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10MB
+   |       ^^^^^^^^^^^^^
+
+warning: constant `UPLOAD_DIR` is never used
+  --> src/controllers/media_controller.rs:16:7
+   |
+16 | const UPLOAD_DIR: &str = "uploads";
+   |       ^^^^^^^^^^
+
+warning: function `list_media` is never used
+  --> src/controllers/media_controller.rs:20:14
+   |
+20 | pub async fn list_media() -> impl Responder {
+   |              ^^^^^^^^^^
+
+warning: function `get_media` is never used
+  --> src/controllers/media_controller.rs:37:14
+   |
+37 | pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
+   |              ^^^^^^^^^
+
+warning: function `delete_media` is never used
+  --> src/controllers/media_controller.rs:53:14
+   |
+53 | pub async fn delete_media(media_uuid: web::Path<String>) -> impl Responder {
+   |              ^^^^^^^^^^^^
+
+warning: function `upload_media` is never used
+  --> src/controllers/media_controller.rs:88:14
+   |
+88 | pub async fn upload_media(req: actix_web::HttpRequest, mut payload: Multipart) -> impl Responder {
+   |              ^^^^^^^^^^^^
+
+warning: struct `Relationship` is never constructed
+  --> src/controllers/relationship_controller.rs:10:12
+   |
+10 | pub struct Relationship {
+   |            ^^^^^^^^^^^^
+
+warning: struct `CreateRelationshipInput` is never constructed
+  --> src/controllers/relationship_controller.rs:21:12
+   |
+21 | pub struct CreateRelationshipInput {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Webhook` is never constructed
+ --> src/controllers/webhook_controller.rs:8:12
+  |
+8 | pub struct Webhook {
+  |            ^^^^^^^
+
+warning: struct `CreateWebhookInput` is never constructed
+  --> src/controllers/webhook_controller.rs:17:12
+   |
+17 | pub struct CreateWebhookInput {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: fields `churn_risk`, `page`, and `per_page` are never read
+  --> src/controllers/crm_controller.rs:14:9
+   |
+11 | pub struct CustomerFilters {
+   |            --------------- fields in this struct
+...
+14 |     pub churn_risk: Option<String>,
+   |         ^^^^^^^^^^
+15 |     pub page: Option<i64>,
+   |         ^^^^
+16 |     pub per_page: Option<i64>,
+   |         ^^^^^^^^
+   |
+   = note: `CustomerFilters` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: field `lifecycle_stage` is never read
+  --> src/controllers/crm_controller.rs:22:9
+   |
+20 | pub struct CreateCustomerRequest {
+   |            --------------------- field in this struct
+21 |     pub user_id: i32,
+22 |     pub lifecycle_stage: Option<String>,
+   |         ^^^^^^^^^^^^^^^
+   |
+   = note: `CreateCustomerRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: field `customer_id` is never read
+  --> src/controllers/crm_controller.rs:78:9
+   |
+77 | pub struct CreateNoteRequest {
+   |            ----------------- field in this struct
+78 |     pub customer_id: i32,
+   |         ^^^^^^^^^^^
+   |
+   = note: `CreateNoteRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: field `priority` is never read
+  --> src/controllers/crm_controller.rs:89:9
+   |
+85 | pub struct TaskFilters {
+   |            ----------- field in this struct
+...
+89 |     pub priority: Option<String>,
+   |         ^^^^^^^^
+   |
+   = note: `TaskFilters` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: struct `PaginatedResponse` is never constructed
+  --> src/controllers/crm_controller.rs:95:12
+   |
+95 | pub struct PaginatedResponse<T> {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `CustomerDetailResponse` is never constructed
+   --> src/controllers/crm_controller.rs:103:12
+    |
+103 | pub struct CustomerDetailResponse {
+    |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `CreateLanguageInput` is never constructed
+ --> src/controllers/i18n_controller.rs:8:12
+  |
+8 | pub struct CreateLanguageInput {
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `OAuthCallbackQuery` is never constructed
+ --> src/controllers/oauth_controller.rs:5:12
+  |
+5 | pub struct OAuthCallbackQuery {
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `OAuthCallbackQuery` is never constructed
+  --> src/controllers/oauth_callback_controller.rs:12:12
+   |
+12 | pub struct OAuthCallbackQuery {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `TokenResponse` is never constructed
+  --> src/controllers/oauth_callback_controller.rs:18:8
+   |
+18 | struct TokenResponse {
+   |        ^^^^^^^^^^^^^
+
+warning: struct `UserProfile` is never constructed
+  --> src/controllers/oauth_callback_controller.rs:26:12
+   |
+26 | pub struct UserProfile {
+   |            ^^^^^^^^^^^
+
+warning: function `google_callback` is never used
+  --> src/controllers/oauth_callback_controller.rs:47:14
+   |
+47 | pub async fn google_callback(
+   |              ^^^^^^^^^^^^^^^
+
+warning: function `github_callback` is never used
+   --> src/controllers/oauth_callback_controller.rs:169:14
+    |
+169 | pub async fn github_callback(
+    |              ^^^^^^^^^^^^^^^
+
+warning: function `disconnect_provider` is never used
+   --> src/controllers/oauth_callback_controller.rs:275:14
+    |
+275 | pub async fn disconnect_provider(
+    |              ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `OAuthConnectionsQuery` is never constructed
+ --> src/controllers/oauth_connections_controller.rs:5:12
+  |
+5 | pub struct OAuthConnectionsQuery {
+  |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_connections` is never used
+  --> src/controllers/oauth_connections_controller.rs:10:14
+   |
+10 | pub async fn get_connections(
+   |              ^^^^^^^^^^^^^^^
+
+warning: variant `Unknown` is never constructed
+  --> src/services/errors_service.rs:14:5
+   |
+ 8 | pub enum CustomHttpError {
+   |          --------------- variant in this enum
+...
+14 |     Unknown,
+   |     ^^^^^^^
+   |
+   = note: `CustomHttpError` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: struct `CacheService` is never constructed
+ --> src/services/cache_service.rs:6:12
+  |
+6 | pub struct CacheService {
+  |            ^^^^^^^^^^^^
+
+warning: associated items `new`, `get`, `set`, `delete`, and `is_enabled` are never used
+   --> src/services/cache_service.rs:14:12
+    |
+ 11 | impl CacheService {
+    | ----------------- associated items in this implementation
+...
+ 14 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 62 |     pub fn get(&self, key: &str) -> Option<String> {
+    |            ^^^
+...
+ 77 |     pub fn set(&self, key: &str, value: &str, ttl_seconds: usize) -> bool {
+    |            ^^^
+...
+ 92 |     pub fn delete(&self, key: &str) -> bool {
+    |            ^^^^^^
+...
+107 |     pub fn is_enabled(&self) -> bool {
+    |            ^^^^^^^^^^
+
+warning: associated functions `track_page_view`, `hash_ip`, `insert_page_view`, and `get_page_views` are never used
+  --> src/services/analytics_service.rs:14:12
+   |
+10 | impl AnalyticsService {
+   | --------------------- associated functions in this implementation
+...
+14 |     pub fn track_page_view(
+   |            ^^^^^^^^^^^^^^^
+...
+36 |     fn hash_ip(ip: &str) -> String {
+   |        ^^^^^^^
+...
+43 |     fn insert_page_view(
+   |        ^^^^^^^^^^^^^^^^
+...
+68 |     pub fn get_page_views(page_url: &str) -> i64 {
+   |            ^^^^^^^^^^^^^^
+
+warning: fields `compare_at_price` and `is_active` are never read
+  --> src/services/inventory_service.rs:33:9
+   |
+29 | pub struct CreateVariantRequest {
+   |            -------------------- fields in this struct
+...
+33 |     pub compare_at_price: Option<BigDecimal>,
+   |         ^^^^^^^^^^^^^^^^
+...
+37 |     pub is_active: Option<bool>,
+   |         ^^^^^^^^^
+   |
+   = note: `CreateVariantRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: enum `AIScope` is never used
+ --> src/services/ai_scope_service.rs:9:10
+  |
+9 | pub enum AIScope {
+  |          ^^^^^^^
+
+warning: struct `UserContext` is never constructed
+  --> src/services/ai_scope_service.rs:18:12
+   |
+18 | pub struct UserContext {
+   |            ^^^^^^^^^^^
+
+warning: function `check_ai_permission` is never used
+  --> src/services/ai_scope_service.rs:43:8
+   |
+43 | pub fn check_ai_permission(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: enum `TeamRole` is never used
+  --> src/services/ai_scope_service.rs:98:10
+   |
+98 | pub enum TeamRole {
+   |          ^^^^^^^^
+
+warning: associated function `from_str` is never used
+   --> src/services/ai_scope_service.rs:105:12
+    |
+104 | impl TeamRole {
+    | ------------- associated function in this implementation
+105 |     pub fn from_str(s: &str) -> Self {
+    |            ^^^^^^^^
+
+warning: struct `TeamMCPSettings` is never constructed
+   --> src/services/ai_scope_service.rs:116:12
+    |
+116 | pub struct TeamMCPSettings {
+    |            ^^^^^^^^^^^^^^^
+
+warning: function `check_team_mcp_permission` is never used
+   --> src/services/ai_scope_service.rs:128:4
+    |
+128 | fn check_team_mcp_permission(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `api_key`, `model_name`, `is_active`, `daily_token_limit`, and `monthly_budget_cents` are never read
+  --> src/services/ai_provider_service.rs:25:9
+   |
+24 | pub struct UpdateProviderRequest {
+   |            --------------------- fields in this struct
+25 |     pub api_key: Option<String>,
+   |         ^^^^^^^
+26 |     pub model_name: Option<String>,
+   |         ^^^^^^^^^^
+27 |     pub is_active: Option<bool>,
+   |         ^^^^^^^^^
+28 |     pub daily_token_limit: Option<i32>,
+   |         ^^^^^^^^^^^^^^^^^
+29 |     pub monthly_budget_cents: Option<i32>,
+   |         ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `UpdateProviderRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: fields `prompt_tokens` and `completion_tokens` are never read
+  --> src/services/ai_content_service.rs:60:5
+   |
+59 | struct OpenAIUsage {
+   |        ----------- fields in this struct
+60 |     prompt_tokens: u32,
+   |     ^^^^^^^^^^^^^
+61 |     completion_tokens: u32,
+   |     ^^^^^^^^^^^^^^^^^
+   |
+   = note: `OpenAIUsage` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: function `decrypt_api_key` is never used
+   --> src/services/ai_content_service.rs:316:4
+    |
+316 | fn decrypt_api_key(encrypted: &[u8]) -> Result<String, CustomHttpError> {
+    |    ^^^^^^^^^^^^^^^
+
+warning: struct `UserContext` is never constructed
+  --> src/services/ai_authorization_service.rs:10:12
+   |
+10 | pub struct UserContext {
+   |            ^^^^^^^^^^^
+
+warning: enum `AIScope` is never used
+  --> src/services/ai_authorization_service.rs:19:10
+   |
+19 | pub enum AIScope {
+   |          ^^^^^^^
+
+warning: function `extract_user_context` is never used
+  --> src/services/ai_authorization_service.rs:27:8
+   |
+27 | pub fn extract_user_context(req: &HttpRequest) -> Result<UserContext, CustomHttpError> {
+   |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `check_scope` is never used
+  --> src/services/ai_authorization_service.rs:57:8
+   |
+57 | pub fn check_scope(user: &UserContext, required_scope: AIScope) -> Result<(), CustomHttpError> {
+   |        ^^^^^^^^^^^
+
+warning: function `filter_pages_by_permission` is never used
+  --> src/services/ai_authorization_service.rs:88:8
+   |
+88 | pub fn filter_pages_by_permission(
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_accessible_page_ids` is never used
+   --> src/services/ai_authorization_service.rs:112:14
+    |
+112 | pub async fn get_accessible_page_ids(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `verify_page_access` is never used
+   --> src/services/ai_authorization_service.rs:122:14
+    |
+122 | pub async fn verify_page_access(
+    |              ^^^^^^^^^^^^^^^^^^
+
+warning: struct `MCPClient` is never constructed
+  --> src/services/mcp_client.rs:11:12
+   |
+11 | pub struct MCPClient {
+   |            ^^^^^^^^^
+
+warning: struct `MCPTool` is never constructed
+  --> src/services/mcp_client.rs:19:12
+   |
+19 | pub struct MCPTool {
+   |            ^^^^^^^
+
+warning: struct `MCPRequest` is never constructed
+  --> src/services/mcp_client.rs:27:12
+   |
+27 | pub struct MCPRequest {
+   |            ^^^^^^^^^^
+
+warning: struct `MCPResponse` is never constructed
+  --> src/services/mcp_client.rs:36:12
+   |
+36 | pub struct MCPResponse {
+   |            ^^^^^^^^^^^
+
+warning: struct `MCPError` is never constructed
+  --> src/services/mcp_client.rs:45:12
+   |
+45 | pub struct MCPError {
+   |            ^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/mcp_client.rs:54:12
+    |
+ 52 | impl MCPClient {
+    | -------------- associated items in this implementation
+ 53 |     /// Create a new MCP client
+ 54 |     pub fn new(server_url: String) -> Self {
+    |            ^^^
+...
+ 63 |     pub async fn connect(&mut self) -> Result<(), String> {
+    |                  ^^^^^^^
+...
+ 83 |     async fn discover_tools_from_stream(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+128 |     pub async fn execute_tool(
+    |                  ^^^^^^^^^^^^
+...
+153 |     pub fn get_tools(&self) -> Vec<&MCPTool> {
+    |            ^^^^^^^^^
+...
+158 |     pub fn is_connected(&self) -> bool {
+    |            ^^^^^^^^^^^^
+...
+163 |     pub async fn disconnect(&mut self) {
+    |                  ^^^^^^^^^^
+
+warning: trait `AIProvider` is never used
+ --> src/services/ai_providers/mod.rs:8:11
+  |
+8 | pub trait AIProvider: Send + Sync {
+  |           ^^^^^^^^^^
+
+warning: struct `CompletionOptions` is never constructed
+  --> src/services/ai_providers/mod.rs:40:12
+   |
+40 | pub struct CompletionOptions {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `CompletionResponse` is never constructed
+  --> src/services/ai_providers/mod.rs:68:12
+   |
+68 | pub struct CompletionResponse {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `TokenUsage` is never constructed
+  --> src/services/ai_providers/mod.rs:79:12
+   |
+79 | pub struct TokenUsage {
+   |            ^^^^^^^^^^
+
+warning: enum `AIProviderError` is never used
+  --> src/services/ai_providers/mod.rs:87:10
+   |
+87 | pub enum AIProviderError {
+   |          ^^^^^^^^^^^^^^^
+
+warning: struct `ProviderRegistry` is never constructed
+   --> src/services/ai_providers/mod.rs:108:12
+    |
+108 | pub struct ProviderRegistry {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `register`, `get`, and `list` are never used
+   --> src/services/ai_providers/mod.rs:113:12
+    |
+112 | impl ProviderRegistry {
+    | --------------------- associated items in this implementation
+113 |     pub fn new() -> Self {
+    |            ^^^
+...
+119 |     pub fn register(&mut self, name: String, provider: Box<dyn AIProvider>) {
+    |            ^^^^^^^^
+...
+123 |     pub fn get(&self, name: &str) -> Option<&dyn AIProvider> {
+    |            ^^^
+...
+127 |     pub fn list(&self) -> Vec<&str> {
+    |            ^^^^
+
+warning: struct `OpenAIProvider` is never constructed
+  --> src/services/ai_providers/openai.rs:15:12
+   |
+15 | pub struct OpenAIProvider {
+   |            ^^^^^^^^^^^^^^
+
+warning: associated items `new`, `gpt4`, `gpt35_turbo`, and `build_messages` are never used
+  --> src/services/ai_providers/openai.rs:22:12
+   |
+20 | impl OpenAIProvider {
+   | ------------------- associated items in this implementation
+21 |     /// Create new OpenAI provider
+22 |     pub fn new(api_key: String, model: Option<String>) -> Self {
+   |            ^^^
+...
+35 |     pub fn gpt4(api_key: String) -> Self {
+   |            ^^^^
+...
+40 |     pub fn gpt35_turbo(api_key: String) -> Self {
+   |            ^^^^^^^^^^^
+...
+45 |     fn build_messages(
+   |        ^^^^^^^^^^^^^^
+
+warning: struct `AnthropicProvider` is never constructed
+  --> src/services/ai_providers/anthropic.rs:10:12
+   |
+10 | pub struct AnthropicProvider {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `AnthropicRequest` is never constructed
+  --> src/services/ai_providers/anthropic.rs:17:8
+   |
+17 | struct AnthropicRequest {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `AnthropicMessage` is never constructed
+  --> src/services/ai_providers/anthropic.rs:27:8
+   |
+27 | struct AnthropicMessage {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `AnthropicResponse` is never constructed
+  --> src/services/ai_providers/anthropic.rs:33:8
+   |
+33 | struct AnthropicResponse {
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: struct `AnthropicContent` is never constructed
+  --> src/services/ai_providers/anthropic.rs:45:8
+   |
+45 | struct AnthropicContent {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: struct `AnthropicUsage` is never constructed
+  --> src/services/ai_providers/anthropic.rs:52:8
+   |
+52 | struct AnthropicUsage {
+   |        ^^^^^^^^^^^^^^
+
+warning: associated functions `new`, `claude3_opus`, `claude3_sonnet`, and `claude3_haiku` are never used
+  --> src/services/ai_providers/anthropic.rs:59:12
+   |
+57 | impl AnthropicProvider {
+   | ---------------------- associated functions in this implementation
+58 |     /// Create new Anthropic provider
+59 |     pub fn new(api_key: String, model: Option<String>) -> Self {
+   |            ^^^
+...
+73 |     pub fn claude3_opus(api_key: String) -> Self {
+   |            ^^^^^^^^^^^^
+...
+78 |     pub fn claude3_sonnet(api_key: String) -> Self {
+   |            ^^^^^^^^^^^^^^
+...
+83 |     pub fn claude3_haiku(api_key: String) -> Self {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `GoogleProvider` is never constructed
+  --> src/services/ai_providers/google.rs:10:12
+   |
+10 | pub struct GoogleProvider {
+   |            ^^^^^^^^^^^^^^
+
+warning: struct `GoogleRequest` is never constructed
+  --> src/services/ai_providers/google.rs:17:8
+   |
+17 | struct GoogleRequest {
+   |        ^^^^^^^^^^^^^
+
+warning: struct `GoogleContent` is never constructed
+  --> src/services/ai_providers/google.rs:25:8
+   |
+25 | struct GoogleContent {
+   |        ^^^^^^^^^^^^^
+
+warning: struct `GooglePart` is never constructed
+  --> src/services/ai_providers/google.rs:32:8
+   |
+32 | struct GooglePart {
+   |        ^^^^^^^^^^
+
+warning: struct `GoogleGenerationConfig` is never constructed
+  --> src/services/ai_providers/google.rs:37:8
+   |
+37 | struct GoogleGenerationConfig {
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `GoogleResponse` is never constructed
+  --> src/services/ai_providers/google.rs:46:8
+   |
+46 | struct GoogleResponse {
+   |        ^^^^^^^^^^^^^^
+
+warning: struct `GoogleCandidate` is never constructed
+  --> src/services/ai_providers/google.rs:53:8
+   |
+53 | struct GoogleCandidate {
+   |        ^^^^^^^^^^^^^^^
+
+warning: struct `GoogleUsageMetadata` is never constructed
+  --> src/services/ai_providers/google.rs:60:8
+   |
+60 | struct GoogleUsageMetadata {
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `gemini_15_pro`, `gemini_15_flash`, and `get_endpoint` are never used
+  --> src/services/ai_providers/google.rs:71:12
+   |
+69 | impl GoogleProvider {
+   | ------------------- associated items in this implementation
+70 |     /// Create new Google Gemini provider
+71 |     pub fn new(api_key: String, model: Option<String>) -> Self {
+   |            ^^^
+...
+85 |     pub fn gemini_15_pro(api_key: String) -> Self {
+   |            ^^^^^^^^^^^^^
+...
+90 |     pub fn gemini_15_flash(api_key: String) -> Self {
+   |            ^^^^^^^^^^^^^^^
+...
+95 |     fn get_endpoint(&self) -> String {
+   |        ^^^^^^^^^^^^
+
+warning: struct `AIKeyManager` is never constructed
+  --> src/services/ai_key_manager.rs:11:12
+   |
+11 | pub struct AIKeyManager;
+   |            ^^^^^^^^^^^^
+
+warning: enum `AIProviderType` is never used
+  --> src/services/ai_key_manager.rs:15:10
+   |
+15 | pub enum AIProviderType {
+   |          ^^^^^^^^^^^^^^
+
+warning: associated items `as_str` and `from_str` are never used
+  --> src/services/ai_key_manager.rs:23:12
+   |
+22 | impl AIProviderType {
+   | ------------------- associated items in this implementation
+23 |     pub fn as_str(&self) -> &str {
+   |            ^^^^^^
+...
+32 |     pub fn from_str(s: &str) -> Self {
+   |            ^^^^^^^^
+
+warning: struct `AIProviderKey` is never constructed
+  --> src/services/ai_key_manager.rs:45:12
+   |
+45 | pub struct AIProviderKey {
+   |            ^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/ai_key_manager.rs:72:12
+    |
+ 70 | impl AIKeyManager {
+    | ----------------- associated items in this implementation
+ 71 |     /// Create a new AI key manager
+ 72 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 78 |     pub async fn store_key(
+    |                  ^^^^^^^^^
+...
+121 |     pub async fn get_key(
+    |                  ^^^^^^^
+...
+166 |     pub async fn track_usage(
+    |                  ^^^^^^^^^^^
+...
+210 |     pub async fn rotate_key(
+    |                  ^^^^^^^^^^
+...
+259 |     pub async fn deactivate_key(
+    |                  ^^^^^^^^^^^^^^
+...
+283 |     pub async fn list_keys(
+    |                  ^^^^^^^^^
+
+warning: struct `AIRateLimiter` is never constructed
+ --> src/services/ai_rate_limiter.rs:8:12
+  |
+8 | pub struct AIRateLimiter {
+  |            ^^^^^^^^^^^^^
+
+warning: struct `ProviderRateLimit` is never constructed
+  --> src/services/ai_rate_limiter.rs:14:12
+   |
+14 | pub struct ProviderRateLimit {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `maybe_reset_window`, `can_proceed`, `record_request`, and `get_usage` are never used
+  --> src/services/ai_rate_limiter.rs:28:12
+   |
+27 | impl ProviderRateLimit {
+   | ---------------------- associated items in this implementation
+28 |     pub fn new(max_requests_per_minute: u32, max_tokens_per_minute: u64) -> Self {
+   |            ^^^
+...
+39 |     fn maybe_reset_window(&mut self) {
+   |        ^^^^^^^^^^^^^^^^^^
+...
+48 |     pub fn can_proceed(&mut self, estimated_tokens: u64) -> Result<(), String> {
+   |            ^^^^^^^^^^^
+...
+70 |     pub fn record_request(&mut self, tokens_used: u64) {
+   |            ^^^^^^^^^^^^^^
+...
+77 |     pub fn get_usage(&mut self) -> (u32, u64) {
+   |            ^^^^^^^^^
+
+warning: associated items `new`, `check_limit`, `record_usage`, `get_usage`, and `update_limits` are never used
+   --> src/services/ai_rate_limiter.rs:85:12
+    |
+ 83 | impl AIRateLimiter {
+    | ------------------ associated items in this implementation
+ 84 |     /// Create a new rate limiter with default limits
+ 85 |     pub fn new() -> Self {
+    |            ^^^
+...
+114 |     pub fn check_limit(
+    |            ^^^^^^^^^^^
+...
+129 |     pub fn record_usage(
+    |            ^^^^^^^^^^^^
+...
+145 |     pub fn get_usage(&self, provider: &str) -> Result<(u32, u64), String> {
+    |            ^^^^^^^^^
+...
+156 |     pub fn update_limits(
+    |            ^^^^^^^^^^^^^
+
+warning: struct `AICostTracker` is never constructed
+   --> src/services/ai_rate_limiter.rs:182:12
+    |
+182 | pub struct AICostTracker {
+    |            ^^^^^^^^^^^^^
+
+warning: struct `ModelPricing` is never constructed
+   --> src/services/ai_rate_limiter.rs:187:12
+    |
+187 | pub struct ModelPricing {
+    |            ^^^^^^^^^^^^
+
+warning: associated items `get_pricing` and `calculate_cost` are never used
+   --> src/services/ai_rate_limiter.rs:194:12
+    |
+192 | impl ModelPricing {
+    | ----------------- associated items in this implementation
+193 |     /// Get pricing for a model
+194 |     pub fn get_pricing(model: &str) -> Self {
+    |            ^^^^^^^^^^^
+...
+248 |     pub fn calculate_cost(&self, input_tokens: usize, output_tokens: usize) -> f64 {
+    |            ^^^^^^^^^^^^^^
+
+warning: associated items `new`, `track_cost`, `get_provider_cost`, `get_total_cost`, `get_cost_breakdown`, and `check_budget` are never used
+   --> src/services/ai_rate_limiter.rs:256:12
+    |
+255 | impl AICostTracker {
+    | ------------------ associated items in this implementation
+256 |     pub fn new() -> Self {
+    |            ^^^
+...
+264 |     pub fn track_cost(
+    |            ^^^^^^^^^^
+...
+284 |     pub fn get_provider_cost(&self, provider: &str) -> Result<f64, String> {
+    |            ^^^^^^^^^^^^^^^^^
+...
+297 |     pub fn get_total_cost(&self) -> Result<f64, String> {
+    |            ^^^^^^^^^^^^^^
+...
+303 |     pub fn get_cost_breakdown(&self) -> Result<HashMap<String, f64>, String> {
+    |            ^^^^^^^^^^^^^^^^^^
+...
+309 |     pub fn check_budget(&self, budget: f64) -> Result<bool, String> {
+    |            ^^^^^^^^^^^^
+
+warning: struct `CommandParser` is never constructed
+ --> src/services/command_parser.rs:6:12
+  |
+6 | pub struct CommandParser;
+  |            ^^^^^^^^^^^^^
+
+warning: struct `ParsedCommand` is never constructed
+  --> src/services/command_parser.rs:10:12
+   |
+10 | pub struct ParsedCommand {
+   |            ^^^^^^^^^^^^^
+
+warning: enum `CommandIntent` is never used
+  --> src/services/command_parser.rs:18:10
+   |
+18 | pub enum CommandIntent {
+   |          ^^^^^^^^^^^^^
+
+warning: multiple associated functions are never used
+   --> src/services/command_parser.rs:29:12
+    |
+ 27 | impl CommandParser {
+    | ------------------ associated functions in this implementation
+ 28 |     /// Parse a text command
+ 29 |     pub fn parse(text: &str) -> ParsedCommand {
+    |            ^^^^^
+...
+ 61 |     fn parse_slash_command(text: &str) -> Option<CommandIntent> {
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+118 |     fn parse_natural_language(text: &str) -> Option<CommandIntent> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+181 |     fn extract_number(text: &str) -> Option<i32> {
+    |        ^^^^^^^^^^^^^^
+...
+191 |     fn extract_url(text: &str) -> Option<String> {
+    |        ^^^^^^^^^^^
+...
+201 |     fn extract_language(text: &str) -> Option<String> {
+    |        ^^^^^^^^^^^^^^^^
+...
+225 |     pub fn describe_intent(intent: &CommandIntent) -> String {
+    |            ^^^^^^^^^^^^^^^
+
+warning: struct `CommandRouter` is never constructed
+  --> src/services/command_router.rs:12:12
+   |
+12 | pub struct CommandRouter {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `CommandResult` is never constructed
+  --> src/services/command_router.rs:19:12
+   |
+19 | pub struct CommandResult {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `CommandMetadata` is never constructed
+  --> src/services/command_router.rs:27:12
+   |
+27 | pub struct CommandMetadata {
+   |            ^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/command_router.rs:37:12
+    |
+ 35 | impl CommandRouter {
+    | ------------------ associated items in this implementation
+ 36 |     /// Create a new command router
+ 37 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 46 |     pub async fn route(
+    |                  ^^^^^
+...
+ 93 |     async fn handle_generate_page(
+    |              ^^^^^^^^^^^^^^^^^^^^
+...
+147 |     async fn handle_optimize_seo(
+    |              ^^^^^^^^^^^^^^^^^^^
+...
+198 |     async fn handle_summarize(
+    |              ^^^^^^^^^^^^^^^^
+...
+248 |     async fn handle_translate(
+    |              ^^^^^^^^^^^^^^^^
+...
+295 |     async fn handle_analyze(
+    |              ^^^^^^^^^^^^^^
+
+warning: struct `AICommandExecutor` is never constructed
+  --> src/services/ai_command_executor.rs:15:12
+   |
+15 | pub struct AICommandExecutor {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `ExecutionResult` is never constructed
+  --> src/services/ai_command_executor.rs:23:12
+   |
+23 | pub struct ExecutionResult {
+   |            ^^^^^^^^^^^^^^^
+
+warning: associated items `new`, `generate_page`, `optimize_seo`, `summarize`, and `translate` are never used
+   --> src/services/ai_command_executor.rs:34:12
+    |
+ 32 | impl AICommandExecutor {
+    | ---------------------- associated items in this implementation
+ 33 |     /// Create new executor
+ 34 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 44 |     pub async fn generate_page(
+    |                  ^^^^^^^^^^^^^
+...
+117 |     pub async fn optimize_seo(
+    |                  ^^^^^^^^^^^^
+...
+191 |     pub async fn summarize(
+    |                  ^^^^^^^^^
+...
+261 |     pub async fn translate(
+    |                  ^^^^^^^^^
+
+warning: struct `AIResponseHandler` is never constructed
+ --> src/services/ai_response_handler.rs:6:12
+  |
+6 | pub struct AIResponseHandler;
+  |            ^^^^^^^^^^^^^^^^^
+
+warning: enum `ResponseFormat` is never used
+  --> src/services/ai_response_handler.rs:10:10
+   |
+10 | pub enum ResponseFormat {
+   |          ^^^^^^^^^^^^^^
+
+warning: struct `ProcessedResponse` is never constructed
+  --> src/services/ai_response_handler.rs:19:12
+   |
+19 | pub struct ProcessedResponse {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `ResponseMetadata` is never constructed
+  --> src/services/ai_response_handler.rs:27:12
+   |
+27 | pub struct ResponseMetadata {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: multiple associated functions are never used
+   --> src/services/ai_response_handler.rs:38:12
+    |
+ 36 | impl AIResponseHandler {
+    | ---------------------- associated functions in this implementation
+ 37 |     /// Process raw AI response
+ 38 |     pub fn process(
+    |            ^^^^^^^
+...
+ 63 |     fn analyze_content(text: &str) -> ResponseMetadata {
+    |        ^^^^^^^^^^^^^^^
+...
+ 87 |     fn markdown_to_plain_text(markdown: &str) -> String {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+115 |     fn to_json(text: &str, metadata: &ResponseMetadata) -> Result<String, String> {
+    |        ^^^^^^^
+...
+126 |     fn markdown_to_html(markdown: &str) -> String {
+    |        ^^^^^^^^^^^^^^^^
+...
+147 |     pub fn process_stream_chunk(chunk: &str) -> Result<String, String> {
+    |            ^^^^^^^^^^^^^^^^^^^^
+...
+154 |     pub fn validate_response(response: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^^^^^
+...
+171 |     pub fn extract_code_blocks(markdown: &str) -> Vec<CodeBlock> {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+203 |     pub fn estimate_tokens(text: &str) -> usize {
+    |            ^^^^^^^^^^^^^^^
+
+warning: struct `CodeBlock` is never constructed
+   --> src/services/ai_response_handler.rs:211:12
+    |
+211 | pub struct CodeBlock {
+    |            ^^^^^^^^^
+
+warning: struct `WorkflowOrchestrator` is never constructed
+ --> src/services/workflow_orchestrator.rs:8:12
+  |
+8 | pub struct WorkflowOrchestrator {
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Workflow` is never constructed
+  --> src/services/workflow_orchestrator.rs:14:12
+   |
+14 | pub struct Workflow {
+   |            ^^^^^^^^
+
+warning: struct `WorkflowStep` is never constructed
+  --> src/services/workflow_orchestrator.rs:27:12
+   |
+27 | pub struct WorkflowStep {
+   |            ^^^^^^^^^^^^
+
+warning: enum `StepType` is never used
+  --> src/services/workflow_orchestrator.rs:39:10
+   |
+39 | pub enum StepType {
+   |          ^^^^^^^^
+
+warning: struct `StepConfig` is never constructed
+  --> src/services/workflow_orchestrator.rs:50:12
+   |
+50 | pub struct StepConfig {
+   |            ^^^^^^^^^^
+
+warning: enum `StepStatus` is never used
+  --> src/services/workflow_orchestrator.rs:59:10
+   |
+59 | pub enum StepStatus {
+   |          ^^^^^^^^^^
+
+warning: enum `WorkflowStatus` is never used
+  --> src/services/workflow_orchestrator.rs:69:10
+   |
+69 | pub enum WorkflowStatus {
+   |          ^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/workflow_orchestrator.rs:80:12
+    |
+ 78 | impl WorkflowOrchestrator {
+    | ------------------------- associated items in this implementation
+ 79 |     /// Create new orchestrator
+ 80 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 88 |     pub fn create_workflow(
+    |            ^^^^^^^^^^^^^^^
+...
+117 |     pub fn start_workflow(&self, workflow_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^^
+...
+136 |     pub async fn execute_next_step(&self, workflow_id: &str) -> Result<bool, String> {
+    |                  ^^^^^^^^^^^^^^^^^
+...
+181 |     async fn execute_step(&self, step: &WorkflowStep) -> Result<String, String> {
+    |              ^^^^^^^^^^^^
+...
+195 |     pub fn get_workflow(&self, workflow_id: &str) -> Result<Workflow, String> {
+    |            ^^^^^^^^^^^^
+...
+205 |     pub fn pause_workflow(&self, workflow_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^^
+...
+222 |     pub fn resume_workflow(&self, workflow_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^^^
+...
+239 |     pub fn cancel_workflow(&self, workflow_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^^^
+...
+254 |     pub fn list_workflows(&self) -> Result<Vec<Workflow>, String> {
+    |            ^^^^^^^^^^^^^^
+
+warning: method `as_str` is never used
+   --> src/services/workflow_orchestrator.rs:263:12
+    |
+262 | impl StepType {
+    | ------------- method in this implementation
+263 |     pub fn as_str(&self) -> &str {
+    |            ^^^^^^
+
+warning: struct `ContentTemplateLibrary` is never constructed
+ --> src/services/content_templates.rs:6:12
+  |
+6 | pub struct ContentTemplateLibrary;
+  |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ContentTemplate` is never constructed
+  --> src/services/content_templates.rs:10:12
+   |
+10 | pub struct ContentTemplate {
+   |            ^^^^^^^^^^^^^^^
+
+warning: enum `TemplateType` is never used
+  --> src/services/content_templates.rs:22:10
+   |
+22 | pub enum TemplateType {
+   |          ^^^^^^^^^^^^
+
+warning: struct `TemplateSection` is never constructed
+  --> src/services/content_templates.rs:35:12
+   |
+35 | pub struct TemplateSection {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `TemplateMetadata` is never constructed
+  --> src/services/content_templates.rs:46:12
+   |
+46 | pub struct TemplateMetadata {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: multiple associated functions are never used
+   --> src/services/content_templates.rs:56:12
+    |
+ 54 | impl ContentTemplateLibrary {
+    | --------------------------- associated functions in this implementation
+ 55 |     /// Get blog post template
+ 56 |     pub fn blog_post() -> ContentTemplate {
+    |            ^^^^^^^^^
+...
+110 |     pub fn product_description() -> ContentTemplate {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+164 |     pub fn landing_page() -> ContentTemplate {
+    |            ^^^^^^^^^^^^
+...
+226 |     pub fn email_campaign() -> ContentTemplate {
+    |            ^^^^^^^^^^^^^^
+...
+272 |     pub fn list_templates() -> Vec<ContentTemplate> {
+    |            ^^^^^^^^^^^^^^
+...
+282 |     pub fn get_template(id: &str) -> Option<ContentTemplate> {
+    |            ^^^^^^^^^^^^
+...
+289 |     pub fn render_prompt(
+    |            ^^^^^^^^^^^^^
+
+warning: struct `ContentScheduler` is never constructed
+ --> src/services/content_scheduler.rs:9:12
+  |
+9 | pub struct ContentScheduler {
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `ScheduledTask` is never constructed
+  --> src/services/content_scheduler.rs:17:12
+   |
+17 | pub struct ScheduledTask {
+   |            ^^^^^^^^^^^^^
+
+warning: enum `TaskType` is never used
+  --> src/services/content_scheduler.rs:33:10
+   |
+33 | pub enum TaskType {
+   |          ^^^^^^^^
+
+warning: enum `TaskPriority` is never used
+  --> src/services/content_scheduler.rs:43:10
+   |
+43 | pub enum TaskPriority {
+   |          ^^^^^^^^^^^^
+
+warning: struct `TaskPayload` is never constructed
+  --> src/services/content_scheduler.rs:52:12
+   |
+52 | pub struct TaskPayload {
+   |            ^^^^^^^^^^^
+
+warning: enum `TaskStatus` is never used
+  --> src/services/content_scheduler.rs:58:10
+   |
+58 | pub enum TaskStatus {
+   |          ^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/content_scheduler.rs:68:12
+    |
+ 66 | impl ContentScheduler {
+    | --------------------- associated items in this implementation
+ 67 |     /// Create new scheduler
+ 68 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 78 |     pub fn schedule_task(
+    |            ^^^^^^^^^^^^^
+...
+117 |     pub async fn get_next_task(&self) -> Result<Option<ScheduledTask>, String> {
+    |                  ^^^^^^^^^^^^^
+...
+138 |     pub fn complete_task(&self, task_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^^^
+...
+158 |     pub fn fail_task(&self, task_id: &str, error: String) -> Result<bool, String> {
+    |            ^^^^^^^^^
+...
+198 |     pub fn get_status(&self) -> Result<SchedulerStatus, String> {
+    |            ^^^^^^^^^^
+...
+215 |     pub fn cancel_task(&self, task_id: &str) -> Result<(), String> {
+    |            ^^^^^^^^^^^
+
+warning: struct `SchedulerStatus` is never constructed
+   --> src/services/content_scheduler.rs:250:12
+    |
+250 | pub struct SchedulerStatus {
+    |            ^^^^^^^^^^^^^^^
+
+warning: struct `ErrorRecoverySystem` is never constructed
+ --> src/services/error_recovery.rs:8:12
+  |
+8 | pub struct ErrorRecoverySystem {
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ErrorRecord` is never constructed
+  --> src/services/error_recovery.rs:15:12
+   |
+15 | pub struct ErrorRecord {
+   |            ^^^^^^^^^^^
+
+warning: enum `ErrorType` is never used
+  --> src/services/error_recovery.rs:29:10
+   |
+29 | pub enum ErrorType {
+   |          ^^^^^^^^^
+
+warning: struct `ErrorContext` is never constructed
+  --> src/services/error_recovery.rs:42:12
+   |
+42 | pub struct ErrorContext {
+   |            ^^^^^^^^^^^^
+
+warning: enum `ErrorSeverity` is never used
+  --> src/services/error_recovery.rs:52:10
+   |
+52 | pub enum ErrorSeverity {
+   |          ^^^^^^^^^^^^^
+
+warning: enum `RecoveryStrategy` is never used
+  --> src/services/error_recovery.rs:61:10
+   |
+61 | pub enum RecoveryStrategy {
+   |          ^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/error_recovery.rs:70:12
+    |
+ 68 | impl ErrorRecoverySystem {
+    | ------------------------ associated items in this implementation
+ 69 |     /// Create new error recovery system
+ 70 |     pub fn new() -> Self {
+    |            ^^^
+...
+100 |     pub fn log_error(
+    |            ^^^^^^^^^
+...
+148 |     pub fn get_recovery_strategy(&self, error_type: &ErrorType) -> Option<RecoveryStrategy> {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+...
+153 |     pub fn mark_recovery_attempted(&self, error_id: &str, success: bool) {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+...
+170 |     pub fn get_statistics(&self) -> ErrorStatistics {
+    |            ^^^^^^^^^^^^^^
+...
+204 |     pub fn get_recent_errors(&self, limit: usize) -> Vec<ErrorRecord> {
+    |            ^^^^^^^^^^^^^^^^^
+...
+214 |     pub fn clear_resolved(&self) -> usize {
+    |            ^^^^^^^^^^^^^^
+
+warning: struct `ErrorStatistics` is never constructed
+   --> src/services/error_recovery.rs:230:12
+    |
+230 | pub struct ErrorStatistics {
+    |            ^^^^^^^^^^^^^^^
+
+warning: struct `SeverityBreakdown` is never constructed
+   --> src/services/error_recovery.rs:240:12
+    |
+240 | pub struct SeverityBreakdown {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: method `as_str` is never used
+   --> src/services/error_recovery.rs:248:12
+    |
+247 | impl ErrorType {
+    | -------------- method in this implementation
+248 |     pub fn as_str(&self) -> &str {
+    |            ^^^^^^
+
+warning: struct `KeywordResearchService` is never constructed
+ --> src/services/keyword_research.rs:7:12
+  |
+7 | pub struct KeywordResearchService {
+  |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `KeywordData` is never constructed
+  --> src/services/keyword_research.rs:13:12
+   |
+13 | pub struct KeywordData {
+   |            ^^^^^^^^^^^
+
+warning: enum `CompetitionLevel` is never used
+  --> src/services/keyword_research.rs:25:10
+   |
+25 | pub enum CompetitionLevel {
+   |          ^^^^^^^^^^^^^^^^
+
+warning: struct `TrendData` is never constructed
+  --> src/services/keyword_research.rs:33:12
+   |
+33 | pub struct TrendData {
+   |            ^^^^^^^^^
+
+warning: struct `KeywordSuggestions` is never constructed
+  --> src/services/keyword_research.rs:40:12
+   |
+40 | pub struct KeywordSuggestions {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `KeywordSuggestion` is never constructed
+  --> src/services/keyword_research.rs:47:12
+   |
+47 | pub struct KeywordSuggestion {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/keyword_research.rs:55:12
+    |
+ 53 | impl KeywordResearchService {
+    | --------------------------- associated items in this implementation
+ 54 |     /// Create new keyword research service
+ 55 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 63 |     pub fn add_api_key(&mut self, provider: &str, api_key: String) {
+    |            ^^^^^^^^^^^
+...
+ 69 |     pub async fn research_keyword(&self, keyword: &str) -> Result<KeywordData, String> {
+    |                  ^^^^^^^^^^^^^^^^
+...
+104 |     pub async fn get_suggestions(&self, seed: &str, limit: usize) -> Result<KeywordSuggestions, String> {
+    |                  ^^^^^^^^^^^^^^^
+...
+127 |     pub async fn analyze_difficulty(&self, keyword: &str) -> Result<DifficultyAnalysis, String> {
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+150 |     pub async fn find_long_tail(&self, topic: &str) -> Result<Vec<KeywordData>, String> {
+    |                  ^^^^^^^^^^^^^^
+...
+179 |     pub async fn get_seasonal_trends(&self, keyword: &str) -> Result<Vec<TrendData>, String> {
+    |                  ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `DifficultyAnalysis` is never constructed
+   --> src/services/keyword_research.rs:200:12
+    |
+200 | pub struct DifficultyAnalysis {
+    |            ^^^^^^^^^^^^^^^^^^
+
+warning: enum `OpportunityLevel` is never used
+   --> src/services/keyword_research.rs:210:10
+    |
+210 | pub enum OpportunityLevel {
+    |          ^^^^^^^^^^^^^^^^
+
+warning: struct `AEOService` is never constructed
+ --> src/services/aeo_service.rs:6:12
+  |
+6 | pub struct AEOService;
+  |            ^^^^^^^^^^
+
+warning: struct `AEOOptimization` is never constructed
+  --> src/services/aeo_service.rs:10:12
+   |
+10 | pub struct AEOOptimization {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `QAPair` is never constructed
+  --> src/services/aeo_service.rs:21:12
+   |
+21 | pub struct QAPair {
+   |            ^^^^^^
+
+warning: struct `StructuredData` is never constructed
+  --> src/services/aeo_service.rs:29:12
+   |
+29 | pub struct StructuredData {
+   |            ^^^^^^^^^^^^^^
+
+warning: struct `Property` is never constructed
+  --> src/services/aeo_service.rs:36:12
+   |
+36 | pub struct Property {
+   |            ^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/aeo_service.rs:43:18
+    |
+ 41 | impl AEOService {
+    | --------------- methods in this implementation
+ 42 |     /// Optimize content for answer engines
+ 43 |     pub async fn optimize_for_answer_engines(
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 76 |     async fn extract_qa_pairs(&self, content: &str) -> Result<Vec<QAPair>, String> {
+    |              ^^^^^^^^^^^^^^^^
+...
+ 91 |     async fn generate_structured_data(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+112 |     async fn create_featured_snippet(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+...
+127 |     async fn restructure_for_ai(
+    |              ^^^^^^^^^^^^^^^^^^
+...
+149 |     fn calculate_aeo_score(
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+172 |     pub async fn analyze_visibility(
+    |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `VisibilityAnalysis` is never constructed
+   --> src/services/aeo_service.rs:210:12
+    |
+210 | pub struct VisibilityAnalysis {
+    |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `EngineVisibility` is never constructed
+   --> src/services/aeo_service.rs:218:12
+    |
+218 | pub struct EngineVisibility {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: struct `GEOService` is never constructed
+ --> src/services/geo_service.rs:6:12
+  |
+6 | pub struct GEOService;
+  |            ^^^^^^^^^^
+
+warning: struct `GEOOptimization` is never constructed
+  --> src/services/geo_service.rs:10:12
+   |
+10 | pub struct GEOOptimization {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `SourceAttribution` is never constructed
+  --> src/services/geo_service.rs:21:12
+   |
+21 | pub struct SourceAttribution {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/geo_service.rs:29:18
+    |
+ 27 | impl GEOService {
+    | --------------- methods in this implementation
+ 28 |     /// Optimize content for generative engines
+ 29 |     pub async fn optimize_for_generative_ai(
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 60 |     async fn extract_attributions(&self, content: &str) -> Result<Vec<SourceAttribution>, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^
+...
+ 73 |     async fn add_context_markers(&self, content: &str) -> Result<String, String> {
+    |              ^^^^^^^^^^^^^^^^^^^
+...
+ 85 |     fn calculate_citation_score(&self, attributions: &[SourceAttribution]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 98 |     fn calculate_context_quality(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+119 |     fn generate_recommendations(&self, citation_score: f64, context_quality: f64) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+138 |     pub async fn analyze_geo_performance(
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `GEOPerformance` is never constructed
+   --> src/services/geo_service.rs:172:12
+    |
+172 | pub struct GEOPerformance {
+    |            ^^^^^^^^^^^^^^
+
+warning: struct `EnginePerformance` is never constructed
+   --> src/services/geo_service.rs:180:12
+    |
+180 | pub struct EnginePerformance {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `SEOMetaGenerator` is never constructed
+ --> src/services/seo_meta_generator.rs:7:12
+  |
+7 | pub struct SEOMetaGenerator;
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `SEOMetadata` is never constructed
+  --> src/services/seo_meta_generator.rs:11:12
+   |
+11 | pub struct SEOMetadata {
+   |            ^^^^^^^^^^^
+
+warning: multiple methods are never used
+  --> src/services/seo_meta_generator.rs:22:18
+   |
+20 | impl SEOMetaGenerator {
+   | --------------------- methods in this implementation
+21 |     /// Generate complete SEO metadata
+22 |     pub async fn generate_metadata(
+   |                  ^^^^^^^^^^^^^^^^^
+...
+47 |     async fn generate_title(&self, content: &str, keyword: &str) -> Result<String, String> {
+   |              ^^^^^^^^^^^^^^
+...
+54 |     async fn generate_description(&self, content: &str, keyword: &str) -> Result<String, String> {
+   |              ^^^^^^^^^^^^^^^^^^^^
+...
+61 |     async fn extract_keywords(&self, content: &str) -> Result<Vec<String>, String> {
+   |              ^^^^^^^^^^^^^^^^
+...
+71 |     async fn generate_og_tags(
+   |              ^^^^^^^^^^^^^^^^
+...
+86 |     async fn generate_twitter_cards(
+   |              ^^^^^^^^^^^^^^^^^^^^^^
+...
+99 |     pub fn validate_metadata(&self, metadata: &SEOMetadata) -> ValidationResult {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `ValidationResult` is never constructed
+   --> src/services/seo_meta_generator.rs:140:12
+    |
+140 | pub struct ValidationResult {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: struct `SchemaMarkupGenerator` is never constructed
+ --> src/services/schema_markup.rs:8:12
+  |
+8 | pub struct SchemaMarkupGenerator;
+  |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: enum `SchemaType` is never used
+  --> src/services/schema_markup.rs:12:10
+   |
+12 | pub enum SchemaType {
+   |          ^^^^^^^^^^
+
+warning: struct `SchemaMarkup` is never constructed
+  --> src/services/schema_markup.rs:24:12
+   |
+24 | pub struct SchemaMarkup {
+   |            ^^^^^^^^^^^^
+
+warning: methods `generate_article_schema`, `generate_faq_schema`, `generate_product_schema`, and `validate_schema` are never used
+   --> src/services/schema_markup.rs:32:12
+    |
+ 30 | impl SchemaMarkupGenerator {
+    | -------------------------- methods in this implementation
+ 31 |     /// Generate Article schema
+ 32 |     pub fn generate_article_schema(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 62 |     pub fn generate_faq_schema(&self, questions: Vec<(String, String)>) -> Result<SchemaMarkup, String> {
+    |            ^^^^^^^^^^^^^^^^^^^
+...
+ 95 |     pub fn generate_product_schema(
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+...
+127 |     fn validate_schema(&self, schema: &HashMap<&str, &str>) -> f64 {
+    |        ^^^^^^^^^^^^^^^
+
+warning: struct `ContentQualityAnalyzer` is never constructed
+ --> src/services/content_quality.rs:6:12
+  |
+6 | pub struct ContentQualityAnalyzer;
+  |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `QualityAnalysis` is never constructed
+  --> src/services/content_quality.rs:10:12
+   |
+10 | pub struct QualityAnalysis {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `ReadabilityMetrics` is never constructed
+  --> src/services/content_quality.rs:20:12
+   |
+20 | pub struct ReadabilityMetrics {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/content_quality.rs:30:12
+    |
+ 28 | impl ContentQualityAnalyzer {
+    | --------------------------- methods in this implementation
+ 29 |     /// Analyze content quality
+ 30 |     pub fn analyze(&self, content: &str) -> QualityAnalysis {
+    |            ^^^^^^^
+...
+ 50 |     fn calculate_readability(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+ 62 |     fn get_readability_metrics(&self, content: &str) -> ReadabilityMetrics {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 81 |     fn syllables_per_word(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^
+...
+ 87 |     fn calculate_seo_score(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+111 |     fn calculate_engagement_score(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+133 |     fn generate_recommendations(&self, readability: f64, seo: f64, engagement: f64) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `LinkBuilder` is never constructed
+ --> src/services/link_builder.rs:7:12
+  |
+7 | pub struct LinkBuilder;
+  |            ^^^^^^^^^^^
+
+warning: struct `LinkAnalysis` is never constructed
+  --> src/services/link_builder.rs:11:12
+   |
+11 | pub struct LinkAnalysis {
+   |            ^^^^^^^^^^^^
+
+warning: struct `LinkInfo` is never constructed
+  --> src/services/link_builder.rs:21:12
+   |
+21 | pub struct LinkInfo {
+   |            ^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/link_builder.rs:30:12
+    |
+ 28 | impl LinkBuilder {
+    | ---------------- methods in this implementation
+ 29 |     /// Analyze links in content
+ 30 |     pub fn analyze_links(&self, content: &str, base_url: &str) -> LinkAnalysis {
+    |            ^^^^^^^^^^^^^
+...
+ 49 |     fn extract_internal_links(&self, content: &str, base_url: &str) -> Vec<LinkInfo> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 66 |     fn extract_external_links(&self, content: &str, base_url: &str) -> Vec<LinkInfo> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 83 |     fn find_broken_links(&self, _content: &str) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^
+...
+ 89 |     fn calculate_link_score(&self, internal: &[LinkInfo], external: &[LinkInfo]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+127 |     fn generate_link_recommendations(&self, internal: &[LinkInfo], external: &[LinkInfo]) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+161 |     pub fn suggest_internal_links(&self, content: &str, site_pages: Vec<String>) -> Vec<LinkSuggestion> {
+    |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `LinkSuggestion` is never constructed
+   --> src/services/link_builder.rs:187:12
+    |
+187 | pub struct LinkSuggestion {
+    |            ^^^^^^^^^^^^^^
+
+warning: struct `CompetitorAnalyzer` is never constructed
+ --> src/services/competitor_analyzer.rs:7:12
+  |
+7 | pub struct CompetitorAnalyzer;
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `CompetitorAnalysis` is never constructed
+  --> src/services/competitor_analyzer.rs:11:12
+   |
+11 | pub struct CompetitorAnalysis {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `KeywordOverlap` is never constructed
+  --> src/services/competitor_analyzer.rs:23:12
+   |
+23 | pub struct KeywordOverlap {
+   |            ^^^^^^^^^^^^^^
+
+warning: struct `ContentGap` is never constructed
+  --> src/services/competitor_analyzer.rs:33:12
+   |
+33 | pub struct ContentGap {
+   |            ^^^^^^^^^^
+
+warning: struct `BacklinkProfile` is never constructed
+  --> src/services/competitor_analyzer.rs:43:12
+   |
+43 | pub struct BacklinkProfile {
+   |            ^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/competitor_analyzer.rs:52:18
+    |
+ 50 | impl CompetitorAnalyzer {
+    | ----------------------- methods in this implementation
+ 51 |     /// Analyze competitor
+ 52 |     pub async fn analyze(
+    |                  ^^^^^^^
+...
+ 78 |     async fn get_domain_authority(&self, _url: &str) -> Result<f64, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^
+...
+ 84 |     async fn analyze_keyword_overlap(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+...
+105 |     async fn identify_content_gaps(&self, _url: &str) -> Result<Vec<ContentGap>, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^^
+...
+126 |     async fn analyze_backlinks(&self, _url: &str) -> Result<BacklinkProfile, String> {
+    |              ^^^^^^^^^^^^^^^^^
+...
+141 |     fn identify_advantages(
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+168 |     fn generate_recommendations(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+213 |     pub async fn compare_competitors(
+    |                  ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `CompetitorComparison` is never constructed
+   --> src/services/competitor_analyzer.rs:240:12
+    |
+240 | pub struct CompetitorComparison {
+    |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ContentOptimizer` is never constructed
+ --> src/services/content_optimizer.rs:6:12
+  |
+6 | pub struct ContentOptimizer;
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `OptimizationResult` is never constructed
+  --> src/services/content_optimizer.rs:10:12
+   |
+10 | pub struct OptimizationResult {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `Improvement` is never constructed
+  --> src/services/content_optimizer.rs:19:12
+   |
+19 | pub struct Improvement {
+   |            ^^^^^^^^^^^
+
+warning: enum `ImpactLevel` is never used
+  --> src/services/content_optimizer.rs:29:10
+   |
+29 | pub enum ImpactLevel {
+   |          ^^^^^^^^^^^
+
+warning: methods `optimize_content`, `score_content`, `generate_improvements`, `generate_suggestions`, and `optimize_readability` are never used
+   --> src/services/content_optimizer.rs:37:18
+    |
+ 35 | impl ContentOptimizer {
+    | --------------------- methods in this implementation
+ 36 |     /// Optimize content for target keyword
+ 37 |     pub async fn optimize_content(
+    |                  ^^^^^^^^^^^^^^^^
+...
+ 61 |     fn score_content(&self, content: &str, keyword: &str) -> f64 {
+    |        ^^^^^^^^^^^^^
+...
+ 92 |     async fn generate_improvements(
+    |              ^^^^^^^^^^^^^^^^^^^^^
+...
+145 |     fn generate_suggestions(&self, content: &str, keyword: &str) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+173 |     pub fn optimize_readability(&self, content: &str) -> ReadabilityOptimization {
+    |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ReadabilityOptimization` is never constructed
+   --> src/services/content_optimizer.rs:203:12
+    |
+203 | pub struct ReadabilityOptimization {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `PerformanceMonitor` is never constructed
+ --> src/services/performance_monitor.rs:6:12
+  |
+6 | pub struct PerformanceMonitor;
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `PerformanceMetrics` is never constructed
+  --> src/services/performance_monitor.rs:10:12
+   |
+10 | pub struct PerformanceMetrics {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `PageSpeedMetrics` is never constructed
+  --> src/services/performance_monitor.rs:20:12
+   |
+20 | pub struct PageSpeedMetrics {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: struct `CoreWebVitals` is never constructed
+  --> src/services/performance_monitor.rs:29:12
+   |
+29 | pub struct CoreWebVitals {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `SEOHealth` is never constructed
+  --> src/services/performance_monitor.rs:38:12
+   |
+38 | pub struct SEOHealth {
+   |            ^^^^^^^^^
+
+warning: methods `get_metrics`, `measure_page_speed`, `measure_core_web_vitals`, `check_seo_health`, `generate_recommendations`, and `track_trend` are never used
+   --> src/services/performance_monitor.rs:47:18
+    |
+ 45 | impl PerformanceMonitor {
+    | ----------------------- methods in this implementation
+ 46 |     /// Get comprehensive performance metrics
+ 47 |     pub async fn get_metrics(&self, url: &str) -> Result<PerformanceMetrics, String> {
+    |                  ^^^^^^^^^^^
+...
+ 67 |     async fn measure_page_speed(&self, _url: &str) -> Result<PageSpeedMetrics, String> {
+    |              ^^^^^^^^^^^^^^^^^^
+...
+ 87 |     async fn measure_core_web_vitals(&self, _url: &str) -> Result<CoreWebVitals, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^^^^
+...
+107 |     async fn check_seo_health(&self, _url: &str) -> Result<SEOHealth, String> {
+    |              ^^^^^^^^^^^^^^^^
+...
+126 |     fn generate_recommendations(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+169 |     pub fn track_trend(&self, historical_metrics: Vec<PerformanceMetrics>) -> PerformanceTrend {
+    |            ^^^^^^^^^^^
+
+warning: struct `PerformanceTrend` is never constructed
+   --> src/services/performance_monitor.rs:203:12
+    |
+203 | pub struct PerformanceTrend {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: enum `TrendDirection` is never used
+   --> src/services/performance_monitor.rs:211:10
+    |
+211 | pub enum TrendDirection {
+    |          ^^^^^^^^^^^^^^
+
+warning: struct `ContentCalendar` is never constructed
+ --> src/services/content_calendar.rs:8:12
+  |
+8 | pub struct ContentCalendar;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `ContentPlan` is never constructed
+  --> src/services/content_calendar.rs:12:12
+   |
+12 | pub struct ContentPlan {
+   |            ^^^^^^^^^^^
+
+warning: struct `ContentItem` is never constructed
+  --> src/services/content_calendar.rs:21:12
+   |
+21 | pub struct ContentItem {
+   |            ^^^^^^^^^^^
+
+warning: enum `ContentType` is never used
+  --> src/services/content_calendar.rs:33:10
+   |
+33 | pub enum ContentType {
+   |          ^^^^^^^^^^^
+
+warning: enum `PublishStatus` is never used
+  --> src/services/content_calendar.rs:44:10
+   |
+44 | pub enum PublishStatus {
+   |          ^^^^^^^^^^^^^
+
+warning: enum `Priority` is never used
+  --> src/services/content_calendar.rs:54:10
+   |
+54 | pub enum Priority {
+   |          ^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/content_calendar.rs:62:18
+    |
+ 60 | impl ContentCalendar {
+    | -------------------- methods in this implementation
+ 61 |     /// Generate content plan for period
+ 62 |     pub async fn generate_plan(
+    |                  ^^^^^^^^^^^^^
+...
+ 84 |     async fn create_schedule(
+    |              ^^^^^^^^^^^^^^^
+...
+121 |     fn select_content_type(&self, index: u32) -> ContentType {
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+133 |     fn calculate_coverage(&self, schedule: &[ContentItem], keywords: &[String]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^
+...
+150 |     fn calculate_diversity(&self, schedule: &[ContentItem]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+170 |     fn generate_recommendations(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+203 |     pub fn optimize_schedule(&self, mut items: Vec<ContentItem>) -> Vec<ContentItem> {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `RankTracker` is never constructed
+ --> src/services/rank_tracker.rs:6:12
+  |
+6 | pub struct RankTracker;
+  |            ^^^^^^^^^^^
+
+warning: struct `RankingReport` is never constructed
+  --> src/services/rank_tracker.rs:10:12
+   |
+10 | pub struct RankingReport {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `RankingSnapshot` is never constructed
+  --> src/services/rank_tracker.rs:20:12
+   |
+20 | pub struct RankingSnapshot {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `RankTrend` is never constructed
+  --> src/services/rank_tracker.rs:29:12
+   |
+29 | pub struct RankTrend {
+   |            ^^^^^^^^^
+
+warning: enum `TrendDirection` is never used
+  --> src/services/rank_tracker.rs:37:10
+   |
+37 | pub enum TrendDirection {
+   |          ^^^^^^^^^^^^^^
+
+warning: methods `track_keyword`, `get_rankings`, `calculate_trend`, `calculate_visibility`, and `track_bulk` are never used
+   --> src/services/rank_tracker.rs:45:18
+    |
+ 43 | impl RankTracker {
+    | ---------------- methods in this implementation
+ 44 |     /// Track keyword ranking
+ 45 |     pub async fn track_keyword(
+    |                  ^^^^^^^^^^^^^
+...
+ 66 |     async fn get_rankings(&self, keyword: &str, url: &str) -> Result<Vec<RankingSnapshot>, String> {
+    |              ^^^^^^^^^^^^
+...
+ 87 |     fn calculate_trend(&self, rankings: &[RankingSnapshot]) -> RankTrend {
+    |        ^^^^^^^^^^^^^^^
+...
+120 |     fn calculate_visibility(&self, rankings: &[RankingSnapshot]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+139 |     pub async fn track_bulk(&self, keywords: Vec<String>, url: &str) -> Result<BulkRankingReport, String> {
+    |                  ^^^^^^^^^^
+
+warning: struct `BulkRankingReport` is never constructed
+   --> src/services/rank_tracker.rs:164:12
+    |
+164 | pub struct BulkRankingReport {
+    |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `LocalSEOOptimizer` is never constructed
+ --> src/services/local_seo.rs:6:12
+  |
+6 | pub struct LocalSEOOptimizer;
+  |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `LocalSEOOptimization` is never constructed
+  --> src/services/local_seo.rs:10:12
+   |
+10 | pub struct LocalSEOOptimization {
+   |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Location` is never constructed
+  --> src/services/local_seo.rs:21:12
+   |
+21 | pub struct Location {
+   |            ^^^^^^^^
+
+warning: struct `GMBOptimization` is never constructed
+  --> src/services/local_seo.rs:33:12
+   |
+33 | pub struct GMBOptimization {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `Citation` is never constructed
+  --> src/services/local_seo.rs:43:12
+   |
+43 | pub struct Citation {
+   |            ^^^^^^^^
+
+warning: methods `optimize_local_seo`, `analyze_gmb_profile`, `find_citations`, `calculate_local_score`, `generate_local_recommendations`, and `generate_local_schema` are never used
+   --> src/services/local_seo.rs:51:18
+    |
+ 49 | impl LocalSEOOptimizer {
+    | ---------------------- methods in this implementation
+ 50 |     /// Optimize for local search
+ 51 |     pub async fn optimize_local_seo(
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+ 74 |     async fn analyze_gmb_profile(&self, _business_name: &str) -> Result<GMBOptimization, String> {
+    |              ^^^^^^^^^^^^^^^^^^^
+...
+ 86 |     async fn find_citations(&self, business_name: &str, location: &Location) -> Result<Vec<Citation>, String> {
+    |              ^^^^^^^^^^^^^^
+...
+103 |     fn calculate_local_score(&self, gmb: &GMBOptimization, citations: &[Citation]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+123 |     fn generate_local_recommendations(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+164 |     pub fn generate_local_schema(&self, business: &str, location: &Location) -> String {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `VoiceSearchOptimizer` is never constructed
+ --> src/services/voice_search.rs:6:12
+  |
+6 | pub struct VoiceSearchOptimizer;
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `VoiceOptimization` is never constructed
+  --> src/services/voice_search.rs:10:12
+   |
+10 | pub struct VoiceOptimization {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `QAPair` is never constructed
+  --> src/services/voice_search.rs:21:12
+   |
+21 | pub struct QAPair {
+   |            ^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/voice_search.rs:29:18
+    |
+ 27 | impl VoiceSearchOptimizer {
+    | ------------------------- methods in this implementation
+ 28 |     /// Optimize content for voice search
+ 29 |     pub async fn optimize_for_voice(
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+ 52 |     async fn extract_voice_qa_pairs(&self, content: &str) -> Result<Vec<QAPair>, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 79 |     fn generate_featured_snippets(&self, qa_pairs: &[QAPair]) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 87 |     async fn create_conversational_version(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+110 |     fn score_conversational_quality(&self, content: &str) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+142 |     fn generate_voice_recommendations(&self, score: f64, qa_pairs: &[QAPair]) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+170 |     pub fn analyze_voice_potential(&self, content: &str, keywords: Vec<String>) -> VoiceSearchPotential {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `VoiceSearchPotential` is never constructed
+   --> src/services/voice_search.rs:206:12
+    |
+206 | pub struct VoiceSearchPotential {
+    |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `InventoryAnalytics` is never constructed
+ --> src/services/inventory_analytics.rs:7:12
+  |
+7 | pub struct InventoryAnalytics;
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `InventoryReport` is never constructed
+  --> src/services/inventory_analytics.rs:11:12
+   |
+11 | pub struct InventoryReport {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `ProductPerformance` is never constructed
+  --> src/services/inventory_analytics.rs:23:12
+   |
+23 | pub struct ProductPerformance {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `StockAlert` is never constructed
+  --> src/services/inventory_analytics.rs:34:12
+   |
+34 | pub struct StockAlert {
+   |            ^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/inventory_analytics.rs:44:18
+    |
+ 42 | impl InventoryAnalytics {
+    | ----------------------- methods in this implementation
+ 43 |     /// Generate comprehensive inventory report
+ 44 |     pub async fn generate_report(&self, days: u32) -> Result<InventoryReport, String> {
+    |                  ^^^^^^^^^^^^^^^
+...
+ 67 |     async fn get_product_data(&self) -> Result<Vec<ProductData>, String> {
+    |              ^^^^^^^^^^^^^^^^
+...
+101 |     fn calculate_total_value(&self, products: &[ProductData]) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+108 |     fn calculate_turnover_rate(&self, products: &[ProductData], days: u32) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+...
+120 |     fn find_best_sellers(&self, products: &[ProductData], top_n: usize) -> Vec<ProductPerformance> {
+    |        ^^^^^^^^^^^^^^^^^
+...
+131 |     fn find_worst_sellers(&self, products: &[ProductData], bottom_n: usize) -> Vec<ProductPerformance> {
+    |        ^^^^^^^^^^^^^^^^^^
+...
+142 |     fn calculate_performance(&self, product: &ProductData) -> ProductPerformance {
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+162 |     fn find_low_stock_items(&self, products: &[ProductData]) -> Vec<StockAlert> {
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+184 |     fn generate_recommendations(&self, products: &[ProductData], turnover: f64) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ProductData` is never constructed
+   --> src/services/inventory_analytics.rs:213:8
+    |
+213 | struct ProductData {
+    |        ^^^^^^^^^^^
+
+warning: struct `ProductReviews` is never constructed
+ --> src/services/product_reviews.rs:7:12
+  |
+7 | pub struct ProductReviews;
+  |            ^^^^^^^^^^^^^^
+
+warning: struct `Review` is never constructed
+  --> src/services/product_reviews.rs:11:12
+   |
+11 | pub struct Review {
+   |            ^^^^^^
+
+warning: enum `ReviewStatus` is never used
+  --> src/services/product_reviews.rs:26:10
+   |
+26 | pub enum ReviewStatus {
+   |          ^^^^^^^^^^^^
+
+warning: struct `RatingSummary` is never constructed
+  --> src/services/product_reviews.rs:35:12
+   |
+35 | pub struct RatingSummary {
+   |            ^^^^^^^^^^^^^
+
+warning: methods `submit_review`, `get_rating_summary`, `get_mock_reviews`, `mark_helpful`, `moderate_review`, and `generate_review_schema` are never used
+   --> src/services/product_reviews.rs:44:18
+    |
+ 42 | impl ProductReviews {
+    | ------------------- methods in this implementation
+ 43 |     /// Submit new review
+ 44 |     pub async fn submit_review(
+    |                  ^^^^^^^^^^^^^
+...
+ 78 |     pub async fn get_rating_summary(&self, product_id: &str) -> Result<RatingSummary, String> {
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+107 |     fn get_mock_reviews(&self, product_id: &str) -> Vec<Review> {
+    |        ^^^^^^^^^^^^^^^^
+...
+137 |     pub async fn mark_helpful(&self, review_id: &str) -> Result<(), String> {
+    |                  ^^^^^^^^^^^^
+...
+144 |     pub async fn moderate_review(&self, review_id: &str, status: ReviewStatus) -> Result<(), String> {
+    |                  ^^^^^^^^^^^^^^^
+...
+151 |     pub fn generate_review_schema(&self, summary: &RatingSummary) -> String {
+    |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `CartAbandonment` is never constructed
+ --> src/services/cart_abandonment.rs:7:12
+  |
+7 | pub struct CartAbandonment;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `AbandonedCart` is never constructed
+  --> src/services/cart_abandonment.rs:11:12
+   |
+11 | pub struct AbandonedCart {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `CartItem` is never constructed
+  --> src/services/cart_abandonment.rs:24:12
+   |
+24 | pub struct CartItem {
+   |            ^^^^^^^^
+
+warning: struct `RecoveryCampaign` is never constructed
+  --> src/services/cart_abandonment.rs:33:12
+   |
+33 | pub struct RecoveryCampaign {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/cart_abandonment.rs:43:18
+    |
+ 41 | impl CartAbandonment {
+    | -------------------- methods in this implementation
+ 42 |     /// Track abandoned cart
+ 43 |     pub async fn track_abandonment(
+    |                  ^^^^^^^^^^^^^^^^^
+...
+ 71 |     pub async fn send_recovery_email(&self, cart: &AbandonedCart) -> Result<(), String> {
+    |                  ^^^^^^^^^^^^^^^^^^^
+...
+ 83 |     pub async fn get_campaign_stats(&self, days: u32) -> Result<RecoveryCampaign, String> {
+    |                  ^^^^^^^^^^^^^^^^^^
+...
+ 93 |     fn get_mock_stats(&self) -> RecoveryCampaign {
+    |        ^^^^^^^^^^^^^^
+...
+104 |     pub async fn find_high_value_carts(&self, min_value: f64) -> Result<Vec<AbandonedCart>, String> {
+    |                  ^^^^^^^^^^^^^^^^^^^^^
+...
+117 |     fn get_mock_carts(&self) -> Vec<AbandonedCart> {
+    |        ^^^^^^^^^^^^^^
+...
+140 |     pub fn calculate_recovery_potential(&self, cart: &AbandonedCart) -> f64 {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `WishlistManager` is never constructed
+ --> src/services/wishlist.rs:6:12
+  |
+6 | pub struct WishlistManager;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `Wishlist` is never constructed
+  --> src/services/wishlist.rs:10:12
+   |
+10 | pub struct Wishlist {
+   |            ^^^^^^^^
+
+warning: struct `WishlistItem` is never constructed
+  --> src/services/wishlist.rs:21:12
+   |
+21 | pub struct WishlistItem {
+   |            ^^^^^^^^^^^^
+
+warning: methods `create_wishlist`, `add_item`, `enable_price_alert`, and `share_wishlist` are never used
+  --> src/services/wishlist.rs:31:18
+   |
+29 | impl WishlistManager {
+   | -------------------- methods in this implementation
+30 |     /// Create wishlist
+31 |     pub async fn create_wishlist(&self, user_id: String, name: String) -> Result<Wishlist, String> {
+   |                  ^^^^^^^^^^^^^^^
+...
+45 |     pub async fn add_item(
+   |                  ^^^^^^^^
+...
+58 |     pub async fn enable_price_alert(&self, wishlist_id: &str, product_id: &str) -> Result<(), String> {
+   |                  ^^^^^^^^^^^^^^^^^^
+...
+65 |     pub async fn share_wishlist(&self, wishlist_id: &str) -> Result<String, String> {
+   |                  ^^^^^^^^^^^^^^
+
+warning: struct `ProductBundles` is never constructed
+ --> src/services/product_bundles.rs:6:12
+  |
+6 | pub struct ProductBundles;
+  |            ^^^^^^^^^^^^^^
+
+warning: struct `Bundle` is never constructed
+  --> src/services/product_bundles.rs:10:12
+   |
+10 | pub struct Bundle {
+   |            ^^^^^^
+
+warning: struct `BundleProduct` is never constructed
+  --> src/services/product_bundles.rs:23:12
+   |
+23 | pub struct BundleProduct {
+   |            ^^^^^^^^^^^^^
+
+warning: methods `create_bundle` and `get_bundle_analytics` are never used
+  --> src/services/product_bundles.rs:32:18
+   |
+30 | impl ProductBundles {
+   | ------------------- methods in this implementation
+31 |     /// Create bundle
+32 |     pub async fn create_bundle(
+   |                  ^^^^^^^^^^^^^
+...
+68 |     pub async fn get_bundle_analytics(&self, bundle_id: &str) -> Result<BundleAnalytics, String> {
+   |                  ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `BundleAnalytics` is never constructed
+  --> src/services/product_bundles.rs:84:12
+   |
+84 | pub struct BundleAnalytics {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `ConversionAnalytics` is never constructed
+ --> src/services/conversion_analytics.rs:6:12
+  |
+6 | pub struct ConversionAnalytics;
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ConversionFunnel` is never constructed
+  --> src/services/conversion_analytics.rs:10:12
+   |
+10 | pub struct ConversionFunnel {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: struct `DropOffRates` is never constructed
+  --> src/services/conversion_analytics.rs:22:12
+   |
+22 | pub struct DropOffRates {
+   |            ^^^^^^^^^^^^
+
+warning: methods `get_funnel` and `calculate_attribution` are never used
+  --> src/services/conversion_analytics.rs:30:18
+   |
+28 | impl ConversionAnalytics {
+   | ------------------------ methods in this implementation
+29 |     /// Get conversion funnel data
+30 |     pub async fn get_funnel(&self, days: u32) -> Result<ConversionFunnel, String> {
+   |                  ^^^^^^^^^^
+...
+59 |     pub async fn calculate_attribution(&self) -> Result<RevenueAttribution, String> {
+   |                  ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `RevenueAttribution` is never constructed
+  --> src/services/conversion_analytics.rs:74:12
+   |
+74 | pub struct RevenueAttribution {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `ProductImportExport` is never constructed
+ --> src/services/product_import_export.rs:6:12
+  |
+6 | pub struct ProductImportExport;
+  |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ImportResult` is never constructed
+  --> src/services/product_import_export.rs:10:12
+   |
+10 | pub struct ImportResult {
+   |            ^^^^^^^^^^^^
+
+warning: methods `import_csv`, `parse_product_row`, and `export_csv` are never used
+  --> src/services/product_import_export.rs:19:18
+   |
+17 | impl ProductImportExport {
+   | ------------------------ methods in this implementation
+18 |     /// Import products from CSV
+19 |     pub async fn import_csv(&self, csv_data: &str) -> Result<ImportResult, String> {
+   |                  ^^^^^^^^^^
+...
+56 |     fn parse_product_row(&self, row: &str) -> Result<ProductRow, String> {
+   |        ^^^^^^^^^^^^^^^^^
+...
+71 |     pub async fn export_csv(&self) -> Result<String, String> {
+   |                  ^^^^^^^^^^
+
+warning: struct `ProductRow` is never constructed
+  --> src/services/product_import_export.rs:85:8
+   |
+85 | struct ProductRow {
+   |        ^^^^^^^^^^
+
+warning: struct `OrderManagement` is never constructed
+ --> src/services/order_management.rs:6:12
+  |
+6 | pub struct OrderManagement;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `Order` is never constructed
+  --> src/services/order_management.rs:10:12
+   |
+10 | pub struct Order {
+   |            ^^^^^
+
+warning: struct `OrderItem` is never constructed
+  --> src/services/order_management.rs:23:12
+   |
+23 | pub struct OrderItem {
+   |            ^^^^^^^^^
+
+warning: enum `OrderStatus` is never used
+  --> src/services/order_management.rs:32:10
+   |
+32 | pub enum OrderStatus {
+   |          ^^^^^^^^^^^
+
+warning: methods `create_order`, `update_status`, and `get_analytics` are never used
+  --> src/services/order_management.rs:43:18
+   |
+41 | impl OrderManagement {
+   | -------------------- methods in this implementation
+42 |     /// Create order
+43 |     pub async fn create_order(
+   |                  ^^^^^^^^^^^^
+...
+72 |     pub async fn update_status(&self, order_id: &str, status: OrderStatus) -> Result<(), String> {
+   |                  ^^^^^^^^^^^^^
+...
+79 |     pub async fn get_analytics(&self, days: u32) -> Result<OrderAnalytics, String> {
+   |                  ^^^^^^^^^^^^^
+
+warning: struct `OrderAnalytics` is never constructed
+  --> src/services/order_management.rs:94:12
+   |
+94 | pub struct OrderAnalytics {
+   |            ^^^^^^^^^^^^^^
+
+warning: struct `PaymentProcessor` is never constructed
+ --> src/services/payment_processor.rs:6:12
+  |
+6 | pub struct PaymentProcessor;
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `Payment` is never constructed
+  --> src/services/payment_processor.rs:10:12
+   |
+10 | pub struct Payment {
+   |            ^^^^^^^
+
+warning: enum `PaymentMethod` is never used
+  --> src/services/payment_processor.rs:20:10
+   |
+20 | pub enum PaymentMethod {
+   |          ^^^^^^^^^^^^^
+
+warning: enum `PaymentStatus` is never used
+  --> src/services/payment_processor.rs:30:10
+   |
+30 | pub enum PaymentStatus {
+   |          ^^^^^^^^^^^^^
+
+warning: methods `process_payment` and `refund` are never used
+  --> src/services/payment_processor.rs:40:18
+   |
+38 | impl PaymentProcessor {
+   | --------------------- methods in this implementation
+39 |     /// Process payment
+40 |     pub async fn process_payment(
+   |                  ^^^^^^^^^^^^^^^
+...
+63 |     pub async fn refund(&self, payment_id: &str, amount: f64) -> Result<(), String> {
+   |                  ^^^^^^
+
+warning: struct `ShippingManager` is never constructed
+ --> src/services/shipping_manager.rs:6:12
+  |
+6 | pub struct ShippingManager;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `Shipment` is never constructed
+  --> src/services/shipping_manager.rs:10:12
+   |
+10 | pub struct Shipment {
+   |            ^^^^^^^^
+
+warning: enum `ShipmentStatus` is never used
+  --> src/services/shipping_manager.rs:21:10
+   |
+21 | pub enum ShipmentStatus {
+   |          ^^^^^^^^^^^^^^
+
+warning: methods `create_shipment` and `track` are never used
+  --> src/services/shipping_manager.rs:30:18
+   |
+28 | impl ShippingManager {
+   | -------------------- methods in this implementation
+29 |     /// Create shipment
+30 |     pub async fn create_shipment(
+   |                  ^^^^^^^^^^^^^^^
+...
+48 |     pub async fn track(&self, tracking_number: &str) -> Result<ShipmentStatus, String> {
+   |                  ^^^^^
+
+warning: struct `CustomerSupport` is never constructed
+ --> src/services/customer_support.rs:6:12
+  |
+6 | pub struct CustomerSupport;
+  |            ^^^^^^^^^^^^^^^
+
+warning: struct `SupportTicket` is never constructed
+  --> src/services/customer_support.rs:10:12
+   |
+10 | pub struct SupportTicket {
+   |            ^^^^^^^^^^^^^
+
+warning: enum `TicketStatus` is never used
+  --> src/services/customer_support.rs:21:10
+   |
+21 | pub enum TicketStatus {
+   |          ^^^^^^^^^^^^
+
+warning: enum `TicketPriority` is never used
+  --> src/services/customer_support.rs:30:10
+   |
+30 | pub enum TicketPriority {
+   |          ^^^^^^^^^^^^^^
+
+warning: methods `create_ticket` and `update_status` are never used
+  --> src/services/customer_support.rs:39:18
+   |
+37 | impl CustomerSupport {
+   | -------------------- methods in this implementation
+38 |     /// Create ticket
+39 |     pub async fn create_ticket(
+   |                  ^^^^^^^^^^^^^
+...
+58 |     pub async fn update_status(&self, ticket_id: &str, status: TicketStatus) -> Result<(), String> {
+   |                  ^^^^^^^^^^^^^
+
+warning: struct `PerformanceBenchmark` is never constructed
+ --> src/services/performance_benchmark.rs:7:12
+  |
+7 | pub struct PerformanceBenchmark;
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `BenchmarkResult` is never constructed
+  --> src/services/performance_benchmark.rs:11:12
+   |
+11 | pub struct BenchmarkResult {
+   |            ^^^^^^^^^^^^^^^
+
+warning: struct `BenchmarkSuite` is never constructed
+  --> src/services/performance_benchmark.rs:21:12
+   |
+21 | pub struct BenchmarkSuite {
+   |            ^^^^^^^^^^^^^^
+
+warning: methods `run_full_suite`, `benchmark_page_load`, `benchmark_api_response`, `benchmark_database`, and `benchmark_memory` are never used
+   --> src/services/performance_benchmark.rs:30:18
+    |
+ 28 | impl PerformanceBenchmark {
+    | ------------------------- methods in this implementation
+ 29 |     /// Run comprehensive benchmark
+ 30 |     pub async fn run_full_suite(&self) -> Result<BenchmarkSuite, String> {
+    |                  ^^^^^^^^^^^^^^
+...
+ 61 |     async fn benchmark_page_load(&self) -> Result<BenchmarkResult, String> {
+    |              ^^^^^^^^^^^^^^^^^^^
+...
+ 80 |     async fn benchmark_api_response(&self) -> Result<BenchmarkResult, String> {
+    |              ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 98 |     async fn benchmark_database(&self) -> Result<BenchmarkResult, String> {
+    |              ^^^^^^^^^^^^^^^^^^
+...
+113 |     async fn benchmark_memory(&self) -> Result<BenchmarkResult, String> {
+    |              ^^^^^^^^^^^^^^^^
+
+warning: struct `LoadTester` is never constructed
+ --> src/services/load_tester.rs:6:12
+  |
+6 | pub struct LoadTester;
+  |            ^^^^^^^^^^
+
+warning: struct `LoadTestResult` is never constructed
+  --> src/services/load_tester.rs:10:12
+   |
+10 | pub struct LoadTestResult {
+   |            ^^^^^^^^^^^^^^
+
+warning: method `run_load_test` is never used
+  --> src/services/load_tester.rs:22:18
+   |
+20 | impl LoadTester {
+   | --------------- method in this implementation
+21 |     /// Run load test
+22 |     pub async fn run_load_test(&self, concurrent_users: usize, duration_seconds: u64) -> Result<LoadTestResult, String> {
+   |                  ^^^^^^^^^^^^^
+
+warning: struct `SystemProfiler` is never constructed
+ --> src/services/system_profiler.rs:5:12
+  |
+5 | pub struct SystemProfiler;
+  |            ^^^^^^^^^^^^^^
+
+warning: struct `ProfileResult` is never constructed
+ --> src/services/system_profiler.rs:9:12
+  |
+9 | pub struct ProfileResult {
+  |            ^^^^^^^^^^^^^
+
+warning: method `profile` is never used
+  --> src/services/system_profiler.rs:17:18
+   |
+15 | impl SystemProfiler {
+   | ------------------- method in this implementation
+16 |     /// Profile system
+17 |     pub async fn profile(&self) -> Result<ProfileResult, String> {
+   |                  ^^^^^^^
+
+warning: struct `MetricsCollector` is never constructed
+ --> src/services/metrics_collector.rs:5:12
+  |
+5 | pub struct MetricsCollector;
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `Metric` is never constructed
+ --> src/services/metrics_collector.rs:9:12
+  |
+9 | pub struct Metric {
+  |            ^^^^^^
+
+warning: method `collect` is never used
+  --> src/services/metrics_collector.rs:17:12
+   |
+15 | impl MetricsCollector {
+   | --------------------- method in this implementation
+16 |     /// Collect metrics
+17 |     pub fn collect(&self) -> Vec<Metric> {
+   |            ^^^^^^^
+
+warning: struct `PerformanceOptimizer` is never constructed
+ --> src/services/performance_optimizer.rs:3:12
+  |
+3 | pub struct PerformanceOptimizer;
+  |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: method `optimize_queries` is never used
+ --> src/services/performance_optimizer.rs:7:12
+  |
+5 | impl PerformanceOptimizer {
+  | ------------------------- method in this implementation
+6 |     /// Optimize queries
+7 |     pub fn optimize_queries(&self) -> Vec<String> {
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `CacheManager` is never constructed
+ --> src/services/cache_manager.rs:6:12
+  |
+6 | pub struct CacheManager {
+  |            ^^^^^^^^^^^^
+
+warning: struct `CachedItem` is never constructed
+  --> src/services/cache_manager.rs:12:8
+   |
+12 | struct CachedItem {
+   |        ^^^^^^^^^^
+
+warning: associated items `new`, `get`, `set`, and `clear` are never used
+  --> src/services/cache_manager.rs:19:12
+   |
+17 | impl CacheManager {
+   | ----------------- associated items in this implementation
+18 |     /// Create new cache manager
+19 |     pub fn new() -> Self {
+   |            ^^^
+...
+26 |     pub fn get(&self, key: &str) -> Option<String> {
+   |            ^^^
+...
+31 |     pub fn set(&mut self, key: String, value: String, ttl_seconds: i64) {
+   |            ^^^
+...
+37 |     pub fn clear(&mut self) {
+   |            ^^^^^
+
+warning: struct `MonitoringSetup` is never constructed
+ --> src/services/monitoring_setup.rs:3:12
+  |
+3 | pub struct MonitoringSetup;
+  |            ^^^^^^^^^^^^^^^
+
+warning: methods `configure` and `health_check` are never used
+  --> src/services/monitoring_setup.rs:7:12
+   |
+ 5 | impl MonitoringSetup {
+   | -------------------- methods in this implementation
+ 6 |     /// Configure monitoring
+ 7 |     pub fn configure(&self) -> Vec<String> {
+   |            ^^^^^^^^^
+...
+16 |     pub fn health_check(&self) -> bool {
+   |            ^^^^^^^^^^^^
+
+warning: struct `DocumentationGenerator` is never constructed
+ --> src/services/documentation_generator.rs:3:12
+  |
+3 | pub struct DocumentationGenerator;
+  |            ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `generate_performance_docs` and `generate_api_docs` are never used
+  --> src/services/documentation_generator.rs:7:12
+   |
+ 5 | impl DocumentationGenerator {
+   | --------------------------- methods in this implementation
+ 6 |     /// Generate performance docs
+ 7 |     pub fn generate_performance_docs(&self) -> String {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+28 |     pub fn generate_api_docs(&self) -> String {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `PerformanceMetrics` is never constructed
+ --> src/services/monitoring_service.rs:9:12
+  |
+9 | pub struct PerformanceMetrics {
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src/services/monitoring_service.rs:52:12
+    |
+ 50 | impl PerformanceMetrics {
+    | ----------------------- methods in this implementation
+ 51 |     /// Record a successful media upload
+ 52 |     pub fn record_upload(&self, bytes: u64, duration_ms: u64) {
+    |            ^^^^^^^^^^^^^
+...
+ 64 |     pub fn record_upload_failure(&self) {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |     pub fn record_revision(&self) {
+    |            ^^^^^^^^^^^^^^^
+...
+ 74 |     pub fn record_rollback(&self, success: bool) {
+    |            ^^^^^^^^^^^^^^^
+...
+ 83 |     pub fn record_scheduler_run(&self, published: u64, archived: u64, errors: u64) {
+    |            ^^^^^^^^^^^^^^^^^^^^
+...
+ 91 |     pub fn to_json(&self) -> serde_json::Value {
+    |            ^^^^^^^
+...
+132 |     fn calculate_success_rate(&self, total: u64, failed: u64) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+140 |     fn calculate_error_rate(&self, total: u64, errors: u64) -> f64 {
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: static `METRICS` is never used
+   --> src/services/monitoring_service.rs:149:12
+    |
+149 | pub static METRICS: once_cell::sync::Lazy<Arc<PerformanceMetrics>> = 
+    |            ^^^^^^^
+
+warning: function `log_metrics` is never used
+   --> src/services/monitoring_service.rs:153:8
+    |
+153 | pub fn log_metrics() {
+    |        ^^^^^^^^^^^
+
+warning: struct `ValidationRule` is never constructed
+ --> src/services/field_validation_service.rs:8:12
+  |
+8 | pub struct ValidationRule {
+  |            ^^^^^^^^^^^^^^
+
+warning: struct `ValidationError` is never constructed
+  --> src/services/field_validation_service.rs:19:12
+   |
+19 | pub struct ValidationError {
+   |            ^^^^^^^^^^^^^^^
+
+warning: function `validate_field` is never used
+  --> src/services/field_validation_service.rs:33:8
+   |
+33 | pub fn validate_field(
+   |        ^^^^^^^^^^^^^^
+
+warning: function `validate_text` is never used
+  --> src/services/field_validation_service.rs:88:4
+   |
+88 | fn validate_text(field_name: &str, content: &str, rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+   |    ^^^^^^^^^^^^^
+
+warning: function `validate_html` is never used
+   --> src/services/field_validation_service.rs:126:4
+    |
+126 | fn validate_html(field_name: &str, content: &str, rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `validate_json` is never used
+   --> src/services/field_validation_service.rs:143:4
+    |
+143 | fn validate_json(field_name: &str, content: &str, _rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `validate_number` is never used
+   --> src/services/field_validation_service.rs:152:4
+    |
+152 | fn validate_number(field_name: &str, content: &str, rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `validate_boolean` is never used
+   --> src/services/field_validation_service.rs:181:4
+    |
+181 | fn validate_boolean(field_name: &str, content: &str) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `validate_date` is never used
+   --> src/services/field_validation_service.rs:191:4
+    |
+191 | fn validate_date(field_name: &str, content: &str) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `validate_datetime` is never used
+   --> src/services/field_validation_service.rs:199:4
+    |
+199 | fn validate_datetime(field_name: &str, content: &str) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `validate_uuid` is never used
+   --> src/services/field_validation_service.rs:209:4
+    |
+209 | fn validate_uuid(field_name: &str, content: &str) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^
+
+warning: function `validate_select` is never used
+   --> src/services/field_validation_service.rs:217:4
+    |
+217 | fn validate_select(field_name: &str, content: &str, rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^^^
+
+warning: function `validate_multi_select` is never used
+   --> src/services/field_validation_service.rs:231:4
+    |
+231 | fn validate_multi_select(field_name: &str, content: &str, rules: Option<&ValidationRule>) -> Result<(), ValidationError> {
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Permission` is never constructed
+ --> src/services/permission_service.rs:8:12
+  |
+8 | pub struct Permission {
+  |            ^^^^^^^^^^
+
+warning: associated items `from_str` and `matches` are never used
+  --> src/services/permission_service.rs:16:12
+   |
+14 | impl Permission {
+   | --------------- associated items in this implementation
+15 |     /// Parse permission string like "pages.update" or "pages.update_own"
+16 |     pub fn from_str(perm: &str) -> Self {
+   |            ^^^^^^^^
+...
+44 |     pub fn matches(&self, required: &Permission) -> bool {
+   |            ^^^^^^^
+
+warning: function `user_has_permission` is never used
+  --> src/services/permission_service.rs:72:8
+   |
+72 | pub fn user_has_permission(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `user_owns_resource` is never used
+   --> src/services/permission_service.rs:117:8
+    |
+117 | pub fn user_owns_resource(
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: struct `SearchQuery` is never constructed
+ --> src/services/search_service.rs:7:12
+  |
+7 | pub struct SearchQuery {
+  |            ^^^^^^^^^^^
+
+warning: struct `PageSearchResult` is never constructed
+  --> src/services/search_service.rs:15:12
+   |
+15 | pub struct PageSearchResult {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: struct `ModuleSearchResult` is never constructed
+  --> src/services/search_service.rs:23:12
+   |
+23 | pub struct ModuleSearchResult {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `MediaSearchResult` is never constructed
+  --> src/services/search_service.rs:30:12
+   |
+30 | pub struct MediaSearchResult {
+   |            ^^^^^^^^^^^^^^^^^
+
+warning: struct `SearchResult` is never constructed
+  --> src/services/search_service.rs:38:12
+   |
+38 | pub struct SearchResult {
+   |            ^^^^^^^^^^^^
+
+warning: struct `SearchResponse` is never constructed
+  --> src/services/search_service.rs:46:12
+   |
+46 | pub struct SearchResponse {
+   |            ^^^^^^^^^^^^^^
+
+warning: function `search` is never used
+  --> src/services/search_service.rs:54:8
+   |
+54 | pub fn search(
+   |        ^^^^^^
+
+warning: struct `CacheServiceV2` is never constructed
+ --> src/services/cache_service_v2.rs:7:12
+  |
+7 | pub struct CacheServiceV2 {
+  |            ^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src/services/cache_service_v2.rs:14:18
+    |
+ 12 | impl CacheServiceV2 {
+    | ------------------- associated items in this implementation
+ 13 |     /// Create new cache service from Redis URL
+ 14 |     pub async fn new(redis_url: &str, default_ttl: usize) -> Result<Self, Box<dyn Error>> {
+    |                  ^^^
+...
+ 31 |     pub async fn get<T: DeserializeOwned>(&self, key: &str) -> Option<T> {
+    |                  ^^^
+...
+ 38 |     pub async fn set<T: Serialize>(
+    |                  ^^^
+...
+ 53 |     pub async fn delete(&self, key: &str) -> Result<(), Box<dyn Error>> {
+    |                  ^^^^^^
+...
+ 60 |     pub async fn delete_pattern(&self, pattern: &str) -> Result<usize, Box<dyn Error>> {
+    |                  ^^^^^^^^^^^^^^
+...
+ 76 |     pub async fn incr(&self, key: &str) -> Result<i64, Box<dyn Error>> {
+    |                  ^^^^
+...
+ 83 |     pub async fn expire(&self, key: &str, seconds: usize) -> Result<(), Box<dyn Error>> {
+    |                  ^^^^^^
+...
+ 90 |     pub async fn exists(&self, key: &str) -> bool {
+    |                  ^^^^^^
+...
+100 |     pub async fn ttl(&self, key: &str) -> Option<i64> {
+    |                  ^^^
+
+warning: type alias `HmacSha256` is never used
+ --> src/services/webhook_service.rs:8:6
+  |
+8 | type HmacSha256 = Hmac<Sha256>;
+  |      ^^^^^^^^^^
+
+warning: struct `WebhookEvent` is never constructed
+  --> src/services/webhook_service.rs:11:12
+   |
+11 | pub struct WebhookEvent {
+   |            ^^^^^^^^^^^^
+
+warning: struct `WebhookService` is never constructed
+  --> src/services/webhook_service.rs:20:12
+   |
+20 | pub struct WebhookService {
+   |            ^^^^^^^^^^^^^^
+
+warning: associated items `new`, `generate_signature`, `deliver_webhook`, and `trigger` are never used
+   --> src/services/webhook_service.rs:25:12
+    |
+ 24 | impl WebhookService {
+    | ------------------- associated items in this implementation
+ 25 |     pub fn new() -> Self {
+    |            ^^^
+...
+ 35 |     pub fn generate_signature(payload: &str, secret: &str) -> String {
+    |            ^^^^^^^^^^^^^^^^^^
+...
+ 44 |     pub async fn deliver_webhook(
+    |                  ^^^^^^^^^^^^^^^
+...
+112 |     pub async fn trigger(&self, event: WebhookEvent) {
+    |                  ^^^^^^^
+
+warning: struct `WebhookDeliveryResult` is never constructed
+   --> src/services/webhook_service.rs:121:12
+    |
+121 | pub struct WebhookDeliveryResult {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `generate_srcset` is never used
+  --> src/services/image_service.rs:10:8
+   |
+10 | pub fn generate_srcset(base_url: &str) -> String {
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `get_webp_url` is never used
+  --> src/services/image_service.rs:33:8
+   |
+33 | pub fn get_webp_url(original_url: &str) -> String {
+   |        ^^^^^^^^^^^^
+
+warning: function `should_lazy_load` is never used
+  --> src/services/image_service.rs:47:8
+   |
+47 | pub fn should_lazy_load(index: usize) -> bool {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `generate_picture_html` is never used
+  --> src/services/image_service.rs:54:8
+   |
+54 | pub fn generate_picture_html(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `resize_image` is never used
+  --> src/services/image_service.rs:76:8
+   |
+76 | pub fn resize_image(img: &DynamicImage, target_width: u32) -> DynamicImage {
+   |        ^^^^^^^^^^^^
+
+warning: function `convert_to_webp` is never used
+  --> src/services/image_service.rs:92:8
+   |
+92 | pub fn convert_to_webp(img: &DynamicImage, quality: u8) -> Result<Vec<u8>, String> {
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `optimize_image` is never used
+   --> src/services/image_service.rs:104:8
+    |
+104 | pub fn optimize_image(
+    |        ^^^^^^^^^^^^^^
+
+warning: function `generate_responsive_variants` is never used
+   --> src/services/image_service.rs:137:8
+    |
+137 | pub fn generate_responsive_variants(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `name`, `version`, and `on_save_content` are never used
+  --> src/services/plugin_service/mod.rs:12:8
+   |
+10 | pub trait Plugin: Send + Sync + Any {
+   |           ------ methods in this trait
+11 |     /// Unique identifier for the plugin
+12 |     fn name(&self) -> &str;
+   |        ^^^^
+...
+15 |     fn version(&self) -> &str;
+   |        ^^^^^^^
+...
+28 |     async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+   |              ^^^^^^^^^^^^^^^
+
+warning: methods `register` and `get_hooks` are never used
+  --> src/services/plugin_service/mod.rs:46:12
+   |
+38 | impl PluginRegistry {
+   | ------------------- methods in this implementation
+...
+46 |     pub fn register(&self, plugin: Arc<dyn Plugin>) {
+   |            ^^^^^^^^
+...
+76 |     pub fn get_hooks(&self) -> Vec<String> {
+   |            ^^^^^^^^^
+
+warning: enum `TemplateEngine` is never used
+ --> src/services/template_service.rs:7:10
+  |
+7 | pub enum TemplateEngine {
+  |          ^^^^^^^^^^^^^^
+
+warning: fields `liquid_templates` and `liquid_parser` are never read
+  --> src/services/template_service.rs:14:5
+   |
+12 | pub struct TemplateService {
+   |            --------------- fields in this struct
+13 |     handlebars: Arc<Mutex<Handlebars<'static>>>,
+14 |     liquid_templates: Arc<Mutex<HashMap<String, liquid::Template>>>,
+   |     ^^^^^^^^^^^^^^^^
+15 |     liquid_parser: Parser,
+   |     ^^^^^^^^^^^^^
+
+warning: methods `register_helpers`, `render`, and `register_liquid_template` are never used
+  --> src/services/template_service.rs:34:12
+   |
+18 | impl TemplateService {
+   | -------------------- methods in this implementation
+...
+34 |     pub fn register_helpers(&self) {
+   |            ^^^^^^^^^^^^^^^^
+...
+54 |     pub fn render(&self, template_name: &str, data: &serde_json::Value) -> Result<String, String> {
+   |            ^^^^^^
+...
+74 |     pub fn register_liquid_template(&self, name: &str, content: &str) -> Result<(), String> {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `confirm_payment_intent`, `cancel_payment_intent`, and `verify_webhook_signature` are never used
+  --> src/services/payment_service/mod.rs:54:14
+   |
+40 | pub trait PaymentHandler: Send + Sync {
+   |           -------------- methods in this trait
+...
+54 |     async fn confirm_payment_intent(&self, intent_id: &str) -> Result<PaymentIntent, String>;
+   |              ^^^^^^^^^^^^^^^^^^^^^^
+...
+57 |     async fn cancel_payment_intent(&self, intent_id: &str) -> Result<PaymentIntent, String>;
+   |              ^^^^^^^^^^^^^^^^^^^^^
+...
+60 |     fn verify_webhook_signature(&self, payload: &[u8], signature: &str) -> Result<bool, String>;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `reference_id` is never read
+  --> src/services/payment_service/square.rs:39:5
+   |
+34 | struct SquarePayment {
+   |        ------------- field in this struct
+...
+39 |     reference_id: Option<String>,
+   |     ^^^^^^^^^^^^
+
+warning: function `start_scheduler` is never used
+  --> src/services/scheduler_service.rs:12:14
+   |
+12 | pub async fn start_scheduler() -> Result<JobScheduler, Box<dyn std::error::Error>> {
+   |              ^^^^^^^^^^^^^^^
+
+warning: function `process_scheduled_pages` is never used
+  --> src/services/scheduler_service.rs:32:10
+   |
+32 | async fn process_scheduled_pages() -> Result<(), diesel::result::Error> {
+   |          ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `metadata_type` is never read
+  --> src/services/metadata_automation_service.rs:15:9
+   |
+13 | pub struct GenerateMetadataRequest {
+   |            ----------------------- field in this struct
+14 |     pub content: String,
+15 |     pub metadata_type: String, // 'keywords', 'tags', 'categories', 'alt_text'
+   |         ^^^^^^^^^^^^^
+   |
+   = note: `GenerateMetadataRequest` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: function `decrypt` is never used
+  --> src/services/encryption_service.rs:69:8
+   |
+69 | pub fn decrypt(ciphertext_base64: &str) -> Result<String, String> {
+   |        ^^^^^^^
+
+warning: struct `LanguageService` is never constructed
+ --> src/services/language_service.rs:5:12
+  |
+5 | pub struct LanguageService;
+  |            ^^^^^^^^^^^^^^^
+
+warning: associated functions `get_enabled_languages`, `get_default_language`, `create_language`, `get_language_by_code`, `get_page_translation`, and `save_page_translation` are never used
+  --> src/services/language_service.rs:9:12
+   |
+ 7 | impl LanguageService {
+   | -------------------- associated functions in this implementation
+ 8 |     /// Get all enabled languages
+ 9 |     pub fn get_enabled_languages(conn: &mut diesel::pg::PgConnection) -> Result<Vec<Language>, diesel::result::Error> {
+   |            ^^^^^^^^^^^^^^^^^^^^^
+...
+19 |     pub fn get_default_language(conn: &mut diesel::pg::PgConnection) -> Result<Language, diesel::result::Error> {
+   |            ^^^^^^^^^^^^^^^^^^^^
+...
+28 |     pub fn create_language(
+   |            ^^^^^^^^^^^^^^^
+...
+40 |     pub fn get_language_by_code(
+   |            ^^^^^^^^^^^^^^^^^^^^
+...
+53 |     pub fn get_page_translation(
+   |            ^^^^^^^^^^^^^^^^^^^^
+...
+68 |     pub fn save_page_translation(
+   |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `AnalyticsService` is never constructed
+ --> src/services/analytics_service_v2.rs:6:12
+  |
+6 | pub struct AnalyticsService;
+  |            ^^^^^^^^^^^^^^^^
+
+warning: struct `AnalyticsEvent` is never constructed
+ --> src/services/analytics_service_v2.rs:9:12
+  |
+9 | pub struct AnalyticsEvent {
+  |            ^^^^^^^^^^^^^^
+
+warning: associated functions `track_page_view`, `track_conversion`, and `get_page_analytics` are never used
+  --> src/services/analytics_service_v2.rs:22:12
+   |
+20 | impl AnalyticsService {
+   | --------------------- associated functions in this implementation
+21 |     /// Track a page view event
+22 |     pub fn track_page_view(
+   |            ^^^^^^^^^^^^^^^
+...
+34 |     pub fn track_conversion(
+   |            ^^^^^^^^^^^^^^^^
+...
+43 |     pub fn get_page_analytics(
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: struct `AnalyticsStats` is never constructed
+  --> src/services/analytics_service_v2.rs:59:12
+   |
+59 | pub struct AnalyticsStats {
+   |            ^^^^^^^^^^^^^^
+
+warning: struct `OAuthService` is never constructed
+ --> src/services/oauth_service.rs:4:12
+  |
+4 | pub struct OAuthService;
+  |            ^^^^^^^^^^^^
+
+warning: struct `OAuthProvider` is never constructed
+ --> src/services/oauth_service.rs:7:12
+  |
+7 | pub struct OAuthProvider {
+  |            ^^^^^^^^^^^^^
+
+warning: struct `OAuthToken` is never constructed
+  --> src/services/oauth_service.rs:15:12
+   |
+15 | pub struct OAuthToken {
+   |            ^^^^^^^^^^
+
+warning: associated items `get_authorization_url`, `exchange_code_for_token`, `fetch_google_profile`, `fetch_github_profile`, and `store_connection` are never used
+   --> src/services/oauth_service.rs:25:12
+    |
+ 23 | impl OAuthService {
+    | ----------------- associated items in this implementation
+ 24 |     /// Get OAuth authorization URL
+ 25 |     pub fn get_authorization_url(provider: &str, redirect_uri: &str, state: &str) -> Result<String, String> {
+    |            ^^^^^^^^^^^^^^^^^^^^^
+...
+ 54 |     pub async fn exchange_code_for_token(
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^
+...
+109 |     pub async fn fetch_google_profile(&self, access_token: &str) -> Result<crate::controllers::oauth_callback_controller::UserProfi...
+    |                  ^^^^^^^^^^^^^^^^^^^^
+...
+132 |     pub async fn fetch_github_profile(&self, access_token: &str) -> Result<crate::controllers::oauth_callback_controller::UserProfi...
+    |                  ^^^^^^^^^^^^^^^^^^^^
+...
+159 |     pub fn store_connection(
+    |            ^^^^^^^^^^^^^^^^
+
+warning: function `generate_hreflang_tags` is never used
+ --> src/services/hreflang_service.rs:4:8
+  |
+4 | pub fn generate_hreflang_tags(
+  |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_hreflang_for_template` is never used
+  --> src/services/hreflang_service.rs:27:8
+   |
+27 | pub fn get_hreflang_for_template(
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `calculate_rfm_score` is never used
+  --> src/services/crm_service.rs:14:8
+   |
+14 | pub fn calculate_rfm_score(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `calculate_health_score` is never used
+  --> src/services/crm_service.rs:52:8
+   |
+52 | pub fn calculate_health_score(rfm_total: i32, days_since_interaction: i32, email_engagement: f64) -> i32 {
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: trait `DTO` is never used
+  --> src/models/mod.rs:49:11
+   |
+49 | pub trait DTO<TColumns> {
+   |           ^^^
+
+warning: trait `Joinable` is never used
+  --> src/models/mod.rs:53:11
+   |
+53 | pub trait Joinable<TLeft, TRight, TPrimary> {
+   |           ^^^^^^^^
+
+warning: function `format_connection_string` is never used
+  --> src/models/mod.rs:60:8
+   |
+60 | pub fn format_connection_string(conf: config_models::LocalConfig) -> String {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `establish_database_connection` is never used
+  --> src/models/mod.rs:94:8
+   |
+94 | pub fn establish_database_connection(conf: LocalConfig) -> Option<DatabasePool> {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `init_connection` is never used
+  --> src/models/mod.rs:99:8
+   |
+99 | pub fn init_connection(db_url: &str) -> ConnectionManager<diesel::PgConnection> {
+   |        ^^^^^^^^^^^^^^^
+
+warning: function `init_pool` is never used
+   --> src/models/mod.rs:103:8
+    |
+103 | pub fn init_pool(db_url: &str) -> Result<Pool<ConnectionManager<PgConnection>>, PoolError> {
+    |        ^^^^^^^^^
+
+warning: multiple fields are never read
+  --> src/models/config_models.rs:8:9
+   |
+ 4 | pub struct LocalConfig {
+   |            ----------- fields in this struct
+...
+ 8 |     pub mysql_username: Option<String>,
+   |         ^^^^^^^^^^^^^^
+ 9 |     pub mysql_password: Option<String>,
+   |         ^^^^^^^^^^^^^^
+10 |     pub mysql_database: Option<String>,
+   |         ^^^^^^^^^^^^^^
+11 |     pub mysql_url: Option<String>,
+   |         ^^^^^^^^^
+12 |     pub mysql_port: Option<u16>,
+   |         ^^^^^^^^^^
+13 |     pub jwt_key: String,
+   |         ^^^^^^^
+14 |     pub max_req: u16,
+15 |     pub base_url: String,
+   |         ^^^^^^^^
+   |
+   = note: `LocalConfig` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: method `to_string` is never used
+  --> src/models/rbac.rs:25:12
+   |
+13 | impl TenantRole {
+   | --------------- method in this implementation
+...
+25 |     pub fn to_string(&self) -> String {
+   |            ^^^^^^^^^
+
+warning: struct `RevisionSummary` is never constructed
+  --> src/models/revision_models.rs:46:12
+   |
+46 | pub struct RevisionSummary {
+   |            ^^^^^^^^^^^^^^^
+
+warning: enum `FieldType` is never used
+ --> src/models/field_type_enum.rs:8:10
+  |
+8 | pub enum FieldType {
+  |          ^^^^^^^^^
+
+warning: associated items `as_str` and `from_str` are never used
+  --> src/models/field_type_enum.rs:24:12
+   |
+23 | impl FieldType {
+   | -------------- associated items in this implementation
+24 |     pub fn as_str(&self) -> &'static str {
+   |            ^^^^^^
+...
+41 |     pub fn from_str(s: &str) -> Option<Self> {
+   |            ^^^^^^^^
+
+warning: struct `Category` is never constructed
+ --> src/models/category_models.rs:7:12
+  |
+7 | pub struct Category {
+  |            ^^^^^^^^
+
+warning: struct `Language` is never constructed
+ --> src/models/language_models.rs:6:12
+  |
+6 | pub struct Language {
+  |            ^^^^^^^^
+
+warning: struct `PageTranslation` is never constructed
+ --> src/models/translation_models.rs:6:12
+  |
+6 | pub struct PageTranslation {
+  |            ^^^^^^^^^^^^^^^
+
+warning: enum `AIProviderType` is never used
+  --> src/models/ai_provider_models.rs:10:10
+   |
+10 | pub enum AIProviderType {
+   |          ^^^^^^^^^^^^^^
+
+warning: struct `AIGeneratedContentDTO` is never constructed
+  --> src/models/ai_generated_content_models.rs:45:12
+   |
+45 | pub struct AIGeneratedContentDTO {
+   |            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `get_database_type_string` is never used
+  --> src/models/db_connection.rs:39:8
+   |
+39 | pub fn get_database_type_string(pool: &DatabasePool) -> &'static str {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `RateLimit` is never constructed
+  --> src/middleware/rate_limit.rs:10:12
+   |
+10 | pub struct RateLimit {
+   |            ^^^^^^^^^
+
+warning: associated function `new` is never used
+  --> src/middleware/rate_limit.rs:16:12
+   |
+15 | impl RateLimit {
+   | -------------- associated function in this implementation
+16 |     pub fn new(max_requests: i64, window_seconds: usize) -> Self {
+   |            ^^^
+
+warning: struct `RateLimitMiddleware` is never constructed
+  --> src/middleware/rate_limit.rs:45:12
+   |
+45 | pub struct RateLimitMiddleware<S> {
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: fields `email` and `role` are never read
+  --> src/middleware/auth_middleware.rs:23:9
+   |
+21 | pub struct UserContext {
+   |            ----------- fields in this struct
+22 |     pub user_id: i32,
+23 |     pub email: String,
+   |         ^^^^^
+24 |     pub role: String,
+   |         ^^^^
+   |
+   = note: `UserContext` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: function `create_jwt_token` is never used
+   --> src/middleware/auth_middleware.rs:155:8
+    |
+155 | pub fn create_jwt_token(user_id: i32, email: String, role: String) -> Result<String, jsonwebtoken::errors::Error> {
+    |        ^^^^^^^^^^^^^^^^
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> src/controllers/user_controllers.rs:175:20
+    |
+175 | fn login_res(user: &mut MutUser) -> Result<Cookie, CustomHttpError> {
+    |                    ^^^^^^^^^^^^            ^^^^^^ the same lifetime is hidden here
+    |                    |
+    |                    the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+    |
+175 | fn login_res(user: &mut MutUser) -> Result<Cookie<'_>, CustomHttpError> {
+    |                                                  ++++
+
+warning: `freeradical` (bin "freeradical") generated 582 warnings (run `cargo fix --bin "freeradical" -p freeradical` to apply 159 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 23.30s

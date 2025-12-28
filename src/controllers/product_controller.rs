@@ -5,8 +5,12 @@ use serde::{Deserialize, Serialize};
 use crate::models::{pool_handler, DatabasePool};
 use crate::models::commerce_models::{Product, NewProduct};
 use crate::services::errors_service::CustomHttpError;
-use crate::services::auth_service::Claims;
 use crate::schema::products;
+use crate::helpers::tenant_helper::{resolve_tenant_id, get_tenant_role};
+use crate::models::rbac::{has_permission, Permission};
+use crate::middleware::auth_middleware::get_user_context;
+use actix_web::HttpRequest;
+use uuid::Uuid;
 
 #[derive(Deserialize)]
 pub struct PaginationQuery {
@@ -23,9 +27,14 @@ pub struct ProductListResponse {
 }
 
 pub async fn list_products(
+    req: HttpRequest,
     query: web::Query<PaginationQuery>,
     pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
+    // Optional: verify membership? Generally "List" implies ViewContent or similar. 
+    // For now we just enforce filtering.
+
     use crate::models::PooledDatabaseConnection;
     let mut conn = pool_handler(pool)?;
     
@@ -34,6 +43,7 @@ pub async fn list_products(
     
     let products_list =  products::table
                 .filter(products::is_active.eq(true))
+                .filter(products::tenant_id.eq(tenant_id))
                 .limit(per_page)
                 .offset(page * per_page)
                 .load::<Product>(&mut conn)
@@ -41,6 +51,7 @@ pub async fn list_products(
             
     let total = products::table
                 .filter(products::is_active.eq(true))
+                .filter(products::tenant_id.eq(tenant_id))
                 .count()
                 .get_result::<i64>(&mut conn)
                 .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
@@ -56,9 +67,12 @@ pub async fn list_products(
 }
 
 pub async fn get_product(
+    req: HttpRequest,
     id: web::Path<i64>,
     pool: web::Data<DatabasePool>,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
+
     use crate::models::PooledDatabaseConnection;
     let mut conn = pool_handler(pool)?;
     
@@ -66,6 +80,7 @@ pub async fn get_product(
             products::table
                 .find(*id)
                 .filter(products::is_active.eq(true))
+                .filter(products::tenant_id.eq(tenant_id)) // Enforce tenant ownership
                 .first::<Product>(&mut conn)
                 .map_err(|_| CustomHttpError::NotFound("Product not found".to_string()))?
         ;
@@ -74,16 +89,29 @@ pub async fn get_product(
 }
 
 pub async fn create_product(
+    req: HttpRequest,
     product: web::Json<NewProduct>,
     pool: web::Data<DatabasePool>,
-    _claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
+    let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
     use crate::models::PooledDatabaseConnection;
     let mut conn = pool_handler(pool)?;
     
+    // RBAC Check
+    let role = get_tenant_role(tenant_id, user_ctx.user_id, &mut conn)
+        .map_err(|_| CustomHttpError::Forbidden("Access denied".to_string()))?;
     
+    if !has_permission(&role, Permission::PublishContent) {
+        return Err(CustomHttpError::Forbidden("Insufficient permissions".to_string()));
+    }
+    
+    let mut new_prod = product.into_inner();
+    new_prod.tenant_id = Some(tenant_id);
+    new_prod.uuid = Uuid::new_v4().to_string(); // Ensure UUID is generated if not sent? Or trust input? Usually gen server side.
+
             diesel::insert_into(products::table)
-                .values(&product.into_inner())
+                .values(&new_prod)
                 .execute(&mut conn)
                 .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
         
@@ -94,17 +122,32 @@ pub async fn create_product(
 }
 
 pub async fn update_product(
+    req: HttpRequest,
     id: web::Path<i64>,
     product: web::Json<NewProduct>,
     pool: web::Data<DatabasePool>,
-    _claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
+    let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
+    
     use crate::models::PooledDatabaseConnection;
     let mut conn = pool_handler(pool)?;
     
+    // RBAC Check
+    let role = get_tenant_role(tenant_id, user_ctx.user_id, &mut conn)
+        .map_err(|_| CustomHttpError::Forbidden("Access denied".to_string()))?;
+    
+    if !has_permission(&role, Permission::EditContent) {
+        return Err(CustomHttpError::Forbidden("Insufficient permissions".to_string()));
+    }
+
+    let mut updated_prod = product.into_inner();
+    updated_prod.tenant_id = Some(tenant_id);
+
     let updated = 
             diesel::update(products::table.find(*id))
-                .set(&product.into_inner())
+                .filter(products::tenant_id.eq(tenant_id)) // Enforce tenant check
+                .set(&updated_prod)
                 .execute(&mut conn)
                 .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
         ;
@@ -119,15 +162,27 @@ pub async fn update_product(
 }
 
 pub async fn delete_product(
+    req: HttpRequest,
     id: web::Path<i64>,
     pool: web::Data<DatabasePool>,
-    _claim: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
+    let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
+    let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
+
     use crate::models::PooledDatabaseConnection;
     let mut conn = pool_handler(pool)?;
     
+    // RBAC Check
+    let role = get_tenant_role(tenant_id, user_ctx.user_id, &mut conn)
+        .map_err(|_| CustomHttpError::Forbidden("Access denied".to_string()))?;
+    
+    if !has_permission(&role, Permission::DeleteContent) {
+        return Err(CustomHttpError::Forbidden("Insufficient permissions".to_string()));
+    }
+
     let updated = 
             diesel::update(products::table.find(*id))
+                .filter(products::tenant_id.eq(tenant_id)) // Enforce tenant
                 .set(products::is_active.eq(false))
                 .execute(&mut conn)
                 .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
