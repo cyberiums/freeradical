@@ -219,6 +219,9 @@ Oxidly.com is the cloud/enterprise frontend for FreeRadical CMS:
   - AI automated messaging
   - [x] AI predictive analytics
   - [x] AI sentiment analysis
+- [x] Instant Tenant Segmentation (Rust Backend)
+  - Segment creation & management
+  - Dynamic member assignment
 
 #### 7. Content Management
 - [x] Content CRUD using FreeRadical API
