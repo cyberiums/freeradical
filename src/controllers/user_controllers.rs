@@ -14,7 +14,6 @@ use serde_json;
 pub async fn create_user(
     new: web::Json<MutUser>,
     pool: web::Data<DatabasePool>,
-    _: Claims,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -52,7 +51,8 @@ pub async fn update_user(
     let mut salted_user = new.clone();
 
     // if you're trying to change someone elses data, don't allow it.
-    if id.clone() != claim.sub {
+    // id param is username, check against claim.email (which is username)
+    if id.clone() != claim.email {
         return Err(CustomHttpError::Unauthorized("Cannot update another user's data".to_string()));
     }
 
@@ -64,7 +64,9 @@ pub async fn update_user(
     // give them a new token just in case they update their username.
     let claim = Claims {
         exp: (exp_time).timestamp() as usize,
-        sub: salted_user.username.clone(),
+        sub: claim.sub, // Keep same user ID
+        email: salted_user.username.clone(),
+        role: claim.role, // Keep same role
     };
 
     let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hours(1);
@@ -121,7 +123,7 @@ pub async fn login(
             two_factor_enabled: None,
         };
         
-        let cookie = login_res(&mut new_user)?;
+        let cookie = login_res(&read_user)?; // Pass actual user with ID
         let cookie_response = HttpResponse::Accepted().cookie(cookie.clone()).finish();
 
         new_user.token = Some(cookie.value().to_string());
@@ -160,7 +162,7 @@ pub async fn login(
                 two_factor_enabled: None,
             };
 
-            let cookie = login_res(&mut new_user)?;
+            let cookie = login_res(&read_user)?; // Pass actual user with ID
             let cookie_response = HttpResponse::Ok().cookie(cookie.clone()).finish();
 
             new_user.token = Some(cookie.value().to_string());
@@ -172,12 +174,14 @@ pub async fn login(
     }
 }
 
-fn login_res(user: &mut MutUser) -> Result<Cookie, CustomHttpError> {
+fn login_res(user: &User) -> Result<Cookie, CustomHttpError> {
     let claim = Claims {
         exp: (chrono::Utc::now() + chrono::Duration::days(10)).timestamp() as usize,
-        sub: user.username.clone(),
+        sub: user.id.to_string(),
+        email: user.username.clone(),
+        role: "user".to_string(), // Default role
     };
-    user.password = None;
+    
     let token_enc = encrypt(claim)?;
 
     let time: OffsetDateTime = OffsetDateTime::now_utc() + Duration::hours(1);
@@ -204,7 +208,16 @@ pub async fn check_login(
 ) -> Result<HttpResponse, CustomHttpError> {
     let auth_header = req.headers().get("authorization");
 
-    let auth_res = authenticate(auth_header.unwrap(), &pool).await;
+    let auth_str = match auth_header {
+        Some(h) => h.to_str().unwrap_or("").to_string(),
+        None => return Ok(HttpResponse::Unauthorized().finish()),
+    };
+    
+    if auth_str.is_empty() {
+         return Ok(HttpResponse::Unauthorized().finish());
+    }
+
+    let auth_res = authenticate(auth_str, &pool).await;
 
     match auth_res {
         Ok(_) => Ok(HttpResponse::Ok().finish()),

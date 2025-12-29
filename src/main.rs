@@ -59,16 +59,16 @@ async fn main() -> std::io::Result<()> {
     // Initialize config
     let conf: LocalConfig = envy::prefixed("APP_").from_env().unwrap();
 
-    // Run migrations - DISABLED for Docker (run manually via migrate.sh)
-    // let db_url = models::format_connection_string(conf.clone());
-    // let mut connection = MysqlConnection::establish(&db_url)
-    //     .unwrap_or_else(|_| panic!("Error connecting to {}", db_url));
+    // Run migrations
+    let db_url_for_migration = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let mut connection = PgConnection::establish(&db_url_for_migration)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", db_url_for_migration));
     
-    // println!("Running migrations...");
-    // match connection.run_pending_migrations(MIGRATIONS) {
-    //     Ok(_) => println!("Migrations complete"),
-    //     Err(e) => println!("Migrations error: {}", e)
-    // };
+    println!("Running migrations...");
+    match connection.run_pending_migrations(MIGRATIONS) {
+        Ok(_) => println!("Migrations complete"),
+        Err(e) => println!("Migrations error: {}", e)
+    };
 
     // Create database URL from config
     let db_url = std::env::var("DATABASE_URL")
