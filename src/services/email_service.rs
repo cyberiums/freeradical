@@ -6,7 +6,7 @@ use log::{info, error, warn};
 use lettre::{Message, SmtpTransport, Transport, transport::smtp::authentication::Credentials};
 use aws_sdk_sesv2::Client as SesClient;
 use aws_config::meta::region::RegionProviderChain;
-use aws_config::behavior_version::BehaviorVersion;
+use aws_config::BehaviorVersion;
 
 #[derive(Clone)]
 pub enum EmailProviderType {

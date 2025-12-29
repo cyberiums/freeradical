@@ -94,19 +94,22 @@ utoipa = { version = "4.2", features = ["actix_extras", "chrono", "uuid"] }
 utoipa-swagger-ui = { version = "6.0", features = ["actix-web"] }
 utoipa-redoc = { version = "3.0", features = ["actix-web"] }
 
-[dependencies.aws-config]
-version = "1.1.7"
-
-[dependencies.aws-sdk-s3]
-version = "1.17.0"
-
-[dependencies.aws-types]
-version = "1.1.7"
-
-
+# Email
 # Email
 lettre = { version = "0.10", features = ["tokio1", "tokio1-native-tls", "builder"] }
-aws-sdk-sesv2 = "1.17.0"
+aws-sdk-sesv2 = "1.50.0"
+
+[dependencies.aws-config]
+version = "1.5.0"
+
+[dependencies.aws-sdk-s3]
+version = "1.50.0"
+
+[dependencies.aws-types]
+version = "1.3.3"
+
+
+
 
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

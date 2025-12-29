@@ -58,6 +58,10 @@ graph TD
         *   **Provider Abstraction**: Pluggable support for OpenAI, Anthropic, Gemini.
         *   **Security Scoping**: Granular JWT-based access (`ReadPublic`, `ReadOwn`, `WriteOwn`). See [AI Scoping](./docs/AI_MCP_SCOPING.md).
         *   **Orchestrator**: Multi-step workflow execution (e.g., "Write a blog post" -> Outline -> Draft -> Image Gen -> SEO Optimize).
+    *   **Communication Layer** (New in v2.0):
+        *   **Unified Email Service**: Trait-based provider system (`EmailProvider`) supporting **SMTP** (Lettre) and **AWS SES** (SDK v2).
+        *   **Template Engine**: Handlebars-based compilation with caching (`EmailTemplateService`).
+        *   **Transactional Flows**: Built-in support for Welcome emails, Password Resets, and Cart Abandonment recovery.
     *   **SEO/AEO Engine**:
         *   **Generative Engine Optimization (GEO)**: Optimizes content for AI search (Perplexity, SearchGPT).
         *   **Automated Metadata**: Generates JSON-LD Schema (Article, Product, FAQ) automatically.
@@ -74,7 +78,9 @@ graph TD
     *   **Service Layer**: `api.js` acts as a typed client for the FreeRadical Backend.
     *   **Controllers**: Isolated logic for Site Management, Auth, and Commerce.
 *   **Key Features**:
-    *   **Site Management**: Create/Manage subdomains (`*.oxidly.com`) and Custom Domains (CNAME).
+    *   **Site Management**: 
+        *   **Dynamic Domain Resolution**: DB-driven tenant resolution via `Host` header. **No static configuration files** (Nginx/Caddy) are generated per-tenant, ensuring infinite scalability and zero-downtime creation.
+        *   **Custom Domains**: Instant CNAME validation against the database.
     *   **Dashboard**: Analytics visualization.
     *   **Team Management**: RBAC (Owner, Admin, Editor) and Member Invites.
     *   **Commerce UI**: Product Catalog, Manual Order Entry, Inventory.
@@ -127,6 +133,7 @@ All schema changes are managed via `Diesel CLI`.
 ### 6.2. Scalability
 *   **Stateless Backend**: FreeRadical can scale horizontally behind a load balancer (Nginx/Traefik).
 *   **Read Replicas**: Database configuration supports Read/Write splitting for high-traffic deployments.
+*   **Data Seeding**: `scripts/seed_local_data.sh` provides instant environment replication for development, creating default Tenants and Admin users idempotently.
 
 ---
 
@@ -138,7 +145,7 @@ All schema changes are managed via `Diesel CLI`.
 | **AI Capabilities** | ✅ Full MCP Agent support | Voice-controlled Admin UI |
 | **E-commerce** | ✅ Stripe/PayPal/Square | Subscription Billing |
 | **Frontend/UI** | 🟡 Basic Dashboard | Full Drag-and-Drop Builder |
-| **Multi-tenancy** | 🟡 Database Ready | Org/Team Management UI |
+| **Multi-tenancy** | ✅ Full DB Isolation & Domain Mapping | Org/Team Management UI |
 
 ---
 
