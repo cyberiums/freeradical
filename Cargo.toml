@@ -103,5 +103,10 @@ version = "1.17.0"
 [dependencies.aws-types]
 version = "1.1.7"
 
+
+# Email
+lettre = { version = "0.10", features = ["tokio1", "tokio1-native-tls", "builder"] }
+aws-sdk-sesv2 = "1.17.0"
+
 [dev-dependencies]
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

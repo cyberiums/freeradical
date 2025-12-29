@@ -229,3 +229,65 @@ pub async fn list_audit_logs(
         Err(e) => HttpResponse::InternalServerError().json(format!("Error fetching logs: {}", e)),
     }
 }
+
+pub async fn update_settings(
+    req: HttpRequest,
+    pool: web::Data<db_connection::DatabasePool>,
+    path: web::Path<i32>,
+    item: web::Json<serde_json::Value>
+) -> impl Responder {
+    let user_ctx = match get_user_context(&req) {
+        Some(ctx) => ctx,
+        None => return HttpResponse::Unauthorized().json("User not authenticated"),
+    };
+
+    let tenant_id = path.into_inner();
+    let mut conn = pool.get().expect("couldn't get db connection from pool");
+
+    use crate::schema::{tenants, tenant_members};
+    use crate::models::rbac::{has_permission, Permission};
+
+    // 1. Verify permissions (manage_settings or owner)
+    let membership = tenant_members::table
+        .filter(tenant_members::tenant_id.eq(tenant_id))
+        .filter(tenant_members::user_id.eq(user_ctx.user_id))
+        .select(tenant_members::role)
+        .first::<String>(&mut conn);
+
+    match membership {
+        Ok(role_str) => {
+            // Assuming we accept Owner or Admin for now. 
+            // In a real RBAC, checking specifically for 'manage_settings'.
+            // Simple check: Only owners can change settings for now, or just check generic permission if implemented?
+            // Let's stick to the RBAC utility if possible, or just allow if role is owner/admin.
+            if !has_permission(&role_str, Permission::ManageSettings) {
+                 return HttpResponse::Forbidden().json("Insufficient permissions");
+            }
+        },
+        Err(_) => return HttpResponse::Forbidden().json("Access denied"),
+    }
+
+    // 2. Update settings
+    let res = diesel::update(tenants::table.find(tenant_id))
+        .set(tenants::settings.eq(item.clone()))
+        .execute(&mut conn);
+
+    match res {
+        Ok(_) => {
+            // Audit Log
+            let _ = crate::services::audit_service::AuditService::log(
+                &pool,
+                Some(tenant_id),
+                user_ctx.user_id,
+                "update_settings",
+                "tenant",
+                Some(&tenant_id.to_string()),
+                Some(item.clone()),
+                req.peer_addr().map(|s| s.to_string()).as_deref()
+            ).await;
+            
+            HttpResponse::Ok().json("Settings updated successfully")
+        },
+        Err(e) => HttpResponse::InternalServerError().json(format!("Error updating settings: {}", e)),
+    }
+}

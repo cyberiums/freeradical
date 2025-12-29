@@ -14,6 +14,7 @@ use serde_json;
 pub async fn create_user(
     new: web::Json<MutUser>,
     pool: web::Data<DatabasePool>,
+    email_service: web::Data<crate::services::email_service::EmailService>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let mut mysql_pool = pool_handler(pool)?;
 
@@ -23,6 +24,18 @@ pub async fn create_user(
     salted_user.uuid = Some(Uuid::new_v4().to_string());
 
     User::create(&salted_user, &mut mysql_pool)?;
+
+    // Send Welcome Email
+    // Assuming username is email as per system design
+    let _ = email_service.send_template_email(
+         &salted_user.username,
+         "Welcome to FreeRadical CMS",
+         "auth/welcome",
+         &serde_json::json!({
+             "username": salted_user.username,
+             "verify_link": "https://oxidly.com/verify-email" // Implementation pending
+         })
+    ).await;
 
     Ok(HttpResponse::Created().json(&new.clone()))
 }

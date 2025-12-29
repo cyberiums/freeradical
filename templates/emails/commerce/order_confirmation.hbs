@@ -1,0 +1,38 @@
+{{#*inline "content"}}
+<p>Hi {{customer_name}},</p>
+<h1>Order #{{order_id}} Confirmed!</h1>
+<p>Thank you for your purchase. We're getting your order ready to be shipped. We will notify you when it has been sent.
+</p>
+
+<h3>Order Summary</h3>
+<table width="100%" cellpadding="0" cellspacing="0">
+    {{#each items}}
+    <tr>
+        <td style="padding: 5px 0;">{{this.quantity}}x {{this.product_name}}</td>
+        <td style="text-align: right;">{{this.price}}</td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td style="padding-top: 10px; font-weight: bold;">Total</td>
+        <td style="text-align: right; font-weight: bold;">{{total_amount}}</td>
+    </tr>
+</table>
+
+<br>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+        <tr>
+            <td align="left">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td> <a href="{{order_link}}" target="_blank">View Order</a> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{{/inline}}
+{{> layouts/base body=(partials.content) }}

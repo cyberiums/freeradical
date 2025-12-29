@@ -92,4 +92,6 @@ pub mod analytics_service_v2;
 pub mod oauth_service;
 pub mod hreflang_service;
 pub mod audit_service;
+pub mod email_service;
+pub mod email_template_service;
 pub mod crm_service; // CRM modules below require migrations to be run first

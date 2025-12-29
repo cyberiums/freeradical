@@ -1,0 +1,17 @@
+{{#*inline "content"}}
+<p>Hi {{customer_name}},</p>
+<h2>{{newsletter_title}}</h2>
+<p>{{newsletter_intro}}</p>
+
+{{#each sections}}
+<h3>{{this.title}}</h3>
+<p>{{this.content}}</p>
+{{#if this.cta_link}}
+<a href="{{this.cta_link}}">{{this.cta_text}}</a>
+{{/if}}
+<br><br>
+{{/each}}
+
+<p>Best regards,<br>{{company_name}} Team</p>
+{{/inline}}
+{{> layouts/base body=(partials.content) }}

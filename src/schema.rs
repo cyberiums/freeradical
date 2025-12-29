@@ -777,7 +777,7 @@ diesel::table! {
 }
 
 diesel::table! {
-    users (uuid) {
+    users (id) {
         id -> Int4,
         #[max_length = 255]
         uuid -> Varchar,
@@ -881,6 +881,45 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    surveys (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 255]
+        title -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        created_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    survey_questions (id) {
+        id -> Int4,
+        survey_id -> Int4,
+        question_text -> Text,
+        #[max_length = 50]
+        question_type -> Varchar,
+        options -> Nullable<Jsonb>,
+        order_index -> Nullable<Int4>,
+        is_required -> Nullable<Bool>,
+    }
+}
+
+diesel::table! {
+    survey_responses (id) {
+        id -> Int4,
+        survey_id -> Int4,
+        respondent_id -> Nullable<Int4>,
+        answers -> Jsonb,
+        metadata -> Nullable<Jsonb>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
 diesel::joinable!(ai_key_rotation_history -> ai_provider_keys (provider_key_id));
 diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
 diesel::joinable!(crm_interactions -> crm_customers (customer_id));
@@ -916,6 +955,12 @@ diesel::joinable!(crm_interactions -> tenants (tenant_id));
 diesel::joinable!(crm_notes -> tenants (tenant_id));
 diesel::joinable!(crm_segments -> tenants (tenant_id));
 diesel::joinable!(crm_tasks -> tenants (tenant_id));
+diesel::joinable!(surveys -> tenants (tenant_id));
+diesel::joinable!(surveys -> users (created_by));
+diesel::joinable!(survey_questions -> surveys (survey_id));
+diesel::joinable!(survey_responses -> surveys (survey_id));
+diesel::joinable!(survey_responses -> users (respondent_id));
+
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,
@@ -963,4 +1008,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     tenant_webhooks,
     themes,
     marketplace_plugins,
+    surveys,
+    survey_questions,
+    survey_responses,
 );

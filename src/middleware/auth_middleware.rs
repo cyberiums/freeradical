@@ -7,7 +7,7 @@ use jsonwebtoken::{decode, DecodingKey, Validation, Algorithm};
 use std::future::{ready, Ready};
 
 // Import Claims and UserContext from auth_service
-use crate::services::auth_service::{Claims, UserContext};
+pub use crate::services::auth_service::{Claims, UserContext};
 
 /// Authentication middleware factory
 pub struct AuthMiddleware {

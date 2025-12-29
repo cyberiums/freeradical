@@ -268,6 +268,7 @@ pub async fn create_campaign(
     req: HttpRequest,
     request: web::Json<CreateCampaignRequest>,
     pool: web::Data<DbPool>,
+    email_service: web::Data<crate::services::email_service::EmailService>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
     let new_campaign = NewCrmCampaign {
@@ -281,6 +282,25 @@ pub async fn create_campaign(
         created_by: request.created_by,
         tenant_id: Some(tenant_id),
     };
+
+    // Feature: Send test email if campaign name starts with "TEST:"
+    if request.name.starts_with("TEST:") {
+        if let Some(subject) = &request.subject {
+             // Hardcoded test email for verification
+             let _ = email_service.send_template_email(
+                 "admin@freeradical.dev", 
+                 subject, 
+                 "crm/newsletter", 
+                 &serde_json::json!({
+                    "customer_name": "Admin",
+                    "newsletter_title": subject,
+                    "newsletter_intro": request.content.clone().unwrap_or_default(),
+                    "sections": [],
+                    "company_name": "FreeRadical CRM"
+                 })
+             ).await;
+        }
+    }
     
     crm_service::create_campaign(pool, new_campaign).await
 }

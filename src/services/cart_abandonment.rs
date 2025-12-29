@@ -68,15 +68,31 @@ impl CartAbandonment {
     }
 
     /// Send recovery email
-    pub async fn send_recovery_email(&self, cart: &AbandonedCart) -> Result<(), String> {
-        if cart.email.is_none() {
-            return Err("No email address available".to_string());
+    pub async fn send_recovery_email(
+        &self, 
+        cart: &AbandonedCart,
+        email_service: &crate::services::email_service::EmailService
+    ) -> Result<(), String> {
+        if let Some(email) = &cart.email {
+            info!("Sending recovery email for cart: {}", cart.cart_id);
+            
+            // Create template data
+            let data = serde_json::json!({
+                "customer_name": cart.user_id.as_deref().unwrap_or("Valued Customer"),
+                "cart_link": format!("https://oxidly.com/checkout/{}", cart.cart_id),
+                "items": cart.items,
+                "total_value": cart.total_value
+            });
+            
+            email_service.send_template_email(
+                email,
+                "Complete your purchase!",
+                "commerce/cart_abandonment", 
+                &data
+            ).await
+        } else {
+             Err("No email address available".to_string())
         }
-
-        info!("Sending recovery email for cart: {}", cart.cart_id);
-
-        // TODO: Integrate with email service
-        Ok(())
     }
 
     /// Get recovery campaign stats

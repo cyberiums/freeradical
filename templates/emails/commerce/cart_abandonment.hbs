@@ -1,0 +1,38 @@
+{{#*inline "content"}}
+<p>Hi {{customer_name}},</p>
+<h2>You left something behind!</h2>
+<p>We saved the items in your cart so you can easily complete your purchase.</p>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+    {{#each items}}
+    <tr>
+        <td style="padding: 5px 0;">{{this.quantity}}x {{this.product_name}}</td>
+        <td style="text-align: right;">{{this.price}}</td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td style="padding-top: 10px; font-weight: bold;">Total</td>
+        <td style="text-align: right; font-weight: bold;">{{total_value}}</td>
+    </tr>
+</table>
+
+<br>
+<p>Don't miss out on these items!</p>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+        <tr>
+            <td align="left">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td> <a href="{{cart_link}}" target="_blank">Complete Purchase</a> </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{{/inline}}
+{{> layouts/base body=(partials.content) }}
