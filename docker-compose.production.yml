@@ -1,0 +1,99 @@
+version: '3.8'
+
+# Production docker-compose for GCP Cloud SQL
+# Local dev uses docker-compose.yml (with Postgres container)
+# Production uses this file (with Cloud SQL)
+
+services:
+  # Cloud SQL Proxy - connects to GCP Cloud SQL securely
+  cloud-sql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
+    container_name: freeradical_cloud_sql_proxy
+    command:
+      - "--structured-logs"
+      - "${CLOUD_SQL_CONNECTION_NAME}"  # e.g., project:region:instance
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    # Option 1: Use service account key file (mount as volume)
+    # volumes:
+    #   - ./gcp-service-account.json:/config
+    # environment:
+    #   - GOOGLE_APPLICATION_CREDENTIALS=/config
+    # Option 2: Use Workload Identity (recommended for GKE/Cloud Run)
+    # No additional config needed if running on GCP with proper IAM
+
+  redis:
+    image: redis:7-alpine
+    container_name: freeradical_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  cms:
+    image: ghcr.io/cyberiums/freeradical/cms:latest
+    container_name: freeradical_cms
+    depends_on:
+      - cloud-sql-proxy
+      - redis
+    environment:
+      # Cloud SQL connection via proxy
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@cloud-sql-proxy:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+      APP_BIND_ADDRESS: 0.0.0.0
+      APP_BIND_PORT: 8000
+      APP_JWT_KEY: ${JWT_SECRET}
+      APP_BASE_URL: ${APP_BASE_URL}
+      RUST_LOG: ${RUST_LOG:-info}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  oxidly:
+    image: ghcr.io/cyberiums/freeradical/oxidly:latest
+    container_name: freeradical_oxidly
+    depends_on:
+      - cms
+    environment:
+      API_URL: http://cms:8000/v1
+      PORT: 5005
+    ports:
+      - "5005:5005"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: freeradical_watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=300
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_LOG_LEVEL=info
+    restart: unless-stopped
+
+volumes:
+  redis_data:

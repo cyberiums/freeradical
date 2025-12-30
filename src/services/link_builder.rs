@@ -162,16 +162,28 @@ impl LinkBuilder {
         info!("Analyzing content for internal link opportunities");
         
         let mut suggestions = vec![];
-        let words: Vec<&str> = content.split_whitespace().collect();
+        let content_lower = content.to_lowercase();
 
         for page in site_pages {
-            // Simple keyword matching (in production, use NLP/semantic matching)
+            // Extract keywords from page path (remove slashes, split on hyphens)
             let page_topic = page.split('/').last().unwrap_or("");
             
-            if content.to_lowercase().contains(&page_topic.to_lowercase()) {
+            // Split on hyphens to get individual keywords
+            let keywords: Vec<&str> = page_topic.split('-').collect();
+            
+            // Check if any keyword appears in content
+            let mut has_match = false;
+            for keyword in &keywords {
+                if !keyword.is_empty() && content_lower.contains(&keyword.to_lowercase()) {
+                    has_match = true;
+                    break;
+                }
+            }
+            
+            if has_match {
                 suggestions.push(LinkSuggestion {
                     target_url: page.clone(),
-                    suggested_anchor: page_topic.to_string(),
+                    suggested_anchor: page_topic.replace('-', " "),
                     relevance_score: 0.85,
                     placement_context: "Related topic mentioned in content".to_string(),
                 });
