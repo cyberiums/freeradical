@@ -109,6 +109,26 @@ pub struct CustomerDetailResponse {
 // ===== Customer Endpoints =====
 
 /// List customers with optional filters
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/customers",
+    tag = "Customer - CRM",
+    params(
+        ("lifecycle_stage" = Option<String>, Query, description = "Filter by lifecycle stage (lead, prospect, customer, advocate)"),
+        ("min_health_score" = Option<i32>, Query, description = "Minimum health score (0-100)"),
+        ("churn_risk" = Option<String>, Query, description = "Filter by churn risk (low, medium, high)"),
+        ("page" = Option<i64>, Query, description = "Page number for pagination", example = 1),
+        ("per_page" = Option<i64>, Query, description = "Results per page", example = 20)
+    ),
+    responses(
+        (status = 200, description = "List of customers retrieved successfully", body = Vec<CrmCustomer>),
+        (status = 401, description = "Unauthorized - Invalid or missing JWT token"),
+        (status = 403, description = "Forbidden - Insufficient permissions")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_customers(
     req: HttpRequest,
     query: web::Query<CustomerFilters>,
@@ -124,6 +144,22 @@ pub async fn list_customers(
 }
 
 /// Get customer profile by ID
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/customers/{id}",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID", example = 123)
+    ),
+    responses(
+        (status = 200, description = "Customer profile with timeline and tasks", body = CustomerDetailResponse),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_customer_profile(
     customer_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -132,6 +168,21 @@ pub async fn get_customer_profile(
 }
 
 /// Create or get customer from user_id
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/customers",
+    tag = "Customer - CRM",
+    request_body = CreateCustomerRequest,
+    responses(
+        (status = 201, description = "Customer created successfully", body = CrmCustomer),
+        (status = 200, description = "Existing customer returned", body = CrmCustomer),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_customer(
     req: HttpRequest,
     request: web::Json<CreateCustomerRequest>,
