@@ -183,6 +183,16 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
+    - name: Extract metadata (tags, labels) for Admin
+      id: meta-admin
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/admin
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
     - name: Build and push CMS image
       uses: docker/build-push-action@v5
       with:
@@ -201,6 +211,16 @@ jobs:
         push: true
         tags: ${{ steps.meta-oxidly.outputs.tags }}
         labels: ${{ steps.meta-oxidly.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push Admin image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./admin
+        push: true
+        tags: ${{ steps.meta-admin.outputs.tags }}
+        labels: ${{ steps.meta-admin.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
@@ -223,3 +243,10 @@ jobs:
         sleep 3
         docker logs test-oxidly
         docker stop test-oxidly
+        
+        # Test Admin image
+        docker run -d --name test-admin \
+          ghcr.io/${{ github.repository }}/admin:latest
+        sleep 3
+        docker logs test-admin
+        docker stop test-admin
