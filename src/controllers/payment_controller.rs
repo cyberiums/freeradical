@@ -14,6 +14,22 @@ pub struct CreatePaymentRequest {
     pub metadata: Option<HashMap<String, String>>,
 }
 
+/// Create payment intent with provider
+#[utoipa::path(
+    post,
+    path = "/v1/payments/intent",
+    tag = "Commerce - Payments",
+    request_body = CreatePaymentRequest,
+    responses(
+        (status = 200, description = "Payment intent created (returns provider-specific intent ID)"),
+        (status = 400, description = "Invalid provider or payment data"),
+        (status = 500, description = "Payment provider error"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_payment_intent(
     body: web::Json<CreatePaymentRequest>,
     registry: web::Data<PaymentHandlerRegistry>,
@@ -47,6 +63,25 @@ pub struct GetPaymentRequest {
     pub intent_id: String,
 }
 
+/// Get payment intent status
+#[utoipa::path(
+    get,
+    path = "/v1/payments/intent",
+    tag = "Commerce - Payments",
+    params(
+        ("provider" = String, Query, description = "Payment provider (stripe, paypal, square)", example = "stripe"),
+        ("intent_id" = String, Query, description = "Provider payment intent ID", example = "pi_1234567890")
+    ),
+    responses(
+        (status = 200, description = "Payment intent details"),
+        (status = 400, description = "Invalid provider"),
+        (status = 500, description = "Provider error"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_payment_intent(
     query: web::Query<GetPaymentRequest>,
     registry: web::Data<PaymentHandlerRegistry>,
@@ -67,6 +102,15 @@ pub async fn get_payment_intent(
     Ok(HttpResponse::Ok().json(intent))
 }
 
+/// List available payment providers
+#[utoipa::path(
+    get,
+    path = "/v1/payments/providers",
+    tag = "Commerce - Payments",
+    responses(
+        (status = 200, description = "List of configured payment providers (stripe, paypal, square)")
+    )
+)]
 pub async fn list_payment_handlers(
     registry: web::Data<PaymentHandlerRegistry>,
 ) -> Result<HttpResponse, CustomHttpError> {
