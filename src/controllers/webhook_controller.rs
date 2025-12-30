@@ -14,6 +14,22 @@ pub struct CreateWebhookRequest {
     pub secret: String,
 }
 
+/// List tenant webhooks
+#[utoipa::path(
+    get,
+    path = "/v1/api/tenants/{id}/webhooks",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    responses(
+        (status = 200, description = "List of webhooks", body = Vec<TenantWebhook>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_webhooks(
     req: HttpRequest,
     pool: web::Data<DatabasePool>,
@@ -37,6 +53,23 @@ pub async fn list_webhooks(
     }
 }
 
+/// Create tenant webhook
+#[utoipa::path(
+    post,
+    path = "/v1/api/tenants/{id}/webhooks",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    request_body = CreateWebhookRequest,
+    responses(
+        (status = 201, description = "Webhook created", body = TenantWebhook),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_webhook(
     req: HttpRequest,
     pool: web::Data<DatabasePool>,
@@ -70,6 +103,23 @@ pub async fn create_webhook(
     }
 }
 
+/// Delete tenant webhook
+#[utoipa::path(
+    delete,
+    path = "/v1/api/tenants/{id}/webhooks/{hook_id}",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1),
+        ("hook_id" = String, Path, description = "Webhook UUID", example = "123e4567-e89b-12d3-a456-426614174000")
+    ),
+    responses(
+        (status = 200, description = "Webhook deleted"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn delete_webhook(
     req: HttpRequest,
     pool: web::Data<DatabasePool>,
