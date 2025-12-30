@@ -39,7 +39,19 @@ pub struct OrderItemWithProduct {
     pub subtotal_amount_cents: i64,
 }
 
-// List user's orders
+/// List current user's orders
+#[utoipa::path(
+    get,
+    path = "/v1/orders",
+    tag = "Commerce - Orders",
+    responses(
+        (status = 200, description = "List of user's orders sorted by date (newest first)", body = Vec<Order>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_orders(
     pool: web::Data<DatabasePool>,
     claim: Claims,
@@ -70,7 +82,23 @@ pub async fn list_orders(
     Ok(HttpResponse::Ok().json(orders_list))
 }
 
-// Get single order with items
+/// Get order details with items
+#[utoipa::path(
+    get,
+    path = "/v1/orders/{id}",
+    tag = "Commerce - Orders",
+    params(
+        ("id" = i64, Path, description = "Order ID", example = 456)
+    ),
+    responses(
+        (status = 200, description = "Order details with items and total", body = OrderResponse),
+        (status = 404, description = "Order not found"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_order(
     id: web::Path<i64>,
     pool: web::Data<DatabasePool>,
@@ -146,7 +174,21 @@ pub async fn get_order(
     Ok(HttpResponse::Ok().json(response))
 }
 
-// Create order
+/// Create new order with items
+#[utoipa::path(
+    post,
+    path = "/v1/orders",
+    tag = "Commerce - Orders",
+    request_body = CreateOrderRequest,
+    responses(
+        (status = 201, description = "Order created successfully with calculated total"),
+        (status = 400, description = "Invalid items or products not found"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_order(
     body: web::Json<CreateOrderRequest>,
     pool: web::Data<DatabasePool>,
@@ -253,6 +295,25 @@ pub struct UpdateOrderStatusRequest {
     pub status: String,
 }
 
+/// Update order status
+#[utoipa::path(
+    put,
+    path = "/v1/orders/{id}/status",
+    tag = "Commerce - Orders",
+    params(
+        ("id" = i64, Path, description = "Order ID", example = 456)
+    ),
+    request_body = UpdateOrderStatusRequest,
+    responses(
+        (status = 200, description = "Order status updated"),
+        (status = 400, description = "Invalid status (must be: pending, processing, completed, cancelled)"),
+        (status = 404, description = "Order not found"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_order_status(
     id: web::Path<i64>,
     body: web::Json<UpdateOrderStatusRequest>,
@@ -292,6 +353,24 @@ pub struct LinkPaymentRequest {
     pub payment_intent_id: String,
 }
 
+/// Link payment to order
+#[utoipa::path(
+    post,
+    path = "/v1/orders/{id}/payment",
+    tag = "Commerce - Orders",
+    params(
+        ("id" = i64, Path, description = "Order ID", example = 456)
+    ),
+    request_body = LinkPaymentRequest,
+    responses(
+        (status = 200, description = "Payment linked, order status set to processing"),
+        (status = 404, description = "Order not found"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn link_payment_to_order(
     id: web::Path<i64>,
     body: web::Json<LinkPaymentRequest>,
