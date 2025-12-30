@@ -11,54 +11,39 @@ on:
 
 jobs:
   test:
-    name: Test with ${{ matrix.database }}
+    name: Test with PostgreSQL
     runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        database: [mysql, postgres]
         
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Set up Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
+        uses: dtolnay/rust-toolchain@stable
           
-      - name: Cache cargo registry
-        uses: actions/cache@v3
+      - name: Cache cargo
+        uses: actions/cache@v4
         with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-          
-      - name: Cache cargo index
-        uses: actions/cache@v3
-        with:
-          path: ~/.cargo/git
-          key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
-          
-      - name: Cache target directory
-        uses: actions/cache@v3
-        with:
-          path: target
-          key: ${{ runner.os }}-target-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           
       - name: Install Diesel CLI
         run: |
-          cargo install diesel_cli --no-default-features --features ${{ matrix.database }}
+          cargo install diesel_cli --no-default-features --features postgres
           
-      - name: Run ${{ matrix.database }} tests
-        run: bash scripts/test_${{ matrix.database }}.sh
+      - name: Run PostgreSQL tests
+        run: bash scripts/test_postgres.sh
         
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-${{ matrix.database }}
+          name: test-results-postgres
           path: test-results/
           
   build:
@@ -68,13 +53,13 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         
       - name: Build Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           push: false
