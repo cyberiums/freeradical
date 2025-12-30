@@ -45,6 +45,18 @@ pub struct UpdateStockRequest {
 }
 
 /// Get all variants for a product
+#[utoipa::path(
+    get,
+    path = "/v1/products/{id}/variants",
+    tag = "Commerce - Inventory",
+    params(
+        ("id" = i32, Path, description = "Product ID", example = 123)
+    ),
+    responses(
+        (status = 200, description = "List of active product variants", body = Vec<ProductVariant>),
+        (status = 500, description = "Database error")
+    )
+)]
 pub async fn get_product_variants(
     pool: web::Data<DbPool>,
     product_id: web::Path<i32>,
@@ -73,6 +85,19 @@ pub async fn get_product_variants(
 }
 
 /// Create a new product variant
+#[utoipa::path(
+    post,
+    path = "/v1/variants",
+    tag = "Commerce - Inventory",
+    request_body = CreateVariantRequest,
+    responses(
+        (status = 201, description = "Variant created successfully", body = ProductVariant),
+        (status = 500, description = "Database error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_variant(
     pool: web::Data<DbPool>,
     payload: web::Json<CreateVariantRequest>,
@@ -117,7 +142,23 @@ pub async fn create_variant(
     Ok(HttpResponse::Created().json(variant))
 }
 
-/// Update variant stock and log the change
+/// Update variant stock and log change
+#[utoipa::path(
+    put,
+    path = "/v1/variants/{id}/stock",
+    tag = "Commerce - Inventory",
+    params(
+        ("id" = i32, Path, description = "Variant ID", example = 789)
+    ),
+    request_body = UpdateStockRequest,
+    responses(
+        (status = 200, description = "Stock updated with audit log", body = ProductVariant),
+        (status = 500, description = "Database error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_variant_stock(
     pool: web::Data<DbPool>,
     variant_id: web::Path<i32>,
@@ -215,7 +256,22 @@ pub async fn get_inventory_audit_log(
 }
 
 
-/// Delete a variant (soft delete by setting is_active = false)
+/// Delete a variant (soft delete)
+#[utoipa::path(
+    delete,
+    path = "/v1/variants/{id}",
+    tag = "Commerce - Inventory",
+    params(
+        ("id" = i32, Path, description = "Variant ID to delete", example = 789)
+    ),
+    responses(
+        (status = 200, description = "Variant deleted (soft delete)"),
+        (status = 500, description = "Database error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn delete_variant(
     pool: web::Data<DbPool>,
     variant_id: web::Path<i32>,
