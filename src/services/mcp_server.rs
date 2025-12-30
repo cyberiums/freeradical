@@ -309,19 +309,42 @@ impl MCPWebSocket {
                     };
                 }
                 
-                // Tool execution is now scoped to tenant_id
+                // MCP as AI Interface: Guide agent to REST API
+                let v_type = arguments.get("verification_type")
+                    .and_then(|v| v.as_str())
+                    .unwrap_or("crm_customer");
+                let ttl = arguments.get("ttl_hours")
+                    .and_then(|v| v.as_i64())
+                    .unwrap_or(12);
+                let enabled = arguments.get("enabled")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(true);
+                
                 MCPResponse {
                     jsonrpc: "2.0".to_string(),
                     result: Some(json!({
                         "content": [{
                             "type": "text",
                             "text": format!(
-                                "✅ Updated verification settings for type: {} (tenant: {}, user: {})",
-                                arguments.get("verification_type")
-                                    .and_then(|v| v.as_str())
-                                    .unwrap_or("unknown"),
+                                "To update verification settings for '{}', make this API call:\n\n\
+                                 **Endpoint:** PUT /v1/api/verification/settings/{}\n\
+                                 **Headers:**\n  Authorization: Bearer <your_jwt_token>\n  Content-Type: application/json\n\n\
+                                 **Body:**\n{{\
+                                 \n  \"ttl_hours\": {},\n  \"enabled\": {}\n\
+                                 }}\n\n\
+                                 **Example cURL:**\n\
+                                 curl -X PUT 'http://localhost:8000/v1/api/verification/settings/{}' \\\n\
+                                      -H 'Authorization: Bearer YOUR_TOKEN' \\\n\
+                                      -H 'Content-Type: application/json' \\\n\
+                                      -d '{{\"ttl_hours\":{},\"enabled\":{}}}'\n\n\
+                                 **Tenant:** {}\n\
+                                 **User:** {}\n\
+                                 **Role:** {}",
+                                v_type, v_type, ttl, enabled,
+                                v_type, ttl, enabled,
                                 tenant_id,
-                                self.user_id.unwrap_or(0)
+                                self.user_id.unwrap_or(0),
+                                self.role.as_deref().unwrap_or("viewer")
                             )
                         }]
                     })),
@@ -340,12 +363,40 @@ impl MCPWebSocket {
                     };
                 }
                 
+                let v_type_filter = arguments.get("verification_type")
+                    .and_then(|v| v.as_str());
+                
+                let query_params = if let Some(vtype) = v_type_filter {
+                    format!("?verification_type={}", vtype)
+                } else {
+                    String::new()
+                };
+                
                 MCPResponse {
                     jsonrpc: "2.0".to_string(),
                     result: Some(json!({
                         "content": [{
                             "type": "text",
-                            "text": format!("Current settings for tenant {}:\\n- crm_customer: 12h TTL, enabled", tenant_id)
+                            "text": format!(
+                                "To retrieve verification settings{}, make this API call:\n\n\
+                                 **Endpoint:** GET /v1/api/verification/settings{}\n\
+                                 **Headers:**\n  Authorization: Bearer <your_jwt_token>\n\n\
+                                 **Example cURL:**\n\
+                                 curl 'http://localhost:8000/v1/api/verification/settings{}' \\\n\
+                                      -H 'Authorization: Bearer YOUR_TOKEN'\n\n\
+                                 **Response Format:**\n\
+                                 {{\n  \"settings\": [\n    {{\n      \"id\": 1,\n      \"tenant_id\": {},\n      \"verification_type\": \"crm_customer\",\n      \"ttl_hours\": 12,\n      \"enabled\": true,\n      \"email_template\": null\n    }}\n  ]\n}}\n\n\
+                                 **Tenant:** {}\n\
+                                 **User:** {}\n\
+                                 **Role:** {}",
+                                if v_type_filter.is_some() { format!(" for type '{}'", v_type_filter.unwrap()) } else { "".to_string() },
+                                query_params,
+                                query_params,
+                                tenant_id,
+                                tenant_id,
+                                self.user_id.unwrap_or(0),
+                                self.role.as_deref().unwrap_or("viewer")
+                            )
                         }]
                     })),
                     error: None,
