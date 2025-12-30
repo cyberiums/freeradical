@@ -40,7 +40,20 @@ pub struct RecommendationResponse {
     pub algorithm: String,
 }
 
-/// Get related content recommendations
+/// Get AI-powered content recommendations
+#[utoipa::path(
+    post,
+    path = "/v1/recommendations/related",
+    tag = "Customer - CRM (AI)",
+    request_body = RecommendationRequest,
+    responses(
+        (status = 200, description = "Related content recommendations", body = RecommendationResponse),
+        (status = 500, description = "Database or embedding error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_related_content(
     pool: web::Data<DbPool>,
     payload: web::Json<RecommendationRequest>,
@@ -99,7 +112,22 @@ pub async fn get_related_content(
     }))
 }
 
-/// Get trending content
+/// Get trending content based on recency and popularity
+#[utoipa::path(
+    get,
+    path = "/v1/recommendations/trending",
+    tag = "Customer - CRM (AI)",
+    params(
+        ("limit" = Option<i64>, Query, description = "Maximum number of trending items", example = 10)
+    ),
+    responses(
+        (status = 200, description = "Trending content list"),
+        (status = 500, description = "Database error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_trending(
     pool: web::Data<DbPool>,
     limit: web::Query<i64>,

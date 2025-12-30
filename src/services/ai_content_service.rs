@@ -343,7 +343,21 @@ pub async fn generate_with_anthropic(
 
 // --- Handlers ---
 
-/// Analyze sentiment
+/// Analyze sentiment of text using AI
+#[utoipa::path(
+    post,
+    path = "/v1/ai/analyze/sentiment",
+    tag = "Customer - CRM (AI)",
+    request_body = AnalyzeSentimentRequest,
+    responses(
+        (status = 200, description = "Sentiment analysis complete", body = SentimentAnalysisResponse),
+        (status = 400, description = "Unsupported provider"),
+        (status = 500, description = "AI provider error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn analyze_sentiment(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
