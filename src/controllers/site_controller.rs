@@ -10,6 +10,19 @@ pub struct ValidateCnameRequest {
     pub domain: String,
 }
 
+/// List user's sites
+#[utoipa::path(
+    get,
+    path = "/v1/sites",
+    tag = "Internal - System",
+    responses(
+        (status = 200, description = "List of sites (alias for tenants)"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_sites(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
@@ -17,6 +30,20 @@ pub async fn list_sites(
     tenant_controller::list_my_tenants(req, pool).await
 }
 
+/// Create a new site
+#[utoipa::path(
+    post,
+    path = "/v1/sites",
+    tag = "Internal - System",
+    request_body(content = String, description = "Site creation request (alias for tenant creation)"),
+    responses(
+        (status = 200, description = "Site created"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_site(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -25,6 +52,20 @@ pub async fn create_site(
     tenant_controller::create_tenant(req, pool, item).await
 }
 
+/// Validate custom domain CNAME
+#[utoipa::path(
+    post,
+    path = "/v1/sites/validate-cname",
+    tag = "Internal - System",
+    request_body = ValidateCnameRequest,
+    responses(
+        (status = 200, description = "Domain validation result"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn validate_cname(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -52,6 +93,23 @@ pub async fn validate_cname(
     }
 }
 
+/// Get site details
+#[utoipa::path(
+    get,
+    path = "/v1/sites/{id}",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Site ID", example = 1)
+    ),
+    responses(
+        (status = 200, description = "Site details"),
+        (status = 404, description = "Site not found"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_site(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,

@@ -26,6 +26,19 @@ pub struct SurveyDetails {
     pub questions: Vec<Question>,
 }
 
+/// List user's surveys
+#[utoipa::path(
+    get,
+    path = "/v1/surveys",
+    tag = "Internal - System",
+    responses(
+        (status = 200, description = "List of surveys created by user", body = Vec<Survey>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_surveys(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
@@ -58,6 +71,20 @@ pub async fn list_surveys(
     }
 }
 
+/// Create a new survey
+#[utoipa::path(
+    post,
+    path = "/v1/surveys",
+    tag = "Internal - System",
+    request_body = CreateSurveyRequest,
+    responses(
+        (status = 200, description = "Survey created", body = Survey),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_survey(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -94,6 +121,19 @@ pub async fn create_survey(
     }
 }
 
+/// Get survey with questions
+#[utoipa::path(
+    get,
+    path = "/v1/surveys/{id}",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Survey ID", example = 10)
+    ),
+    responses(
+        (status = 200, description = "Survey details with questions", body = SurveyDetails),
+        (status = 404, description = "Survey not found")
+    )
+)]
 pub async fn get_survey(
     pool: web::Data<db_connection::DatabasePool>,
     path: web::Path<i32>
@@ -123,6 +163,23 @@ pub async fn get_survey(
     })
 }
 
+/// Add question to survey
+#[utoipa::path(
+    post,
+    path = "/v1/surveys/{id}/questions",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Survey ID", example = 10)
+    ),
+    request_body = AddQuestionRequest,
+    responses(
+        (status = 200, description = "Question added", body = Question),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn add_question(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -157,10 +214,24 @@ pub async fn add_question(
     }
 }
 
+/// Submit survey response
+#[utoipa::path(
+    post,
+    path = "/v1/surveys/{id}/responses",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Survey ID", example = 10)
+    ),
+    request_body(content = String, description = "JSON answers object"),
+    responses(
+        (status = 200, description = "Response submitted", body = Response),
+        (status = 500, description = "Error submitting response")
+    )
+)]
 pub async fn submit_response(
     pool: web::Data<db_connection::DatabasePool>,
-    path: web::Path<i32>, // survey_id
-    item: web::Json<serde_json::Value> // answers
+    path: web::Path<i32>,
+    item: web::Json<serde_json::Value>
 ) -> impl Responder {
     let survey_id = path.into_inner();
     let mut conn = pool.get().expect("couldn't get db connection from pool");
@@ -183,6 +254,22 @@ pub async fn submit_response(
     }
 }
 
+/// Get survey results
+#[utoipa::path(
+    get,
+    path = "/v1/surveys/{id}/results",
+    tag = "Internal - System",
+    params(
+        ("id" = i32, Path, description = "Survey ID", example = 10)
+    ),
+    responses(
+        (status = 200, description = "Survey responses", body = Vec<Response>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_results(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
