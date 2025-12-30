@@ -22,7 +22,7 @@ POSTGRES_PORT=${POSTGRES_PORT:-5432}
 API_URL="http://localhost:8001"
 
 echo -e "${YELLOW}Step 1: Starting PostgreSQL stack...${NC}"
-docker compose -f docker-compose.yml up -d
+docker compose -f docker-compose.yml up -d postgres redis cms
 sleep 8
 
 echo -e "\n${YELLOW}Step 2: Checking database connectivity...${NC}"

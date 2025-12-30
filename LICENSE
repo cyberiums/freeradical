@@ -1,22 +1,79 @@
-MIT License
+# FreeRadical CMS - Licensing
 
-Copyright (c) 2020 fastbuilder
+FreeRadical CMS uses a **dual-license model** to support both open-source and commercial use cases.
 
+---
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## License Summary
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+| Component | License for Companies < $20M Revenue | License for Companies ≥ $20M Revenue |
+|-----------|-------------------------------------|--------------------------------------|
+| **Content API** | MIT License | MIT License |
+| **Internal API** | MIT License | MIT License |
+| **Customer API** | MIT License | FastBuilder.AI Enterprise License |
+| **Commerce API** | MIT License | FastBuilder.AI Enterprise License |
+| **oxidly/** | FastBuilder.AI Enterprise License | FastBuilder.AI Enterprise License |
+| **marketplace/** | FastBuilder.AI Enterprise License | FastBuilder.AI Enterprise License |
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+---
+
+## MIT Licensed Components
+
+The following components are available under the **MIT License** for all users:
+
+- **Content API** - All content management functionality
+- **Internal API** - Internal system APIs
+- **Customer API** - For companies with annual revenue **under USD $20,000,000**
+- **Commerce API** - For companies with annual revenue **under USD $20,000,000**
+
+See [LICENSE-MIT](./LICENSE-MIT) for full MIT License text.
+
+---
+
+## Enterprise Licensed Components
+
+The following components require the **FastBuilder.AI Enterprise License**:
+
+### Always Enterprise (All Companies)
+- **oxidly/** - Cloud management frontend and infrastructure (private repository)
+- **marketplace/** - Marketplace and extensions functionality
+
+### Enterprise for Large Companies (≥ $20M Annual Revenue)
+- **Customer API** - Customer management and support features
+- **Commerce API** - E-commerce and payment processing features
+
+See [LICENSE-ENTERPRISE](./LICENSE-ENTERPRISE) for full Enterprise License text.
+
+---
+
+## Determining Your License
+
+### You can use the MIT License if:
+- Your company's annual revenue is **under USD $20,000,000**, OR
+- You are only using Content API and Internal API components
+
+### You need an Enterprise License if:
+- Your company's annual revenue is **$20,000,000 or more** AND you use Customer/Commerce APIs, OR
+- You use the `oxidly/` or `marketplace/` components (regardless of company size)
+
+---
+
+## Getting an Enterprise License
+
+To obtain a FastBuilder.AI Enterprise License:
+
+1. **Contact**: enterprise@fastbuilder.ai
+2. **Provide**: Company information and intended use case
+3. **Pricing**: Custom pricing based on your needs and scale
+
+---
+
+## Questions?
+
+For licensing questions, contact: licensing@fastbuilder.ai
+
+For technical support: support@fastbuilder.ai
+
+---
+
+**Built by FastBuilder.AI** | https://fastbuilder.ai

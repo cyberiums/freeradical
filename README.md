@@ -1,7 +1,7 @@
 # FreeRadical CMS
 
 [![Version](https://img.shields.io/badge/version-2.5.0-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v2.5.0)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+![License](https://img.shields.io/badge/license-MIT%20%2F%20Enterprise-blue.svg)
 ![Rust](https://img.shields.io/badge/rust-1.92%2B-orange.svg)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
@@ -234,8 +234,31 @@ Contributions are welcome! Please see:
 
 ## 📜 License
 
-MIT
- License - see LICENSE file
+FreeRadical CMS uses a **dual-license model**:
+
+### Open Source (MIT License)
+- ✅ **Content API** - Free for all
+- ✅ **Internal API** - Free for all  
+- ✅ **Customer API** - Free for companies < $20M revenue
+- ✅ **Commerce API** - Free for companies < $20M revenue
+
+### Enterprise License Required
+- 🔒 **oxidly/** - Proprietary (all companies)
+- 🔒 **marketplace/** - Proprietary (all companies)
+- 🔒 **Customer API** - Companies ≥ $20M revenue
+- 🔒 **Commerce API** - Companies ≥ $20M revenue
+
+**Quick determination:**
+- Revenue < $20M? → Use MIT License for all APIs ✅
+- Revenue ≥ $20M? → Enterprise License required for Customer/Commerce APIs
+- Using oxidly or marketplace? → Enterprise License required
+
+📄 **License Files:**
+- [LICENSE](./LICENSE) - Overview and component breakdown
+- [LICENSE-MIT](./LICENSE-MIT) - Full MIT License text
+- [LICENSE-ENTERPRISE](./LICENSE-ENTERPRISE) - Full Enterprise License text
+
+💼 **Enterprise License:** enterprise@fastbuilder.ai
 
 ## 🙏 Credits
 

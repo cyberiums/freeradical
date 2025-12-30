@@ -1,0 +1,142 @@
+FastBuilder.AI Enterprise License
+
+Copyright (c) 2024-2025 FastBuilder.AI
+All Rights Reserved.
+
+---
+
+## PROPRIETARY SOFTWARE LICENSE AGREEMENT
+
+This Enterprise License Agreement ("Agreement") is between FastBuilder.AI ("Licensor") 
+and the entity or individual licensing this software ("Licensee").
+
+### 1. GRANT OF LICENSE
+
+Subject to the terms of this Agreement and payment of applicable license fees, 
+Licensor grants Licensee a non-exclusive, non-transferable license to use the 
+licensed components of FreeRadical CMS.
+
+### 2. LICENSED COMPONENTS
+
+This Enterprise License is REQUIRED for:
+
+**A. Always Enterprise (All Companies):**
+- oxidly/ - Cloud management frontend and infrastructure
+- marketplace/ - Marketplace and extensions functionality
+
+**B. Revenue-Based Enterprise (Companies ≥ $20M Annual Revenue):**
+- Customer API - Customer management and support features
+- Commerce API - E-commerce and payment processing features
+
+### 3. LICENSE FEES
+
+License fees are determined based on:
+- Number of users/seats
+- Annual revenue of Licensee's organization
+- Deployment scale (self-hosted vs cloud)
+- Support level required
+
+Contact enterprise@fastbuilder.ai for pricing.
+
+### 4. RESTRICTIONS
+
+Licensee shall NOT:
+- Redistribute or resell the licensed components
+- Remove or modify copyright notices or license information
+- Use the licensed components to create competing products
+- Share access credentials or licenses with unlicensed third parties
+- Reverse engineer, decompile, or disassemble the software
+
+### 5. REVENUE THRESHOLD
+
+For Customer API and Commerce API:
+- Companies with annual revenue < USD $20,000,000 may use the MIT License
+- Companies with annual revenue ≥ USD $20,000,000 MUST obtain this Enterprise License
+
+Annual revenue is calculated based on the most recent fiscal year.
+
+### 6. COMPLIANCE AND AUDITING
+
+Licensor reserves the right to:
+- Request proof of revenue for verification purposes
+- Audit Licensee's use of the licensed components
+- Terminate the license for non-compliance
+
+### 7. TERM AND TERMINATION
+
+- License term is typically annual, renewable upon payment
+- Either party may terminate with 30 days written notice
+- Upon termination, Licensee must cease use and destroy all copies
+- Prepaid fees are non-refundable
+
+### 8. SUPPORT AND UPDATES
+
+- Enterprise license includes priority support
+- Access to security updates and patches
+- Optional premium support packages available
+- Training and onboarding assistance
+
+### 9. WARRANTY DISCLAIMER
+
+THE LICENSED COMPONENTS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, 
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+### 10. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL FASTBUILDER.AI BE LIABLE FOR ANY SPECIAL, INCIDENTAL, INDIRECT, 
+OR CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION, DAMAGES FOR 
+LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, 
+OR ANY OTHER PECUNIARY LOSS) ARISING OUT OF THE USE OF OR INABILITY TO USE THE 
+LICENSED COMPONENTS.
+
+### 11. CONFIDENTIALITY
+
+Licensee agrees to keep confidential any proprietary information, trade secrets, 
+or non-public aspects of the licensed components.
+
+### 12. GOVERNING LAW
+
+This Agreement shall be governed by the laws of Ohio USA, without 
+regard to its conflict of law provisions.
+
+### 13. ENTIRE AGREEMENT
+
+This Agreement constitutes the entire agreement between the parties and supersedes 
+all prior agreements and understandings, whether written or oral.
+
+---
+
+## OBTAINING A LICENSE
+
+To obtain an Enterprise License:
+
+**Email**: enterprise@fastbuilder.ai  
+**Website**: https://fastbuilder.ai/enterprise  
+**Phone**: [Check https://fastbuilder.ai/contact for Contact Number]
+
+Please provide:
+1. Company name and size
+2. Annual revenue range
+3. Intended use case
+4. Number of users/deployments
+5. Required support level
+
+---
+
+## LICENSE ENFORCEMENT
+
+Unauthorized use of Enterprise-licensed components is prohibited and may result in:
+- Immediate license termination
+- Legal action
+- Damages and attorney fees
+
+FastBuilder.AI actively monitors and enforces license compliance.
+
+---
+
+**FastBuilder.AI**  
+Built for Enterprise Scale  
+https://fastbuilder.ai
+
+For questions: licensing@fastbuilder.ai
