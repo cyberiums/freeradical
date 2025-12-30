@@ -196,7 +196,7 @@ jobs:
     - name: Build and push Oxidly image
       uses: docker/build-push-action@v5
       with:
-        context: ./oxidly
+        context: .
         file: ./oxidly/Dockerfile.root
         push: true
         tags: ${{ steps.meta-oxidly.outputs.tags }}
