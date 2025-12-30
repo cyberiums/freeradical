@@ -14,6 +14,7 @@ pub mod payment_controller;
 pub mod category_controllers;
 pub mod sitemap_controller;
 pub mod crm_controller;
+pub mod crm_controller_public; // Public CRM endpoints (no auth)
 pub mod image_sitemap_controller;
 pub mod graphql_controller;
 pub mod search_controller;
