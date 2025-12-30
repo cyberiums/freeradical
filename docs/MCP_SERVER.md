@@ -78,6 +78,54 @@ curl -X POST http://localhost:8000/v1/auth/login \
 
 `2024-11-05`
 
+### MCP AI Interface Pattern ✨
+
+**Design Philosophy:** MCP tools act as an **AI-friendly interface layer** that guides agents to the appropriate REST API endpoints rather than directly accessing the database.
+
+**Why This Approach:**
+- ✅ **Simple** - No complex async WebSocket actor refactoring
+- ✅ **Maintainable** - Clear separation: MCP = AI interface, REST = operations  
+- ✅ **Immediate value** - Tools are useful from day 1
+- ✅ **Leverages existing** - REST API already tested and working
+
+**How It Works:**
+
+When an AI agent calls a tool like `update_verification_settings`, it receives:
+- Complete API endpoint details
+- cURL examples with headers
+- Request body format
+- Expected response structure
+- Tenant/user/role context
+
+The AI agent can then:
+1. Use the provided information to understand the operation
+2. Make the actual REST API call with proper authentication
+3. Receive the real data from the database
+
+**Example Tool Response:**
+```markdown
+To update verification settings for 'crm_customer', make this API call:
+
+**Endpoint:** PUT /v1/api/verification/settings/crm_customer
+**Headers:**
+  Authorization: Bearer <your_jwt_token>
+  Content-Type: application/json
+
+**Body:**
+{
+  "ttl_hours": 24,
+  "enabled": true
+}
+
+**Example cURL:**
+curl -X PUT 'http://localhost:8000/v1/api/verification/settings/crm_customer' \
+     -H 'Authorization: Bearer YOUR_TOKEN' \
+     -H 'Content-Type: application/json' \
+     -d '{"ttl_hours":24,"enabled":true}'
+```
+
+**See Also:** `docs/MCP_IMPLEMENTATION_DECISION.md` for the full design rationale.
+
 ---
 
 ## Available Resources
