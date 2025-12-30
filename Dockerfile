@@ -66,6 +66,7 @@ RUN cargo install diesel_cli --no-default-features --features postgres
 RUN mkdir -p /app/uploads
 
 EXPOSE 8000
+EXPOSE 9009
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["./freeradical"]

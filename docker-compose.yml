@@ -57,6 +57,7 @@ services:
       GOOGLE_REDIRECT_URI: "http://localhost:8000/v1/auth/google/callback"
     ports:
       - "${APP_PORT:-8000}:8000"
+      - "${MCP_PORT:-9009}:9009"
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped

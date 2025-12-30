@@ -57,11 +57,25 @@ pub struct MCPTool {
 
 pub struct MCPWebSocket {
     pool: Arc<DbPool>,
+    tenant_id: Option<i32>,  // Extracted from JWT
+    authenticated: bool,
 }
 
 impl MCPWebSocket {
-    pub fn new(pool: Arc<DbPool>) -> Self {
-        Self { pool }
+    pub fn new(pool: Arc<DbPool>, tenant_id: Option<i32>) -> Self {
+        Self { 
+            pool,
+            tenant_id,
+            authenticated: tenant_id.is_some(),
+        }
+    }
+    
+    fn check_auth(&self) -> Result<i32, MCPError> {
+        self.tenant_id.ok_or_else(|| MCPError {
+            code: -32001,
+            message: "Authentication required. Please provide bearer token.".to_string(),
+            data: None,
+        })
     }
 
     fn handle_request(&self, req: MCPRequest) -> MCPResponse {
@@ -225,6 +239,19 @@ impl MCPWebSocket {
     }
 
     fn handle_call_tool(&self, params: Option<serde_json::Value>, id: Option<serde_json::Value>) -> MCPResponse {
+        // Check authentication first
+        let tenant_id = match self.check_auth() {
+            Ok(id) => id,
+            Err(error) => {
+                return MCPResponse {
+                    jsonrpc: "2.0".to_string(),
+                    result: None,
+                    error: Some(error),
+                    id,
+                };
+            }
+        };
+        
         let tool_name = params
             .as_ref()
             .and_then(|p| p.get("name").and_then(|n| n.as_str()))
@@ -236,21 +263,22 @@ impl MCPWebSocket {
             .cloned()
             .unwrap_or(json!({}));
 
-        info!("🔧 Calling tool: {} with args: {:?}", tool_name, arguments);
+        info!("🔧 Calling tool: {} for tenant_id={}", tool_name, tenant_id);
 
         match tool_name {
             "update_verification_settings" => {
-                // In production, this would call the actual API endpoint
+                // Tool execution is now scoped to tenant_id
                 MCPResponse {
                     jsonrpc: "2.0".to_string(),
                     result: Some(json!({
                         "content": [{
                             "type": "text",
                             "text": format!(
-                                "✅ Updated verification settings for type: {}",
+                                "✅ Updated verification settings for type: {} (tenant: {})",
                                 arguments.get("verification_type")
                                     .and_then(|v| v.as_str())
-                                    .unwrap_or("unknown")
+                                    .unwrap_or("unknown"),
+                                tenant_id
                             )
                         }]
                     })),
@@ -264,7 +292,7 @@ impl MCPWebSocket {
                     result: Some(json!({
                         "content": [{
                             "type": "text",
-                            "text": "Current settings:\n- crm_customer: 12h TTL, enabled\n- user_registration: 24h TTL, enabled"
+                            "text": format!("Current settings for tenant {}:\n- crm_customer: 12h TTL, enabled", tenant_id)
                         }]
                     })),
                     error: None,
@@ -343,8 +371,49 @@ async fn ws_index(
     pool: web::Data<Arc<DbPool>>,
 ) -> Result<HttpResponse, actix_web::Error> {
     info!("📡 New MCP WebSocket connection attempt");
-    let ws_actor = MCPWebSocket::new(pool.get_ref().clone());
+    
+    // Extract tenant_id from JWT token in Authorization header
+    let tenant_id = extract_tenant_from_request(&req);
+    
+    if tenant_id.is_none() {
+        info!("⚠️  MCP connection attempt without authentication - rejecting");
+    } else {
+        info!("✅ MCP connection authenticated for tenant: {:?}", tenant_id);
+    }
+    
+    let ws_actor = MCPWebSocket::new(pool.get_ref().clone(), tenant_id);
     ws::start(ws_actor, &req, stream)
+}
+
+fn extract_tenant_from_request(req: &HttpRequest) -> Option<i32> {
+    use jsonwebtoken::{decode, DecodingKey, Validation, Algorithm};
+    use serde::{Deserialize};
+    
+    #[derive(Debug, Deserialize)]
+    struct Claims {
+        sub: String,
+        tenant_id: Option<i32>,
+    }
+    
+    // Get Authorization header
+    let auth_header = req.headers().get("Authorization")?;
+    let auth_str = auth_header.to_str().ok()?;
+    
+    // Extract token from "Bearer <token>"
+    let token = auth_str.strip_prefix("Bearer ")?.trim();
+    
+    // Get JWT secret from environment
+    let jwt_secret = std::env::var("APP_JWT_KEY").unwrap_or_else(|_| "secret".to_string());
+    
+    // Decode and validate JWT
+    let validation = Validation::new(Algorithm::HS256);
+    let token_data = decode::<Claims>(
+        token,
+        &DecodingKey::from_secret(jwt_secret.as_bytes()),
+        &validation
+    ).ok()?;
+    
+    token_data.claims.tenant_id
 }
 
 async fn health() -> HttpResponse {

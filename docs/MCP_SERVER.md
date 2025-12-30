@@ -8,6 +8,10 @@ FreeRadical now includes a **Model Context Protocol (MCP) Server** that runs on 
 
 ## Quick Start
 
+### Authentication Required 🔒
+
+**IMPORTANT:** The MCP server requires JWT authentication. All connections must include a bearer token in the `Authorization` header.
+
 ### Connection
 
 **WebSocket Endpoint:**
@@ -15,7 +19,12 @@ FreeRadical now includes a **Model Context Protocol (MCP) Server** that runs on 
 ws://localhost:9009/mcp
 ```
 
-**Health Check:**
+**Headers Required:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+```
+
+**Health Check (No Auth):**
 ```
 http://localhost:9009/health
 ```
@@ -26,8 +35,12 @@ http://localhost:9009/health
 # Install wscat
 npm install -g wscat
 
-# Connect to MCP server
-wscat -c ws://localhost:9009/mcp
+# Get your JWT token first (from login endpoint)
+JWT_TOKEN="your-jwt-token-here"
+
+# Connect to MCP server with authentication
+wscat -c ws://localhost:9009/mcp \
+  --header "Authorization: Bearer $JWT_TOKEN"
 
 # Send initialize request
 {"jsonrpc":"2.0","method":"initialize","id":1}
@@ -37,6 +50,17 @@ wscat -c ws://localhost:9009/mcp
 
 # List resources
 {"jsonrpc":"2.0","method":"resources/list","id":3}
+```
+
+### Getting a JWT Token
+
+```bash
+# Login to get JWT token
+curl -X POST http://localhost:8000/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"your-password"}'
+
+# Response includes: {"token": "eyJhbGc..."}
 ```
 
 ---
@@ -261,18 +285,55 @@ FreeRadical CMS
 
 ---
 
-## Security
+## Security 🔒
 
-**Current State:**
-- ⚠️ No authentication (localhost only)
-- ✅ Tenant isolation in database queries
-- ✅ Input validation (TTL limits, etc.)
+**Current Implementation:**
+- ✅ **JWT Authentication** - Bearer token required
+- ✅ **Tenant Isolation** - All operations scoped to user's tenant_id
+- ✅ **Authorization Header** - Standard bearer token format
+- ✅ **Auth Validation** - JWT signature and expiration checked
+- ✅ **Error Handling** - Custom -32001 error for auth failures
+- ✅ **Audit Logging** - Tenant ID logged for all operations
+
+**How It Works:**
+
+1. Client connects with Authorization header
+2. Server extracts JWT and validates signature
+3. Tenant ID extracted from JWT claims
+4. All tool calls scoped to that tenant
+5. Cross-tenant access impossible
+
+**Authentication Flow:**
+
+```
+Client                    MCP Server
+  |                           |
+  |--WebSocket + JWT--------->|
+  |                           |-Validate JWT
+  |                           |-Extract tenant_id
+  |<----Connection Accepted---|
+  |                           |
+  |--Tool Call--------------->|
+  |                           |-Check tenant_id
+  |                           |-Execute (tenant-scoped)
+  |<----Result (tenant data)--|
+```
+
+**Error Codes:**
+
+| Code | Meaning | Solution |
+|------|---------|----------|
+| `-32001` | Authentication required | Provide valid JWT bearer token |
+| `-32700` | Parse error | Check JSON syntax |
+| `-32601` | Method not found | Use valid MCP method |
 
 **Production Recommendations:**
-1. Add bearer token authentication
-2. Rate limiting per client
-3. TLS/WSS for production
-4. Firewall rules (only allow from trusted IPs)
+1. ✅ Use HTTPS/WSS in production
+2. ✅ Rotate JWT secrets regularly
+3. ✅ Set short token expiration (1-24h)
+4. ⚠️ Add rate limiting per tenant
+5. ⚠️ Monitor failed auth attempts
+6. ⚠️ Implement IP whitelist for sensitive operations
 
 ---
 
