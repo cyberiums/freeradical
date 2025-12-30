@@ -417,6 +417,16 @@ async fn main() -> std::io::Result<()> {
     .workers(2)
     .run();
 
+    // Start MCP Server on port 9009 (parallel to main REST API on port 8000)
+    let pool_for_mcp = pool.clone();
+    actix_web::rt::spawn(async move {
+        log::info!("🔌 Starting FreeRadical MCP Server on port 9009...");
+        match services::mcp_server::start_mcp_server(pool_for_mcp).await {
+            Ok(_) => log::info!("MCP Server stopped"),
+            Err(e) => log::error!("❌ MCP Server failed to start: {}", e),
+        }
+    });
+
     // Start Scheduled Tasks
     let email_service_for_sched = email_service.clone();
     actix_web::rt::spawn(async move {
