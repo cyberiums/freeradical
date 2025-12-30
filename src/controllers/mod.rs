@@ -29,3 +29,4 @@ pub mod tenant_sso_controller;
 pub mod tenant_controller;
 pub mod survey_controller;
 pub mod billing_controller;
+pub mod verification_settings_controller; // Admin verification settings
