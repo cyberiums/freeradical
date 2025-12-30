@@ -132,6 +132,22 @@ pub async fn display_page(
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }
 
+/// Create a new page with SEO metadata
+#[utoipa::path(
+    post,
+    path = "/v1/pages",
+    tag = "Content - Pages",
+    request_body = MutPage,
+    responses(
+        (status = 200, description = "Page created successfully", body = MutPage),
+        (status = 400, description = "Validation failed  (SEO fields too long)"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_page(
     req: HttpRequest,
     new: web::Json<MutPage>,
@@ -161,6 +177,20 @@ pub async fn create_page(
     Ok(HttpResponse::Ok().json(uuid_new))
 }
 
+/// List all pages for the current tenant
+#[utoipa::path(
+    get,
+    path = "/v1/pages",
+    tag = "Content - Pages",
+    responses(
+        (status = 200, description = "List of pages", body = Vec<PageDTO>),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Access denied")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_pages(
     req: HttpRequest, 
     pool: web::Data<DatabasePool>
@@ -180,6 +210,22 @@ pub async fn get_pages(
     Ok(HttpResponse::Ok().json(pages))
 }
 
+/// Get a single page by UUID
+#[utoipa::path(
+    get,
+    path = "/v1/pages/{id}",
+    tag = "Content - Pages",
+    params(
+        ("id" = String, Path, description = "Page UUID", example = "123e4567-e89b-12d3-a456-426614174000")
+    ),
+    responses(
+        (status = 200, description = "Page details", body = PageDTO),
+        (status = 404, description = "Page not found or tenant mismatch")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_page(
     req: HttpRequest,
     id: web::Path<String>,
@@ -202,6 +248,22 @@ pub async fn get_page(
     Ok(HttpResponse::Ok().json(page))
 }
 
+/// Get page with associated modules
+#[utoipa::path(
+    get,
+    path = "/v1/pages/{id}/modules",
+    tag = "Content - Pages",
+    params(
+        ("id" = String, Path, description = "Page UUID", example = "123e4567-e89b-12d3-a456-426614174000")
+    ),
+    responses(
+        (status = 200, description = "Page with modules", body = PageModuleDTO),
+        (status = 404, description = "Page not found")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_page_join_modules(
     req: HttpRequest,
     id: web::Path<String>,
@@ -232,6 +294,26 @@ pub async fn get_page_join_modules(
     Ok(HttpResponse::Ok().json(page_vec))
 }
 
+/// Update an existing page
+#[utoipa::path(
+    put,
+    path = "/v1/pages/{id}",
+    tag = "Content - Pages",
+    params(
+        ("id" = String, Path, description = "Page UUID to update", example = "123e4567-e89b-12d3-a456-426614174000")
+    ),
+    request_body = MutPage,
+    responses(
+        (status = 200, description = "Page updated successfully", body = MutPage),
+        (status = 400, description = "Validation failed"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions"),
+        (status = 404, description = "Page not found")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_page(
     req: HttpRequest,
     updated_page: web::Json<MutPage>,
@@ -295,6 +377,24 @@ pub async fn update_page(
     Ok(HttpResponse::Ok().json(final_page))
 }
 
+/// Delete a page
+#[utoipa::path(
+    delete,
+    path = "/v1/pages/{id}",
+    tag = "Content - Pages",
+    params(
+        ("id" = String, Path, description = "Page UUID to delete", example = "123e4567-e89b-12d3-a456-426614174000")
+    ),
+    responses(
+        (status = 200, description = "Page deleted successfully"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions"),
+        (status = 404, description = "Page not found")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn delete_page(
     req: HttpRequest,
     id: web::Path<String>,
