@@ -94,6 +94,7 @@ pub mod hreflang_service;
 pub mod audit_service;
 pub mod email_service;
 pub mod email_template_service;
+pub mod email_verification_service; // Public API email verification
 pub mod crm_service; // CRM modules below require migrations to be run first
 pub mod billing_service;
 pub mod billing_events;
