@@ -418,6 +418,19 @@ async fn main() -> std::io::Result<()> {
     actix_web::rt::spawn(async move {
         let _ = services::scheduler_service::start_scheduler(email_service_for_sched).await;
     });
+    
+    // Start Email Verification Cleanup Job (runs every hour)
+    let pool_for_cleanup = pool.clone();
+    actix_web::rt::spawn(async move {
+        use services::email_verification_service::EmailVerificationService;
+        loop {
+            tokio::time::sleep(tokio::time::Duration::from_secs(3600)).await; // 1 hour
+            match EmailVerificationService::cleanup_expired(&pool_for_cleanup).await {
+                Ok(deleted) => log::info!("✅ Cleaned up {} expired email verifications", deleted),
+                Err(e) => log::error!("❌ Verification cleanup failed: {}", e),
+            }
+        }
+    });
 
     println!("🚀 Server is running 🚀");
 
