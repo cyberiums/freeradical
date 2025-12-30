@@ -796,6 +796,21 @@ pub struct OptimizeAdResponse {
     pub predicted_roas: f64,
 }
 
+/// AI-powered marketing campaign generation
+#[utoipa::path(
+    post,
+    path = "/v1/ai/marketing/generate",
+    tag = "Commerce - AI",
+    request_body = GenerateMarketingRequest,
+    responses(
+        (status = 200, description = "Generated marketing campaign with subject, content, and CTA", body = GenerateMarketingResponse),
+        (status = 400, description = "Unsupported AI provider"),
+        (status = 500, description = "AI generation failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn generate_marketing_campaign(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
@@ -853,6 +868,21 @@ pub async fn generate_marketing_campaign(
     Ok(HttpResponse::Ok().json(result))
 }
 
+/// AI-powered ad spend optimization
+#[utoipa::path(
+    post,
+    path = "/v1/ai/marketing/optimize",
+    tag = "Commerce - AI",
+    request_body = OptimizeAdRequest,
+    responses(
+        (status = 200, description = "Optimized ad spend recommendation with predicted ROAS", body = OptimizeAdResponse),
+        (status = 400, description = "Unsupported AI provider"),
+        (status = 500, description = "AI optimization failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn optimize_ad_spend(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
