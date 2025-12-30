@@ -17,6 +17,20 @@ pub struct InviteMemberRequest {
     pub role: String,
 }
 
+/// Create a new tenant
+#[utoipa::path(
+    post,
+    path = "/v1/api/tenants",
+    tag = "Internal - Tenants",
+    request_body = NewTenantRequest,
+    responses(
+        (status = 200, description = "Tenant created with user as owner", body = Tenant),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_tenant(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -72,6 +86,19 @@ pub async fn create_tenant(
     }
 }
 
+/// List user's tenants
+#[utoipa::path(
+    get,
+    path = "/v1/api/tenants",
+    tag = "Internal - Tenants",
+    responses(
+        (status = 200, description = "List of tenants user is a member of", body = Vec<Tenant>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_my_tenants(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
@@ -98,6 +125,25 @@ pub async fn list_my_tenants(
     }
 }
 
+/// Invite member to tenant
+#[utoipa::path(
+    post,
+    path = "/v1/api/tenants/{id}/members",
+    tag = "Internal - Tenants",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    request_body = InviteMemberRequest,
+    responses(
+        (status = 200, description = "Member invited successfully"),
+        (status = 400, description = "User not found"),
+        (status = 403, description = "Insufficient permissions (ManageMembers required)"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn invite_member(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -176,6 +222,23 @@ pub async fn invite_member(
     }
 }
 
+/// Get tenant details
+#[utoipa::path(
+    get,
+    path = "/v1/api/tenants/{id}",
+    tag = "Internal - Tenants",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    responses(
+        (status = 200, description = "Tenant details", body = Tenant),
+        (status = 404, description = "Tenant not found or access denied"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_tenant_details(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -206,6 +269,22 @@ pub async fn get_tenant_details(
     }
 }
 
+/// List tenant audit logs
+#[utoipa::path(
+    get,
+    path = "/v1/api/tenants/{id}/audit-logs",
+    tag = "Internal - Tenants",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    responses(
+        (status = 200, description = "List of audit log entries"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_audit_logs(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -230,6 +309,24 @@ pub async fn list_audit_logs(
     }
 }
 
+/// Update tenant settings
+#[utoipa::path(
+    put,
+    path = "/v1/api/tenants/{id}/settings",
+    tag = "Internal - Tenants",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    request_body(content = String, description = "JSON settings object"),
+    responses(
+        (status = 200, description = "Settings updated successfully"),
+        (status = 403, description = "Insufficient permissions (ManageSettings required)"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_settings(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
