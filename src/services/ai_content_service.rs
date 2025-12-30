@@ -575,6 +575,21 @@ pub async fn analyze_pricing(
     Ok(HttpResponse::Ok().json(result))
 }
 
+/// AI-powered content generation (blog posts, meta descriptions, titles)
+#[utoipa::path(
+    post,
+    path = "/v1/ai/generate/content",
+    tag = "Content - AI",
+    request_body = GenerateContentRequest,
+    responses(
+        (status = 200, description = "Generated content with token usage and cost tracking", body = GeneratedContentResponse),
+        (status = 400, description = "Unsupported provider or invalid content type"),
+        (status = 500, description = "AI generation failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn generate_content(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
@@ -628,6 +643,21 @@ struct OpenAIImageData {
     url: String,
 }
 
+/// AI-powered image generation
+#[utoipa::path(
+    post,
+    path = "/v1/ai/generate/image",
+    tag = "Content - AI",
+    request_body = GenerateImageRequest,
+    responses(
+        (status = 200, description = "Generated image URLs with cost tracking", body = GenerateImageResponse),
+        (status = 400, description = "Unsupported provider"),
+        (status = 500, description = "AI image generation failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn generate_image(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
