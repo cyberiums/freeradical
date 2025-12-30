@@ -1,0 +1,109 @@
+services:
+  postgres:
+    image: ankane/pgvector:latest # Official pgvector image (PostgreSQL 17 + pgvector)
+    container_name: freeradical_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-freeradical}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-freeradical}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-freeradical}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: freeradical_redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cms:
+    image: ghcr.io/cyberiums/freeradical/cms:latest
+    container_name: freeradical_cms
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-freeradical}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-freeradical}
+      # MySQL vars required by app code (not used with PostgreSQL but needed for compilation)
+      APP_MYSQL_USERNAME: unused
+      APP_MYSQL_PASSWORD: unused
+      APP_MYSQL_DATABASE: unused
+      APP_MYSQL_URL: unused
+      APP_MYSQL_PORT: 3306
+      APP_BIND_ADDRESS: 0.0.0.0
+      APP_BIND_PORT: 8000
+      APP_JWT_KEY: ${JWT_SECRET:-change-this-in-production}
+      APP_MAX_REQ: 100
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
+      REDIS_URL: redis://redis:6379
+      RUST_LOG: info
+      GOOGLE_CLIENT_ID: "867082665481-umkfneu32sak280he9tjuil6rm98k7a2.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      GOOGLE_REDIRECT_URI: "http://localhost:8000/oauth/callback"
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  oxidly:
+    image: ghcr.io/cyberiums/freeradical/oxidly:latest
+    container_name: freeradical_oxidly
+    depends_on:
+      - cms
+    environment:
+      - API_URL=http://cms:8000/v1
+      - PORT=5005
+    ports:
+      - "5005:5005"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  admin:
+    image: ghcr.io/cyberiums/freeradical/admin:latest
+    container_name: freeradical_admin
+    depends_on:
+      - cms
+    ports:
+      - "${ADMIN_PORT:-3000}:80"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: freeradical_watchtower
+    restart: unless-stopped
+    environment:
+      - DOCKER_API_VERSION=1.44
+      - WATCHTOWER_ROLLING_RESTART=true
+      - WATCHTOWER_INCLUDE_STOPPED=false
+      - WATCHTOWER_REVIVE_STOPPED=false
+      - WATCHTOWER_LABEL_ENABLE=true
+      - TZ=UTC
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Random delay (0-10 min) + random interval (5-10 min) for rolling deployments
+    command: sh -c 'DELAY=$$(( RANDOM % 600 )); INTERVAL=$$(( 300 + RANDOM % 300 )); echo "Watchtower: waiting $${DELAY}s, then checking every $${INTERVAL}s"; sleep $$DELAY; exec /watchtower --interval $$INTERVAL --cleanup --label-enable'
+
+volumes:
+  postgres_data:
+  redis_data:
