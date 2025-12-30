@@ -28,16 +28,13 @@ jobs:
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      uses: dtolnay/rust-toolchain@stable
     
     - name: Cache cargo
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/bin/
@@ -60,13 +57,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Install Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
+      uses: dtolnay/rust-toolchain@stable
     
     - name: Check if CLI exists
       run: |
@@ -98,12 +92,12 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
     
     - name: Check if admin exists
       run: |
@@ -145,10 +139,10 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Setup SSH for Bitbucket
-      uses: webfactory/ssh-agent@v0.7.0
+      uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
 
@@ -159,12 +153,73 @@ jobs:
         rm -rf oxidly
         git clone git@bitbucket.org:samskritam/oxidly.git oxidly
     
-    - name: Build Docker image
-      run: docker build -t freeradical-cms:latest .
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
     
-    - name: Test Docker image
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Extract metadata (tags, labels) for CMS
+      id: meta-cms
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/cms
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Extract metadata (tags, labels) for Oxidly
+      id: meta-oxidly
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/oxidly
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Build and push CMS image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta-cms.outputs.tags }}
+        labels: ${{ steps.meta-cms.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push Oxidly image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./oxidly
+        file: ./oxidly/Dockerfile.root
+        push: true
+        tags: ${{ steps.meta-oxidly.outputs.tags }}
+        labels: ${{ steps.meta-oxidly.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Test Docker images
       run: |
-        docker run -d --name test-cms freeradical-cms:latest
+        # Test CMS image
+        docker run -d --name test-cms \
+          -e DATABASE_URL=postgres://root:root@localhost:5432/freeradical_test \
+          -e REDIS_URL=redis://localhost:6379 \
+          ghcr.io/${{ github.repository }}/cms:latest
         sleep 5
         docker logs test-cms
         docker stop test-cms
+        
+        # Test Oxidly image
+        docker run -d --name test-oxidly \
+          -e API_URL=http://localhost:8000/v1 \
+          -e PORT=5005 \
+          ghcr.io/${{ github.repository }}/oxidly:latest
+        sleep 3
+        docker logs test-oxidly
+        docker stop test-oxidly

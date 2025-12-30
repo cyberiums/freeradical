@@ -12,12 +12,12 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/typescript-v')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
       
       - name: Install dependencies
@@ -32,31 +32,28 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: TypeScript SDK ${{ github.ref }}
-          body: |
-            **TypeScript/JavaScript SDK Release**
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/typescript-v}
+          gh release create "$GITHUB_REF" \
+            --title "TypeScript SDK v${VERSION}" \
+            --notes "**TypeScript/JavaScript SDK Release**
             
-            Install: `npm install @freeradical/sdk`
+            Install: \`npm install @freeradical/sdk\`
             
-            See [CHANGELOG](./sdk/freeradical-sdk/CHANGELOG.md) for details.
-          draft: false
-          prerelease: false
+            See [CHANGELOG](./sdk/freeradical-sdk/CHANGELOG.md) for details."
 
   publish-python:
     if: startsWith(github.ref, 'refs/tags/python-v')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.11'
       
       - name: Install build tools
         run: pip install build twine
@@ -71,47 +68,41 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
       
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Python SDK ${{ github.ref }}
-          body: |
-            **Python SDK Release**
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/python-v}
+          gh release create "$GITHUB_REF" \
+            --title "Python SDK v${VERSION}" \
+            --notes "**Python SDK Release**
             
-            Install: `pip install freeradical-client`
+            Install: \`pip install freeradical-client\`
             
-            See [README](./sdks/python/README.md) for details.
-          draft: false
-          prerelease: false
+            See [README](./sdks/python/README.md) for details."
 
   publish-go:
     if: startsWith(github.ref, 'refs/tags/go-v')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: Setup Go
-        uses: actions/setup-go@v4
+        uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.22'
       
       - name: Run tests
         run: cd sdks/go && go test ./...
       
       - name: Create GitHub Release
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Go SDK ${{ github.ref }}
-          body: |
-            **Go SDK Release**
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/go-v}
+          gh release create "$GITHUB_REF" \
+            --title "Go SDK v${VERSION}" \
+            --notes "**Go SDK Release**
             
-            Install: `go get github.com/cyberiums/freeradical-go-client@${{ github.ref }}`
+            Install: \`go get github.com/cyberiums/freeradical-go-client@${GITHUB_REF}\`
             
-            See [README](./sdks/go/README.md) for details.
-          draft: false
-          prerelease: false
+            See [README](./sdks/go/README.md) for details."
