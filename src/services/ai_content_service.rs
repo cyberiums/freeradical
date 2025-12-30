@@ -1167,16 +1167,7 @@ pub async fn generate_outreach_message(
         payload.intent
     );
 
-    let openai_req = OpenAIRequest {
-        model: model.to_string(),
-        messages: vec![
-            OpenAIMessage { role: "system".to_string(), content: system_prompt.to_string() },
-            OpenAIMessage { role: "user".to_string(), content: user_prompt },
-        ],
-        max_tokens: Some(200),
-        temperature: Some(0.7),
-        response_format: Some(OpenAIResponseFormat { response_type: "json_object".to_string() }), 
-    };
+
     // Note: JSON object format requires prompt to mention "JSON" usually, let's adjust verify if standard text is better or force JSON.
     // For simplicity/reliability in this restricted context, let's ask for JSON in the system prompt.
     let system_prompt_json = "You are an expert CRM copywriter. Return a JSON object with 'subject' and 'body' fields.";
