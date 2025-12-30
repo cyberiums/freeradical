@@ -412,7 +412,21 @@ pub async fn analyze_sentiment(
     Ok(HttpResponse::Ok().json(result))
 }
 
-/// Detect fraud
+/// AI-powered fraud detection for transactions
+#[utoipa::path(
+    post,
+    path = "/v1/ai/analyze/fraud",
+    tag = "Commerce - AI",
+    request_body = FraudDetectionRequest,
+    responses(
+        (status = 200, description = "Fraud analysis with risk score (0-100) and reasons", body = FraudDetectionResponse),
+        (status = 400, description = "Unsupported AI provider"),
+        (status = 500, description = "AI analysis failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn detect_fraud(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
@@ -489,7 +503,21 @@ pub struct AnalyzePricingResponse {
 
 // ... existing code ...
 
-/// Analyze pricing
+/// AI-powered dynamic pricing analysis
+#[utoipa::path(
+    post,
+    path = "/v1/ai/analyze/pricing",
+    tag = "Commerce - AI",
+    request_body = AnalyzePricingRequest,
+    responses(
+        (status = 200, description = "Pricing recommendation with confidence score and action (raise/lower/maintain)", body = AnalyzePricingResponse),
+        (status = 400, description = "Unsupported AI provider"),
+        (status = 500, description = "AI analysis failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn analyze_pricing(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
@@ -663,6 +691,21 @@ pub struct ForecastSupplyResponse {
     pub explanation: String,
 }
 
+/// AI-powered supply chain forecasting
+#[utoipa::path(
+    post,
+    path = "/v1/ai/forecast/supply",
+    tag = "Commerce - AI",
+    request_body = ForecastSupplyRequest,
+    responses(
+        (status = 200, description = "Demand forecast with restock recommendations and risk assessment", body = ForecastSupplyResponse),
+        (status = 400, description = "Unsupported AI provider"),
+        (status = 500, description = "AI forecasting failed")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn forecast_supply(
     req: actix_web::HttpRequest,
     pool: web::Data<DbPool>,
