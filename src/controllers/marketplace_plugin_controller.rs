@@ -18,6 +18,19 @@ pub struct InstallPluginRequest {
     pub plugin_id: i32,
 }
 
+/// List all marketplace plugins
+#[utoipa::path(
+    get,
+    path = "/v1/plugins",
+    tag = "Marketplace - Plugins",
+    responses(
+        (status = 200, description = "List of all marketplace plugins", body = Vec<MarketplacePlugin>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_plugins(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
@@ -39,6 +52,21 @@ pub async fn list_plugins(
     }
 }
 
+/// Submit a new plugin to marketplace
+#[utoipa::path(
+    post,
+    path = "/v1/plugins/submit",
+    tag = "Marketplace - Plugins",
+    request_body(content = String, description = "Multipart form with plugin file, name, version, price_cents", content_type = "multipart/form-data"),
+    responses(
+        (status = 201, description = "Plugin submitted successfully (pending approval)"),
+        (status = 400, description = "Missing required fields"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn submit_plugin(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -126,6 +154,23 @@ pub async fn submit_plugin(
     }
 }
 
+/// Install a plugin to tenant
+#[utoipa::path(
+    post,
+    path = "/v1/plugins/install",
+    tag = "Marketplace - Plugins",
+    request_body = InstallPluginRequest,
+    responses(
+        (status = 201, description = "Plugin installed successfully"),
+        (status = 200, description = "Plugin already installed"),
+        (status = 400, description = "Invalid user ID"),
+        (status = 403, description = "User not associated with tenant"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn install_plugin(
     _req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,

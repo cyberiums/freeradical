@@ -9,6 +9,15 @@ use crate::models::db_connection;
 use crate::middleware::auth_middleware::get_user_context;
 use diesel::prelude::*;
 
+/// List all available themes
+#[utoipa::path(
+    get,
+    path = "/v1/themes",
+    tag = "Marketplace - Themes",
+    responses(
+        (status = 200, description = "List of all themes", body = Vec<Theme>)
+    )
+)]
 pub async fn list_themes(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
@@ -25,6 +34,21 @@ pub async fn list_themes(
     }
 }
 
+/// Upload a new theme
+#[utoipa::path(
+    post,
+    path = "/v1/themes/upload",
+    tag = "Marketplace - Themes",
+    request_body(content = String, description = "Multipart form with theme file, name, version", content_type = "multipart/form-data"),
+    responses(
+        (status = 201, description = "Theme uploaded successfully"),
+        (status = 400, description = "Missing required fields"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn upload_theme(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
@@ -115,6 +139,22 @@ pub async fn upload_theme(
     }
 }
 
+/// Activate a theme
+#[utoipa::path(
+    post,
+    path = "/v1/themes/{id}/activate",
+    tag = "Marketplace - Themes",
+    params(
+        ("id" = i32, Path, description = "Theme ID to activate", example = 5)
+    ),
+    responses(
+        (status = 200, description = "Theme activated successfully"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn activate_theme(
     req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>,
