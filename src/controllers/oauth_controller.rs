@@ -1,6 +1,16 @@
 use actix_web::{HttpResponse, Responder};
 use crate::services::oauth_service::OAuthService;
 
+/// Initiate Google OAuth login flow
+#[utoipa::path(
+    get,
+    path = "/v1/auth/google",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 302, description = "Redirect to Google OAuth consent page"),
+        (status = 500, description = "Error generating OAuth URL")
+    )
+)]
 pub async fn google_login() -> impl Responder {
     // Generate OAuth URL using the Service layer
     let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or_else(|_| "http://localhost:8000/v1/auth/google/callback".to_string());

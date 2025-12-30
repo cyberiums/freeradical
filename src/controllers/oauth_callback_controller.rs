@@ -44,6 +44,19 @@ pub struct NewUserOAuthConnection {
 }
 
 /// Google OAuth callback handler
+#[utoipa::path(
+    get,
+    path = "/v1/oauth/callback",
+    tag = "Customer - Authentication",
+    params(
+        ("code" = String, Query, description = "Authorization code from Google"),
+        ("state" = String, Query, description = "State parameter for CSRF protection")
+    ),
+    responses(
+        (status = 302, description = "Redirect to dashboard after successful authentication"),
+        (status = 500, description = "OAuth authentication failed")
+    )
+)]
 pub async fn google_callback(
     query: web::Query<OAuthCallbackQuery>,
     pool: web::Data<DatabasePool>,
@@ -168,6 +181,19 @@ pub async fn google_callback(
 }
 
 /// GitHub OAuth callback handler
+#[utoipa::path(
+    get,
+    path = "/v1/auth/github/callback",
+    tag = "Customer - Authentication",
+    params(
+        ("code" = String, Query, description = "Authorization code from GitHub"),
+        ("state" = String, Query, description = "State parameter for CSRF protection")
+    ),
+    responses(
+        (status = 302, description = "Redirect to dashboard after successful authentication"),
+        (status = 500, description = "OAuth authentication failed")
+    )
+)]
 pub async fn github_callback(
     query: web::Query<OAuthCallbackQuery>,
     pool: web::Data<DatabasePool>,
@@ -274,6 +300,21 @@ pub async fn github_callback(
 }
 
 /// Disconnect OAuth provider
+#[utoipa::path(
+    delete,
+    path = "/v1/oauth/disconnect/{provider}",
+    tag = "Customer - Authentication",
+    params(
+        ("provider" = String, Path, description = "OAuth provider name (google, github)", example = "google")
+    ),
+    responses(
+        (status = 200, description = "Provider disconnected successfully"),
+        (status = 500, description = "Failed to disconnect provider")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn disconnect_provider(
     provider: web::Path<String>,
     pool: web::Data<DatabasePool>,

@@ -18,6 +18,23 @@ pub struct UpdateSsoRequest {
     pub is_enabled: bool,
 }
 
+/// Update SSO configuration for a tenant
+#[utoipa::path(
+    post,
+    path = "/v1/api/tenants/{id}/sso",
+    tag = "Customer - Authentication",
+    params(
+        ("id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    request_body = UpdateSsoRequest,
+    responses(
+        (status = 200, description = "SSO configuration updated successfully"),
+        (status = 500, description = "Database error")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_config(
     tenant_id: web::Path<i32>,
     params: web::Json<UpdateSsoRequest>,
@@ -46,6 +63,20 @@ pub async fn update_config(
     }
 }
 
+/// Initiate SSO login for a tenant
+#[utoipa::path(
+    get,
+    path = "/v1/sso/login/{tenant_id}",
+    tag = "Customer - Authentication",
+    params(
+        ("tenant_id" = i32, Path, description = "Tenant ID", example = 1)
+    ),
+    responses(
+        (status = 302, description = "Redirect to identity provider"),
+        (status = 404, description = "SSO not configured for this tenant"),
+        (status = 400, description = "SSO is disabled or invalid configuration")
+    )
+)]
 pub async fn login(
     tenant_id: web::Path<i32>,
     pool: web::Data<DatabasePool>
@@ -105,6 +136,20 @@ pub struct OidcCallbackQuery {
     state: String,
 }
 
+/// OIDC callback handler
+#[utoipa::path(
+    get,
+    path = "/v1/sso/oidc/callback",
+    tag = "Customer - Authentication",
+    params(
+        ("code" = String, Query, description = "Authorization code from OIDC provider"),
+        ("state" = String, Query, description = "State parameter containing tenant ID")
+    ),
+    responses(
+        (status = 302, description = "Redirect to dashboard after successful authentication"),
+        (status = 400, description = "Invalid state parameter or tenant not found")
+    )
+)]
 pub async fn oidc_callback(
     query: web::Query<OidcCallbackQuery>,
     pool: web::Data<DatabasePool>
@@ -139,10 +184,29 @@ pub async fn oidc_callback(
         .finish()
 }
 
+/// SAML Assertion Consumer Service (ACS) endpoint
+#[utoipa::path(
+    post,
+    path = "/v1/sso/saml/acs",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 200, description = "SAML assertion processed"),
+        (status = 400, description = "Invalid SAML response")
+    )
+)]
 pub async fn saml_acs() -> impl Responder {
      HttpResponse::Ok().body("SAML ACS Endpoint (Stub)")
 }
 
+/// SAML metadata endpoint
+#[utoipa::path(
+    get,
+    path = "/v1/sso/metadata",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 200, description = "SAML service provider metadata XML", content_type = "application/xml")
+    )
+)]
 pub async fn metadata() -> impl Responder {
     HttpResponse::Ok().content_type("application/xml").body("<EntityDescriptor>...</EntityDescriptor>")
 }
