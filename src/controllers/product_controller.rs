@@ -26,6 +26,23 @@ pub struct ProductListResponse {
     pub per_page: i64,
 }
 
+/// List products with pagination
+#[utoipa::path(
+    get,
+    path = "/v1/products",
+    tag = "Commerce - Products",
+    params(
+        ("page" = Option<i64>, Query, description = "Page number (0-indexed)", example = 0),
+        ("per_page" = Option<i64>, Query, description = "Items per page (max 100)", example = 20)
+    ),
+    responses(
+        (status = 200, description = "Paginated product list", body = ProductListResponse),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_products(
     req: HttpRequest,
     query: web::Query<PaginationQuery>,
@@ -66,6 +83,23 @@ pub async fn list_products(
     Ok(HttpResponse::Ok().json(response))
 }
 
+/// Get product by ID
+#[utoipa::path(
+    get,
+    path = "/v1/products/{id}",
+    tag = "Commerce - Products",
+    params(
+        ("id" = i64, Path, description = "Product ID", example = 123)
+    ),
+    responses(
+        (status = 200, description = "Product details", body = Product),
+        (status = 404, description = "Product not found or inactive"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_product(
     req: HttpRequest,
     id: web::Path<i64>,
@@ -88,6 +122,22 @@ pub async fn get_product(
     Ok(HttpResponse::Ok().json(product))
 }
 
+/// Create a new product
+#[utoipa::path(
+    post,
+    path = "/v1/products",
+    tag = "Commerce - Products",
+    request_body = NewProduct,
+    responses(
+        (status = 201, description = "Product created successfully"),
+        (status = 400, description = "Invalid product data"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_product(
     req: HttpRequest,
     product: web::Json<NewProduct>,
@@ -121,6 +171,26 @@ pub async fn create_product(
     })))
 }
 
+/// Update an existing product
+#[utoipa::path(
+    put,
+    path = "/v1/products/{id}",
+    tag = "Commerce - Products",
+    params(
+        ("id" = i64, Path, description = "Product ID to update", example = 123)
+    ),
+    request_body = NewProduct,
+    responses(
+        (status = 200, description = "Product updated successfully"),
+        (status = 400, description = "Invalid product data"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions"),
+        (status = 404, description = "Product not found")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_product(
     req: HttpRequest,
     id: web::Path<i64>,
@@ -161,6 +231,24 @@ pub async fn update_product(
     })))
 }
 
+/// Delete a product (soft delete)
+#[utoipa::path(
+    delete,
+    path = "/v1/products/{id}",
+    tag = "Commerce - Products",
+    params(
+        ("id" = i64, Path, description = "Product ID to delete", example = 123)
+    ),
+    responses(
+        (status = 204, description = "Product deleted successfully (soft delete)"),
+        (status = 401, description = "Not authenticated"),
+        (status = 403, description = "Insufficient permissions"),
+        (status = 404, description = "Product not found")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn delete_product(
     req: HttpRequest,
     id: web::Path<i64>,
