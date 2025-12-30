@@ -55,9 +55,18 @@ COPY migrations ./migrations
 COPY migrations_postgres ./migrations_postgres
 COPY static ./static
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+# Install diesel_cli for migrations (PostgreSQL only)
+RUN cargo install diesel_cli --no-default-features --features postgres
+
 # Create uploads directory
 RUN mkdir -p /app/uploads
 
 EXPOSE 8000
 
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["./freeradical"]
+
