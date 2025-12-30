@@ -58,14 +58,18 @@ pub struct MCPTool {
 pub struct MCPWebSocket {
     pool: Arc<DbPool>,
     tenant_id: Option<i32>,  // Extracted from JWT
+    user_id: Option<i32>,    // Extracted from JWT  
+    role: Option<String>,     // User role (admin, editor, viewer)
     authenticated: bool,
 }
 
 impl MCPWebSocket {
-    pub fn new(pool: Arc<DbPool>, tenant_id: Option<i32>) -> Self {
+    pub fn new(pool: Arc<DbPool>, tenant_id: Option<i32>, user_id: Option<i32>, role: Option<String>) -> Self {
         Self { 
             pool,
             tenant_id,
+            user_id,
+            role,
             authenticated: tenant_id.is_some(),
         }
     }
@@ -76,6 +80,34 @@ impl MCPWebSocket {
             message: "Authentication required. Please provide bearer token.".to_string(),
             data: None,
         })
+    }
+    
+    fn check_role(&self, required_role: &str) -> Result<(), MCPError> {
+        let user_role = self.role.as_deref().unwrap_or("viewer");
+        
+        match required_role {
+            "admin" => {
+                if user_role != "admin" {
+                    return Err(MCPError {
+                        code: -32002,
+                        message: format!("Insufficient permissions. Required: admin, your role: {}", user_role),
+                        data: Some(json!({"required": "admin", "actual": user_role})),
+                    });
+                }
+            }
+            "editor" => {
+                if user_role != "admin" && user_role != "editor" {
+                    return Err(MCPError {
+                        code: -32002,
+                        message: format!("Insufficient permissions. Required: editor or admin, your role: {}", user_role),
+                        data: Some(json!({"required": "editor", "actual": user_role})),
+                    });
+                }
+            }
+            _ => {} // "viewer" has access by default
+        }
+        
+        Ok(())
     }
 
     fn handle_request(&self, req: MCPRequest) -> MCPResponse {
@@ -267,6 +299,16 @@ impl MCPWebSocket {
 
         match tool_name {
             "update_verification_settings" => {
+                // Admin-only tool
+                if let Err(error) = self.check_role("admin") {
+                    return MCPResponse {
+                        jsonrpc: "2.0".to_string(),
+                        result: None,
+                        error: Some(error),
+                        id,
+                    };
+                }
+                
                 // Tool execution is now scoped to tenant_id
                 MCPResponse {
                     jsonrpc: "2.0".to_string(),
@@ -274,11 +316,12 @@ impl MCPWebSocket {
                         "content": [{
                             "type": "text",
                             "text": format!(
-                                "✅ Updated verification settings for type: {} (tenant: {})",
+                                "✅ Updated verification settings for type: {} (tenant: {}, user: {})",
                                 arguments.get("verification_type")
                                     .and_then(|v| v.as_str())
                                     .unwrap_or("unknown"),
-                                tenant_id
+                                tenant_id,
+                                self.user_id.unwrap_or(0)
                             )
                         }]
                     })),
@@ -287,12 +330,22 @@ impl MCPWebSocket {
                 }
             }
             "get_verification_settings" => {
+                // Editors and admins can view settings
+                if let Err(error) = self.check_role("editor") {
+                    return MCPResponse {
+                        jsonrpc: "2.0".to_string(),
+                        result: None,
+                        error: Some(error),
+                        id,
+                    };
+                }
+                
                 MCPResponse {
                     jsonrpc: "2.0".to_string(),
                     result: Some(json!({
                         "content": [{
                             "type": "text",
-                            "text": format!("Current settings for tenant {}:\n- crm_customer: 12h TTL, enabled", tenant_id)
+                            "text": format!("Current settings for tenant {}:\\n- crm_customer: 12h TTL, enabled", tenant_id)
                         }]
                     })),
                     error: None,
@@ -372,20 +425,20 @@ async fn ws_index(
 ) -> Result<HttpResponse, actix_web::Error> {
     info!("📡 New MCP WebSocket connection attempt");
     
-    // Extract tenant_id from JWT token in Authorization header
-    let tenant_id = extract_tenant_from_request(&req);
+    // Extract auth info from JWT token in Authorization header
+    let (tenant_id, user_id, role) = extract_auth_from_request(&req);
     
     if tenant_id.is_none() {
-        info!("⚠️  MCP connection attempt without authentication - rejecting");
+        info!("⚠️  MCP connection attempt without authentication");
     } else {
-        info!("✅ MCP connection authenticated for tenant: {:?}", tenant_id);
+        info!("✅ MCP authenticated - tenant: {:?}, user: {:?}, role: {:?}", tenant_id, user_id, role);
     }
     
-    let ws_actor = MCPWebSocket::new(pool.get_ref().clone(), tenant_id);
+    let ws_actor = MCPWebSocket::new(pool.get_ref().clone(), tenant_id, user_id, role);
     ws::start(ws_actor, &req, stream)
 }
 
-fn extract_tenant_from_request(req: &HttpRequest) -> Option<i32> {
+fn extract_auth_from_request(req: &HttpRequest) -> (Option<i32>, Option<i32>, Option<String>) {
     use jsonwebtoken::{decode, DecodingKey, Validation, Algorithm};
     use serde::{Deserialize};
     
@@ -393,27 +446,46 @@ fn extract_tenant_from_request(req: &HttpRequest) -> Option<i32> {
     struct Claims {
         sub: String,
         tenant_id: Option<i32>,
+        user_id: Option<i32>,
+        role: Option<String>,  // "admin", "editor", "viewer"
     }
     
     // Get Authorization header
-    let auth_header = req.headers().get("Authorization")?;
-    let auth_str = auth_header.to_str().ok()?;
+    let auth_header = req.headers().get("Authorization");
+    if auth_header.is_none() {
+        return (None, None, None);
+    }
+    
+    let auth_str = match auth_header.unwrap().to_str() {
+        Ok(s) => s,
+        Err(_) => return (None, None, None),
+    };
     
     // Extract token from "Bearer <token>"
-    let token = auth_str.strip_prefix("Bearer ")?.trim();
+    let token = match auth_str.strip_prefix("Bearer ") {
+        Some(t) => t.trim(),
+        None => return (None, None, None),
+    };
     
     // Get JWT secret from environment
     let jwt_secret = std::env::var("APP_JWT_KEY").unwrap_or_else(|_| "secret".to_string());
     
     // Decode and validate JWT
     let validation = Validation::new(Algorithm::HS256);
-    let token_data = decode::<Claims>(
+    let token_data = match decode::<Claims>(
         token,
         &DecodingKey::from_secret(jwt_secret.as_bytes()),
         &validation
-    ).ok()?;
+    ) {
+        Ok(data) => data,
+        Err(_) => return (None, None, None),
+    };
     
-    token_data.claims.tenant_id
+    (
+        token_data.claims.tenant_id,
+        token_data.claims.user_id,
+        token_data.claims.role
+    )
 }
 
 async fn health() -> HttpResponse {
