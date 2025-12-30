@@ -185,6 +185,7 @@ async fn main() -> std::io::Result<()> {
         &conf.bind_port
     );
 
+    let email_service_for_server = email_service.clone();
     let http_server = HttpServer::new(move || {
         let cors = Cors::permissive();
 
@@ -223,11 +224,12 @@ async fn main() -> std::io::Result<()> {
             .route("/api/tenants", web::get().to(controllers::tenant_controller::list_my_tenants))
             .route("/api/tenants/{id}/members", web::post().to(controllers::tenant_controller::invite_member))
             .route("/api/tenants/{id}", web::get().to(controllers::tenant_controller::get_tenant_details))
-            // SAML Routes
-            .route("/saml/metadata", web::get().to(controllers::saml_controller::metadata))
-            .route("/saml/login/{tenant_id}", web::get().to(controllers::saml_controller::login))
-            .route("/saml/acs", web::post().to(controllers::saml_controller::acs))
-            .route("/api/tenants/{id}/sso", web::post().to(controllers::saml_controller::update_config))
+            // SSO Routes (SAML + OIDC)
+            .route("/sso/metadata", web::get().to(controllers::tenant_sso_controller::metadata))
+            .route("/sso/login/{tenant_id}", web::get().to(controllers::tenant_sso_controller::login))
+            .route("/sso/saml/acs", web::post().to(controllers::tenant_sso_controller::saml_acs))
+            .route("/sso/oidc/callback", web::get().to(controllers::tenant_sso_controller::oidc_callback))
+            .route("/api/tenants/{id}/sso", web::post().to(controllers::tenant_sso_controller::update_config))
             .route("/api/tenants/{id}/settings", web::put().to(controllers::tenant_controller::update_settings))
             .route("/api/tenants/{id}/audit-logs", web::get().to(controllers::tenant_controller::list_audit_logs))
             .route("/api/tenants/{id}/webhooks", web::get().to(controllers::webhook_controller::list_webhooks))
@@ -253,6 +255,7 @@ async fn main() -> std::io::Result<()> {
             .route("/plugins", web::get().to(controllers::marketplace_plugin_controller::list_plugins))
             .route("/plugins/submit", web::post().to(controllers::marketplace_plugin_controller::submit_plugin))
             .route("/plugins/install", web::post().to(controllers::marketplace_plugin_controller::install_plugin))
+            .route("/plugins/approve", web::post().to(controllers::marketplace_plugin_controller::approve_plugin))
             // CRM API Routes
             .route("/api/crm/customers", web::get().to(controllers::crm_controller::list_customers))
             .route("/api/crm/customers/{id}", web::get().to(controllers::crm_controller::get_customer_profile))
@@ -303,7 +306,12 @@ async fn main() -> std::io::Result<()> {
             .service(controllers::seo_controller::audit_url)
             // Backups
             .service(controllers::backup_controller::list_backups)
-            .service(controllers::backup_controller::create_backup);
+            .service(controllers::backup_controller::create_backup)
+            // Billing & Invoicing
+            .configure(controllers::billing_controller::init_routes)
+            // OAuth Redirects
+            .route("/auth/google", web::get().to(controllers::oauth_controller::google_login))
+            .route("/oauth/callback", web::get().to(controllers::oauth_callback_controller::google_callback));
 
 
         App::new()
@@ -360,6 +368,9 @@ async fn main() -> std::io::Result<()> {
             .route("/", web::get().to(|| async {
                 actix_files::NamedFile::open_async("./static/index.html").await
             }))
+            .route("/manifest.json", web::get().to(|| async {
+                actix_files::NamedFile::open_async("./static/icons/manifest.json").await
+            }))
             .route("/admin", web::get().to(|| async {
                 actix_files::NamedFile::open_async("./static/admin-portal.html").await
             }))
@@ -372,11 +383,17 @@ async fn main() -> std::io::Result<()> {
             .app_data(cache_service.clone()) // Cache Service
             .app_data(handlebars_ref.clone())
             .app_data(payment_registry.clone())
-            .app_data(email_service.clone())
+            .app_data(email_service_for_server.clone())
     })
     .bind(server_url)?
     .workers(2)
     .run();
+
+    // Start Scheduled Tasks
+    let email_service_for_sched = email_service.clone();
+    actix_web::rt::spawn(async move {
+        let _ = services::scheduler_service::start_scheduler(email_service_for_sched).await;
+    });
 
     println!("🚀 Server is running 🚀");
 

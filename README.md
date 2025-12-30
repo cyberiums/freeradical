@@ -65,11 +65,11 @@ cargo run -- init my-project
 
 ## 📚 Documentation
 
-- [Deployment Guide](DEPLOYMENT.md)
+- [Deployment Guide](oxidly/docs/DEPLOYMENT.md)
 - [Admin README](admin/README.md)
 - [CLI README](cli/README.md)
 - [API Documentation](https://docs.freeradical.dev)
-- [Phase 5 Implementation](PHASE-5-IMPLEMENTATION.md)
+- [Phase 5 Implementation](oxidly/docs/core/PHASE-5-IMPLEMENTATION.md)
 
 ## 🧪 Testing
 
@@ -86,7 +86,7 @@ k6 run tests/load/scenarios.js
 
 ## 🚢 Deployment
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for comprehensive deployment guide.
+See [DEPLOYMENT.md](oxidly/docs/DEPLOYMENT.md) for comprehensive deployment guide.
 
 Quick deploy with Docker:
 ```bash
@@ -151,13 +151,13 @@ bash scripts/test_mysql.sh
 
 **No rebuild required!** Switch databases by changing the `DATABASE_URL` environment variable.
 
-📖 **Full guide**: See [`docs/databases.md`](./docs/databases.md) for comprehensive database configuration, migration, and troubleshooting.
+📖 **Full guide**: See [`oxidly/docs/core/databases.md`](./oxidly/docs/core/databases.md) for comprehensive database configuration, migration, and troubleshooting.
 
 See `.env.sample` for all configuration options.
 
 ### Which Database Should You Choose?
 
-Based on professional Apache Bench load testing ([detailed results](./docs/performance_benchmarks.md)):
+Based on professional Apache Bench load testing ([detailed results](./oxidly/docs/core/performance_benchmarks.md)):
 
 #### Choose PostgreSQL for Maximum Performance 🏆
 
@@ -198,37 +198,37 @@ Based on professional Apache Bench load testing ([detailed results](./docs/perfo
 
 💡 **Pro Tip:** PostgreSQL delivers 30-129% better performance - use it unless you have specific MySQL requirements!
 
-📈 **See Apache Bench results:** [`docs/benchmarks/apache_bench_v1.0.3.md`](./docs/benchmarks/apache_bench_v1.0.3.md)
+📈 **See Apache Bench results:** [`oxidly/docs/core/benchmarks/apache_bench_v1.0.3.md`](./oxidly/docs/core/benchmarks/apache_bench_v1.0.3.md)
 
 ---
 
 ## 📚 Documentation
 
-Comprehensive documentation is available in the [`docs/`](./docs/) directory:
+Comprehensive documentation is available in the [`oxidly/docs/`](./oxidly/docs/) directory:
 
 ### Developer Guides
-- **[SDK Developer Guide](./docs/sdk/SDK_DEVELOPER_GUIDE.md)** - Build client libraries
-- **[Core Developer Guide](./docs/core/CORE_DEVELOPER_GUIDE.md)** - Contribute to core
-- **[SDK Overview](./docs/sdk/sdk_overview.md)** - Compare available SDKs
+- **[SDK Developer Guide](./oxidly/docs/core/sdk/SDK_DEVELOPER_GUIDE.md)** - Build client libraries
+- **[Core Developer Guide](./oxidly/docs/core/core/CORE_DEVELOPER_GUIDE.md)** - Contribute to core
+- **[SDK Overview](./oxidly/docs/core/sdk/sdk_overview.md)** - Compare available SDKs
 
 ### Architecture
-- **[Payment System](./docs/architecture/payment_architecture.md)** - Extensible payment handlers
-- **[Feature Walkthrough](./docs/walkthrough.md)** - Complete feature overview
+- **[Payment System](./oxidly/docs/core/architecture/payment_architecture.md)** - Extensible payment handlers
+- **[Feature Walkthrough](./oxidly/docs/core/walkthrough.md)** - Complete feature overview
 
 ### Historical Documentation
-- **[Iterations](./docs/iterations/)** - Development history by phase
-- **[Roadmaps](./docs/roadmaps/)** - Product planning & roadmaps
-- **[Releases](./docs/releases/)** - Version history & changelogs
+- **[Iterations](./oxidly/docs/core/iterations/)** - Development history by phase
+- **[Roadmaps](./oxidly/docs/core/roadmaps/)** - Product planning & roadmaps
+- **[Releases](./oxidly/docs/core/releases/)** - Version history & changelogs
 
-**Start here**: [Documentation Index](./docs/README.md)
+**Start here**: [Documentation Index](./oxidly/docs/core/README.md)
 
 ---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please see:
-- [Core Developer Guide](./docs/core/CORE_DEVELOPER_GUIDE.md) for backend/frontend development
-- [SDK Developer Guide](./docs/sdk/SDK_DEVELOPER_GUIDE.md) for SDK development
+- [Core Developer Guide](./oxidly/docs/core/core/CORE_DEVELOPER_GUIDE.md) for backend/frontend development
+- [SDK Developer Guide](./oxidly/docs/core/sdk/SDK_DEVELOPER_GUIDE.md) for SDK development
 
 ---
 
@@ -259,5 +259,5 @@ Modern, professional landing page built with Tailwind CSS showcasing the CMS fea
 
 
 ### Security & Deployment
-- **[HTTPS Setup Guide](./docs/https-setup.md)** - Enable SSL/TLS for production
+- **[HTTPS Setup Guide](./oxidly/docs/core/https-setup.md)** - Enable SSL/TLS for production
 

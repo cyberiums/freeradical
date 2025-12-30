@@ -110,6 +110,8 @@ struct AnthropicRequest {
     max_tokens: u32,
     messages: Vec<AnthropicMessage>,
     temperature: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    system: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -221,7 +223,7 @@ pub async fn generate_with_openai(
         "meta_description" => ("Generate SEO-optimized meta descriptions (150-160 characters).", false),
         "title" => ("Generate compelling, SEO-friendly titles (50-60 characters).", false),
         "summary" => ("Create concise, informative summaries.", false),
-        "store_structure" => ("You are an expert E-commerce Store Architect. Generate a JSON structure for a complete online store based on the user's description. The JSON must have two top-level keys: 'pages' (array of objects with 'title', 'type'='page', 'content_brief') and 'categories' (array of objects with 'title', 'type'='category'). Ensure the structure is logical and SEO-friendly.", true),
+        "store_structure" => ("You are an expert E-commerce Store Architect. Generate a JSON structure for a complete online store based on the user's description. The JSON must have two top-level keys: 'pages' (array of objects with 'title', 'type'='page', 'content_brief') and 'categories' (array of objects with 'title', 'type'='category'). Ensure the structure is logical and SEO-friendly. Return ONLY valid JSON.", true),
         _ => ("You are a helpful AI assistant.", false),
     };
     
@@ -231,7 +233,7 @@ pub async fn generate_with_openai(
             OpenAIMessage { role: "system".to_string(), content: system_prompt.to_string() },
             OpenAIMessage { role: "user".to_string(), content: request.prompt.clone() },
         ],
-        max_tokens: request.max_tokens.or(Some(2000)), // Higher limit for full structure
+        max_tokens: request.max_tokens.or(Some(2000)),
         temperature: request.temperature.or(Some(0.7)),
         response_format: if use_json { 
             Some(OpenAIResponseFormat { response_type: "json_object".to_string() })
@@ -256,7 +258,7 @@ pub async fn generate_with_openai(
         .map(|c| c.message.content.clone())
         .ok_or_else(|| CustomHttpError::InternalServerError("No content".to_string()))?;
         
-    let cost = if model.contains("gpt-4") { 3 } else { 0 }; // Approx
+    let cost = if model.contains("gpt-4") { 3 } else { 0 }; 
     let cost_cents = (openai_res.usage.total_tokens as f32 / 1000.0 * cost as f32).ceil() as u32;
 
     Ok(GeneratedContentResponse {
@@ -278,6 +280,16 @@ pub async fn generate_with_anthropic(
     let model = provider.model_name.as_deref().unwrap_or("claude-3-opus-20240229");
     let endpoint = "https://api.anthropic.com/v1";
     let api_key = provider.api_key_encrypted.clone();
+
+    // Shared prompt logic
+    let (system_prompt, _use_json) = match request.content_type.as_str() {
+        "blog_post" => ("You are a professional blog writer. Generate engaging, well-structured blog posts.", false),
+        "meta_description" => ("Generate SEO-optimized meta descriptions (150-160 characters).", false),
+        "title" => ("Generate compelling, SEO-friendly titles (50-60 characters).", false),
+        "summary" => ("Create concise, informative summaries.", false),
+        "store_structure" => ("You are an expert E-commerce Store Architect. Generate a JSON structure for a complete online store based on the user's description. The JSON must have two top-level keys: 'pages' (array of objects with 'title', 'type'='page', 'content_brief') and 'categories' (array of objects with 'title', 'type'='category'). Ensure the structure is logical and SEO-friendly. Return ONLY valid JSON.", true),
+        _ => ("You are a helpful AI assistant.", false),
+    };
     
     let anthropic_request = AnthropicRequest {
         model: model.to_string(),
@@ -289,6 +301,7 @@ pub async fn generate_with_anthropic(
             },
         ],
         temperature: request.temperature,
+        system: Some(system_prompt.to_string()),
     };
     
     let response = client
@@ -317,7 +330,7 @@ pub async fn generate_with_anthropic(
         .ok_or_else(|| CustomHttpError::InternalServerError("No content in response".to_string()))?;
     
     let total_tokens = anthropic_response.usage.input_tokens + anthropic_response.usage.output_tokens;
-    let cost_cents = (total_tokens as f32 / 1000.0 * 1.5).ceil() as u32; // Estimate
+    let cost_cents = (total_tokens as f32 / 1000.0 * 1.5).ceil() as u32; 
     
     Ok(GeneratedContentResponse {
         content,

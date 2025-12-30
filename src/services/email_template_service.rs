@@ -11,43 +11,45 @@ pub struct EmailTemplateService {
 
 impl EmailTemplateService {
     pub fn new() -> Self {
+        // Initialize Handlebars
         let mut handlebars = Handlebars::new();
         
-        // Register helper for date formatting if needed
-        // handlebars.register_helper("format_date", Box::new(format_date_helper));
-
-        // Load templates from directory manually
         let template_dir = PathBuf::from("./templates/emails");
-        
         if template_dir.exists() {
              info!("Loading email templates from {:?}", template_dir);
-             match std::fs::read_dir(&template_dir) {
-                Ok(entries) => {
-                    for entry in entries {
-                        if let Ok(entry) = entry {
-                            let path = entry.path();
-                            if path.is_file() {
-                                if let Some(ext) = path.extension() {
-                                    if ext == "hbs" {
-                                        if let Some(stem) = path.file_stem() {
-                                            if let Some(name) = stem.to_str() {
-                                                // Simplified registration: use filename as key
-                                                // Ideally we want relative path "auth/welcome"
-                                                // For now, let's just use the filename to fix the build
-                                                // Or recursively walk.
-                                                // Let's stick to shallow for now or fix this logic
-                                                if let Err(e) = handlebars.register_template_file(name, &path) {
-                                                    error!("Failed to register template {}: {}", name, e);
-                                                }
-                                            }
+             
+             // Simple manual recursion for known depth/structure or use a helper
+             // Structure: templates/emails/{category}/{template}.hbs
+             if let Ok(entries) = std::fs::read_dir(&template_dir) {
+                for entry in entries.flatten() {
+                    let path = entry.path();
+                    if path.is_dir() {
+                        // Scan subdirectory (e.g. "auth", "billing")
+                         if let Ok(sub_entries) = std::fs::read_dir(&path) {
+                            for sub_entry in sub_entries.flatten() {
+                                let sub_path = sub_entry.path();
+                                if sub_path.is_file() && sub_path.extension().map_or(false, |e| e == "hbs") {
+                                    if let (Some(cat), Some(name)) = (path.file_name().and_then(|s| s.to_str()), sub_path.file_stem().and_then(|s| s.to_str())) {
+                                        // Register as "category/name" (e.g. "billing/invoice_paid")
+                                        let key = format!("{}/{}", cat, name);
+                                        if let Err(e) = handlebars.register_template_file(&key, &sub_path) {
+                                            error!("Failed to register template {}: {}", key, e);
+                                        } else {
+                                            info!("Registered email template: {}", key);
                                         }
                                     }
                                 }
                             }
+                         }
+                    } else if path.is_file() && path.extension().map_or(false, |e| e == "hbs") {
+                        // Root level templates
+                        if let Some(name) = path.file_stem().and_then(|s| s.to_str()) {
+                             if let Err(e) = handlebars.register_template_file(name, &path) {
+                                error!("Failed to register template {}: {}", name, e);
+                            }
                         }
                     }
-                },
-                Err(e) => error!("Failed to read template directory: {}", e),
+                }
              }
         } else {
             warn!("Email template directory not found: {:?}", template_dir);

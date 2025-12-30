@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .details {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Payment Successful</h2>
+        </div>
+        <div class="content">
+            <p>Hello,</p>
+            <p>We successfully processed your payment for the latest invoice.</p>
+
+            <div class="details">
+                <p>Invoice: <strong>{{invoice_number}}</strong></p>
+                <p>Amount: <span class="amount">${{amount}}</span></p>
+                <p>Date: {{date}}</p>
+            </div>
+
+            <p>You can view and download your invoice from your dashboard.</p>
+        </div>
+        <div class="footer">
+            <p>© {{year}} Oxidly. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

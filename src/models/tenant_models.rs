@@ -119,4 +119,12 @@ impl Tenant {
             .filter(tenant_members::tenant_id.eq(tenant_id))
             .load(db)
     }
+
+    pub fn get_tenant_id_for_user(user_id: i32, db: &mut PooledDatabaseConnection) -> Result<Option<i32>, diesel::result::Error> {
+        tenant_members::table
+            .filter(tenant_members::user_id.eq(user_id))
+            .select(tenant_members::tenant_id)
+            .first::<i32>(db)
+            .optional()
+    }
 }

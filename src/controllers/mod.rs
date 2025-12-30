@@ -24,6 +24,7 @@ pub mod oauth_callback_controller;
 pub mod oauth_connections_controller;
 pub mod dashboard_controller;
 pub mod seo_controller;
-pub mod saml_controller;
+pub mod tenant_sso_controller;
 pub mod tenant_controller;
 pub mod survey_controller;
+pub mod billing_controller;

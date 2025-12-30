@@ -31,3 +31,27 @@ pub struct NewMarketplacePlugin {
     pub developer_id: Option<i32>,
     pub price_cents: Option<i32>,
 }
+
+use crate::schema::tenant_plugins;
+
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, Clone, Serialize, Deserialize)]
+#[diesel(belongs_to(MarketplacePlugin, foreign_key = plugin_id))]
+#[diesel(table_name = tenant_plugins)]
+pub struct TenantPlugin {
+    pub id: i32,
+    pub tenant_id: i32,
+    pub plugin_id: i32,
+    pub status: String,
+    pub settings: Option<serde_json::Value>,
+    pub installed_at: Option<chrono::NaiveDateTime>,
+    pub updated_at: Option<chrono::NaiveDateTime>,
+}
+
+#[derive(Insertable, Debug, Clone, Serialize, Deserialize)]
+#[diesel(table_name = tenant_plugins)]
+pub struct NewTenantPlugin {
+    pub tenant_id: i32,
+    pub plugin_id: i32,
+    pub status: String,
+    pub settings: Option<serde_json::Value>,
+}

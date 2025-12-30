@@ -7,12 +7,12 @@ use uuid::Uuid;
 
 use crate::models::{
     inventory_models::{NewProductVariant, ProductVariant},
-    // inventory_models::InventoryAuditLog, // Commented out as per instruction
-    // inventory_models::NewInventoryAuditLog, // Commented out as per instruction
+    inventory_models::InventoryAuditLog,
+    inventory_models::NewInventoryAuditLog,
     DbPool,
 };
 use crate::schema::product_variants;
-// use crate::schema::inventory_audit_log; // Commented out as per instruction
+use crate::schema::inventory_audit_log;
 use crate::services::errors_service::CustomHttpError;
 
 // Import DbPool from parent module where it's defined
@@ -149,7 +149,6 @@ pub async fn update_variant_stock(
             .execute(&mut conn)?;
         
         // TODO: Re-enable when inventory_audit_log table is added
-        /*
         // Create audit log
         let audit = NewInventoryAuditLog {
             product_id: Some(current.product_id),
@@ -170,7 +169,6 @@ pub async fn update_variant_stock(
         diesel::insert_into(inventory_audit_log::table)
             .values(&audit)
             .execute(&mut conn)?;
-        */
         
         // Return updated variant
         product_variants::table
@@ -188,8 +186,6 @@ pub async fn update_variant_stock(
 }
 
 
-// TODO: Re-enable when inventory_audit_log table is added
-/*
 /// Get inventory audit log for a product
 pub async fn get_inventory_audit_log(
     pool: web::Data<DbPool>,
@@ -217,7 +213,6 @@ pub async fn get_inventory_audit_log(
 
     Ok(HttpResponse::Ok().json(logs))
 }
-*/
 
 
 /// Delete a variant (soft delete by setting is_active = false)

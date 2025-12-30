@@ -15,6 +15,77 @@ pub mod sql_types {
 }
 
 diesel::table! {
+    billing_plans (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 50]
+        code -> Varchar,
+        price_cents -> Int4,
+        #[max_length = 20]
+        billing_interval -> Varchar,
+        #[max_length = 3]
+        currency -> Varchar,
+        limits -> Nullable<Jsonb>,
+        is_active -> Nullable<Bool>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_subscriptions (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        plan_id -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        current_period_start -> Timestamp,
+        current_period_end -> Timestamp,
+        cancel_at_period_end -> Nullable<Bool>,
+        canceled_at -> Nullable<Timestamp>,
+        #[max_length = 255]
+        provider_subscription_id -> Nullable<Varchar>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_invoices (id) {
+        id -> Int4,
+        subscription_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        due_date -> Timestamp,
+        paid_at -> Nullable<Timestamp>,
+        line_items -> Nullable<Jsonb>,
+        #[max_length = 50]
+        invoice_number -> Nullable<Varchar>,
+        pdf_url -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_payments (id) {
+        id -> Int4,
+        invoice_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 255]
+        provider_transaction_id -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Varchar,
+        #[max_length = 50]
+        payment_method -> Nullable<Varchar>,
+        payment_date -> Nullable<Timestamp>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
     ai_generated_content (id) {
         id -> Int8,
         #[max_length = 255]
@@ -736,17 +807,38 @@ diesel::table! {
 }
 
 diesel::table! {
+    tenant_plugins (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        plugin_id -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        settings -> Nullable<Jsonb>,
+        installed_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+    diesel::table! {
     tenant_sso_configs (id) {
         id -> Int4,
         tenant_id -> Int4,
         #[max_length = 255]
-        idp_entity_id -> Varchar,
+        idp_entity_id -> Nullable<Varchar>,
         #[max_length = 500]
-        idp_sso_url -> Varchar,
-        x509_certificate -> Text,
+        idp_sso_url -> Nullable<Varchar>,
+        x509_certificate -> Nullable<Text>,
         is_enabled -> Bool,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        #[max_length = 50]
+        provider_type -> Varchar,
+        #[max_length = 255]
+        client_id -> Nullable<Varchar>,
+        #[max_length = 500]
+        client_secret -> Nullable<Varchar>,
+        #[max_length = 500]
+        discovery_url -> Nullable<Varchar>,
     }
 }
 
@@ -943,6 +1035,8 @@ diesel::joinable!(order_items -> products (product_id));
 diesel::joinable!(page_translations -> languages (language_id));
 // TEMPORARILY DISABLED - optional FK joinable issue
 // diesel::joinable!(product_variants -> products (product_id));
+diesel::joinable!(tenant_plugins -> marketplace_plugins (plugin_id));
+diesel::joinable!(tenant_plugins -> tenants (tenant_id));
 diesel::joinable!(tenant_sso_configs -> tenants (tenant_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
 diesel::joinable!(webhook_logs -> tenant_webhooks (webhook_id));
@@ -960,7 +1054,10 @@ diesel::joinable!(surveys -> users (created_by));
 diesel::joinable!(survey_questions -> surveys (survey_id));
 diesel::joinable!(survey_responses -> surveys (survey_id));
 diesel::joinable!(survey_responses -> users (respondent_id));
-
+diesel::joinable!(billing_subscriptions -> tenants (tenant_id));
+diesel::joinable!(billing_subscriptions -> billing_plans (plan_id));
+diesel::joinable!(billing_invoices -> billing_subscriptions (subscription_id));
+diesel::joinable!(billing_payments -> billing_invoices (invoice_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,
@@ -1000,6 +1097,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     search_history,
     audit_logs,
     tenant_members,
+    tenant_plugins,
     tenants,
     user_oauth_connections,
     user_roles,
@@ -1011,4 +1109,9 @@ diesel::allow_tables_to_appear_in_same_query!(
     surveys,
     survey_questions,
     survey_responses,
+    billing_plans,
+    billing_subscriptions,
+    billing_invoices,
+    billing_payments,
+    tenant_sso_configs,
 );

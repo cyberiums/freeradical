@@ -4,6 +4,7 @@ pub mod page_models;
 pub mod status_enum;  // Re-enabled with PagesStatus in schema
 pub mod user_models;
 pub mod tenant_models;
+pub mod tenant_sso_models;
 pub mod survey_models;
 pub mod rbac;
 pub mod commerce_models;
@@ -24,6 +25,7 @@ pub mod theme_models;
 pub mod marketplace_plugin_models;
 pub mod webhook_models;
 pub mod audit_models;
+pub mod billing_models;
 
 use actix_web::web;
 use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};

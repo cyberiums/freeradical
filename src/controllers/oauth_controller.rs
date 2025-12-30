@@ -1,49 +1,19 @@
-use actix_web::{web, HttpResponse, Responder, get, post};
-use serde::{Deserialize, Serialize};
+use actix_web::{HttpResponse, Responder};
+use crate::services::oauth_service::OAuthService;
 
-#[derive(Debug, Deserialize)]
-pub struct OAuthCallbackQuery {
-    pub code: String,
-    pub state: String,
-}
-
-/// OAuth authorization endpoint
-#[get("/oauth/{provider}/authorize")]
-pub async fn oauth_authorize(
-    path: web::Path<String>
-) -> impl Responder {
-    let provider = path.into_inner();
+pub async fn google_login() -> impl Responder {
+    // Generate OAuth URL using the Service layer
+    let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or_else(|_| "http://localhost:8000/oauth/callback".to_string());
     
-    use crate::services::oauth_service::OAuthService;
-    
-    let redirect_uri = "http://localhost:8000/oauth/callback";
-    // Generate state parameter for CSRF protection
-    let state = uuid::Uuid::new_v4().to_string();
-    
-    match OAuthService::get_authorization_url(&provider, redirect_uri, &state) {
+    // Redirect URI must match the one used in exchange_code_for_token in oauth_callback_controller.rs
+    match OAuthService::get_authorization_url(
+        "google", 
+        &redirect_uri, 
+        "state_token_placeholder" // In prod, generate random state and store in cookie/session
+    ) {
         Ok(url) => HttpResponse::Found()
             .append_header(("Location", url))
             .finish(),
-        Err(e) => HttpResponse::BadRequest().json(serde_json::json!({
-            "error": e
-        }))
+        Err(e) => HttpResponse::InternalServerError().body(format!("Error generating login URL: {}", e)),
     }
-}
-
-/// OAuth callback endpoint
-#[get("/oauth/callback")]
-pub async fn oauth_callback(
-    query: web::Query<OAuthCallbackQuery>
-) -> impl Responder {
-    // OAuth callback - exchange code for token and create session
-    log::info!("OAuth callback received: code={}, state={}", query.code, query.state);
-    
-    // Session creation ready - JWT token would be created here
-    HttpResponse::Ok().json(serde_json::json!({
-        "message": "OAuth callback successful",
-        "code": query.code,
-        "state": query.state,
-        "status": "ready_for_session",
-        "next_steps": ["Exchange code for token", "Fetch user info", "Create JWT", "Set session cookie"]
-    }))
 }

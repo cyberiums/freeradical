@@ -52,6 +52,9 @@ services:
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
       REDIS_URL: redis://redis:6379
       RUST_LOG: info
+      GOOGLE_CLIENT_ID: "867082665481-umkfneu32sak280he9tjuil6rm98k7a2.apps.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      GOOGLE_REDIRECT_URI: "http://localhost:8000/oauth/callback"
     ports:
       - "${APP_PORT:-8000}:8000"
     volumes:
