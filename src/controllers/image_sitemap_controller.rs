@@ -3,8 +3,16 @@ use diesel::prelude::*;
 
 use crate::services::database_service;
 
-/// Generate image sitemap XML
-/// Standardized to manual routing (no macro)
+/// Generate image sitemap XML for Google Image Search
+#[utoipa::path(
+    get,
+    path = "/image-sitemap.xml",
+    tag = "Content - SEO",
+    responses(
+        (status = 200, description = "Image sitemap XML for all pages with featured images", content_type = "application/xml"),
+        (status = 500, description = "Error generating image sitemap")
+    )
+)]
 pub async fn image_sitemap() -> impl Responder {
     use crate::schema::pages::dsl::*;
     

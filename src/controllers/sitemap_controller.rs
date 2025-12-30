@@ -7,7 +7,15 @@ use std::io::Write;
 use crate::services::database_service;
 
 /// Generate XML sitemap with gzip compression support
-/// Standardized to manual routing (no macro)
+#[utoipa::path(
+    get,
+    path = "/sitemap.xml",
+    tag = "Content - SEO",
+    responses(
+        (status = 200, description = "XML sitemap (optionally gzipped)", content_type = "application/xml"),
+        (status = 500, description = "Error generating sitemap")
+    )
+)]
 pub async fn sitemap(req: HttpRequest) -> impl Responder {
     use crate::schema::pages::dsl::*;
     
