@@ -5,7 +5,7 @@ ALTER TABLE pages
 ADD COLUMN author VARCHAR(100),
 ADD COLUMN article_type VARCHAR(50) DEFAULT 'WebPage',
 ADD COLUMN featured_image VARCHAR(500),
-ADD COLUMN word_count INTEGER
+ADD COLUMN word_count INTEGER,
 ADD COLUMN reading_time INTEGER
 
 -- Note: publish_date can use existing time_created field

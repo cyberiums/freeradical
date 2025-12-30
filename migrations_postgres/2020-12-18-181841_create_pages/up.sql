@@ -1,6 +1,8 @@
 -- PostgreSQL version of initial schema creation
 -- Converted from MySQL syntax
 
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 CREATE TABLE IF NOT EXISTS pages (
     uuid varchar(255) PRIMARY KEY,
     page_name varchar(500) NOT NULL,
@@ -14,7 +16,7 @@ INSERT INTO pages (page_name, uuid, page_url, page_title)
 VALUES ('index', gen_random_uuid()::text, '/', 'Home')
 ON CONFLICT (uuid) DO NOTHING;
 
-CREATE TABLE module_category (
+CREATE TABLE IF NOT EXISTS module_category (
     uuid varchar(255) PRIMARY KEY,
     page_uuid varchar(255) NOT NULL,
     title varchar(255) NOT NULL,
@@ -64,8 +66,8 @@ VALUES (gen_random_uuid()::text, 'color3', (SELECT uuid FROM pages LIMIT 1), 'gr
 ON CONFLICT (uuid) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS users (
-    id SERIAL,
-    uuid varchar(255) PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
+    uuid varchar(255) NOT NULL UNIQUE,
     username varchar(255) NOT NULL UNIQUE,
     password varchar(255) NOT NULL,
     token varchar(511)

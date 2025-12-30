@@ -1,11 +1,11 @@
 -- Add scheduled publishing fields to pages (PostgreSQL version)
 -- Iteration 4, Task 4
--- PostgreSQL uses VARCHAR instead of MySQL ENUM
+-- Using Postgres ENUM to match schema.rs definition
+
+CREATE TYPE pages_status AS ENUM ('draft', 'scheduled', 'published', 'archived');
 
 ALTER TABLE pages
-ADD COLUMN status VARCHAR(9) 
-    DEFAULT 'published'
-    CHECK (status IN ('draft', 'scheduled', 'published', 'archived')),
+ADD COLUMN status pages_status DEFAULT 'published',
 ADD COLUMN publish_at TIMESTAMP NULL,
 ADD COLUMN unpublish_at TIMESTAMP NULL;
 

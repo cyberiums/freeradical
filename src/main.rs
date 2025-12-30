@@ -46,7 +46,7 @@ use crate::routers::user_routers::UserRouter;
 extern crate diesel;
 
 // Diesel 2.x migrations
-pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations_postgres");
 
 /// The main function is replaced by actix_web::main.
 /// This allows main to be async and register the HttpServer.
@@ -138,6 +138,16 @@ async fn main() -> std::io::Result<()> {
         .burst_size(conf.max_req.into())
         .finish()
         .unwrap();
+
+    // Auto-Run Migrations on Startup
+    use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+    pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations_postgres");
+    
+    let mut conn = pool.get().expect("Failed to get DB connection for migrations");
+    match conn.run_pending_migrations(MIGRATIONS) {
+        Ok(_) => log::info!("Database migrations executed successfully."),
+        Err(e) => log::error!("Failed to run database migrations: {}", e),
+    };
 
     // Initialize Plugin Registry
     let plugin_registry = std::sync::Arc::new(services::plugin_service::PluginRegistry::new());
@@ -284,6 +294,7 @@ async fn main() -> std::io::Result<()> {
             .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
             // AI Content Generation routes
             .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
+            .route("/ai/generate/image", web::post().to(services::ai_content_service::generate_image))
             // AI Metadata Automation routes
             .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords))
             .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags))
@@ -295,6 +306,16 @@ async fn main() -> std::io::Result<()> {
             .route("/ai/analyze", web::post().to(services::ai_content_service::generate_content)) // Mapped to correct function
             .route("/ai/analyze/sentiment", web::post().to(services::ai_content_service::analyze_sentiment))
             .route("/ai/analyze/fraud", web::post().to(services::ai_content_service::detect_fraud))
+            .route("/ai/analyze/pricing", web::post().to(services::ai_content_service::analyze_pricing))
+            .route("/ai/analyze/forecast", web::post().to(services::ai_content_service::forecast_supply))
+            .route("/ai/marketing/generate", web::post().to(services::ai_content_service::generate_marketing_campaign))
+            .route("/ai/marketing/optimize", web::post().to(services::ai_content_service::optimize_ad_spend))
+            .route("/ai/chat/concierge", web::post().to(services::ai_content_service::chat_concierge))
+            .route("/ai/architect/generate", web::post().to(services::ai_content_service::architect_theme))
+            .route("/ai/vto/generate", web::post().to(services::ai_content_service::virtual_try_on))
+            .route("/ai/crm/health", web::post().to(services::ai_content_service::calculate_customer_health))
+            .route("/ai/crm/returns/analyze", web::post().to(services::ai_content_service::analyze_return_request))
+            .route("/ai/crm/outreach/draft", web::post().to(services::ai_content_service::generate_outreach_message))
             .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
             .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // Admin Dashboard API
@@ -311,7 +332,7 @@ async fn main() -> std::io::Result<()> {
             .configure(controllers::billing_controller::init_routes)
             // OAuth Redirects
             .route("/auth/google", web::get().to(controllers::oauth_controller::google_login))
-            .route("/oauth/callback", web::get().to(controllers::oauth_callback_controller::google_callback));
+            .route("/auth/google/callback", web::get().to(controllers::oauth_callback_controller::google_callback));
 
 
         App::new()

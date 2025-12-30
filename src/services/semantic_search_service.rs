@@ -50,14 +50,15 @@ pub struct SearchResponse {
     pub search_type: String,
 }
 
-/// Content embedding model
 #[derive(Debug, Queryable, Insertable)]
 #[diesel(table_name = content_embeddings)]
 pub struct ContentEmbedding {
     pub id: Option<i64>,
     pub page_uuid: Option<String>,
-    pub embedding_vector: Option<String>,
+    pub content_hash: String,
+    pub embedding: Option<String>, 
     pub model_name: Option<String>,
+    pub content_preview: Option<String>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
 }
@@ -70,12 +71,13 @@ pub async fn create_embedding(
     let content = payload.content.clone();
     let page_uuid = payload.page_uuid.clone();
     
-    // Simplified: skip hash check since content_hash doesn't exist in schema
-    // Generate embedding and store directly
-    
+    // Generate content hash
+    let content_hash = generate_content_hash(&content);
+
     // Generate embedding vector
     let embedding_values = generate_embedding_vector(&content).await?;
-    let model_name = "text-embedding-ada-002".to_string(); // Assuming this model for now
+    let model_name = "text-embedding-ada-002".to_string(); 
+    let preview = content.chars().take(200).collect::<String>();
     
     let id = web::block(move || -> Result<i64, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
@@ -87,21 +89,22 @@ pub async fn create_embedding(
         let vector_formatted = format!("[{}]", vector_str);
         
         // Use raw SQL insert to cast to vector type
-        // schema.rs treats it as Text, DB treats it as vector
-        diesel::sql_query("INSERT INTO content_embeddings (page_uuid, embedding_vector, model_name, created_at, updated_at) VALUES ($1, $2::vector, $3, NOW(), NOW())")
+        diesel::sql_query("INSERT INTO content_embeddings (page_uuid, content_hash, embedding, model_name, content_preview, created_at, updated_at) VALUES ($1, $2, $3::vector, $4, $5, NOW(), NOW()) ON CONFLICT (page_uuid, content_hash) DO NOTHING")
             .bind::<diesel::sql_types::Text, _>(page_uuid)
+            .bind::<diesel::sql_types::Text, _>(content_hash)
             .bind::<diesel::sql_types::Text, _>(vector_formatted)
             .bind::<diesel::sql_types::Text, _>(model_name)
+            .bind::<diesel::sql_types::Text, _>(preview)
             .execute(&mut conn)?;
-        
-        Ok(1) // Placeholder ID
+            
+        Ok(1) 
     })
     .await.map_err(|e| CustomHttpError::InternalServerError(format!("Operation failed: {}", e)))?
     .map_err(|e| CustomHttpError::InternalServerError(e.to_string()))?;
-    
-    Ok(HttpResponse::Created().json(serde_json::json!({
+
+     Ok(HttpResponse::Created().json(serde_json::json!({
         "message": "Embedding created",
-        "id": id
+        "hash": generate_content_hash(&payload.content) 
     })))
 }
 
@@ -133,11 +136,11 @@ pub async fn semantic_search(
         let sql = "SELECT 
                 page_uuid as page_id, 
                 ''::text as content_preview, 
-                (1 - (embedding_vector <=> $1::vector))::real as similarity,
+                (1 - (embedding <=> $1::vector))::real as similarity,
                 0::integer as rank
              FROM content_embeddings 
-             WHERE 1 - (embedding_vector <=> $1::vector) > $2
-             ORDER BY embedding_vector <=> $1::vector
+             WHERE 1 - (embedding <=> $1::vector) > $2
+             ORDER BY embedding <=> $1::vector
              LIMIT $3";
         
         diesel::sql_query(sql)
@@ -175,7 +178,7 @@ fn generate_content_hash(content: &str) -> String {
     format!("{:x}", hasher.finalize())
 }
 
-/// Generate embedding vector using OpenAI
+/// Generate embedding vector using OpenAI (or Mock)
 async fn generate_embedding_vector(text: &str) -> Result<Embedding, CustomHttpError> {
     #[derive(Serialize)]
     struct EmbeddingRequest {
@@ -198,6 +201,25 @@ async fn generate_embedding_vector(text: &str) -> Result<Embedding, CustomHttpEr
     // TODO: Get API key from provider config
     let api_key = std::env::var("OPENAI_API_KEY")
         .unwrap_or_else(|_| "sk-test".to_string());
+
+    // Mock Mode for Testing/Development without spending credits
+    if api_key.starts_with("sk-test") || api_key == "mock" {
+        log::warn!("Generating MOCK embedding for: {}", text.chars().take(20).collect::<String>());
+        // Deterministic pseudo-random generation based on text hash
+        // This ensures the same text always gets the same vector (somewhat useful for basic sanity checks)
+        let mut hasher = Sha256::new();
+        hasher.update(text.as_bytes());
+        let hash = hasher.finalize();
+        
+        let mut mock_embedding = Vec::with_capacity(1536);
+        for i in 0..1536 {
+            // cycle through hash bytes to generate float between -0.1 and 0.1
+            let byte = hash[i % 32];
+            let val = ((byte as f32 / 255.0) - 0.5) * 0.2; 
+            mock_embedding.push(val);
+        }
+        return Ok(mock_embedding);
+    }
     
     let request = EmbeddingRequest {
         input: text.to_string(),
@@ -214,7 +236,10 @@ async fn generate_embedding_vector(text: &str) -> Result<Embedding, CustomHttpEr
         .map_err(|e| CustomHttpError::InternalServerError(format!("Embedding request failed: {}", e)))?;
     
     if !response.status().is_success() {
-        return Err(CustomHttpError::InternalServerError("Embedding generation failed".to_string()));
+        let status = response.status();
+        let body = response.text().await.unwrap_or_default();
+        log::error!("OpenAI API Error ({}) : {}", status, body);
+        return Err(CustomHttpError::InternalServerError(format!("Embedding generation failed: {}", body)));
     }
     
     let embedding_response: EmbeddingResponse = response

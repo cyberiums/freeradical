@@ -50,7 +50,7 @@ pub async fn google_callback(
 ) -> Result<HttpResponse, Error> {
     let oauth = OAuthService;
     
-    let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or_else(|_| "http://localhost:8000/oauth/callback".to_string());
+    let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or_else(|_| "http://localhost:8000/v1/auth/google/callback".to_string());
     
     // Exchange authorization code for access token
     let token_response = OAuthService::exchange_code_for_token("google", &query.code, &redirect_uri)

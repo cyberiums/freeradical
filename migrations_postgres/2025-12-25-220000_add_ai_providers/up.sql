@@ -66,7 +66,7 @@ CREATE INDEX idx_ai_usage_created ON ai_usage_log(created_at);
 -- AI Generated Content Tracking
 CREATE TABLE ai_generated_content (
     id BIGSERIAL PRIMARY KEY,
-    page_id BIGINT REFERENCES pages(id),
+    page_id VARCHAR(255) REFERENCES pages(uuid),
     provider_id BIGINT REFERENCES ai_provider_configs(id),
     content_type VARCHAR(50), -- 'title', 'meta', 'body', 'summary', 'keywords', 'tags'
     prompt TEXT,
@@ -86,7 +86,7 @@ CREATE INDEX idx_ai_content_approved ON ai_generated_content(approved);
 -- AI Generation Queue for async processing
 CREATE TABLE ai_generation_queue (
     id BIGSERIAL PRIMARY KEY,
-    page_id BIGINT,
+    page_id VARCHAR(255),
     task_type VARCHAR(50), -- 'generate_meta', 'extract_keywords', 'generate_summary', etc
     priority INTEGER DEFAULT 5, -- 1 (highest) to 10 (lowest)
     status VARCHAR(20) DEFAULT 'pending', -- 'pending', 'processing', 'completed', 'failed'

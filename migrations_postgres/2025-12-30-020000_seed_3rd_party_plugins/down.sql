@@ -1,1 +1,5 @@
-DELETE FROM marketplace_plugins WHERE name IN ('Mailchimp Connect', 'Review Widget', 'FedEx Shipping Calculator');
+-- Undo Seed 3rd Party Plugins
+
+DELETE FROM marketplace_plugins WHERE name IN (
+    'Stripe Connect', 'Mailchimp Sync', 'Zapier Integration'
+);

@@ -230,9 +230,12 @@ diesel::table! {
         id -> Int8,
         #[max_length = 255]
         page_uuid -> Nullable<Varchar>,
-        embedding_vector -> Nullable<Text>,
+        #[max_length = 64]
+        content_hash -> Varchar,
+        embedding -> Nullable<Text>, 
         #[max_length = 100]
         model_name -> Nullable<Varchar>,
+        content_preview -> Nullable<Text>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
