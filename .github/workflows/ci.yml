@@ -11,14 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: ankane/pgvector:latest
         env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: freeradical_test
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: freeradical_test
         ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       
       redis:
         image: redis:7-alpine
@@ -52,7 +53,7 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
       env:
-        DATABASE_URL: mysql://root:root@localhost:3306/freeradical_test
+        DATABASE_URL: postgres://root:root@localhost:5432/freeradical_test
         REDIS_URL: redis://localhost:6379
 
   test-cli:
