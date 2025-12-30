@@ -22,15 +22,15 @@ POSTGRES_PORT=${POSTGRES_PORT:-5432}
 API_URL="http://localhost:8001"
 
 echo -e "${YELLOW}Step 1: Starting PostgreSQL stack...${NC}"
-docker-compose -f docker-compose.postgres.yml up -d
+docker compose -f docker-compose.yml up -d
 sleep 8
 
 echo -e "\n${YELLOW}Step 2: Checking database connectivity...${NC}"
-if docker-compose -f docker-compose.postgres.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1;" > /dev/null 2>&1; then
+if docker compose -f docker-compose.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1;" > /dev/null 2>&1; then
     echo -e "${GREEN}✓ PostgreSQL connection successful${NC}"
 else
     echo -e "${RED}✗ PostgreSQL connection failed${NC}"
-    docker-compose -f docker-compose.postgres.yml logs postgres
+    docker compose -f docker-compose.yml logs postgres
     exit 1
 fi
 
@@ -48,7 +48,7 @@ else
 fi
 
 echo -e "\n${YELLOW}Step 4: Verifying schema tables...${NC}"
-TABLE_COUNT=$(docker-compose -f docker-compose.postgres.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';" | tr -d ' ')
+TABLE_COUNT=$(docker compose -f docker-compose.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t -c "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='public';" | tr -d ' ')
 echo -e "${GREEN}✓ Found $TABLE_COUNT tables${NC}"
 
 echo -e "\n${YELLOW}Step 5: Testing API health...${NC}"
@@ -59,11 +59,11 @@ if [ "$HTTP_CODE" = "200" ]; then
 else
     echo -e "${RED}✗ API not responding (HTTP $HTTP_CODE)${NC}"
     echo -e "${YELLOW}Checking container logs...${NC}"
-    docker-compose -f docker-compose.postgres.yml logs --tail=20 cms
+    docker compose -f docker-compose.yml logs --tail=20 cms
 fi
 
 echo -e "\n${YELLOW}Step 6: Testing PageStatus VARCHAR type...${NC}"
-STATUS_INFO=$(docker-compose -f docker-compose.postgres.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t -c "SELECT data_type, character_maximum_length FROM information_schema.columns WHERE table_name='pages' AND column_name='status';" 2>/dev/null | tr -s ' ' || echo "")
+STATUS_INFO=$(docker compose -f docker-compose.yml exec -T postgres psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -t -c "SELECT data_type, character_maximum_length FROM information_schema.columns WHERE table_name='pages' AND column_name='status';" 2>/dev/null | tr -s ' ' || echo "")
 
 if [[ "$STATUS_INFO" =~ "character varying" ]] || [[ "$STATUS_INFO" =~ "varchar" ]]; then
     echo -e "${GREEN}✓ PageStatus VARCHAR type found${NC}"
@@ -73,8 +73,8 @@ else
 fi
 
 echo -e "\n${YELLOW}Step 7: Cleanup...${NC}"
-echo -e "${YELLOW}To stop: docker-compose -f docker-compose.postgres.yml down${NC}"
+echo -e "${YELLOW}To stop: docker compose -f docker-compose.yml down${NC}"
 
 echo -e "\n${GREEN}=========================================="
 echo -e "✅ PostgreSQL tests completed!${NC}"
-echo -e "Run 'docker-compose -f docker-compose.postgres.yml logs cms' to view logs"
+echo -e "Run 'docker compose -f docker-compose.yml logs cms' to view logs"
