@@ -202,6 +202,24 @@ pub async fn create_customer(
 }
 
 /// Update customer information
+#[utoipa::path(
+    put,
+    path = "/v1/api/crm/customers/{id}",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID to update", example = 123)
+    ),
+    request_body = UpdateCustomerRequest,
+    responses(
+        (status = 200, description = "Customer updated successfully"),
+        (status = 400, description = "Invalid request data"),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_customer(
     customer_id: web::Path<i32>,
     request: web::Json<UpdateCustomerRequest>,
@@ -223,6 +241,22 @@ pub async fn update_customer(
 }
 
 /// Delete customer (soft delete)
+#[utoipa::path(
+    delete,
+    path = "/v1/api/crm/customers/{id}",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID to delete", example = 123)
+    ),
+    responses(
+        (status = 200, description = "Customer deleted successfully"),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn delete_customer(
     customer_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -238,6 +272,22 @@ pub async fn delete_customer(
 // ===== Interaction Endpoints =====
 
 /// Get customer interaction timeline
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/customers/{id}/timeline",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID", example = 123)
+    ),
+    responses(
+        (status = 200, description = "Customer timeline with all interactions", body = Vec<CrmInteraction>),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_customer_timeline(
     customer_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -246,6 +296,20 @@ pub async fn get_customer_timeline(
 }
 
 /// Create new customer interaction
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/interactions",
+    tag = "Customer - CRM",
+    request_body = CreateInteractionRequest,
+    responses(
+        (status = 201, description = "Interaction created successfully", body = CrmInteraction),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_interaction(
     req: HttpRequest,
     request: web::Json<CreateInteractionRequest>,
@@ -267,6 +331,22 @@ pub async fn create_interaction(
 }
 
 /// Get interaction details
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/interactions/{id}",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Interaction ID", example = 456)
+    ),
+    responses(
+        (status = 200, description = "Interaction details", body = CrmInteraction),
+        (status = 404, description = "Interaction not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_interaction(
     interaction_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -277,6 +357,18 @@ pub async fn get_interaction(
 // ===== Segment Endpoints =====
 
 /// List all segments
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/segments",
+    tag = "Customer - CRM",
+    responses(
+        (status = 200, description = "List of customer segments", body = Vec<CrmSegment>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_segments(
     req: HttpRequest,
     pool: web::Data<DbPool>,
@@ -286,6 +378,20 @@ pub async fn list_segments(
 }
 
 /// Create new segment
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/segments",
+    tag = "Customer - CRM",
+    request_body = CreateSegmentRequest,
+    responses(
+        (status = 201, description = "Segment created successfully", body = CrmSegment),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_segment(
     req: HttpRequest,
     request: web::Json<CreateSegmentRequest>,
@@ -305,6 +411,22 @@ pub async fn create_segment(
 }
 
 /// Get segment members
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/segments/{id}/members",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Segment ID", example = 789)
+    ),
+    responses(
+        (status = 200, description = "List of customers in segment", body = Vec<CrmCustomer>),
+        (status = 404, description = "Segment not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_segment_members(
     segment_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -315,6 +437,20 @@ pub async fn get_segment_members(
 // ===== Campaign Endpoints =====
 
 /// Create new campaign
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/campaigns",
+    tag = "Customer - CRM",
+    request_body = CreateCampaignRequest,
+    responses(
+        (status = 201, description = "Campaign created successfully", body = CrmCampaign),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_campaign(
     req: HttpRequest,
     request: web::Json<CreateCampaignRequest>,
@@ -357,6 +493,18 @@ pub async fn create_campaign(
 }
 
 /// List campaigns
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/campaigns",
+    tag = "Customer - CRM",
+    responses(
+        (status = 200, description = "List of marketing campaigns", body = Vec<CrmCampaign>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_campaigns(
     req: HttpRequest,
     pool: web::Data<DbPool>,
@@ -368,6 +516,20 @@ pub async fn list_campaigns(
 // ===== Task Endpoints =====
 
 /// Create new task
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/tasks",
+    tag = "Customer - CRM",
+    request_body = CreateTaskRequest,
+    responses(
+        (status = 201, description = "Task created successfully", body = CrmTask),
+        (status = 400, description = "Invalid request data"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn create_task(
     req: HttpRequest,
     request: web::Json<CreateTaskRequest>,
@@ -390,6 +552,24 @@ pub async fn create_task(
 }
 
 /// List tasks with filters
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/tasks",
+    tag = "Customer - CRM",
+    params(
+        ("customer_id" = Option<i32>, Query, description = "Filter by customer ID"),
+        ("assigned_to" = Option<i32>, Query, description = "Filter by assignee user ID"),
+        ("status" = Option<String>, Query, description = "Filter by status (pending, in_progress, completed)"),
+        ("priority" = Option<String>, Query, description = "Filter by priority (low, medium, high)")
+    ),
+    responses(
+        (status = 200, description = "List of tasks", body = Vec<CrmTask>),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn list_tasks(
     req: HttpRequest,
     query: web::Query<TaskFilters>,
@@ -406,6 +586,22 @@ pub async fn list_tasks(
 }
 
 /// Update task
+#[utoipa::path(
+    put,
+    path = "/v1/api/crm/tasks/{id}",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Task ID", example = 999)
+    ),
+    responses(
+        (status = 200, description = "Task updated successfully"),
+        (status = 404, description = "Task not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn update_task(
     task_id: web::Path<i32>,
     pool: web::Data<DbPool>,
@@ -422,6 +618,24 @@ pub async fn update_task(
 // ===== Note Endpoints =====
 
 /// Add note to customer
+#[utoipa::path(
+    post,
+    path = "/v1/api/crm/customers/{id}/notes",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID", example = 123)
+    ),
+    request_body = CreateNoteRequest,
+    responses(
+        (status = 201, description = "Note added successfully", body = CrmNote),
+        (status = 400, description = "Invalid request data"),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn add_customer_note(
     req: HttpRequest,
     customer_id: web::Path<i32>,
@@ -441,6 +655,22 @@ pub async fn add_customer_note(
 }
 
 /// Get customer notes
+#[utoipa::path(
+    get,
+    path = "/v1/api/crm/customers/{id}/notes",
+    tag = "Customer - CRM",
+    params(
+        ("id" = i32, Path, description = "Customer ID", example = 123)
+    ),
+    responses(
+        (status = 200, description = "List of customer notes", body = Vec<CrmNote>),
+        (status = 404, description = "Customer not found"),
+        (status = 401, description = "Unauthorized")
+    ),
+    security(
+        ("bearer_auth" = [])
+    )
+)]
 pub async fn get_customer_notes(
     customer_id: web::Path<i32>,
     pool: web::Data<DbPool>,
