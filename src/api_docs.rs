@@ -250,6 +250,7 @@ use utoipa::OpenApi;
         crate::controllers::verification_settings_controller::UpdateVerificationSettingsRequest,
         crate::controllers::verification_settings_controller::VerificationSettingsResponse,
         crate::controllers::verification_settings_controller::VerificationSettingsListResponse,
+        crate::models::verification_models::VerificationSettings,
         
         // Content - Page models
         crate::models::page_models::Page,
