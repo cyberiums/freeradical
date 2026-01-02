@@ -1,5 +1,6 @@
 use actix_web::{web, HttpResponse, HttpRequest};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use crate::models::{DbPool, verification_models::*};
 use crate::services::errors_service::CustomHttpError;
 use crate::helpers::tenant_helper::resolve_tenant_id;
@@ -7,7 +8,7 @@ use diesel::prelude::*;
 
 // ===== Request/Response DTOs =====
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct UpdateVerificationSettingsRequest {
     pub ttl_hours: Option<i32>,
     pub enabled: Option<bool>,
