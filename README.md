@@ -1,6 +1,6 @@
 # FreeRadical CMS
 
-[![Version](https://img.shields.io/badge/version-2.5.0-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v2.5.0)
+[![Version](https://img.shields.io/badge/version-2.6.2-blue.svg)](https://github.com/cyberiums/freeradical/releases/tag/v2.6.2)
 ![License](https://img.shields.io/badge/license-MIT%20%2F%20Enterprise-blue.svg)
 ![Rust](https://img.shields.io/badge/rust-1.92%2B-orange.svg)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
@@ -39,16 +39,41 @@ freeradical/
 
 ## 🎯 Features
 
-- ✅ Language management
+### Core CMS
+- ✅ Content management with pages, modules, and media
+- ✅ Multi-language support (i18n)
+- ✅ SEO optimization with sitemaps and metadata
+- ✅ Multi-tenancy with tenant isolation
 
-### Enterprise Features (Ready)
-- ✅ OAuth (Google, GitHub)
-- ✅ Analytics tracking
-- ✅ Multi-tenancy schema
-- ✅ Load testing suite
-- ✅ Enterprise SSO (SAML 2.0)
-- ✅ Enterprise Audit Logging
-- ✅ Webhooks System (HMAC Signed)
+### E-Commerce
+- ✅ Product catalog with variants
+- ✅ Order management
+- ✅ Payment processing (extensible handlers)
+- ✅ Inventory tracking
+- ✅ Shopping cart and checkout
+
+### AI Capabilities
+- ✅ AI content generation
+- ✅ Sentiment analysis
+- ✅ Fraud detection
+- ✅ Price optimization
+- ✅ Demand forecasting
+
+### Enterprise Features
+- ✅ OAuth (Google, GitHub, SAML 2.0)
+- ✅ Multi-provider SSO
+- ✅ Advanced CRM with customer segmentation
+- ✅ Analytics and metrics tracking
+- ✅ Audit logging
+- ✅ Webhooks (HMAC signed)
+- ✅ Role-based access control
+
+### API
+- ✅ **154 REST endpoints** fully documented
+- ✅ OpenAPI 3.0 specification
+- ✅ Interactive Swagger UI
+- ✅ Beautiful ReDoc documentation
+- ✅ Production URL: https://freeradical.dev
 
 ## 🛠️ Development
 
@@ -65,10 +90,16 @@ cargo run -- init my-project
 
 ## 📚 Documentation
 
+### API Documentation
+- **[Swagger UI](http://localhost:8000/swagger-ui)** - Interactive API explorer
+- **[ReDoc](http://localhost:8000/redoc)** - Beautiful API reference
+- **[OpenAPI Spec](http://localhost:8000/api-docs/openapi.json)** - Machine-readable spec
+- **Production**: https://freeradical.dev
+
+### Guides
 - [Deployment Guide](oxidly/docs/DEPLOYMENT.md)
 - [Admin README](admin/README.md)
 - [CLI README](cli/README.md)
-- [API Documentation](https://docs.freeradical.dev)
 - [Phase 5 Implementation](oxidly/docs/core/PHASE-5-IMPLEMENTATION.md)
 
 ## 🧪 Testing
@@ -95,12 +126,17 @@ Quick deploy with Docker:
 
 ## 📊 Status
 
-**v2.5.0**: 100% complete (Enterprise Release)
-- Phase 1-4 (Core): 100%
-- Phase 5 (Oxidly Cloud): 100%
-- Phase 19 (SSO): 100%
-- Phase 22 (Audit Logs): 100%
-- Phase 23 (Webhooks): 100%
+**v2.6.2**: Latest Release (OpenAPI Complete) - January 2, 2026
+- ✅ **154 API Endpoints** fully documented
+- ✅ Complete OpenAPI 3.0 specification
+- ✅ Zero schema validation errors
+- ✅ Real-time Swagger UI
+- ✅ Production-ready ReDoc
+
+**Previous Releases:**
+- v2.6.1: Complete API Documentation
+- v2.5.0: Enterprise Release (SSO, Audit, Webhooks)
+- Phases 1-23: 100% complete
 
 ## Environment Variables
 
