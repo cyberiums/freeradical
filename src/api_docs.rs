@@ -246,6 +246,7 @@ use utoipa::OpenApi;
         
         // CRM response DTOs
         crate::controllers::crm_controller::CustomerDetailResponse,
+        crate::controllers::crm_controller_public::PublicCustomerRequest,
         
         // Content - Page models
         crate::models::page_models::Page,

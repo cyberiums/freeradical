@@ -16,14 +16,13 @@ use serde_json;
     post,
     path = "/v1/users",
     tag = "Internal - Users",
-    request_body = MutUser,
+    request_body = crate::models::user_models::MutUser,
     responses(
         (status = 201, description = "User created successfully", body = User),
         (status = 401, description = "Not authenticated")
     ),
     security((
-        "bearer_auth" = []
-    ))
+        "bearer_auth" = []\n    ))
 )]
 pub async fn create_user(
     new: web::Json<MutUser>,
@@ -87,7 +86,7 @@ pub async fn get_user(
     params(
         ("uuid" = String, Path, description = "User UUID")
     ),
-    request_body = MutUser,
+    request_body = crate::models::user_models::MutUser,
     responses(
         (status = 200, description = "User updated", body = User),
         (status = 401, description = "Not authenticated")

@@ -3,12 +3,13 @@
 
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
+use utoipa::ToSchema;
 use crate::models::DbPool;
 use crate::services::errors_service::CustomHttpError;
 use crate::services::email_verification_service::EmailVerificationService;
 use crate::services::email_service::EmailService;
 
-#[derive(Debug, Deserialize, serde::Serialize)]
+#[derive(Debug, Deserialize, serde::Serialize, ToSchema)]
 pub struct PublicCustomerRequest {
     pub email: String,
     pub first_name: Option<String>,
