@@ -304,8 +304,8 @@ async fn main() -> std::io::Result<()> {
             .route("/admin/ai/providers/{id}", web::delete().to(services::ai_provider_service::delete_provider))
             .route("/admin/ai/providers/test", web::post().to(services::ai_provider_service::test_provider))
             // AI Content Generation routes
-            .route("/ai/generate", web::post().to(services::ai_content_service::generate_content))
-            .route("/ai/generate/image", web::post().to(services::ai_content_service::generate_image))
+            .route("/v1/ai/generate/content", web::post().to(services::ai_content_service::generate_content))
+            .route("/v1/ai/generate/image", web::post().to(services::ai_content_service::generate_image))
             // AI Metadata Automation routes
             .route("/ai/metadata/keywords", web::post().to(services::metadata_automation_service::extract_keywords))
             .route("/ai/metadata/tags", web::post().to(services::metadata_automation_service::generate_tags))
@@ -314,11 +314,10 @@ async fn main() -> std::io::Result<()> {
             .route("/ai/metadata/all", web::post().to(services::metadata_automation_service::generate_all_metadata))
             .route("/search/embedding", web::post().to(services::semantic_search_service::create_embedding))
             .route("/search/semantic", web::post().to(services::semantic_search_service::semantic_search))
-            .route("/ai/analyze", web::post().to(services::ai_content_service::generate_content)) // Mapped to correct function
-            .route("/ai/analyze/sentiment", web::post().to(services::ai_content_service::analyze_sentiment))
-            .route("/ai/analyze/fraud", web::post().to(services::ai_content_service::detect_fraud))
-            .route("/ai/analyze/pricing", web::post().to(services::ai_content_service::analyze_pricing))
-            .route("/ai/analyze/forecast", web::post().to(services::ai_content_service::forecast_supply))
+            .route("/v1/ai/analyze/sentiment", web::post().to(services::ai_content_service::analyze_sentiment))
+            .route("/v1/ai/analyze/fraud", web::post().to(services::ai_content_service::detect_fraud))
+            .route("/v1/ai/analyze/pricing", web::post().to(services::ai_content_service::analyze_pricing))
+            .route("/v1/ai/forecast/supply", web::post().to(services::ai_content_service::forecast_supply))
             .route("/ai/marketing/generate", web::post().to(services::ai_content_service::generate_marketing_campaign))
             .route("/ai/marketing/optimize", web::post().to(services::ai_content_service::optimize_ad_spend))
             .route("/ai/chat/concierge", web::post().to(services::ai_content_service::chat_concierge))
@@ -327,8 +326,8 @@ async fn main() -> std::io::Result<()> {
             .route("/ai/crm/health", web::post().to(services::ai_content_service::calculate_customer_health))
             .route("/ai/crm/returns/analyze", web::post().to(services::ai_content_service::analyze_return_request))
             .route("/ai/crm/outreach/draft", web::post().to(services::ai_content_service::generate_outreach_message))
-            .route("/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
-            .route("/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
+            .route("/v1/recommendations/related", web::post().to(services::recommendation_service::get_related_content))
+            .route("/v1/recommendations/trending", web::get().to(services::recommendation_service::get_trending))
             // Admin Dashboard API
             .service(controllers::dashboard_controller::dashboard_summary)
             .service(controllers::dashboard_controller::analytics_summary)
@@ -339,6 +338,11 @@ async fn main() -> std::io::Result<()> {
             // Backups
             .service(controllers::backup_controller::list_backups)
             .service(controllers::backup_controller::create_backup)
+            // Media routes
+            .route("/api/media", web::get().to(controllers::media_controller::list_media))
+            .route("/api/media/{uuid}", web::get().to(controllers::media_controller::get_media))
+            .route("/api/media/{uuid}", web::delete().to(controllers::media_controller::delete_media))
+            .route("/api/media/upload", web::post().to(controllers::media_controller::upload_media))
             // Billing & Invoicing
             .configure(controllers::billing_controller::init_routes)
             // OAuth Redirects

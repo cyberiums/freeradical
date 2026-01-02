@@ -213,6 +213,11 @@ use utoipa::OpenApi;
         crate::controllers::revision_controller::list_revisions,
         crate::controllers::revision_controller::get_revision,
         crate::controllers::revision_controller::rollback_revision,
+        
+        // Customer - CRM (AI)
+        crate::services::recommendation_service::get_related_content,
+        crate::services::recommendation_service::get_trending,
+        crate::services::ai_content_service::analyze_sentiment,
     ),
     components(schemas(
         // Auth models
