@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use utoipa::ToSchema;
 use uuid::Uuid;
 
-#[derive(Queryable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = crate::schema::pending_verifications)]
 pub struct PendingVerification {
     pub id: i32,
@@ -31,7 +32,7 @@ pub struct NewPendingVerification {
     pub expires_at: NaiveDateTime,
 }
 
-#[derive(Queryable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = crate::schema::verification_settings)]
 pub struct VerificationSettings {
     pub id: i32,

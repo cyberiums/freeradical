@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use bigdecimal::BigDecimal;
 use chrono::Utc;
 use uuid::Uuid;
@@ -25,12 +26,15 @@ struct GenericHttpResponse {
 
 
 /// Request body for creating a product variant
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateVariantRequest {
     pub variant_name: Option<String>,
     pub variant_sku: Option<String>,
+    #[schema(value_type = Option<String>)]
     pub price: Option<BigDecimal>,
+    #[schema(value_type = Option<String>)]
     pub compare_at_price: Option<BigDecimal>,
+    #[schema(value_type = Option<String>)]
     pub weight: Option<BigDecimal>,
     pub stock_quantity: i32,
     pub image_url: Option<String>,
@@ -38,7 +42,7 @@ pub struct CreateVariantRequest {
 }
 
 /// Request body for updating stock
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct UpdateStockRequest {
     pub quantity_change: i32,
     pub reason: Option<String>,

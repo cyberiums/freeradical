@@ -1,6 +1,9 @@
 pub mod user_controllers;
 pub mod page_controllers;
 pub mod module_controllers;
+pub mod ai_provider_controller;
+pub mod admin_controller;
+pub mod marketplace_submission_controller;
 pub mod category_controllers;
 pub mod product_controller;
 pub mod order_controller;

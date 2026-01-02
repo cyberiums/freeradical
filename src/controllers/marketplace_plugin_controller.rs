@@ -9,11 +9,11 @@ use crate::models::db_connection;
 use crate::middleware::auth_middleware::get_user_context;
 use diesel::prelude::*;
 use serde::Deserialize;
-use crate::models::tenant_models::Tenant;
+use utoipa::ToSchema;use crate::models::tenant_models::Tenant;
 use crate::services::auth_service::Claims;
 use crate::models::marketplace_plugin_models::NewTenantPlugin;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct InstallPluginRequest {
     pub plugin_id: i32,
 }
@@ -221,7 +221,7 @@ pub async fn install_plugin(
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct ApprovePluginRequest {
     pub plugin_id: i32,
     pub status: String, // 'active', 'rejected'

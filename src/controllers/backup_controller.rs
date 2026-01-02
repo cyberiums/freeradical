@@ -4,12 +4,12 @@ use serde::Serialize;
 use utoipa::ToSchema;
 
 #[derive(Serialize, ToSchema)]
-struct BackupList {
+pub struct BackupList {
     backups: Vec<String>,
 }
 
-#[derive(Serialize)]
-struct BackupResponse {
+#[derive(Serialize, ToSchema)]
+pub struct BackupResponse {
     success: bool,
     message: String,
 }

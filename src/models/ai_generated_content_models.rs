@@ -1,12 +1,13 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use bigdecimal::BigDecimal;
 
 use crate::schema::ai_generated_content;
 
 /// AI Generated Content - tracks AI-generated content with quality scores
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable, Selectable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable, Selectable, ToSchema)]
 #[diesel(table_name = ai_generated_content)]
 pub struct AIGeneratedContent {
     pub id: i64,
@@ -17,6 +18,7 @@ pub struct AIGeneratedContent {
     pub model_name: Option<String>,
     pub provider_type: Option<String>,
     pub tokens_used: Option<i32>,
+    #[schema(value_type = Option<String>)]
     pub quality_score: Option<BigDecimal>,
     pub was_accepted: Option<bool>,
     pub generated_by: Option<i32>,
@@ -25,7 +27,7 @@ pub struct AIGeneratedContent {
 }
 
 /// New AI Generated Content - for inserting
-#[derive(Debug, Insertable, Serialize, Deserialize)]
+#[derive(Debug, Insertable, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = ai_generated_content)]
 pub struct NewAIGeneratedContent {
     pub page_uuid: Option<String>,
@@ -35,6 +37,7 @@ pub struct NewAIGeneratedContent {
     pub model_name: Option<String>,
     pub provider_type: Option<String>,
     pub tokens_used: Option<i32>,
+    #[schema(value_type = Option<String>)]
     pub quality_score: Option<BigDecimal>,
     pub was_accepted: Option<bool>,
     pub generated_by: Option<i32>,

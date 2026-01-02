@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use crate::models::ai_provider_models::{AIProviderConfig, NewAIUsageLog};
+use utoipa::ToSchema;use crate::models::ai_provider_models::{AIProviderConfig, NewAIUsageLog};
 use crate::models::DbPool;
 use crate::schema::{ai_provider_configs, ai_usage_log};
 use crate::services::errors_service::CustomHttpError;
@@ -10,7 +10,7 @@ use diesel::prelude::*;
 // --- Request/Response Structs ---
 
 /// Request to generate content
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct GenerateContentRequest {
     pub prompt: String,
     pub content_type: String, // 'blog_post', 'meta_description', 'title', 'summary'
@@ -20,7 +20,7 @@ pub struct GenerateContentRequest {
 }
 
 /// Generated content response
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct GeneratedContentResponse {
     pub content: String,
     pub provider_used: String,
@@ -30,14 +30,14 @@ pub struct GeneratedContentResponse {
 }
 
 /// Request for sentiment analysis
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct AnalyzeSentimentRequest {
     pub text: String,
     pub provider_id: Option<i64>,
 }
 
 /// Response for sentiment analysis
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct SentimentAnalysisResponse {
     pub score: f32, // -1.0 to 1.0
     pub label: String, // 'positive', 'negative', 'neutral'
@@ -45,14 +45,14 @@ pub struct SentimentAnalysisResponse {
 }
 
 /// Request for fraud detection
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct FraudDetectionRequest {
     pub transaction_details: serde_json::Value,
     pub provider_id: Option<i64>,
 }
 
 /// Response for fraud detection
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct FraudDetectionResponse {
     pub risk_score: u32, // 0-100
     pub is_fraudulent: bool,
@@ -78,25 +78,25 @@ struct OpenAIResponseFormat {
     response_type: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 struct OpenAIMessage {
     role: String,
     content: String,
 }
 
 /// OpenAI API response
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct OpenAIResponse {
     choices: Vec<OpenAIChoice>,
     usage: OpenAIUsage,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct OpenAIChoice {
     message: OpenAIMessage,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct OpenAIUsage {
     prompt_tokens: u32,
     completion_tokens: u32,
@@ -114,25 +114,25 @@ struct AnthropicRequest {
     system: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 struct AnthropicMessage {
     role: String,
     content: String,
 }
 
 /// Anthropic API response
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct AnthropicResponse {
     content: Vec<AnthropicContent>,
     usage: AnthropicUsage,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct AnthropicContent {
     text: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct AnthropicUsage {
     input_tokens: u32,
     output_tokens: u32,
@@ -483,7 +483,7 @@ pub async fn detect_fraud(
 
 
 // Re-implement generate_content to match signature and keep existing functionality
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct AnalyzePricingRequest {
     pub product_name: String,
     pub current_price: f64,
@@ -493,7 +493,7 @@ pub struct AnalyzePricingRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct AnalyzePricingResponse {
     pub suggested_price: f64,
     pub market_analysis: String,
@@ -612,7 +612,7 @@ pub async fn generate_content(
 
 // --- Image Generation ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct GenerateImageRequest {
     pub prompt: String,
     pub n: Option<u8>,
@@ -620,7 +620,7 @@ pub struct GenerateImageRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct GenerateImageResponse {
     pub images: Vec<String>,
     pub cost_cents: u32,
@@ -633,12 +633,12 @@ struct OpenAIImageRequest {
     size: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct OpenAIImageResponse {
     data: Vec<OpenAIImageData>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 struct OpenAIImageData {
     url: String,
 }
@@ -704,7 +704,7 @@ pub async fn generate_image(
 
 // --- Demand Forecasting ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct ForecastSupplyRequest {
     pub product_name: String,
     pub current_stock: i32,
@@ -713,7 +713,7 @@ pub struct ForecastSupplyRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct ForecastSupplyResponse {
     pub predicted_demand_30d: i32,
     pub recommended_restock: i32,
@@ -795,7 +795,7 @@ pub async fn forecast_supply(
 
 // --- Marketing ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct GenerateMarketingRequest {
     pub campaign_type: String, // "marketing_email", "social_ad", "push_notification"
     pub product_name: String,
@@ -804,14 +804,14 @@ pub struct GenerateMarketingRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct GenerateMarketingResponse {
     pub subject: String, // or headline
     pub content: String,
     pub call_to_action: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct OptimizeAdRequest {
     pub current_daily_spend: f64,
     pub current_roas: f64, // Return on Ad Spend (e.g., 2.5)
@@ -819,7 +819,7 @@ pub struct OptimizeAdRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct OptimizeAdResponse {
     pub suggested_daily_spend: f64,
     pub reasoning: String,
@@ -975,14 +975,14 @@ pub async fn optimize_ad_spend(
 
 // --- Customer Experience ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct ChatConciergeRequest {
     pub message: String,
     pub session_id: Option<String>,
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct ChatConciergeResponse {
     pub reply: String,
     pub suggested_products: Vec<serde_json::Value>, // Simplified product info
@@ -1072,14 +1072,14 @@ pub async fn chat_concierge(
 
 // --- Store Architect ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct ArchitectThemeRequest {
     pub instruction: String, // e.g., "Make it look like a summer sale"
     pub current_theme_config: serde_json::Value,
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct ArchitectThemeResponse {
     pub suggested_config: serde_json::Value,
     pub explanation: String,
@@ -1142,14 +1142,14 @@ pub async fn architect_theme(
 
 // --- Virtual Try-On ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct VirtualTryOnRequest {
     pub user_image_base64: String, // Or URL
     pub product_image_url: String,
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct VirtualTryOnResponse {
     pub result_image_url: String,
     pub confidence_score: f32,
@@ -1183,7 +1183,7 @@ pub async fn virtual_try_on(
 
 // --- AI CRM & Analytics ---
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CustomerHealthRequest {
     pub customer_id: i32,
     pub total_spend: f64,
@@ -1193,7 +1193,7 @@ pub struct CustomerHealthRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CustomerHealthResponse {
     pub health_score: i32, // 0-100
     pub churn_risk: String, // Low, Medium, High
@@ -1252,7 +1252,7 @@ pub async fn calculate_customer_health(
     }))
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct OutreachRequest {
     pub customer_name: String,
     pub last_purchase: Option<String>,
@@ -1260,7 +1260,7 @@ pub struct OutreachRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct OutreachResponse {
     pub subject: String,
     pub body: String,
@@ -1324,7 +1324,7 @@ pub async fn generate_outreach_message(
     Ok(HttpResponse::Ok().json(result))
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct ReturnAnalysisRequest {
     pub return_reason: String,
     pub customer_sentiment_score: Option<f32>, // -1.0 to 1.0 from sentiment analysis
@@ -1332,7 +1332,7 @@ pub struct ReturnAnalysisRequest {
     pub provider_id: Option<i64>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct ReturnAnalysisResponse {
     pub recommendation: String, // "Approve", "Deny", "Manual Review"
     pub refund_amount_suggested: f64,

@@ -4,14 +4,14 @@ use crate::middleware::auth_middleware::get_user_context;
 use uuid::Uuid;
 use diesel::prelude::*;
 use serde::Deserialize;
-
-#[derive(Deserialize)]
+use utoipa::ToSchema;
+#[derive(Deserialize, ToSchema)]
 pub struct NewTenantRequest {
     pub name: String,
     pub subdomain: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct InviteMemberRequest {
     pub email: String,
     pub role: String,

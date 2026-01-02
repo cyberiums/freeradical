@@ -18,7 +18,7 @@ use utoipa::OpenApi;
     ),
     servers(
         (url = "http://localhost:8000", description = "Local development server"),
-        (url = "https://api.freeradical.dev", description = "Production API server")
+        (url = "https://freeradical.dev", description = "Production API server")
     ),
     paths(
         // Authentication
@@ -81,6 +81,17 @@ use utoipa::OpenApi;
         crate::controllers::product_controller::update_product,
         crate::controllers::product_controller::delete_product,
         
+        // Commerce - Inventory  
+        crate::services::inventory_service::get_product_variants,
+        crate::services::inventory_service::create_variant,
+        crate::services::inventory_service::update_variant_stock,
+        crate::services::inventory_service::delete_variant,
+        
+        // Internal - Billing
+        crate::controllers::billing_controller::get_all_plans,
+        crate::controllers::billing_controller::subscribe,
+        crate::controllers::billing_controller::cancel_subscription,
+        crate::controllers::billing_controller::get_my_subscription,
         // Commerce - Orders
         crate::controllers::order_controller::list_orders,
         crate::controllers::order_controller::get_order,
@@ -199,6 +210,36 @@ use utoipa::OpenApi;
         // Content - Search
         crate::controllers::search_controller::search_content,
         
+        // Content - AI
+        crate::services::ai_content_service::generate_content,
+        crate::services::ai_content_service::generate_image,
+        
+        // Commerce - AI
+        crate::services::ai_content_service::detect_fraud,
+        crate::services::ai_content_service::analyze_pricing,
+        crate::services::ai_content_service::forecast_supply,
+        
+        // Internal - AI Providers
+        crate::controllers::ai_provider_controller::list_ai_providers,
+        crate::controllers::ai_provider_controller::create_ai_provider,
+        crate::controllers::ai_provider_controller::update_ai_provider,
+        crate::controllers::ai_provider_controller::delete_ai_provider,
+        crate::controllers::ai_provider_controller::get_provider_usage,
+        
+        // Internal - Admin
+        crate::controllers::admin_controller::list_users,
+        crate::controllers::admin_controller::update_user_role,
+        crate::controllers::admin_controller::system_health,
+        crate::controllers::admin_controller::clear_cache,
+        crate::controllers::admin_controller::view_logs,
+        
+        // Marketplace - Submissions
+        crate::controllers::marketplace_submission_controller::submit_plugin,
+        crate::controllers::marketplace_submission_controller::list_my_submissions,
+        crate::controllers::marketplace_submission_controller::get_submission_status,
+        crate::controllers::marketplace_submission_controller::update_submission,
+        crate::controllers::marketplace_submission_controller::review_submission,
+        
         // Content - i18n
         crate::controllers::i18n_controller::list_languages,
         crate::controllers::i18n_controller::create_language,
@@ -225,11 +266,53 @@ use utoipa::OpenApi;
         crate::models::user_models::User,
         crate::models::user_models::MutUser,
         
-        // CRM models
-        crate::models::crm_models::CrmCustomer,
+        
+        // CRM DTOs (use String instead of BigDecimal for API compatibility)
+        crate::models::crm_dtos::CrmCustomerDTO,
+        crate::models::crm_dtos::CrmCampaignDTO,
+        
+        // AI Provider DTOs
+        crate::controllers::ai_provider_controller::AIProviderResponse,
+        crate::controllers::ai_provider_controller::CreateAIProviderRequest,
+        crate::controllers::ai_provider_controller::UpdateAIProviderRequest,
+        crate::controllers::ai_provider_controller::AIProviderUsageStats,
+        
+        // Admin DTOs
+        crate::controllers::admin_controller::SystemHealthResponse,
+        crate::controllers::admin_controller::UserListResponse,
+        crate::controllers::admin_controller::UserInfo,
+        crate::controllers::admin_controller::UpdateRoleRequest,
+        crate::controllers::admin_controller::ClearCacheRequest,
+        crate::controllers::admin_controller::ClearCacheResponse,
+        crate::controllers::admin_controller::LogEntry,
+        
+        // Marketplace Submission DTOs
+        crate::controllers::marketplace_submission_controller::SubmissionStatus,
+        crate::controllers::marketplace_submission_controller::SubmitPluginRequest,
+        
+        // AI Content Service DTOs
+        crate::services::ai_content_service::GenerateContentRequest,
+        crate::services::ai_content_service::GeneratedContentResponse,
+        crate::services::ai_content_service::AnalyzeSentimentRequest,
+        crate::services::ai_content_service::SentimentAnalysisResponse,
+        crate::services::ai_content_service::FraudDetectionRequest,
+        crate::services::ai_content_service::FraudDetectionResponse,
+        crate::services::ai_content_service::AnalyzePricingRequest,
+        crate::services::ai_content_service::AnalyzePricingResponse,
+        crate::services::ai_content_service::ForecastSupplyRequest,
+        crate::services::ai_content_service::ForecastSupplyResponse,
+        crate::services::ai_content_service::GenerateImageRequest,
+        crate::services::ai_content_service::GenerateImageResponse,
+        
+        // Inventory Service DTOs
+        crate::services::inventory_service::CreateVariantRequest,
+        crate::services::inventory_service::UpdateStockRequest,
+        
+        // Product/Inventory Models
+        crate::models::inventory_models::ProductVariant,
+        crate::models::commerce_models::Product,
         crate::models::crm_models::CrmInteraction,
         crate::models::crm_models::CrmSegment,
-        crate::models::crm_models::CrmCampaign,
         crate::models::crm_models::CrmTask,
         crate::models::crm_models::CrmNote,
         
@@ -297,6 +380,44 @@ use utoipa::OpenApi;
         // Commerce - Payment request DTOs
         crate::controllers::payment_controller::CreatePaymentRequest,
         crate::controllers::payment_controller::GetPaymentRequest,
+        
+        // Additional request/response DTOs
+        crate::controllers::relationship_controller::CreateRelationshipInput,
+        crate::controllers::i18n_controller::CreateLanguageInput,
+        crate::controllers::order_controller::CreateOrderRequest,
+        crate::controllers::order_controller::OrderItemInput,
+        crate::controllers::order_controller::OrderResponse,
+        crate::controllers::order_controller::UpdateOrderStatusRequest,
+        crate::controllers::order_controller::LinkPaymentRequest,
+        crate::controllers::marketplace_plugin_controller::InstallPluginRequest,
+        crate::controllers::tenant_controller::NewTenantRequest,
+        crate::controllers::tenant_controller::InviteMemberRequest,
+        crate::controllers::tenant_sso_controller::UpdateSsoRequest,
+        crate::controllers::billing_controller::SubscribeRequest,
+        crate::controllers::seo_controller::AuditRequest,
+        crate::controllers::site_controller::ValidateCnameRequest,
+        crate::controllers::survey_controller::CreateSurveyRequest,
+        crate::controllers::survey_controller::AddQuestionRequest,
+        crate::controllers::survey_controller::SurveyDetails,
+        crate::controllers::webhook_controller::CreateWebhookRequest,
+        crate::controllers::backup_controller::BackupResponse,
+        crate::controllers::backup_controller::BackupList,
+        crate::controllers::dashboard_controller::DashboardSummary,
+        crate::controllers::dashboard_controller::AnalyticsSummary,
+        crate::controllers::dashboard_controller::SEOHealthCheck,
+        crate::controllers::dashboard_controller::TopPage,
+        crate::controllers::order_controller::OrderItemWithProduct,
+        crate::controllers::product_controller::ProductListResponse,
+        crate::models::survey_models::Survey,
+        crate::models::survey_models::Question,
+        crate::models::survey_models::Response,
+        crate::models::user_models::Enable2faRequest,
+        crate::models::status_enum::PageStatus,
+        crate::services::ai_content_service::AnalyzeSentimentRequest,
+        crate::services::ai_content_service::SentimentAnalysisResponse,
+        crate::services::recommendation_service::RecommendationRequest,
+        crate::services::recommendation_service::RecommendationResponse,
+        crate::services::recommendation_service::Recommendation,
         
         // Customer - OAuth DTOs
         crate::controllers::oauth_callback_controller::OAuthCallbackQuery,

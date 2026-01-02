@@ -3,15 +3,15 @@ use crate::models::{db_connection, survey_models::{Survey, NewSurvey, Question, 
 use crate::middleware::auth_middleware::{get_user_context, UserContext};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-
-#[derive(Deserialize)]
+use utoipa::ToSchema;
+#[derive(Deserialize, ToSchema)]
 pub struct CreateSurveyRequest {
     pub title: String,
     pub description: Option<String>,
     pub status: Option<String>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct AddQuestionRequest {
     pub question_text: String,
     pub question_type: String,
@@ -20,7 +20,7 @@ pub struct AddQuestionRequest {
     pub is_required: Option<bool>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct SurveyDetails {
     pub survey: Survey,
     pub questions: Vec<Question>,

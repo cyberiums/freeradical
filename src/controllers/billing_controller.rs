@@ -21,7 +21,7 @@ pub struct CancelRequest {
 #[utoipa::path(
     get,
     path = "/api/billing/plans",
-    tag = "Commerce - Billing",
+    tag = "Internal - Billing",
     responses(
         (status = 200, description = "List of billing plans")
     )
@@ -40,7 +40,7 @@ pub async fn get_all_plans(
 #[utoipa::path(
     post,
     path = "/api/billing/subscribe",
-    tag = "Commerce - Billing",
+    tag = "Internal - Billing",
     request_body = SubscribeRequest,
     responses(
         (status = 200, description = "Subscription created"),
@@ -83,7 +83,7 @@ pub async fn subscribe(
 #[utoipa::path(
     post,
     path = "/api/billing/cancel",
-    tag = "Commerce - Billing",
+    tag = "Internal - Billing",
     responses(
         (status = 200, description = "Subscription canceled"),
         (status = 404, description = "No active subscription")
@@ -225,7 +225,7 @@ pub async fn get_plans_view(
 #[utoipa::path(
     get,
     path = "/api/billing/subscription",
-    tag = "Commerce - Billing",
+    tag = "Internal - Billing",
     responses(
         (status = 200, description = "Subscription details"),
         (status = 403, description = "User not in tenant")

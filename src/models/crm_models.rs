@@ -9,7 +9,7 @@ use crate::schema::{
 };
 
 // ===== CRM Customer =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
 #[diesel(table_name = crm_customers)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CrmCustomer {
@@ -134,7 +134,7 @@ pub struct NewCrmSegment {
 }
 
 // ===== CRM Campaign =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
 #[diesel(table_name = crm_campaigns)]
 pub struct CrmCampaign {
     pub id: i32,

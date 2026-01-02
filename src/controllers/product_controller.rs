@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-
+use utoipa::ToSchema;
 use crate::models::{pool_handler, DatabasePool};
 use crate::models::commerce_models::{Product, NewProduct};
 use crate::services::errors_service::CustomHttpError;
@@ -18,7 +18,7 @@ pub struct PaginationQuery {
     pub per_page: Option<i64>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct ProductListResponse {
     pub products: Vec<Product>,
     pub total: i64,

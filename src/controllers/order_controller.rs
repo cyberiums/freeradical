@@ -1,6 +1,7 @@
 use actix_web::{web, HttpResponse};
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
 use chrono::NaiveDateTime;
 
@@ -10,26 +11,26 @@ use crate::services::errors_service::CustomHttpError;
 use crate::services::auth_service::Claims;
 use crate::schema::{orders, order_items, products};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct CreateOrderRequest {
     pub items: Vec<OrderItemInput>,
     pub target_user_uuid: Option<String>, // Admin override
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct OrderItemInput {
     pub product_id: i64,
     pub quantity: i32,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct OrderResponse {
     pub order: Order,
     pub items: Vec<OrderItemWithProduct>,
     pub total_amount_cents: i64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct OrderItemWithProduct {
     pub id: i64,
     pub product_id: i64,
@@ -290,7 +291,7 @@ pub async fn create_order(
 }
 
 // Update order status
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct UpdateOrderStatusRequest {
     pub status: String,
 }
@@ -347,7 +348,7 @@ pub async fn update_order_status(
 }
 
 // Link payment to order
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct LinkPaymentRequest {
     pub payment_provider: String,
     pub payment_intent_id: String,

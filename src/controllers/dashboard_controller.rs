@@ -6,7 +6,7 @@ use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 
 #[derive(Serialize, ToSchema)]
-struct DashboardSummary {
+pub struct DashboardSummary {
     total_pages: i64,
     total_views_today: i64,
     total_views_week: i64,
@@ -14,14 +14,14 @@ struct DashboardSummary {
     top_pages: Vec<TopPage>,
 }
 
-#[derive(Serialize)]
-struct TopPage {
+#[derive(Serialize, ToSchema)]
+pub struct TopPage {
     url: String,
     views: i64,
 }
 
-#[derive(Serialize)]
-struct AnalyticsSummary {
+#[derive(Serialize, ToSchema)]
+pub struct AnalyticsSummary {
     views_today: i64,
     views_week: i64,
     views_month: i64,
@@ -29,8 +29,8 @@ struct AnalyticsSummary {
     top_referrers: Vec<String>,
 }
 
-#[derive(Serialize)]
-struct SEOHealthCheck {
+#[derive(Serialize, ToSchema)]
+pub struct SEOHealthCheck {
     total_pages: i64,
     pages_with_meta_description: i64,
     pages_with_canonical_url: i64,

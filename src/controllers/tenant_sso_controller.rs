@@ -1,10 +1,11 @@
 use actix_web::{web, HttpResponse, Responder, Error};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use crate::models::{DatabasePool, user_models};
 use crate::models::tenant_sso_models::{TenantSsoConfig, MutTenantSsoConfig};
 use crate::models::tenant_models::{Tenant, TenantMember};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, ToSchema)]
 pub struct UpdateSsoRequest {
     pub provider_type: String, // 'saml' or 'oidc'
     // SAML Fields
@@ -130,7 +131,7 @@ pub async fn login(
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct OidcCallbackQuery {
     code: String,
     state: String,

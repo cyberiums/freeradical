@@ -82,7 +82,7 @@ pub struct LoginRequest {
     pub two_factor_code: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct Enable2faRequest {
     pub secret: String,
     pub code: String,

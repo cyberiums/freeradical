@@ -1,13 +1,13 @@
 use actix_web::{web, HttpResponse, Responder, HttpRequest};
 use serde::{Deserialize, Serialize};
-use crate::models::db_connection::DatabasePool;
+use utoipa::ToSchema;use crate::models::db_connection::DatabasePool;
 use crate::middleware::auth_middleware::get_user_context;
 use crate::models::webhook_models::{NewTenantWebhook, TenantWebhook};
 use crate::schema::tenant_webhooks;
 use diesel::prelude::*;
 use uuid::Uuid;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct CreateWebhookRequest {
     pub url: String,
     pub events: Vec<String>,

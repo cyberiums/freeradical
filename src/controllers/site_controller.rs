@@ -3,9 +3,9 @@ use crate::models::db_connection;
 use crate::middleware::auth_middleware::get_user_context;
 use crate::controllers::tenant_controller;
 use serde::Deserialize;
-use diesel::prelude::*;
+use utoipa::ToSchema;use diesel::prelude::*;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct ValidateCnameRequest {
     pub domain: String,
 }

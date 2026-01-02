@@ -2,13 +2,14 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::sql_types::{Jsonb, Numeric};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use uuid::Uuid;
 use bigdecimal::BigDecimal;
 
 use crate::schema::{product_variants, inventory_audit_log};
 
 /// Product variant for SKU-level inventory management
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable, ToSchema)]
 #[diesel(table_name = product_variants)]
 pub struct ProductVariant {
     pub id: i32,
@@ -16,8 +17,10 @@ pub struct ProductVariant {
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
+    #[schema(value_type = Option<String>)]
     pub price: Option<BigDecimal>,
     pub stock_quantity: Option<i32>,
+    #[schema(value_type = Option<String>)]
     pub weight: Option<BigDecimal>,
     // attributes field excluded - JSONB type incompatible with Queryable
     pub image_url: Option<String>,
@@ -27,15 +30,17 @@ pub struct ProductVariant {
 }
 
 /// New product variant for insertion
-#[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, ToSchema)]
 #[diesel(table_name = product_variants)]
 pub struct NewProductVariant {
     pub uuid: String,
     pub product_id: i32,
     pub sku: Option<String>,
     pub variant_name: String,
+    #[schema(value_type = Option<String>)]
     pub price: Option<BigDecimal>,
     pub stock_quantity: Option<i32>,
+    #[schema(value_type = Option<String>)]
     pub weight: Option<BigDecimal>,
     // attributes excluded - JSONB type incompatible
     pub image_url: Option<String>,

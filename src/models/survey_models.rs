@@ -1,9 +1,10 @@
 use crate::schema::{surveys, survey_questions, survey_responses};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = surveys)]
 pub struct Survey {
     pub id: i32,
@@ -26,7 +27,7 @@ pub struct NewSurvey {
     pub created_by: Option<i32>,
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = survey_questions)]
 pub struct Question {
     pub id: i32,
@@ -49,7 +50,7 @@ pub struct NewQuestion {
     pub is_required: Option<bool>,
 }
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = survey_responses)]
 pub struct Response {
     pub id: i32,

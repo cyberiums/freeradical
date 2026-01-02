@@ -1,3 +1,4 @@
+use crate::models::crm_dtos::{CrmCustomerDTO, CrmCampaignDTO};
 use actix_web::{web, HttpResponse, HttpRequest};
 use crate::helpers::tenant_helper::resolve_tenant_id;
 use serde::{Deserialize, Serialize};
@@ -100,9 +101,9 @@ pub struct PaginatedResponse<T> {
     pub per_page: i64,
 }
 
-#[derive(Debug, Serialize, ToSchema)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CustomerDetailResponse {
-    pub customer: CrmCustomer,
+    pub customer: CrmCustomerDTO,
     pub recent_interactions: Vec<CrmInteraction>,
     pub active_tasks: Vec<CrmTask>,
 }
@@ -122,7 +123,7 @@ pub struct CustomerDetailResponse {
         ("per_page" = Option<i64>, Query, description = "Results per page", example = 20)
     ),
     responses(
-        (status = 200, description = "List of customers retrieved successfully", body = Vec<CrmCustomer>),
+        (status = 200, description = "List of customers retrieved successfully", body = Vec<CrmCustomerDTO>),
         (status = 401, description = "Unauthorized - Invalid or missing JWT token"),
         (status = 403, description = "Forbidden - Insufficient permissions")
     ),
@@ -175,8 +176,8 @@ pub async fn get_customer_profile(
     tag = "Customer - CRM",
     request_body = CreateCustomerRequest,
     responses(
-        (status = 201, description = "Customer created successfully", body = CrmCustomer),
-        (status = 200, description = "Existing customer returned", body = CrmCustomer),
+        (status = 201, description = "Customer created successfully", body = CrmCustomerDTO),
+        (status = 200, description = "Existing customer returned", body = CrmCustomerDTO),
         (status = 400, description = "Invalid request data"),
         (status = 401, description = "Unauthorized")
     ),
@@ -420,7 +421,7 @@ pub async fn create_segment(
         ("id" = i32, Path, description = "Segment ID", example = 789)
     ),
     responses(
-        (status = 200, description = "List of customers in segment", body = Vec<CrmCustomer>),
+        (status = 200, description = "List of customers in segment", body = Vec<CrmCustomerDTO>),
         (status = 404, description = "Segment not found"),
         (status = 401, description = "Unauthorized")
     ),
@@ -444,7 +445,7 @@ pub async fn get_segment_members(
     tag = "Customer - CRM",
     request_body = CreateCampaignRequest,
     responses(
-        (status = 201, description = "Campaign created successfully", body = CrmCampaign),
+        (status = 201, description = "Campaign created successfully", body = CrmCampaignDTO),
         (status = 400, description = "Invalid request data"),
         (status = 401, description = "Unauthorized")
     ),
@@ -499,7 +500,7 @@ pub async fn create_campaign(
     path = "/v1/api/crm/campaigns",
     tag = "Customer - CRM",
     responses(
-        (status = 200, description = "List of marketing campaigns", body = Vec<CrmCampaign>),
+        (status = 200, description = "List of marketing campaigns", body = Vec<CrmCampaignDTO>),
         (status = 401, description = "Unauthorized")
     ),
     security(

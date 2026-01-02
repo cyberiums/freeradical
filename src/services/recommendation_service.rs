@@ -1,5 +1,6 @@
 use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use diesel::prelude::*;
 use diesel::sql_types::{BigInt, Text, Float4, Integer};
 use pgvector::Vector;
@@ -9,7 +10,7 @@ use crate::schema::{pages}; // content_embeddings commented - schema mismatch (h
 use crate::services::errors_service::CustomHttpError;
 
 /// Request for recommendations
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct RecommendationRequest {
     pub page_uuid: String,
     pub limit: Option<i64>,
@@ -17,7 +18,7 @@ pub struct RecommendationRequest {
 }
 
 /// Recommendation result
-#[derive(Debug, Serialize, QueryableByName)]
+#[derive(Debug, Serialize, QueryableByName, ToSchema)]
 pub struct Recommendation {
     #[diesel(sql_type = Text)]
     pub page_id: String,
@@ -32,7 +33,7 @@ pub struct Recommendation {
 }
 
 /// Recommendation response
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct RecommendationResponse {
     pub source_page_id: String,
     pub recommendations: Vec<Recommendation>,

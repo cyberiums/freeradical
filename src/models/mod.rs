@@ -13,7 +13,8 @@ pub mod revision_models;
 pub mod field_type_enum;
 pub mod category_models;
 pub mod inventory_models;  // Inventory management models
-pub mod crm_models; // CRM module
+pub mod crm_models;
+pub mod crm_dtos; // CRM module
 pub mod language_models; // Language support
 pub mod translation_models; // Translation support
 pub mod ai_provider_models; // AI provider configs
