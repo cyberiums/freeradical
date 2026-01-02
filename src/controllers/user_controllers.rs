@@ -16,7 +16,7 @@ use serde_json;
     post,
     path = "/v1/users",
     tag = "Internal - Users",
-    request_body = crate::models::user_models::MutUser,
+    request_body = MutUser,
     responses(
         (status = 201, description = "User created successfully", body = User),
         (status = 401, description = "Not authenticated")
@@ -87,7 +87,7 @@ pub async fn get_user(
     params(
         ("uuid" = String, Path, description = "User UUID")
     ),
-    request_body = crate::models::user_models::MutUser,
+    request_body = MutUser,
     responses(
         (status = 200, description = "User updated", body = User),
         (status = 401, description = "Not authenticated")
