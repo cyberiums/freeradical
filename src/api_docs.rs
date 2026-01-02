@@ -248,6 +248,8 @@ use utoipa::OpenApi;
         crate::controllers::crm_controller::CustomerDetailResponse,
         crate::controllers::crm_controller_public::PublicCustomerRequest,
         crate::controllers::verification_settings_controller::UpdateVerificationSettingsRequest,
+        crate::controllers::verification_settings_controller::VerificationSettingsResponse,
+        crate::controllers::verification_settings_controller::VerificationSettingsListResponse,
         
         // Content - Page models
         crate::models::page_models::Page,

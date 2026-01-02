@@ -15,12 +15,12 @@ pub struct UpdateVerificationSettingsRequest {
     pub email_template: Option<String>,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct VerificationSettingsResponse {
     pub settings: VerificationSettings,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct VerificationSettingsListResponse {
     pub settings: Vec<VerificationSettings>,
 }
