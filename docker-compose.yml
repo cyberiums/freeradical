@@ -39,6 +39,8 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgres://${POSTGRES_USER:-freeradical}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-freeradical}
+      DATABASE_HOST: postgres
+      DATABASE_USER: ${POSTGRES_USER:-freeradical}
       # MySQL vars required by app code (not used with PostgreSQL but needed for compilation)
       APP_MYSQL_USERNAME: unused
       APP_MYSQL_PASSWORD: unused

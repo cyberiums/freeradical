@@ -223,6 +223,7 @@ use utoipa::OpenApi;
         // Auth models
         crate::models::user_models::LoginRequest,
         crate::models::user_models::User,
+        crate::models::user_models::MutUser,
         
         // CRM models
         crate::models::crm_models::CrmCustomer,
