@@ -15,77 +15,6 @@ pub mod sql_types {
 }
 
 diesel::table! {
-    billing_plans (id) {
-        id -> Int4,
-        #[max_length = 100]
-        name -> Varchar,
-        #[max_length = 50]
-        code -> Varchar,
-        price_cents -> Int4,
-        #[max_length = 20]
-        billing_interval -> Varchar,
-        #[max_length = 3]
-        currency -> Varchar,
-        limits -> Nullable<Jsonb>,
-        is_active -> Nullable<Bool>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    billing_subscriptions (id) {
-        id -> Int4,
-        tenant_id -> Int4,
-        plan_id -> Int4,
-        #[max_length = 50]
-        status -> Varchar,
-        current_period_start -> Timestamp,
-        current_period_end -> Timestamp,
-        cancel_at_period_end -> Nullable<Bool>,
-        canceled_at -> Nullable<Timestamp>,
-        #[max_length = 255]
-        provider_subscription_id -> Nullable<Varchar>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    billing_invoices (id) {
-        id -> Int4,
-        subscription_id -> Int4,
-        amount_cents -> Int4,
-        #[max_length = 50]
-        status -> Varchar,
-        due_date -> Timestamp,
-        paid_at -> Nullable<Timestamp>,
-        line_items -> Nullable<Jsonb>,
-        #[max_length = 50]
-        invoice_number -> Nullable<Varchar>,
-        pdf_url -> Nullable<Text>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    billing_payments (id) {
-        id -> Int4,
-        invoice_id -> Int4,
-        amount_cents -> Int4,
-        #[max_length = 255]
-        provider_transaction_id -> Nullable<Varchar>,
-        #[max_length = 50]
-        status -> Varchar,
-        #[max_length = 50]
-        payment_method -> Nullable<Varchar>,
-        payment_date -> Nullable<Timestamp>,
-        created_at -> Timestamp,
-    }
-}
-
-diesel::table! {
     ai_generated_content (id) {
         id -> Int8,
         #[max_length = 255]
@@ -202,6 +131,24 @@ diesel::table! {
 }
 
 diesel::table! {
+    audit_logs (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        user_id -> Int4,
+        #[max_length = 50]
+        action -> Varchar,
+        #[max_length = 50]
+        resource_type -> Varchar,
+        #[max_length = 255]
+        resource_id -> Nullable<Varchar>,
+        details -> Nullable<Json>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
     backups (id) {
         id -> Int4,
         #[max_length = 255]
@@ -223,21 +170,95 @@ diesel::table! {
 }
 
 diesel::table! {
+    billing_invoices (id) {
+        id -> Int4,
+        subscription_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        due_date -> Timestamp,
+        paid_at -> Nullable<Timestamp>,
+        line_items -> Nullable<Jsonb>,
+        #[max_length = 100]
+        invoice_number -> Nullable<Varchar>,
+        #[max_length = 500]
+        pdf_url -> Nullable<Varchar>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    billing_payments (id) {
+        id -> Int4,
+        invoice_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 255]
+        provider_transaction_id -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Varchar,
+        #[max_length = 100]
+        payment_method -> Nullable<Varchar>,
+        payment_date -> Nullable<Timestamp>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    billing_plans (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        #[max_length = 100]
+        code -> Varchar,
+        price_cents -> Int4,
+        #[max_length = 50]
+        billing_interval -> Varchar,
+        #[max_length = 3]
+        currency -> Varchar,
+        limits -> Nullable<Jsonb>,
+        is_active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    billing_subscriptions (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        plan_id -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        current_period_start -> Timestamp,
+        current_period_end -> Timestamp,
+        cancel_at_period_end -> Nullable<Bool>,
+        canceled_at -> Nullable<Timestamp>,
+        #[max_length = 255]
+        provider_subscription_id -> Nullable<Varchar>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     use diesel::sql_types::*;
     use super::sql_types::Vector;
 
     content_embeddings (id) {
         id -> Int8,
+        page_id -> Nullable<Int4>,
+        embedding_vector -> Nullable<Vector>,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
         #[max_length = 255]
         page_uuid -> Nullable<Varchar>,
         #[max_length = 64]
         content_hash -> Varchar,
-        embedding -> Nullable<Text>, 
-        #[max_length = 100]
-        model_name -> Nullable<Varchar>,
+        embedding -> Nullable<Text>,
         content_preview -> Nullable<Text>,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
     }
 }
 
@@ -446,6 +467,28 @@ diesel::table! {
 }
 
 diesel::table! {
+    marketplace_plugins (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        #[max_length = 500]
+        icon_url -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        developer_id -> Nullable<Int4>,
+        price_cents -> Nullable<Int4>,
+        downloads_count -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     media (id) {
         id -> Int4,
         #[max_length = 36]
@@ -461,7 +504,6 @@ diesel::table! {
         width -> Nullable<Int4>,
         height -> Nullable<Int4>,
         alt_text -> Nullable<Text>,
-        tenant_id -> Nullable<Int4>,
         #[max_length = 255]
         title -> Nullable<Varchar>,
         description -> Nullable<Text>,
@@ -469,6 +511,7 @@ diesel::table! {
         uploaded_by -> Nullable<Int4>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -549,7 +592,6 @@ diesel::table! {
         #[max_length = 50]
         status -> Varchar,
         total_amount_cents -> Int8,
-        tenant_id -> Nullable<Int4>,
         #[max_length = 50]
         payment_status -> Nullable<Varchar>,
         #[max_length = 50]
@@ -559,6 +601,7 @@ diesel::table! {
         metadata -> Nullable<Jsonb>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -685,6 +728,25 @@ diesel::table! {
 }
 
 diesel::table! {
+    pending_verifications (id) {
+        id -> Int4,
+        uuid -> Uuid,
+        #[max_length = 50]
+        verification_type -> Varchar,
+        #[max_length = 255]
+        email -> Varchar,
+        #[max_length = 255]
+        verification_token -> Varchar,
+        payload -> Jsonb,
+        tenant_id -> Nullable<Int4>,
+        verified -> Nullable<Bool>,
+        expires_at -> Timestamp,
+        created_at -> Nullable<Timestamp>,
+        verified_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     product_variants (id) {
         id -> Int4,
         #[max_length = 36]
@@ -717,7 +779,6 @@ diesel::table! {
         price_cents -> Int8,
         #[max_length = 100]
         sku -> Nullable<Varchar>,
-        tenant_id -> Nullable<Int4>,
         inventory_count -> Nullable<Int4>,
         is_active -> Bool,
         created_at -> Timestamp,
@@ -729,6 +790,7 @@ diesel::table! {
         track_inventory -> Nullable<Bool>,
         allow_backorder -> Nullable<Bool>,
         backorder_limit -> Nullable<Int4>,
+        tenant_id -> Nullable<Int4>,
     }
 }
 
@@ -775,25 +837,43 @@ diesel::table! {
 }
 
 diesel::table! {
-    tenants (id) {
+    survey_questions (id) {
         id -> Int4,
-        #[max_length = 255]
-        uuid -> Varchar,
-        #[max_length = 255]
-        name -> Varchar,
-        #[max_length = 100]
-        subdomain -> Varchar,
-        #[max_length = 255]
-        custom_domain -> Nullable<Varchar>,
+        survey_id -> Nullable<Int4>,
+        question_text -> Text,
         #[max_length = 50]
-        plan -> Nullable<Varchar>,
-        is_active -> Nullable<Bool>,
-        settings -> Nullable<Json>,
+        question_type -> Varchar,
+        options -> Nullable<Jsonb>,
+        order_index -> Nullable<Int4>,
+        is_required -> Nullable<Bool>,
+    }
+}
+
+diesel::table! {
+    survey_responses (id) {
+        id -> Int4,
+        survey_id -> Nullable<Int4>,
+        respondent_id -> Nullable<Int4>,
+        answers -> Jsonb,
+        metadata -> Nullable<Jsonb>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    surveys (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 255]
+        title -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        created_by -> Nullable<Int4>,
         created_at -> Nullable<Timestamp>,
         updated_at -> Nullable<Timestamp>,
     }
 }
-
 
 diesel::table! {
     tenant_members (id) {
@@ -822,26 +902,73 @@ diesel::table! {
     }
 }
 
-    diesel::table! {
+diesel::table! {
     tenant_sso_configs (id) {
         id -> Int4,
         tenant_id -> Int4,
         #[max_length = 255]
-        idp_entity_id -> Nullable<Varchar>,
+        idp_entity_id -> Varchar,
         #[max_length = 500]
-        idp_sso_url -> Nullable<Varchar>,
-        x509_certificate -> Nullable<Text>,
+        idp_sso_url -> Varchar,
+        x509_certificate -> Text,
         is_enabled -> Bool,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        #[max_length = 50]
-        provider_type -> Varchar,
+    }
+}
+
+diesel::table! {
+    tenant_webhooks (id) {
+        id -> Uuid,
+        tenant_id -> Int4,
+        #[max_length = 2048]
+        url -> Varchar,
         #[max_length = 255]
-        client_id -> Nullable<Varchar>,
+        secret -> Varchar,
+        events -> Jsonb,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    tenants (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        #[max_length = 100]
+        subdomain -> Varchar,
+        #[max_length = 255]
+        custom_domain -> Nullable<Varchar>,
+        #[max_length = 50]
+        plan -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        settings -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    themes (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
         #[max_length = 500]
-        client_secret -> Nullable<Varchar>,
+        file_path -> Varchar,
         #[max_length = 500]
-        discovery_url -> Nullable<Varchar>,
+        thumbnail_url -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        is_default -> Nullable<Bool>,
+        tenant_id -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
     }
 }
 
@@ -872,7 +999,7 @@ diesel::table! {
 }
 
 diesel::table! {
-    users (id) {
+    users (uuid) {
         id -> Int4,
         #[max_length = 255]
         uuid -> Varchar,
@@ -889,9 +1016,23 @@ diesel::table! {
 }
 
 diesel::table! {
+    verification_settings (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 50]
+        verification_type -> Varchar,
+        ttl_hours -> Nullable<Int4>,
+        enabled -> Nullable<Bool>,
+        email_template -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     webhook_logs (id) {
         id -> Int8,
-        webhook_id -> Uuid,
+        webhook_id -> Int4,
         #[max_length = 100]
         event_type -> Varchar,
         payload -> Nullable<Json>,
@@ -902,165 +1043,67 @@ diesel::table! {
 }
 
 diesel::table! {
-    audit_logs (id) {
+    webhooks (id) {
         id -> Int4,
-        tenant_id -> Nullable<Int4>,
-        user_id -> Int4,
-        #[max_length = 50]
-        action -> Varchar,
-        #[max_length = 50]
-        resource_type -> Varchar,
-        #[max_length = 255]
-        resource_id -> Nullable<Varchar>,
-        details -> Nullable<Jsonb>,
-        #[max_length = 45]
-        ip_address -> Nullable<Varchar>,
-        created_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    tenant_webhooks (id) {
-        id -> Uuid,
-        tenant_id -> Int4,
         #[max_length = 500]
         url -> Varchar,
-        events -> Jsonb,
+        events -> Json,
         #[max_length = 255]
-        secret -> Varchar,
-        is_active -> Bool,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
-    }
-}
-
-diesel::table! {
-    themes (id) {
-        id -> Int4,
-        #[max_length = 255]
-        name -> Varchar,
-        description -> Nullable<Text>,
-        #[max_length = 50]
-        version -> Varchar,
-        #[max_length = 500]
-        file_path -> Varchar,
-        #[max_length = 500]
-        thumbnail_url -> Nullable<Varchar>,
-        is_active -> Nullable<Bool>,
-        is_default -> Nullable<Bool>,
-        tenant_id -> Nullable<Int4>,
+        secret -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
         created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    marketplace_plugins (id) {
-        id -> Int4,
-        #[max_length = 255]
-        name -> Varchar,
-        description -> Nullable<Text>,
-        #[max_length = 50]
-        version -> Varchar,
-        #[max_length = 500]
-        file_path -> Varchar,
-        #[max_length = 500]
-        icon_url -> Nullable<Varchar>,
-        #[max_length = 50]
-        status -> Nullable<Varchar>,
-        developer_id -> Nullable<Int4>,
-        price_cents -> Nullable<Int4>,
-        downloads_count -> Nullable<Int4>,
-        created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    surveys (id) {
-        id -> Int4,
-        tenant_id -> Nullable<Int4>,
-        #[max_length = 255]
-        title -> Varchar,
-        description -> Nullable<Text>,
-        #[max_length = 50]
-        status -> Nullable<Varchar>,
-        created_by -> Nullable<Int4>,
-        created_at -> Nullable<Timestamp>,
-        updated_at -> Nullable<Timestamp>,
-    }
-}
-
-diesel::table! {
-    survey_questions (id) {
-        id -> Int4,
-        survey_id -> Int4,
-        question_text -> Text,
-        #[max_length = 50]
-        question_type -> Varchar,
-        options -> Nullable<Jsonb>,
-        order_index -> Nullable<Int4>,
-        is_required -> Nullable<Bool>,
-    }
-}
-
-diesel::table! {
-    survey_responses (id) {
-        id -> Int4,
-        survey_id -> Int4,
-        respondent_id -> Nullable<Int4>,
-        answers -> Jsonb,
-        metadata -> Nullable<Jsonb>,
-        created_at -> Nullable<Timestamp>,
+        last_triggered_at -> Nullable<Timestamp>,
+        failure_count -> Nullable<Int4>,
     }
 }
 
 diesel::joinable!(ai_key_rotation_history -> ai_provider_keys (provider_key_id));
+diesel::joinable!(audit_logs -> tenants (tenant_id));
+diesel::joinable!(billing_invoices -> billing_subscriptions (subscription_id));
+diesel::joinable!(billing_payments -> billing_invoices (invoice_id));
+diesel::joinable!(billing_subscriptions -> billing_plans (plan_id));
+diesel::joinable!(billing_subscriptions -> tenants (tenant_id));
 diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
+diesel::joinable!(crm_campaigns -> tenants (tenant_id));
+diesel::joinable!(crm_customers -> tenants (tenant_id));
 diesel::joinable!(crm_interactions -> crm_customers (customer_id));
-// TEMPORARILY DISABLED - optional FK joinable issue
-// diesel::joinable!(crm_interactions -> orders (order_id));
+// diesel::joinable!(crm_interactions -> orders (order_id)); // Type mismatch: orders.id is Int8, order_id is Nullable<Int4>
+diesel::joinable!(crm_interactions -> tenants (tenant_id));
 diesel::joinable!(crm_notes -> crm_customers (customer_id));
+diesel::joinable!(crm_notes -> tenants (tenant_id));
 diesel::joinable!(crm_segment_members -> crm_customers (customer_id));
 diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
+diesel::joinable!(crm_segments -> tenants (tenant_id));
 diesel::joinable!(crm_tasks -> crm_customers (customer_id));
-// TEMPORARILY DISABLED - optional FK joinable issue
-// diesel::joinable!(inventory_audit_log -> orders (order_id));
+diesel::joinable!(crm_tasks -> tenants (tenant_id));
+// diesel::joinable!(inventory_audit_log -> orders (order_id)); // Type mismatch: orders.id is Int8, order_id is Nullable<Int4>
 diesel::joinable!(inventory_audit_log -> product_variants (variant_id));
-// TEMPORARILY DISABLED - optional FK joinable issue
-// diesel::joinable!(inventory_audit_log -> products (product_id));
+// diesel::joinable!(inventory_audit_log -> products (product_id)); // Type mismatch: products.id is Int8, product_id is Nullable<Int4>
+diesel::joinable!(media -> tenants (tenant_id));
 diesel::joinable!(module_category -> pages (page_uuid));
 diesel::joinable!(module_translations -> languages (language_id));
 diesel::joinable!(modules -> module_category (category_uuid));
 diesel::joinable!(modules -> pages (page_uuid));
 diesel::joinable!(order_items -> orders (order_id));
 diesel::joinable!(order_items -> products (product_id));
+diesel::joinable!(orders -> tenants (tenant_id));
 diesel::joinable!(page_translations -> languages (language_id));
-// TEMPORARILY DISABLED - optional FK joinable issue
-// diesel::joinable!(product_variants -> products (product_id));
+diesel::joinable!(pages -> tenants (tenant_id));
+diesel::joinable!(pending_verifications -> tenants (tenant_id));
+// diesel::joinable!(product_variants -> products (product_id)); // Type mismatch: products.id is Int8, product_id is Int4
+diesel::joinable!(products -> tenants (tenant_id));
+diesel::joinable!(survey_questions -> surveys (survey_id));
+diesel::joinable!(survey_responses -> surveys (survey_id));
+diesel::joinable!(surveys -> tenants (tenant_id));
+diesel::joinable!(tenant_members -> tenants (tenant_id));
 diesel::joinable!(tenant_plugins -> marketplace_plugins (plugin_id));
 diesel::joinable!(tenant_plugins -> tenants (tenant_id));
 diesel::joinable!(tenant_sso_configs -> tenants (tenant_id));
-diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
-diesel::joinable!(webhook_logs -> tenant_webhooks (webhook_id));
-diesel::joinable!(audit_logs -> tenants (tenant_id));
 diesel::joinable!(tenant_webhooks -> tenants (tenant_id));
-diesel::joinable!(tenant_members -> tenants (tenant_id));
-diesel::joinable!(crm_campaigns -> tenants (tenant_id));
-diesel::joinable!(crm_customers -> tenants (tenant_id));
-diesel::joinable!(crm_interactions -> tenants (tenant_id));
-diesel::joinable!(crm_notes -> tenants (tenant_id));
-diesel::joinable!(crm_segments -> tenants (tenant_id));
-diesel::joinable!(crm_tasks -> tenants (tenant_id));
-diesel::joinable!(surveys -> tenants (tenant_id));
-diesel::joinable!(surveys -> users (created_by));
-diesel::joinable!(survey_questions -> surveys (survey_id));
-diesel::joinable!(survey_responses -> surveys (survey_id));
-diesel::joinable!(survey_responses -> users (respondent_id));
-diesel::joinable!(billing_subscriptions -> tenants (tenant_id));
-diesel::joinable!(billing_subscriptions -> billing_plans (plan_id));
-diesel::joinable!(billing_invoices -> billing_subscriptions (subscription_id));
-diesel::joinable!(billing_payments -> billing_invoices (invoice_id));
+diesel::joinable!(themes -> tenants (tenant_id));
+diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
+diesel::joinable!(verification_settings -> tenants (tenant_id));
+diesel::joinable!(webhook_logs -> webhooks (webhook_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,
@@ -1070,7 +1113,12 @@ diesel::allow_tables_to_appear_in_same_query!(
     ai_usage_log,
     analytics_events,
     analytics_summary,
+    audit_logs,
     backups,
+    billing_invoices,
+    billing_payments,
+    billing_plans,
+    billing_subscriptions,
     content_embeddings,
     content_relationships,
     crm_campaigns,
@@ -1082,6 +1130,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     crm_tasks,
     inventory_audit_log,
     languages,
+    marketplace_plugins,
     media,
     module_category,
     module_translations,
@@ -1093,28 +1142,25 @@ diesel::allow_tables_to_appear_in_same_query!(
     page_translations,
     page_views,
     pages,
+    pending_verifications,
     product_variants,
     products,
     robots_rules,
     roles,
     search_history,
-    audit_logs,
+    survey_questions,
+    survey_responses,
+    surveys,
     tenant_members,
     tenant_plugins,
+    tenant_sso_configs,
+    tenant_webhooks,
     tenants,
+    themes,
     user_oauth_connections,
     user_roles,
     users,
+    verification_settings,
     webhook_logs,
-    tenant_webhooks,
-    themes,
-    marketplace_plugins,
-    surveys,
-    survey_questions,
-    survey_responses,
-    billing_plans,
-    billing_subscriptions,
-    billing_invoices,
-    billing_payments,
-    tenant_sso_configs,
+    webhooks,
 );

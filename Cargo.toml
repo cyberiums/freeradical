@@ -1,6 +1,6 @@
 [package]
 name = "freeradical"
-version = "2.6.0"
+version = "2.6.1"
 authors = ["fastbuilder <team@fastbuilder.ai>"]
 edition = "2018"
 
@@ -9,6 +9,8 @@ edition = "2018"
 [dependencies]
 # web
 actix-web = "4.12.1"
+actix = "0.13"  # Actor framework for WebSocket MCP server
+actix-web-actors = "4.3"  # WebSocket actors for MCP server
 actix-files = "0.6"
 actix-cors = "0.7"
 actix-governor = "0.10.0"

@@ -1,5 +1,6 @@
 use actix_multipart::Multipart;
 use actix_web::{web, HttpResponse, Responder};
+use utoipa::ToSchema;
 use diesel::prelude::*;
 use futures_util::StreamExt;
 use std::fs;
@@ -16,7 +17,14 @@ use crate::services::storage_service::{StorageService, StorageBackend};
 const MAX_FILE_SIZE: usize = 10 * 1024 * 1024; // 10MB
 
 /// List all media files
-/// GET /api/media
+#[utoipa::path(
+    get,
+    path = "/api/media",
+    tag = "Content - Media",
+    responses(
+        (status = 200, description = "List of media files (max 100)")
+    )
+)]
 pub async fn list_media() -> impl Responder {
     use crate::schema::media::dsl::*;
     
@@ -33,7 +41,18 @@ pub async fn list_media() -> impl Responder {
 }
 
 /// Get single media file
-/// GET /api/media/:uuid
+#[utoipa::path(
+    get,
+    path = "/api/media/{uuid}",
+    tag = "Content - Media",
+    params(
+        ("uuid" = String, Path, description = "Media UUID")
+    ),
+    responses(
+        (status = 200, description = "Media file details"),
+        (status = 404, description = "Media not found")
+    )
+)]
 pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
     use crate::schema::media::dsl::*;
     
@@ -49,9 +68,18 @@ pub async fn get_media(media_uuid: web::Path<String>) -> impl Responder {
 }
 
 /// Delete media file
-/// DELETE /api/media/:uuid
-/// Delete media file
-/// DELETE /api/media/:uuid
+#[utoipa::path(
+    delete,
+    path = "/api/media/{uuid}",
+    tag = "Content - Media",
+    params(
+        ("uuid" = String, Path, description = "Media UUID")
+    ),
+    responses(
+        (status = 200, description = "Media deleted"),
+        (status = 404, description = "Media not found")
+    )
+)]
 pub async fn delete_media(
     media_uuid: web::Path<String>,
     storage: web::Data<StorageBackend>,
@@ -96,13 +124,17 @@ pub async fn delete_media(
 }
 
 /// Upload media file (multipart form data)
-/// POST /api/media/upload
-///
-/// Form fields:
-/// - file: The uploaded file (required)
-/// - alt_text: Alt text for accessibility (optional)
-/// - caption: Image caption (optional)
-/// - folder: Folder/category (optional)
+#[utoipa::path(
+    post,
+    path = "/api/media/upload",
+    tag = "Content - Media",
+    request_body(content = String, description = "Multipart form with file, alt_text, caption, folder", content_type = "multipart/form-data"),
+    responses(
+        (status = 201, description = "File uploaded successfully"),
+        (status = 400, description = "Invalid file or upload failed"),
+        (status = 413, description = "File too large")
+    )
+)]
 pub async fn upload_media(
     req: actix_web::HttpRequest, 
     mut payload: Multipart,

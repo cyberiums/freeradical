@@ -1,10 +1,11 @@
 use actix_web::{get, HttpResponse, Responder, web};
 use serde::{Serialize, Deserialize};
+use utoipa::ToSchema;
 use crate::services::analytics_service::AnalyticsService;
 use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 struct DashboardSummary {
     total_pages: i64,
     total_views_today: i64,
@@ -38,8 +39,15 @@ struct SEOHealthCheck {
     issues: Vec<String>,
 }
 
-/// GET /admin/dashboard/summary
 /// Main dashboard summary with key metrics
+#[utoipa::path(
+    get,
+    path = "/admin/dashboard/summary",
+    tag = "Internal - Dashboard",
+    responses(
+        (status = 200, description = "Dashboard summary", body = DashboardSummary)
+    )
+)]
 #[get("/admin/dashboard/summary")]
 pub async fn dashboard_summary() -> impl Responder {
     use crate::schema::pages::dsl::*;
@@ -71,8 +79,15 @@ pub async fn dashboard_summary() -> impl Responder {
     HttpResponse::Ok().json(summary)
 }
 
-/// GET /admin/analytics/summary
 /// Detailed analytics summary
+#[utoipa::path(
+    get,
+    path = "/admin/analytics/summary",
+    tag = "Internal - Dashboard",
+    responses(
+        (status = 200, description = "Analytics summary", body = AnalyticsSummary)
+    )
+)]
 #[get("/admin/analytics/summary")]
 pub async fn analytics_summary() -> impl Responder {
     let views_today = AnalyticsService::get_views_today();
@@ -96,8 +111,15 @@ pub async fn analytics_summary() -> impl Responder {
     HttpResponse::Ok().json(summary)
 }
 
-/// GET /admin/seo/health
 /// SEO health check
+#[utoipa::path(
+    get,
+    path = "/admin/seo/health",
+    tag = "Internal - Dashboard",
+    responses(
+        (status = 200, description = "SEO health check", body = SEOHealthCheck)
+    )
+)]
 #[get("/admin/seo/health")]
 pub async fn seo_health() -> impl Responder {
     use crate::schema::pages::dsl::*;
@@ -154,8 +176,15 @@ pub async fn seo_health() -> impl Responder {
     HttpResponse::Ok().json(health)
 }
 
-/// GET /admin/analytics/pages
 /// Top pages by views
+#[utoipa::path(
+    get,
+    path = "/admin/analytics/pages",
+    tag = "Internal - Dashboard",
+    responses(
+        (status = 200, description = "Top pages by views")
+    )
+)]
 #[get("/admin/analytics/pages")]
 pub async fn top_pages() -> impl Responder {
     let pages = AnalyticsService::get_top_pages(20)

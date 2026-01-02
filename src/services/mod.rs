@@ -14,7 +14,7 @@ pub mod ai_provider_service; // Provider CRUD operations
 pub mod ai_content_service; // Content generation
 pub mod ai_authorization_service; // Budget and permission checks
 pub mod storage_service; // Multi-region storage (S3/Local)
-pub mod semantic_search_service; // Vector search with content_embeddings
+pub mod semantic_search_service;
 pub mod recommendation_service; // Content recommendations
 
 // v1.7.0: MCP/AI Automation Foundation

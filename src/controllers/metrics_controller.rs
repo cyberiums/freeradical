@@ -1,15 +1,30 @@
 use actix_web::{web, HttpResponse, Responder};
+use utoipa::ToSchema;
 use crate::services::monitoring_service::METRICS;
 
 /// Get performance metrics
-/// GET /api/metrics
+#[utoipa::path(
+    get,
+    path = "/api/metrics",
+    tag = "Internal - Metrics",
+    responses(
+        (status = 200, description = "Performance metrics")
+    )
+)]
 pub async fn get_metrics() -> impl Responder {
     let metrics = METRICS.to_json();
     HttpResponse::Ok().json(metrics)
 }
 
-/// Get metrics summary (for health checks)
-/// GET /api/health
+/// Get metrics summary (health check)
+#[utoipa::path(
+    get,
+    path = "/api/health",
+    tag = "Internal - Metrics",
+    responses(
+        (status = 200, description = "Health check status")
+    )
+)]
 pub async fn health_check() -> impl Responder {
     let uptime = (chrono::Utc::now() - METRICS.server_start_time).num_seconds();
     

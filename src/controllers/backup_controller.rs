@@ -1,8 +1,9 @@
 use actix_web::{get, post, web, HttpResponse, Responder};
 use crate::services::backup_service::BackupService;
 use serde::Serialize;
+use utoipa::ToSchema;
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 struct BackupList {
     backups: Vec<String>,
 }
@@ -13,7 +14,15 @@ struct BackupResponse {
     message: String,
 }
 
-/// GET /admin/backups
+/// List all backups
+#[utoipa::path(
+    get,
+    path = "/admin/backups",
+    tag = "Internal - Backup",
+    responses(
+        (status = 200, description = "List of backups", body = BackupList)
+    )
+)]
 #[get("/admin/backups")]
 pub async fn list_backups() -> impl Responder {
     let backup_dir = std::env::var("BACKUP_DIR").unwrap_or_else(|_| "./backups".to_string());
@@ -29,7 +38,16 @@ pub async fn list_backups() -> impl Responder {
     }
 }
 
-/// POST /admin/backups
+/// Create a new backup
+#[utoipa::path(
+    post,
+    path = "/admin/backups",
+    tag = "Internal - Backup",
+    responses(
+        (status = 200, description = "Backup created", body = BackupResponse),
+        (status = 500, description = "Backup failed")
+    )
+)]
 #[post("/admin/backups")]
 pub async fn create_backup() -> impl Responder {
     let db_url = match std::env::var("DATABASE_URL") {

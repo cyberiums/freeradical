@@ -2,10 +2,11 @@
 
 use actix_web::{web, HttpResponse, Responder, get, post, delete};
 use serde::{Serialize, Deserialize};
+use utoipa::ToSchema;
 use diesel::prelude::*;
 use crate::models::{DatabasePool, pool_handler};
 
-#[derive(Debug, Serialize, Deserialize, Queryable)]
+#[derive(Debug, Serialize, Deserialize, Queryable, ToSchema)]
 #[diesel(table_name = crate::schema::content_relationships)]
 pub struct Relationship {
     pub id: Option<i64>,
@@ -17,7 +18,7 @@ pub struct Relationship {
     pub metadata: Option<serde_json::Value>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateRelationshipInput {
     pub source_type: String,
     pub source_id: String,
@@ -28,6 +29,15 @@ pub struct CreateRelationshipInput {
 }
 
 /// Create a new relationship
+#[utoipa::path(
+    post,
+    path = "/relationships",
+    tag = "Content - Relationships",
+    request_body = CreateRelationshipInput,
+    responses(
+        (status = 201, description = "Relationship created")
+    )
+)]
 #[post("/relationships")]
 pub async fn create_relationship(
     input: web::Json<CreateRelationshipInput>,
@@ -46,6 +56,18 @@ pub async fn create_relationship(
 }
 
 /// Get related content for a resource
+#[utoipa::path(
+    get,
+    path = "/relationships/{resource_type}/{resource_id}",
+    tag = "Content - Relationships",
+    params(
+        ("resource_type" = String, Path, description = "Resource type"),
+        ("resource_id" = String, Path, description = "Resource ID")
+    ),
+    responses(
+        (status = 200, description = "Related content")
+    )
+)]
 #[get("/relationships/{resource_type}/{resource_id}")]
 pub async fn get_related(
     path: web::Path<(String, String)>,
@@ -62,6 +84,17 @@ pub async fn get_related(
 }
 
 /// Delete a relationship
+#[utoipa::path(
+    delete,
+    path = "/relationships/{id}",
+    tag = "Content - Relationships",
+    params(
+        ("id" = i64, Path, description = "Relationship ID")
+    ),
+    responses(
+        (status = 200, description = "Relationship deleted")
+    )
+)]
 #[delete("/relationships/{id}")]
 pub async fn delete_relationship(
     id: web::Path<i64>,

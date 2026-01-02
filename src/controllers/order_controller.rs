@@ -67,13 +67,13 @@ pub async fn list_orders(
             orders::user_uuid,
             orders::status,
             orders::total_amount_cents,
-            orders::tenant_id,
             orders::payment_status,
             orders::payment_provider,
             orders::payment_intent_id,
             orders::metadata,
             orders::created_at,
             orders::updated_at,
+            orders::tenant_id,
         ))
         .filter(orders::user_uuid.eq(&claim.sub))
         .order(orders::created_at.desc())
@@ -113,13 +113,13 @@ pub async fn get_order(
             orders::user_uuid,
             orders::status,
             orders::total_amount_cents,
-            orders::tenant_id,
             orders::payment_status,
             orders::payment_provider,
             orders::payment_intent_id,
             orders::metadata,
             orders::created_at,
             orders::updated_at,
+            orders::tenant_id,
         ))
         .find(*id)
         .first::<Order>(&mut conn)
@@ -253,13 +253,13 @@ pub async fn create_order(
             orders::user_uuid,
             orders::status,
             orders::total_amount_cents,
-            orders::tenant_id,
             orders::payment_status,
             orders::payment_provider,
             orders::payment_intent_id,
             orders::metadata,
             orders::created_at,
             orders::updated_at,
+            orders::tenant_id,
         ))
         .order(orders::id.desc())
         .first::<Order>(&mut conn)?

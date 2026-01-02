@@ -14,8 +14,8 @@ pub struct BillingPlan {
     pub currency: String,
     pub limits: Option<serde_json::Value>,
     pub is_active: Option<bool>,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
+    pub created_at: Option<NaiveDateTime>,
+    pub updated_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, Deserialize)]
@@ -45,8 +45,8 @@ pub struct Subscription {
     pub cancel_at_period_end: Option<bool>,
     pub canceled_at: Option<NaiveDateTime>,
     pub provider_subscription_id: Option<String>,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
+    pub created_at: Option<NaiveDateTime>,
+    pub updated_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, Deserialize)]
@@ -73,8 +73,8 @@ pub struct Invoice {
     pub line_items: Option<serde_json::Value>,
     pub invoice_number: Option<String>,
     pub pdf_url: Option<String>,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
+    pub created_at: Option<NaiveDateTime>,
+    pub updated_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, Deserialize)]

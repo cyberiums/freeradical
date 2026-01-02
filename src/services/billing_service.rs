@@ -228,7 +228,7 @@ impl BillingService {
 
         let recent_invoices: Vec<serde_json::Value> = invoices.into_iter().map(|inv| {
             serde_json::json!({
-                "date": inv.created_at.format("%Y-%m-%d").to_string(),
+                "date": inv.created_at.map(|dt| dt.format("%Y-%m-%d").to_string()).unwrap_or_else(|| "N/A".to_string()),
                 "amount": format!("{:.2}", inv.amount_cents as f64 / 100.0),
                  "status": inv.status,
             })

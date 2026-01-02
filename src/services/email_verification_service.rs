@@ -1,8 +1,7 @@
 use actix_web::web;
 use chrono::{Duration, Utc};
 use diesel::prelude::*;
-use rand::{thread_rng, Rng};
-use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng, distr::Alphanumeric};
 use uuid::Uuid;
 
 use crate::models::DbPool;
@@ -34,7 +33,7 @@ impl EmailVerificationService {
         
         // 4. Create verification record
         let new_verification = NewPendingVerification {
-            uuid: Uuid::new_v4().to_string(),
+            uuid: Uuid::new_v4(),
             verification_type: verification_type.to_string(),
             email: email.to_string(),
             verification_token: token.clone(),
@@ -44,8 +43,9 @@ impl EmailVerificationService {
         };
         
         // 5. Insert into database
+        let pool_clone = pool.clone();
         web::block(move || {
-            let mut conn = pool.get().map_err(|e| {
+            let mut conn = pool_clone.get().map_err(|e| {
                 CustomHttpError::InternalServerError(format!("DB connection error: {}", e))
             })?;
             
@@ -89,7 +89,7 @@ impl EmailVerificationService {
                 })?;
             
             // Check if already verified
-            if verification.verified {
+            if verification.verified.unwrap_or(false) {
                 return Err(CustomHttpError::BadRequest("Token already used".into()));
             }
             
@@ -127,10 +127,7 @@ impl EmailVerificationService {
         
         web::block(move || {
             let mut conn = pool_clone.get().map_err(|e| {
-                diesel::result::Error::DatabaseError(
-                    diesel::result::DatabaseErrorKind::UnableToSendCommand,
-                    Box::new(e.to_string()),
-                )
+                CustomHttpError::InternalServerError(format!("DB connection error: {}", e))
             })?;
             
             let now = Utc::now().naive_utc();
@@ -138,11 +135,12 @@ impl EmailVerificationService {
             // Delete expired, unverified records
             diesel::delete(pending_verifications::table)
                 .filter(pending_verifications::expires_at.lt(now))
-                .filter(pending_verifications::verified.eq(false))
+                .filter(pending_verifications::verified.eq(Some(false)))
                 .execute(&mut conn)
+                .map_err(|e| CustomHttpError::InternalServerError(format!("Delete error: {}", e)))
         })
         .await
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Cleanup failed: {}", e)))
+        .map_err(|e| CustomHttpError::InternalServerError(format!("Block error: {}", e)))?
     }
     
     /// Generate secure random token
@@ -168,10 +166,7 @@ impl EmailVerificationService {
         
         web::block(move || {
             let mut conn = pool_clone.get().map_err(|e| {
-                diesel::result::Error::DatabaseError(
-                    diesel::result::DatabaseErrorKind::UnableToSendCommand,
-                    Box::new(e.to_string()),
-                )
+                CustomHttpError::InternalServerError(format!("DB connection error: {}", e))
             })?;
             
             // Try tenant-specific setting first
@@ -179,10 +174,10 @@ impl EmailVerificationService {
                 if let Ok(settings) = verification_settings::table
                     .filter(verification_settings::tenant_id.eq(tid))
                     .filter(verification_settings::verification_type.eq(&verification_type))
-                    .filter(verification_settings::enabled.eq(true))
+                    .filter(verification_settings::enabled.eq(Some(true)))
                     .first::<VerificationSettings>(&mut conn)
                 {
-                    return Ok(settings.ttl_hours);
+                    return Ok(settings.ttl_hours.unwrap_or(12));
                 }
             }
             
@@ -190,13 +185,13 @@ impl EmailVerificationService {
             verification_settings::table
                 .filter(verification_settings::tenant_id.is_null())
                 .filter(verification_settings::verification_type.eq(&verification_type))
-                .filter(verification_settings::enabled.eq(true))
+                .filter(verification_settings::enabled.eq(Some(true)))
                 .first::<VerificationSettings>(&mut conn)
-                .map(|settings| settings.ttl_hours)
+                .map(|settings| settings.ttl_hours.unwrap_or(12))
                 .or(Ok(12)) // Hard default: 12 hours
         })
         .await
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Failed to get TTL: {}", e)))
+        .map_err(|e| CustomHttpError::InternalServerError(format!("Failed to get TTL: {}", e)))?
     }
     
     /// Send verification email

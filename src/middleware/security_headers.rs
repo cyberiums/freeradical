@@ -68,7 +68,7 @@ where
             // In strict mode, we would require nonces/hashes.
             res.headers_mut().insert(
                 http::header::CONTENT_SECURITY_POLICY,
-                http::header::HeaderValue::from_static("default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:;"),
+                http::header::HeaderValue::from_static("default-src 'self' data: https: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; connect-src 'self' http://localhost:8000 http://localhost:8080 https:;"),
             );
              res.headers_mut().insert(
                 http::header::REFERRER_POLICY,

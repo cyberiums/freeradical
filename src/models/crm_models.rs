@@ -1,6 +1,7 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 use diesel::prelude::*;
+use utoipa::ToSchema;
 
 use crate::schema::{
     crm_customers, crm_interactions, crm_segments, crm_campaigns,
@@ -8,7 +9,7 @@ use crate::schema::{
 };
 
 // ===== CRM Customer =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_customers)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct CrmCustomer {
@@ -53,7 +54,7 @@ pub struct CrmCustomer {
     pub tenant_id: Option<i32>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Insertable, ToSchema)]
 #[diesel(table_name = crm_customers)]
 pub struct NewCrmCustomer {
     pub user_id: i32,
@@ -62,10 +63,11 @@ pub struct NewCrmCustomer {
     pub health_score: Option<i32>,
     pub churn_risk: Option<String>,
     pub tenant_id: Option<i32>,
+    // Note: email, first_name, last_name, tags, source, metadata removed - not in database schema
 }
 
 // ===== CRM Interaction =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_interactions)]
 pub struct CrmInteraction {
     pub id: i32,
@@ -101,7 +103,7 @@ pub struct NewCrmInteraction {
 }
 
 // ===== CRM Segment =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_segments)]
 pub struct CrmSegment {
     pub id: i32,
@@ -132,7 +134,7 @@ pub struct NewCrmSegment {
 }
 
 // ===== CRM Campaign =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_campaigns)]
 pub struct CrmCampaign {
     pub id: i32,
@@ -180,7 +182,7 @@ pub struct NewCrmCampaign {
 }
 
 // ===== CRM Task =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_tasks)]
 pub struct CrmTask {
     pub id: i32,
@@ -217,7 +219,7 @@ pub struct NewCrmTask {
 }
 
 // ===== CRM Note =====
-#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable)]
+#[derive(Debug, Clone, Serialize, Deserialize, Queryable, Selectable, Identifiable, ToSchema)]
 #[diesel(table_name = crm_notes)]
 pub struct CrmNote {
     pub id: i32,

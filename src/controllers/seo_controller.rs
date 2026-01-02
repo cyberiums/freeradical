@@ -1,19 +1,29 @@
 use actix_web::{post, HttpResponse, Responder, web};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use crate::services::seo_auditor::SEOAuditor;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct AuditRequest {
     pub url: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct AuditError {
     pub error: String,
 }
 
-/// POST /admin/seo/audit
-/// Perform an on-demand SEO audit for a URL
+/// Perform an SEO audit for a URL
+#[utoipa::path(
+    post,
+    path = "/admin/seo/audit",
+    tag = "Internal - SEO",
+    request_body = AuditRequest,
+    responses(
+        (status = 200, description = "SEO audit results"),
+        (status = 400, description = "Invalid URL")
+    )
+)]
 #[post("/admin/seo/audit")]
 pub async fn audit_url(payload: web::Json<AuditRequest>) -> impl Responder {
     let url = &payload.url;

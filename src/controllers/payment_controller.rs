@@ -5,8 +5,9 @@ use crate::services::errors_service::CustomHttpError;
 use crate::models::DatabasePool;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use utoipa::ToSchema;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct CreatePaymentRequest {
     pub amount_cents: i64,
     pub currency: String,
@@ -57,7 +58,7 @@ pub async fn create_payment_intent(
     Ok(HttpResponse::Ok().json(intent))
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct GetPaymentRequest {
     pub provider: String,
     pub intent_id: String,

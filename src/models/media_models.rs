@@ -17,13 +17,13 @@ pub struct Media {
     pub width: Option<i32>,
     pub height: Option<i32>,
     pub alt_text: Option<String>,
-    pub tenant_id: Option<i32>,
     pub title: Option<String>,
     pub description: Option<String>,
     pub tags: Option<Vec<Option<String>>>,
     pub uploaded_by: Option<i32>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Insertable, Deserialize)]

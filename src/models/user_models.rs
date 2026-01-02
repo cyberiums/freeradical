@@ -2,10 +2,11 @@ use super::Model;
 use super::PooledDatabaseConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::schema::users;
 
-#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(primary_key(id))]
 #[diesel(table_name = users)]
 pub struct User {
@@ -18,7 +19,7 @@ pub struct User {
     pub two_factor_enabled: bool,
 }
 
-#[derive(Debug, AsChangeset, Insertable, Clone, Serialize, Deserialize)]
+#[derive(Debug, AsChangeset, Insertable, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = users)]
 pub struct MutUser {
     pub uuid: Option<String>,
@@ -74,7 +75,7 @@ impl User {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, ToSchema)]
 pub struct LoginRequest {
     pub username: String,
     pub password: String,

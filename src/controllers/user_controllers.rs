@@ -11,6 +11,20 @@ use crate::services::auth_service::{authenticate, encrypt, encrypt_password, Cla
 use crate::services::errors_service::CustomHttpError;
 use serde_json;
 
+/// Create a new user
+#[utoipa::path(
+    post,
+    path = "/v1/users",
+    tag = "Internal - Users",
+    request_body = MutUser,
+    responses(
+        (status = 201, description = "User created successfully", body = User),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn create_user(
     new: web::Json<MutUser>,
     pool: web::Data<DatabasePool>,
@@ -40,6 +54,19 @@ pub async fn create_user(
     Ok(HttpResponse::Created().json(&new.clone()))
 }
 
+/// Get user by UUID
+#[utoipa::path(
+    get,
+    path = "/v1/users/{uuid}",
+    tag = "Internal - Users",
+    params(
+        ("uuid" = String, Path, description = "User UUID")
+    ),
+    responses(
+        (status = 200, description = "User found", body = User),
+        (status = 404, description = "User not found")
+    )
+)]
 pub async fn get_user(
     id: web::Path<String>,
     pool: web::Data<DatabasePool>,
@@ -52,6 +79,23 @@ pub async fn get_user(
     Ok(HttpResponse::Ok().json(&user))
 }
 
+/// Update user
+#[utoipa::path(
+    put,
+    path = "/v1/users/{uuid}",
+    tag = "Internal - Users",
+    params(
+        ("uuid" = String, Path, description = "User UUID")
+    ),
+    request_body = MutUser,
+    responses(
+        (status = 200, description = "User updated", body = User),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn update_user(
     id: web::Path<String>,
     new: web::Json<MutUser>,
@@ -97,6 +141,22 @@ pub async fn update_user(
     Ok(user)
 }
 
+/// Delete user
+#[utoipa::path(
+    delete,
+    path = "/v1/users/{uuid}",
+    tag = "Internal - Users",
+    params(
+        ("uuid" = String, Path, description = "User UUID")
+    ),
+    responses(
+        (status = 200, description = "User deleted"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn delete_user(
     id: web::Path<String>,
     pool: web::Data<DatabasePool>,
@@ -109,6 +169,17 @@ pub async fn delete_user(
     Ok(HttpResponse::Ok().json(res))
 }
 
+#[utoipa::path(
+    post,
+    path = "/v1/auth/login",
+    tag = "Customer - Authentication",
+    request_body = LoginRequest,
+    responses(
+        (status = 200, description = "Login successful, auth cookie set"),
+        (status = 401, description = "Invalid credentials or 2FA code"),
+        (status = 403, description = "Default root account already initialized")
+    )
+)]
 pub async fn login(
     user: web::Json<LoginRequest>,
     pool: web::Data<DatabasePool>,
@@ -206,6 +277,15 @@ fn login_res(user: &User) -> Result<Cookie, CustomHttpError> {
     Ok(cookie)
 }
 
+/// Logout user
+#[utoipa::path(
+    post,
+    path = "/v1/auth/logout",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 200, description = "Logged out successfully")
+    )
+)]
 pub async fn logout() -> Result<HttpResponse, CustomHttpError> {
     let cookie = Cookie::build("auth", "")
         .expires(Some(OffsetDateTime::now_utc()))
@@ -215,6 +295,19 @@ pub async fn logout() -> Result<HttpResponse, CustomHttpError> {
     Ok(HttpResponse::Ok().cookie(cookie).finish())
 }
 
+/// Check if user is logged in
+#[utoipa::path(
+    get,
+    path = "/v1/auth/status",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 200, description = "Authenticated", body = User),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn check_login(
     req: HttpRequest,
     pool: web::Data<DatabasePool>,
@@ -238,6 +331,19 @@ pub async fn check_login(
     }
 }
 
+/// Setup 2FA for user
+#[utoipa::path(
+    post,
+    path = "/v1/auth/2fa/setup",
+    tag = "Customer - Authentication",
+    responses(
+        (status = 200, description = "2FA setup initiated"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn setup_2fa(
     path: web::Path<String>,
     _: web::Data<DatabasePool>,
@@ -258,6 +364,24 @@ pub async fn setup_2fa(
     })))
 }
 
+/// Enable 2FA for user
+#[utoipa::path(
+    post,
+    path = "/v1/auth/2fa/enable",
+    tag = "Customer - Authentication",
+    params(
+        ("uuid" = String, Path, description = "User UUID")
+    ),
+    request_body = Enable2faRequest,
+    responses(
+        (status = 200, description = "2FA enabled successfully"),
+        (status = 400, description = "Invalid token"),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 pub async fn enable_2fa(
     path: web::Path<String>,
     body: web::Json<Enable2faRequest>,

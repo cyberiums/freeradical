@@ -1,5 +1,6 @@
 use actix_web::{web, HttpResponse, Error};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use crate::models::DatabasePool;
 use crate::services::oauth_service::OAuthService;
 use crate::models::user_models::{User, MutUser};
@@ -8,7 +9,7 @@ use chrono::Utc;
 use diesel::prelude::*;
 use uuid::Uuid;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct OAuthCallbackQuery {
     code: String,
     state: String,
@@ -22,7 +23,7 @@ struct TokenResponse {
     refresh_token: Option<String>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, ToSchema)]
 pub struct UserProfile {
     pub provider: String,
     pub provider_user_id: String,

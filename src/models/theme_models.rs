@@ -1,8 +1,9 @@
 use crate::schema::themes;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = themes)]
 pub struct Theme {
     pub id: i32,
@@ -18,7 +19,7 @@ pub struct Theme {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable, Deserialize, ToSchema)]
 #[diesel(table_name = themes)]
 pub struct NewTheme {
     pub name: String,

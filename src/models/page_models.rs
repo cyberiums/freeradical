@@ -2,6 +2,7 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use utoipa::ToSchema;
 
 use super::module_models::Module;
 use super::status_enum::PageStatus;  // Re-enabled
@@ -14,7 +15,7 @@ use crate::schema::module_category;
 use crate::schema::modules;
 use crate::schema::pages;
 
-#[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone)]
+#[derive(Identifiable, Debug, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, ToSchema)]
 #[diesel(table_name = pages)]
 #[diesel(primary_key(uuid))]
 pub struct Page {
@@ -49,7 +50,7 @@ pub struct Page {
     pub tenant_id: Option<i32>,
 }
 
-#[derive(Insertable, AsChangeset, Serialize, Deserialize)]
+#[derive(Insertable, AsChangeset, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = pages)]
 pub struct MutPage {
     pub uuid: Option<String>,
@@ -82,7 +83,7 @@ pub struct MutPage {
     pub tenant_id: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct PageDTO {
     pub uuid: String,
     pub page_name: String,
@@ -112,7 +113,7 @@ pub struct PageDTO {
     pub tenant_id: Option<i32>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct PageModuleDTO {
     pub uuid: String,
     pub page_name: String,

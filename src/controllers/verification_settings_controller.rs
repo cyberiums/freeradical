@@ -47,8 +47,8 @@ pub async fn get_verification_settings(
     req: HttpRequest,
     query: web::Query<std::collections::HashMap<String, String>>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let tenant_id = resolve_tenant_id(&req)?;
-    let verification_type = query.get("verification_type");
+    let tenant_id = resolve_tenant_id(&req, &pool)?;
+    let verification_type = query.get("verification_type").cloned();
     
     let settings = web::block(move || {
         let mut conn = pool.get().map_err(|e| {
@@ -99,7 +99,7 @@ pub async fn update_verification_settings(
     verification_type: web::Path<String>,
     body: web::Json<UpdateVerificationSettingsRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let tenant_id = resolve_tenant_id(&req)?;
+    let tenant_id = resolve_tenant_id(&req, &pool)?;
     let v_type = verification_type.into_inner();
     
     // Validate TTL (1 hour to 7 days)
@@ -128,30 +128,36 @@ pub async fn update_verification_settings(
             .map_err(|e| CustomHttpError::InternalServerError(format!("Query failed: {}", e)))?;
         
         if let Some(mut existing_settings) = existing {
-            // Update existing
-            let mut changeset = diesel::update(verification_settings::table)
-                .filter(verification_settings::id.eq(existing_settings.id))
-                .into_boxed();
+            // Update existing - using individual updates to avoid type mismatch
+            use diesel::dsl::now;
             
             if let Some(ttl) = body.ttl_hours {
-                changeset = changeset
+                diesel::update(verification_settings::table)
+                    .filter(verification_settings::id.eq(existing_settings.id))
                     .set(verification_settings::ttl_hours.eq(ttl))
-                    .into_boxed();
+                    .execute(&mut conn)
+                    .map_err(|e| CustomHttpError::InternalServerError(format!("Update failed: {}", e)))?;
             }
             
             if let Some(enabled) = body.enabled {
-                changeset = changeset
+                diesel::update(verification_settings::table)
+                    .filter(verification_settings::id.eq(existing_settings.id))
                     .set(verification_settings::enabled.eq(enabled))
-                    .into_boxed();
+                    .execute(&mut conn)
+                    .map_err(|e| CustomHttpError::InternalServerError(format!("Update failed: {}", e)))?;
             }
             
             if let Some(template) = &body.email_template {
-                changeset = changeset
+                diesel::update(verification_settings::table)
+                    .filter(verification_settings::id.eq(existing_settings.id))
                     .set(verification_settings::email_template.eq(template))
-                    .into_boxed();
+                    .execute(&mut conn)
+                    .map_err(|e| CustomHttpError::InternalServerError(format!("Update failed: {}", e)))?;
             }
             
-            changeset
+            // Always update timestamp
+            diesel::update(verification_settings::table)
+                .filter(verification_settings::id.eq(existing_settings.id))
                 .set(verification_settings::updated_at.eq(now))
                 .execute(&mut conn)
                 .map_err(|e| CustomHttpError::InternalServerError(format!("Update failed: {}", e)))?;
@@ -204,7 +210,7 @@ pub async fn delete_verification_settings(
     req: HttpRequest,
     verification_type: web::Path<String>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    let tenant_id = resolve_tenant_id(&req)?;
+    let tenant_id = resolve_tenant_id(&req, &pool)?;
     let v_type = verification_type.into_inner();
     
     web::block(move || {

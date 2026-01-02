@@ -53,6 +53,189 @@ pub struct MCPTool {
     pub input_schema: serde_json::Value,
 }
 
+// ===== Tool Specification for Data-Driven Routing =====
+
+#[derive(Debug, Clone)]
+struct ToolSpec {
+    name: &'static str,
+    required_role: &'static str,  // "viewer", "editor", "admin"
+    http_method: &'static str,     // "GET", "POST", "PUT", "DELETE"
+    endpoint: &'static str,        // REST API endpoint
+    description: &'static str,     // Human-readable description
+}
+
+// Tool specifications for all platform tools
+const TOOL_SPECS: &[ToolSpec] = &[
+    // Content Management Tools
+    ToolSpec {
+        name: "list_content",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/content",
+        description: "To list content (posts/pages), make this API call:",
+    },
+    ToolSpec {
+        name: "create_content",
+        required_role: "editor",
+        http_method: "POST",
+        endpoint: "/v1/api/content",
+        description: "To create new blog post or page, make this API call:",
+    },
+    ToolSpec {
+        name: "update_content",
+        required_role: "editor",
+        http_method: "PUT",
+        endpoint: "/v1/api/content/{id}",
+        description: "To update existing content, make this API call:",
+    },
+    ToolSpec {
+        name: "delete_content",
+        required_role: "admin",
+        http_method: "DELETE",
+        endpoint: "/v1/api/content/{id}",
+        description: "To delete content, make this API call:",
+    },
+    ToolSpec {
+        name: "generate_seo_metadata",
+        required_role: "editor",
+        http_method: "POST",
+        endpoint: "/v1/ai/seo/generate",
+        description: "To generate SEO metadata using AI, make this API call:",
+    },
+    
+    // Customer Management Tools
+    ToolSpec {
+        name: "list_customers",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/customers",
+        description: "To list all customers with filters, make this API call:",
+    },
+    ToolSpec {
+        name: "get_customer_details",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/customers/{id}",
+        description: "To get detailed customer information, make this API call:",
+    },
+    ToolSpec {
+        name: "update_customer",
+        required_role: "editor",
+        http_method: "PUT",
+        endpoint: "/v1/api/crm/customers/{id}",
+        description: "To update customer information, make this API call:",
+    },
+    ToolSpec {
+        name: "add_customer_note",
+        required_role: "editor",
+        http_method: "POST",
+        endpoint: "/v1/api/crm/customers/{id}/notes",
+        description: "To add a note to customer record, make this API call:",
+    },
+    ToolSpec {
+        name: "log_customer_interaction",
+        required_role: "editor",
+        http_method: "POST",
+        endpoint: "/v1/api/crm/interactions",
+        description: "To log a customer interaction (email/call/meeting), make this API call:",
+    },
+    
+    // Commerce Management Tools
+    ToolSpec {
+        name: "list_products",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/products",
+        description: "To list products with inventory information, make this API call:",
+    },
+    ToolSpec {
+        name: "update_inventory",
+        required_role: "editor",
+        http_method: "PUT",
+        endpoint: "/v1/api/inventory/{product_id}",
+        description: "To update product inventory levels, make this API call:",
+    },
+    ToolSpec {
+        name: "list_orders",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/orders",
+        description: "To list customer orders, make this API call:",
+    },
+    ToolSpec {
+        name: "update_order_status",
+        required_role: "editor",
+        http_method: "PUT",
+        endpoint: "/v1/api/orders/{id}/status",
+        description: "To update order fulfillment status, make this API call:",
+    },
+    ToolSpec {
+        name: "get_sales_analytics",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/analytics/sales",
+        description: "To get sales and revenue analytics, make this API call:",
+    },
+    
+    // Newsletter & Email Tools
+    ToolSpec {
+        name: "list_newsletter_subscribers",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/customers?tags=newsletter_subscriber",
+        description: "To list all newsletter subscribers, make this API call:",
+    },
+    ToolSpec {
+        name: "get_subscriber_stats",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/customers?tags=newsletter_subscriber&count=true",
+        description: "To get newsletter subscription statistics, make this API call:",
+    },
+    ToolSpec {
+        name: "create_newsletter_segment",
+        required_role: "admin",
+        http_method: "POST",
+        endpoint: "/v1/api/crm/segments",
+        description: "To create a targeted subscriber segment, make this API call:",
+    },
+    ToolSpec {
+        name: "list_segments",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/segments",
+        description: "To list all CRM segments, make this API call:",
+    },
+    ToolSpec {
+        name: "list_campaigns",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/crm/campaigns",
+        description: "To list email campaigns, make this API call:",
+    },
+    ToolSpec {
+        name: "create_campaign",
+        required_role: "editor",
+        http_method: "POST",
+        endpoint: "/v1/api/crm/campaigns",
+        description: "To create a new email campaign, make this API call:",
+    },
+    ToolSpec {
+        name: "list_pending_verifications",
+        required_role: "editor",
+        http_method: "GET",
+        endpoint: "/v1/api/verification/pending",
+        description: "To show pending email verifications, make this API call:",
+    },
+    ToolSpec {
+        name: "cleanup_expired_verifications",
+        required_role: "admin",
+        http_method: "POST",
+        endpoint: "/v1/api/verification/cleanup",
+        description: "To manually cleanup expired verifications, make this API call:",
+    },
+];
+
 // ===== WebSocket Actor =====
 
 pub struct MCPWebSocket {
@@ -218,6 +401,7 @@ impl MCPWebSocket {
 
     fn handle_list_tools(&self, id: Option<serde_json::Value>) -> MCPResponse {
         let tools = vec![
+            // ===== Verification Tools =====
             MCPTool {
                 name: "update_verification_settings".to_string(),
                 description: "Update email verification settings for a specific type".to_string(),
@@ -260,6 +444,427 @@ impl MCPWebSocket {
                     }
                 }),
             },
+            
+            // ===== Content Management Tools =====
+            MCPTool {
+                name: "list_content".to_string(),
+                description: "List blog posts, pages, or all content with filters".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "content_type": {
+                            "type": "string",
+                            "description": "Type of content to list",
+                            "enum": ["post", "page", "all"]
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Filter by status",
+                            "enum": ["draft", "published", "scheduled"]
+                        },
+                        "search": {
+                            "type": "string",
+                            "description": "Search query for title/content"
+                        },
+                        "page": {
+                            "type": "integer",
+                            "description": "Page number",
+                            "minimum": 1
+                        },
+                        "per_page": {
+                            "type": "integer",
+                            "description": "Results per page",
+                            "minimum": 1,
+                            "maximum": 100
+                        }
+                    }
+                }),
+            },
+            MCPTool {
+                name: "create_content".to_string(),
+                description: "Create new blog post or page".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "Content title"
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content body (HTML or Markdown)"
+                        },
+                        "content_type": {
+                            "type": "string",
+                            "description": "Type of content",
+                            "enum": ["post", "page"]
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Publication status",
+                            "enum": ["draft", "published"]
+                        },
+                        "tags": {
+                            "type": "array",
+                            "description": "Content tags",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["title", "content", "content_type"]
+                }),
+            },
+            MCPTool {
+                name: "update_content".to_string(),
+                description: "Update existing blog post or page".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "content_id": {
+                            "type": "integer",
+                            "description": "ID of content to update"
+                        },
+                        "title": {
+                            "type": "string",
+                            "description": "Content title"
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content body"
+                        },
+                        "status": {
+                            "type": "string",
+                            "description": "Publication status",
+                            "enum": ["draft", "published"]
+                        }
+                    },
+                    "required": ["content_id"]
+                }),
+            },
+            MCPTool {
+                name: "delete_content".to_string(),
+                description: "Delete blog post or page (Admin only)".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "content_id": {
+                            "type": "integer",
+                            "description": "ID of content to delete"
+                        }
+                    },
+                    "required": ["content_id"]
+                }),
+            },
+            MCPTool {
+                name: "generate_seo_metadata".to_string(),
+                description: "Generate SEO meta tags for content using AI".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "title": {
+                            "type": "string",
+                            "description": "Content title"
+                        },
+                        "content": {
+                            "type": "string",
+                            "description": "Content body excerpt"
+                        },
+                        "keywords": {
+                            "type": "array",
+                            "description": "Target keywords",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["title", "content"]
+                }),
+            },
+            
+            // ===== Customer Management Tools =====
+            MCPTool {
+                name: "list_customers".to_string(),
+                description: "List all customers with filters".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "lifecycle_stage": {
+                            "type": "string",
+                            "description": "Filter by lifecycle stage",
+                            "enum": ["lead", "prospect", "customer", "advocate"]
+                        },
+                        "min_health_score": {
+                            "type": "integer",
+                            "description": "Minimum health score (0-100)"
+                        },
+                        "churn_risk": {
+                            "type": "string",
+                            "description": "Filter by churn risk",
+                            "enum": ["low", "medium", "high"]
+                        },
+                        "tags": {
+                            "type": "array",
+                            "description": "Filter by tags",
+                            "items": {"type": "string"}
+                        },
+                        "page": {"type": "integer", "minimum": 1},
+                        "per_page": {"type": "integer", "minimum": 1, "maximum": 100}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "get_customer_details".to_string(),
+                description: "Get detailed customer information including interactions and notes".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "customer_id": {
+                            "type": "integer",
+                            "description": "Customer ID"
+                        }
+                    },
+                    "required": ["customer_id"]
+                }),
+            },
+            MCPTool {
+                name: "update_customer".to_string(),
+                description: "Update customer information".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "customer_id": {"type": "integer"},
+                        "lifecycle_stage": {
+                            "type": "string",
+                            "enum": ["lead", "prospect", "customer", "advocate"]
+                        },
+                        "health_score": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 100
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["customer_id"]
+                }),
+            },
+            MCPTool {
+                name: "add_customer_note".to_string(),
+                description: "Add notes to customer record".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "customer_id": {"type": "integer"},
+                        "note": {"type": "string", "description": "Note content"}
+                    },
+                    "required": ["customer_id", "note"]
+                }),
+            },
+            MCPTool {
+                name: "log_customer_interaction".to_string(),
+                description: "Log customer interactions (email, call, meeting)".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "customer_id": {"type": "integer"},
+                        "interaction_type": {
+                            "type": "string",
+                            "enum": ["email", "call", "meeting", "chat"]
+                        },
+                        "description": {"type": "string"},
+                        "outcome": {"type": "string"}
+                    },
+                    "required": ["customer_id", "interaction_type", "description"]
+                }),
+            },
+            
+            // ===== Commerce Management Tools =====
+            MCPTool {
+                name: "list_products".to_string(),
+                description: "List all products with inventory information".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "category": {"type": "string"},
+                        "in_stock": {"type": "boolean"},
+                        "min_price": {"type": "number"},
+                        "max_price": {"type": "number"},
+                        "page": {"type": "integer", "minimum": 1},
+                        "per_page": {"type": "integer", "minimum": 1, "maximum": 100}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "update_inventory".to_string(),
+                description: "Update product inventory levels".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "product_id": {"type": "integer"},
+                        "quantity": {"type": "integer", "minimum": 0},
+                        "operation": {
+                            "type": "string",
+                            "enum": ["set", "add", "subtract"],
+                            "description": "How to update: set=replace, add=increase, subtract=decrease"
+                        }
+                    },
+                    "required": ["product_id", "quantity", "operation"]
+                }),
+            },
+            MCPTool {
+                name: "list_orders".to_string(),
+                description: "List customer orders".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
+                        },
+                        "customer_id": {"type": "integer"},
+                        "date_from": {"type": "string", "format": "date"},
+                        "date_to": {"type": "string", "format": "date"},
+                        "page": {"type": "integer", "minimum": 1},
+                        "per_page": {"type": "integer", "minimum": 1}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "update_order_status".to_string(),
+                description: "Update order fulfillment status".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "order_id": {"type": "integer"},
+                        "status": {
+                            "type": "string",
+                            "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
+                        },
+                        "tracking_number": {"type": "string"}
+                    },
+                    "required": ["order_id", "status"]
+                }),
+            },
+            MCPTool {
+                name: "get_sales_analytics".to_string(),
+                description: "Get sales and revenue analytics".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "date_from": {"type": "string", "format": "date"},
+                        "date_to": {"type": "string", "format": "date"},
+                        "group_by": {
+                            "type": "string",
+                            "enum": ["day", "week", "month"],
+                            "description": "How to group the data"
+                        }
+                    }
+                }),
+            },
+            
+            // ===== Newsletter & Email Tools =====
+            MCPTool {
+                name: "list_newsletter_subscribers".to_string(),
+                description: "List all newsletter subscribers".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "lifecycle_stage": {"type": "string"},
+                        "page": {"type": "integer", "minimum": 1},
+                        "per_page": {"type": "integer", "minimum": 1, "maximum": 100}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "get_subscriber_stats".to_string(),
+                description: "Get newsletter subscription statistics".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "date_from": {"type": "string", "format": "date"},
+                        "date_to": {"type": "string", "format": "date"}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "create_newsletter_segment".to_string(),
+                description: "Create targeted subscriber segment (Admin only)".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "description": {"type": "string"},
+                        "criteria": {
+                            "type": "object",
+                            "description": "Segment criteria (e.g., tags, lifecycle_stage)"
+                        }
+                    },
+                    "required": ["name", "criteria"]
+                }),
+            },
+            MCPTool {
+                name: "list_segments".to_string(),
+                description: "List all CRM segments".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "page": {"type": "integer", "minimum": 1},
+                        "per_page": {"type": "integer", "minimum": 1}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "list_campaigns".to_string(),
+                description: "List email campaigns".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "status": {
+                            "type": "string",
+                            "enum": ["draft", "scheduled", "sent"]
+                        },
+                        "page": {"type": "integer", "minimum": 1}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "create_campaign".to_string(),
+                description: "Create new email campaign".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "name": {"type": "string"},
+                        "segment_id": {"type": "integer"},
+                        "subject": {"type": "string"},
+                        "content": {"type": "string", "description": "HTML email content"},
+                        "schedule_date": {"type": "string", "format": "date-time"}
+                    },
+                    "required": ["name", "segment_id", "subject", "content"]
+                }),
+            },
+            MCPTool {
+                name: "list_pending_verifications".to_string(),
+                description: "Show pending email verifications".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "verification_type": {"type": "string"},
+                        "page": {"type": "integer", "minimum": 1}
+                    }
+                }),
+            },
+            MCPTool {
+                name: "cleanup_expired_verifications".to_string(),
+                description: "Manually cleanup expired verifications (Admin only)".to_string(),
+                input_schema: json!({
+                    "type": "object",
+                    "properties": {
+                        "dry_run": {
+                            "type": "boolean",
+                            "description": "If true, shows what would be deleted without deleting"
+                        }
+                    }
+                }),
+            },
         ];
 
         MCPResponse {
@@ -297,9 +902,9 @@ impl MCPWebSocket {
 
         info!("🔧 Calling tool: {} for tenant_id={}", tool_name, tenant_id);
 
+        // Special case: legacy verification tools with custom logic
         match tool_name {
             "update_verification_settings" => {
-                // Admin-only tool
                 if let Err(error) = self.check_role("admin") {
                     return MCPResponse {
                         jsonrpc: "2.0".to_string(),
@@ -309,51 +914,24 @@ impl MCPWebSocket {
                     };
                 }
                 
-                // MCP as AI Interface: Guide agent to REST API
                 let v_type = arguments.get("verification_type")
                     .and_then(|v| v.as_str())
                     .unwrap_or("crm_customer");
-                let ttl = arguments.get("ttl_hours")
-                    .and_then(|v| v.as_i64())
-                    .unwrap_or(12);
-                let enabled = arguments.get("enabled")
-                    .and_then(|v| v.as_bool())
-                    .unwrap_or(true);
+                let body = json!({
+                    "ttl_hours": arguments.get("ttl_hours").and_then(|v| v.as_i64()).unwrap_or(12),
+                    "enabled": arguments.get("enabled").and_then(|v| v.as_bool()).unwrap_or(true)
+                }).to_string();
                 
-                MCPResponse {
-                    jsonrpc: "2.0".to_string(),
-                    result: Some(json!({
-                        "content": [{
-                            "type": "text",
-                            "text": format!(
-                                "To update verification settings for '{}', make this API call:\n\n\
-                                 **Endpoint:** PUT /v1/api/verification/settings/{}\n\
-                                 **Headers:**\n  Authorization: Bearer <your_jwt_token>\n  Content-Type: application/json\n\n\
-                                 **Body:**\n{{\
-                                 \n  \"ttl_hours\": {},\n  \"enabled\": {}\n\
-                                 }}\n\n\
-                                 **Example cURL:**\n\
-                                 curl -X PUT 'http://localhost:8000/v1/api/verification/settings/{}' \\\n\
-                                      -H 'Authorization: Bearer YOUR_TOKEN' \\\n\
-                                      -H 'Content-Type: application/json' \\\n\
-                                      -d '{{\"ttl_hours\":{},\"enabled\":{}}}'\n\n\
-                                 **Tenant:** {}\n\
-                                 **User:** {}\n\
-                                 **Role:** {}",
-                                v_type, v_type, ttl, enabled,
-                                v_type, ttl, enabled,
-                                tenant_id,
-                                self.user_id.unwrap_or(0),
-                                self.role.as_deref().unwrap_or("viewer")
-                            )
-                        }]
-                    })),
-                    error: None,
+                return self.build_api_guidance(
+                    "PUT",
+                    &format!("/v1/api/verification/settings/{}", v_type),
+                    Some(body),
+                    &format!("To update verification settings for '{}', make this API call:", v_type),
+                    tenant_id,
                     id,
-                }
+                );
             }
             "get_verification_settings" => {
-                // Editors and admins can view settings
                 if let Err(error) = self.check_role("editor") {
                     return MCPResponse {
                         jsonrpc: "2.0".to_string(),
@@ -363,56 +941,169 @@ impl MCPWebSocket {
                     };
                 }
                 
-                let v_type_filter = arguments.get("verification_type")
-                    .and_then(|v| v.as_str());
-                
-                let query_params = if let Some(vtype) = v_type_filter {
-                    format!("?verification_type={}", vtype)
+                let v_type_filter = arguments.get("verification_type").and_then(|v| v.as_str());
+                let query_params = v_type_filter.map(|v| format!("?verification_type={}", v)).unwrap_or_default();
+                let description = if let Some(vtype) = v_type_filter {
+                    format!("To retrieve verification settings for type '{}', make this API call:", vtype)
                 } else {
-                    String::new()
+                    "To retrieve verification settings, make this API call:".to_string()
                 };
-                
-                MCPResponse {
-                    jsonrpc: "2.0".to_string(),
-                    result: Some(json!({
-                        "content": [{
-                            "type": "text",
-                            "text": format!(
-                                "To retrieve verification settings{}, make this API call:\n\n\
-                                 **Endpoint:** GET /v1/api/verification/settings{}\n\
-                                 **Headers:**\n  Authorization: Bearer <your_jwt_token>\n\n\
-                                 **Example cURL:**\n\
-                                 curl 'http://localhost:8000/v1/api/verification/settings{}' \\\n\
-                                      -H 'Authorization: Bearer YOUR_TOKEN'\n\n\
-                                 **Response Format:**\n\
-                                 {{\n  \"settings\": [\n    {{\n      \"id\": 1,\n      \"tenant_id\": {},\n      \"verification_type\": \"crm_customer\",\n      \"ttl_hours\": 12,\n      \"enabled\": true,\n      \"email_template\": null\n    }}\n  ]\n}}\n\n\
-                                 **Tenant:** {}\n\
-                                 **User:** {}\n\
-                                 **Role:** {}",
-                                if v_type_filter.is_some() { format!(" for type '{}'", v_type_filter.unwrap()) } else { "".to_string() },
-                                query_params,
-                                query_params,
-                                tenant_id,
-                                tenant_id,
-                                self.user_id.unwrap_or(0),
-                                self.role.as_deref().unwrap_or("viewer")
-                            )
-                        }]
-                    })),
-                    error: None,
+
+                return self.build_api_guidance(
+                    "GET",
+                    &format!("/v1/api/verification/settings{}", query_params),
+                    None,
+                    &description,
+                    tenant_id,
                     id,
+                );
+            }
+            _ => {}
+        }
+
+        // Data-driven routing for platform tools
+        if let Some(spec) = TOOL_SPECS.iter().find(|s| s.name == tool_name) {
+            // Check RBAC
+            if let Err(error) = self.check_role(spec.required_role) {
+                return MCPResponse {
+                    jsonrpc: "2.0".to_string(),
+                    result: None,
+                    error: Some(error),
+                    id,
+                };
+            }
+            
+            // Build endpoint with path parameters and query parameters
+            let endpoint = Self::build_endpoint(spec.endpoint, &arguments);
+            
+            // Build request body for POST/PUT requests
+            let body = match spec.http_method {
+                "POST" | "PUT" => Some(arguments.to_string()),
+                _ => None,
+            };
+            
+            return self.build_api_guidance(
+                spec.http_method,
+                &endpoint,
+                body,
+                spec.description,
+                tenant_id,
+                id,
+            );
+        }
+
+        // Unknown tool
+        MCPResponse {
+            jsonrpc: "2.0".to_string(),
+            result: None,
+            error: Some(MCPError {
+                code: -32601,
+                message: format!("Unknown tool: {}", tool_name),
+                data: None,
+            }),
+            id,
+        }
+    }
+    
+    // Helper: Build endpoint from template + arguments
+    fn build_endpoint(template: &str, arguments: &serde_json::Value) -> String {
+        let mut endpoint = template.to_string();
+        
+        // Replace path parameters like {id}, {product_id}
+        if let Some(obj) = arguments.as_object() {
+            for (key, value) in obj {
+                let placeholder = format!("{{{}}}", key);
+                if endpoint.contains(&placeholder) {
+                    let val_str = match value {
+                        serde_json::Value::String(s) => s.clone(),
+                        serde_json::Value::Number(n) => n.to_string(),
+                        _ => value.to_string(),
+                    };
+                    endpoint = endpoint.replace(&placeholder, &val_str);
                 }
             }
-            _ => MCPResponse {
-                jsonrpc: "2.0".to_string(),
-                result: None,
-                error: Some(MCPError {
-                    code: -32601,
-                    message: format!("Unknown tool: {}", tool_name),
-                    data: None,
-                }),
-                id,
-            },
+            
+            // Add query parameters for GET requests (skip path params already used)
+            if !template.contains('?') {
+                let query_params: Vec<String> = obj.iter()
+                    .filter(|(k, _)| !template.contains(&format!("{{{}}}", k)))
+                    .filter_map(|(k, v)| {
+                        match v {
+                            serde_json::Value::Null => None,
+                            serde_json::Value::String(s) if s.is_empty() => None,
+                            serde_json::Value::String(s) => Some(format!("{}={}", k, s)),
+                            serde_json::Value::Number(n) => Some(format!("{}={}", k, n)),
+                            serde_json::Value::Bool(b) => Some(format!("{}={}", k, b)),
+                            serde_json::Value::Array(_) | serde_json::Value::Object(_) => None,
+                        }
+                    })
+                    .collect();
+                
+                if !query_params.is_empty() {
+                    endpoint.push('?');
+                    endpoint.push_str(&query_params.join("&"));
+                }
+            }
+        }
+        
+        endpoint
+    }
+    
+    // Helper function to build API guidance responses
+    fn build_api_guidance(
+        &self,
+        method: &str,
+        endpoint: &str,
+        body: Option<String>,
+        description: &str,
+        tenant_id: i32,
+        id: Option<serde_json::Value>,
+    ) -> MCPResponse {
+        let headers_section = if body.is_some() {
+            "**Headers:**\n  Authorization: Bearer <your_jwt_token>\n  Content-Type: application/json\n"
+        } else {
+            "**Headers:**\n  Authorization: Bearer <your_jwt_token>\n"
+        };
+        
+        let body_section = if let Some(ref body_str) = body {
+            format!("\n**Body:**\n```json\n{}\n```\n", body_str)
+        } else {
+            String::new()
+        };
+        
+        let curl_example = if let Some(body_str) = body {
+            format!(
+                "curl -X {} 'http://localhost:8000{}' \\\n     -H 'Authorization: Bearer YOUR_TOKEN' \\\n     -H 'Content-Type: application/json' \\\n     -d '{}'",
+                method, endpoint, body_str.replace('\n', "")
+            )
+        } else {
+            format!(
+                "curl -X {} 'http://localhost:8000{}' \\\n     -H 'Authorization: Bearer YOUR_TOKEN'",
+               method, endpoint
+            )
+        };
+        
+        MCPResponse {
+            jsonrpc: "2.0".to_string(),
+            result: Some(json!({
+                "content": [{
+                    "type": "text",
+                    "text": format!(
+                        "{}\\n\\n**Endpoint:** {} {}\\n{}{}\\n**Example cURL:**\\n{}\\n\\n**Context:**\\n  Tenant: {}\\n  User: {}\\n  Role: {}",
+                        description,
+                        method,
+                        endpoint,
+                        headers_section,
+                        body_section,
+                        curl_example,
+                        tenant_id,
+                        self.user_id.unwrap_or(0),
+                        self.role.as_deref().unwrap_or("viewer")
+                    )
+                }]
+            })),
+            error: None,
+            id,
         }
     }
 }

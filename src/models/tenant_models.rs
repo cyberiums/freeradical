@@ -2,10 +2,11 @@ use super::Model;
 use super::PooledDatabaseConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::schema::{tenants, tenant_members};
 
-#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = tenants)]
 pub struct Tenant {
     pub id: i32,
@@ -20,7 +21,7 @@ pub struct Tenant {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Debug, Insertable, AsChangeset, Clone, Serialize, Deserialize)]
+#[derive(Debug, Insertable, AsChangeset, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = tenants)]
 pub struct NewTenant {
     pub uuid: String,
@@ -32,7 +33,7 @@ pub struct NewTenant {
     pub settings: Option<serde_json::Value>,
 }
 
-#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize, Associations)]
+#[derive(Queryable, Selectable, Identifiable, Debug, Clone, Serialize, Deserialize, Associations, ToSchema)]
 #[diesel(belongs_to(Tenant))]
 #[diesel(table_name = tenant_members)]
 pub struct TenantMember {
@@ -45,7 +46,7 @@ pub struct TenantMember {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Debug, Insertable, Clone, Serialize, Deserialize)]
+#[derive(Debug, Insertable, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = tenant_members)]
 pub struct NewTenantMember {
     pub tenant_id: i32,

@@ -1,4 +1,5 @@
 use actix_web::{get, HttpResponse, Responder};
+use utoipa::ToSchema;
 use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 
@@ -11,12 +12,20 @@ struct RobotRule {
     path: String,
     crawl_delay: Option<i32>,
     comment: Option<String>,
-    is_active: Option<bool>,  // Nullable in schema
+    is_active: Option<bool>,
     created_at: Option<chrono::NaiveDateTime>,
     updated_at: Option<chrono::NaiveDateTime>,
 }
 
 /// Generate dynamic robots.txt from database configuration
+#[utoipa::path(
+    get,
+    path = "/robots.txt",
+    tag = "Content - SEO",
+    responses(
+        (status = 200, description = "robots.txt file", content_type = "text/plain")
+    )
+)]
 #[get("/robots.txt")]
 pub async fn robots() -> impl Responder {
     use crate::schema::robots_rules::dsl::*;

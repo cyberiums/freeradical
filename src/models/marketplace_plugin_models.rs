@@ -1,8 +1,9 @@
 use crate::schema::marketplace_plugins;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Deserialize, Debug, Clone, ToSchema)]
 #[diesel(table_name = marketplace_plugins)]
 pub struct MarketplacePlugin {
     pub id: i32,
@@ -19,7 +20,7 @@ pub struct MarketplacePlugin {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Insertable, Deserialize)]
+#[derive(Insertable, Deserialize, ToSchema)]
 #[diesel(table_name = marketplace_plugins)]
 pub struct NewMarketplacePlugin {
     pub name: String,
@@ -34,7 +35,7 @@ pub struct NewMarketplacePlugin {
 
 use crate::schema::tenant_plugins;
 
-#[derive(Queryable, Selectable, Identifiable, Associations, Debug, Clone, Serialize, Deserialize)]
+#[derive(Queryable, Selectable, Identifiable, Associations, Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(belongs_to(MarketplacePlugin, foreign_key = plugin_id))]
 #[diesel(table_name = tenant_plugins)]
 pub struct TenantPlugin {
@@ -47,7 +48,7 @@ pub struct TenantPlugin {
     pub updated_at: Option<chrono::NaiveDateTime>,
 }
 
-#[derive(Insertable, Debug, Clone, Serialize, Deserialize)]
+#[derive(Insertable, Debug, Clone, Serialize, Deserialize, ToSchema)]
 #[diesel(table_name = tenant_plugins)]
 pub struct NewTenantPlugin {
     pub tenant_id: i32,

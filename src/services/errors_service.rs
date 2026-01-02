@@ -115,3 +115,8 @@ impl From<CryptoError> for CustomHttpError {
     }
 }
 
+impl From<String> for CustomHttpError {
+    fn from(err: String) -> Self {
+        CustomHttpError::InternalServerError(err)
+    }
+}

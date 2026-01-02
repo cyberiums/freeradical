@@ -5,7 +5,7 @@ use diesel::sql_types::{BigInt, Text, Float4, Integer};
 use pgvector::Vector;
 
 use crate::models::DbPool;
-use crate::schema::{pages, content_embeddings};
+use crate::schema::{pages}; // content_embeddings commented - schema mismatch (has page_id, expects page_uuid)
 use crate::services::errors_service::CustomHttpError;
 
 /// Request for recommendations

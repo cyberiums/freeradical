@@ -1,11 +1,12 @@
 use actix_web::{web, HttpResponse, Responder, get, post};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use crate::services::billing_service::BillingService;
 use crate::models::db_connection::DatabasePool;
 use crate::services::auth_service::Claims;
 use crate::models::tenant_models::Tenant;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, ToSchema)]
 pub struct SubscribeRequest {
     pub plan_code: String,
 }
@@ -16,6 +17,15 @@ pub struct CancelRequest {
     // But helpful to verify intent if needed.
 }
 
+/// List all billing plans
+#[utoipa::path(
+    get,
+    path = "/api/billing/plans",
+    tag = "Commerce - Billing",
+    responses(
+        (status = 200, description = "List of billing plans")
+    )
+)]
 #[get("/api/billing/plans")]
 pub async fn get_all_plans(
     pool: web::Data<DatabasePool>,
@@ -26,6 +36,20 @@ pub async fn get_all_plans(
     }
 }
 
+/// Subscribe to a billing plan
+#[utoipa::path(
+    post,
+    path = "/api/billing/subscribe",
+    tag = "Commerce - Billing",
+    request_body = SubscribeRequest,
+    responses(
+        (status = 200, description = "Subscription created"),
+        (status = 400, description = "Invalid plan or subscription failed")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 #[post("/api/billing/subscribe")]
 pub async fn subscribe(
     _req: actix_web::HttpRequest,
@@ -55,6 +79,19 @@ pub async fn subscribe(
     }
 }
 
+/// Cancel current subscription
+#[utoipa::path(
+    post,
+    path = "/api/billing/cancel",
+    tag = "Commerce - Billing",
+    responses(
+        (status = 200, description = "Subscription canceled"),
+        (status = 404, description = "No active subscription")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 #[post("/api/billing/cancel")]
 pub async fn cancel_subscription(
     _req: actix_web::HttpRequest,
@@ -92,6 +129,15 @@ pub async fn cancel_subscription(
 use std::sync::Mutex;
 use handlebars::Handlebars;
 
+/// Get billing view (HTML)
+#[utoipa::path(
+    get,
+    path = "/settings/billing",
+    tag = "Internal - Views",
+    responses(
+        (status = 200, description = "Billing settings page", content_type = "text/html")
+    )
+)]
 #[get("/settings/billing")]
 pub async fn get_billing_view(
     req: actix_web::HttpRequest,
@@ -119,6 +165,15 @@ pub async fn get_billing_view(
      }
 }
 
+/// Get plans view (HTML)
+#[utoipa::path(
+    get,
+    path = "/settings/plans",
+    tag = "Internal - Views",
+    responses(
+        (status = 200, description = "Plans selection page", content_type = "text/html")
+    )
+)]
 #[get("/settings/plans")]
 pub async fn get_plans_view(
     req: actix_web::HttpRequest,
@@ -166,6 +221,19 @@ pub async fn get_plans_view(
     HttpResponse::Ok().content_type("text/html").body(body)
 }
 
+/// Get current user's subscription
+#[utoipa::path(
+    get,
+    path = "/api/billing/subscription",
+    tag = "Commerce - Billing",
+    responses(
+        (status = 200, description = "Subscription details"),
+        (status = 403, description = "User not in tenant")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
 #[get("/api/billing/subscription")]
 pub async fn get_my_subscription(
     _req: actix_web::HttpRequest,

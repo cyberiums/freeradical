@@ -1,13 +1,14 @@
 use diesel::prelude::*;
 use diesel::{Insertable, Queryable, RunQueryDsl};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use super::page_models::Page;
 use super::{Model, PooledDatabaseConnection};
 use crate::schema::module_category;
 use crate::schema::modules;
 
-#[derive(Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash)]
+#[derive(Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash, ToSchema)]
 #[diesel(belongs_to(Page, foreign_key = page_uuid))]
 #[diesel(belongs_to(ModuleCategory, foreign_key = category_uuid))]
 #[diesel(primary_key(uuid))]
@@ -23,7 +24,7 @@ pub struct Module {
     pub validation_rules: Option<String>,
 }
 
-#[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone)]
+#[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone, ToSchema)]
 #[diesel(table_name = modules)]
 pub struct MutModule {
     pub uuid: Option<String>,
@@ -36,21 +37,21 @@ pub struct MutModule {
     pub validation_rules: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
 pub struct CategoryDTO {
     pub uuid: String,
     pub title: String,
     pub modules: Vec<Module>
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default, ToSchema)]
 pub struct FieldsDTO {
     pub modules: Vec<Module>,
     pub categories: Option<Vec<CategoryDTO>>
 }
 
 #[derive(
-    Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash,
+    Debug, Identifiable, Associations, Serialize, Deserialize, Queryable, Selectable, PartialEq, Clone, Eq, Hash, ToSchema,
 )]
 #[diesel(primary_key(uuid))]
 #[diesel(belongs_to(Page, foreign_key = page_uuid))]
@@ -62,7 +63,7 @@ pub struct ModuleCategory {
 }
 
 #[derive(
-    Debug, Serialize, Deserialize, AsChangeset, Insertable, PartialEq, Clone, Eq, Hash,
+    Debug, Serialize, Deserialize, AsChangeset, Insertable, PartialEq, Clone, Eq, Hash, ToSchema,
 )]
 #[diesel(table_name = module_category)]
 pub struct MutCategory {

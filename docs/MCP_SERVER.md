@@ -476,6 +476,13 @@ journalctl -u freeradical -f | grep "MCP"
 - [MCP SDK Documentation](https://github.com/anthropics/anthropic-sdk-typescript)
 - [MCP Server Examples](https://github.com/modelcontextprotocol/servers)
 
+## See Also
+
+- [FEATURES_V2.6.md](file:///Users/prabhatsingh/freeradical/docs/FEATURES_V2.6.md) - Quick reference for all v2.6 features
+- [CRM_VERIFICATION_FLOW.md](file:///Users/prabhatsingh/freeradical/docs/CRM_VERIFICATION_FLOW.md) - Newsletter subscription flow
+- [MCP_RBAC.md](file:///Users/prabhatsingh/freeradical/docs/MCP_RBAC.md) - Role-based access control details
+- [MCP_IMPLEMENTATION_DECISION.md](file:///Users/prabhatsingh/freeradical/docs/MCP_IMPLEMENTATION_DECISION.md) - Design rationale
+
 ---
 
 **Status:** ✅ Production Ready  

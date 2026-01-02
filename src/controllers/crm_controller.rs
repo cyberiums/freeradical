@@ -1,13 +1,14 @@
 use actix_web::{web, HttpResponse, HttpRequest};
 use crate::helpers::tenant_helper::resolve_tenant_id;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
 use crate::models::{DbPool, crm_models::*};
 use crate::services::{crm_service, errors_service::CustomHttpError};
 
 // ===== Request DTOs =====
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CustomerFilters {
     pub lifecycle_stage: Option<String>,
     pub min_health_score: Option<i32>,
@@ -16,13 +17,13 @@ pub struct CustomerFilters {
     pub per_page: Option<i64>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateCustomerRequest {
     pub user_id: i32,
     pub lifecycle_stage: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct UpdateCustomerRequest {
     pub lifecycle_stage: Option<String>,
     pub health_score: Option<i32>,
@@ -30,7 +31,7 @@ pub struct UpdateCustomerRequest {
     pub notes: Option<String>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateInteractionRequest {
     pub customer_id: i32,
     pub interaction_type: String,
@@ -41,7 +42,7 @@ pub struct CreateInteractionRequest {
     pub created_by: Option<i32>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateSegmentRequest {
     pub name: String,
     pub description: Option<String>,
@@ -50,7 +51,7 @@ pub struct CreateSegmentRequest {
     pub created_by: Option<i32>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateCampaignRequest {
     pub name: String,
     pub campaign_type: String,
@@ -61,7 +62,7 @@ pub struct CreateCampaignRequest {
     pub created_by: Option<i32>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateTaskRequest {
     pub customer_id: Option<i32>,
     pub title: String,
@@ -73,7 +74,7 @@ pub struct CreateTaskRequest {
     pub created_by: Option<i32>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct CreateNoteRequest {
     pub customer_id: i32,
     pub note_text: String,
@@ -81,7 +82,7 @@ pub struct CreateNoteRequest {
     pub created_by: Option<i32>,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, ToSchema)]
 pub struct TaskFilters {
     pub customer_id: Option<i32>,
     pub assigned_to: Option<i32>,
@@ -91,7 +92,7 @@ pub struct TaskFilters {
 
 // ===== Response DTOs =====
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct PaginatedResponse<T> {
     pub data: Vec<T>,
     pub total: i64,
@@ -99,7 +100,7 @@ pub struct PaginatedResponse<T> {
     pub per_page: i64,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct CustomerDetailResponse {
     pub customer: CrmCustomer,
     pub recent_interactions: Vec<CrmInteraction>,

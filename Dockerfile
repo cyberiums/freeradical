@@ -33,6 +33,9 @@ RUN touch src/main.rs
 # Build release (application)
 RUN cargo build --release
 
+# Install diesel_cli in builder stage
+RUN cargo install diesel_cli --no-default-features --features postgres
+
 # Runtime stage
 FROM debian:sid-slim
 
@@ -59,8 +62,8 @@ COPY static ./static
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 
-# Install diesel_cli for migrations (PostgreSQL only)
-RUN cargo install diesel_cli --no-default-features --features postgres
+# Copy diesel_cli from builder
+COPY --from=builder /usr/local/cargo/bin/diesel /usr/local/bin/diesel
 
 # Create uploads directory
 RUN mkdir -p /app/uploads

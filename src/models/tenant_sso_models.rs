@@ -9,16 +9,13 @@ use crate::schema::tenant_sso_configs;
 pub struct TenantSsoConfig {
     pub id: i32,
     pub tenant_id: i32,
-    pub idp_entity_id: Option<String>,
-    pub idp_sso_url: Option<String>,
-    pub x509_certificate: Option<String>,
+    pub idp_entity_id: String,
+    pub idp_sso_url: String,
+    pub x509_certificate: String,
     pub is_enabled: bool,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
-    pub provider_type: String, // 'saml' or 'oidc'
-    pub client_id: Option<String>, // OIDC
-    pub client_secret: Option<String>, // OIDC
-    pub discovery_url: Option<String>, // OIDC
+    // Note: provider_type, client_id, client_secret, discovery_url removed - not in schema
 }
 
 #[derive(Debug, Insertable, AsChangeset, Clone, Serialize, Deserialize)]
@@ -29,10 +26,7 @@ pub struct MutTenantSsoConfig {
     pub idp_sso_url: Option<String>,
     pub x509_certificate: Option<String>,
     pub is_enabled: Option<bool>,
-    pub provider_type: Option<String>,
-    pub client_id: Option<String>,
-    pub client_secret: Option<String>,
-    pub discovery_url: Option<String>,
+    // Note: provider_type, client_id, client_secret, discovery_url removed - not in schema
 }
 
 impl TenantSsoConfig {

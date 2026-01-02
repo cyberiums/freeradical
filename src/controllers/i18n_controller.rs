@@ -1,10 +1,11 @@
 use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
 use diesel::prelude::*;
 use serde::{Serialize, Deserialize};
+use utoipa::ToSchema;
 use crate::models::DatabasePool;
 use crate::services::language_service::{LanguageService, Language, NewLanguage};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CreateLanguageInput {
     pub code: String,
     pub name: String,
@@ -13,6 +14,14 @@ pub struct CreateLanguageInput {
 }
 
 /// List all languages
+#[utoipa::path(
+    get,
+    path = "/languages",
+    tag = "Content - i18n",
+    responses(
+        (status = 200, description = "List of languages")
+    )
+)]
 #[get("/languages")]
 pub async fn list_languages(pool: web::Data<DatabasePool>) -> impl Responder {
     let mut conn = match pool.get() {
@@ -27,6 +36,16 @@ pub async fn list_languages(pool: web::Data<DatabasePool>) -> impl Responder {
 }
 
 /// Create a new language
+#[utoipa::path(
+    post,
+    path = "/languages",
+    tag = "Content - i18n",
+    request_body = CreateLanguageInput,
+    responses(
+        (status = 201, description = "Language created"),
+        (status = 500, description = "Creation failed")
+    )
+)]
 #[post("/languages")]
 pub async fn create_language(
     input: web::Json<CreateLanguageInput>,
@@ -57,6 +76,19 @@ pub async fn create_language(
 }
 
 /// Get translation for a page
+#[utoipa::path(
+    get,
+    path = "/pages/{page_id}/translations/{lang_code}",
+    tag = "Content - i18n",
+    params(
+        ("page_id" = i32, Path, description = "Page ID"),
+        ("lang_code" = String, Path, description = "Language code")
+    ),
+    responses(
+        (status = 200, description = "Translation found"),
+        (status = 404, description = "Language not found")
+    )
+)]
 #[get("/pages/{page_id}/translations/{lang_code}")]
 pub async fn get_translation(
     path: web::Path<(i32, String)>,

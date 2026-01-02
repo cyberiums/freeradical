@@ -195,6 +195,10 @@ async fn main() -> std::io::Result<()> {
         &conf.bind_port
     );
 
+    // Clone pool for MCP Server before HttpServer closure captures it
+    let pool_for_mcp = pool.clone();
+    let pool_for_cleanup = pool.clone();
+
     let email_service_for_server = email_service.clone();
     let http_server = HttpServer::new(move || {
         let cors = Cors::permissive();
@@ -418,7 +422,6 @@ async fn main() -> std::io::Result<()> {
     .run();
 
     // Start MCP Server on port 9009 (parallel to main REST API on port 8000)
-    let pool_for_mcp = pool.clone();
     actix_web::rt::spawn(async move {
         log::info!("🔌 Starting FreeRadical MCP Server on port 9009...");
         match services::mcp_server::start_mcp_server(pool_for_mcp).await {
@@ -434,7 +437,6 @@ async fn main() -> std::io::Result<()> {
     });
     
     // Start Email Verification Cleanup Job (runs every hour)
-    let pool_for_cleanup = pool.clone();
     actix_web::rt::spawn(async move {
         use services::email_verification_service::EmailVerificationService;
         loop {
