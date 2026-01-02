@@ -22,7 +22,8 @@ use serde_json;
         (status = 401, description = "Not authenticated")
     ),
     security((
-        "bearer_auth" = []\n    ))
+        "bearer_auth" = []
+    ))
 )]
 pub async fn create_user(
     new: web::Json<MutUser>,
