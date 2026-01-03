@@ -92,7 +92,7 @@ services:
       - WATCHTOWER_POLL_INTERVAL=300
       - WATCHTOWER_CLEANUP=true
       - WATCHTOWER_LABEL_ENABLE=true
-      - WATCHTOWER_LOG_LEVEL=info
+      - WATCHTOWER_LOG_LEVEL=error
     restart: unless-stopped
 
 volumes:
