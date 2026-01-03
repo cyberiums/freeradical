@@ -3,10 +3,9 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;
-use chrono::NaiveDateTime;
 
-use crate::models::{pool_handler, DatabasePool, PooledDatabaseConnection};
-use crate::models::commerce_models::{Order, OrderItem, NewOrder, NewOrderItem, Product};
+use crate::models::{pool_handler, DatabasePool};
+use crate::models::commerce_models::{Order, NewOrder, NewOrderItem, Product};
 use crate::services::errors_service::CustomHttpError;
 use crate::services::auth_service::Claims;
 use crate::schema::{orders, order_items, products};

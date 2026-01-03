@@ -2,7 +2,7 @@ use super::email_template_service::EmailTemplateService;
 use serde::Serialize;
 use std::env;
 use std::sync::Arc;
-use log::{info, error, warn};
+use log::{info, error};
 use lettre::{Message, SmtpTransport, Transport, transport::smtp::authentication::Credentials};
 use aws_sdk_sesv2::Client as SesClient;
 use aws_config::meta::region::RegionProviderChain;

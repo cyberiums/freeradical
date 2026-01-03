@@ -1,5 +1,4 @@
 use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
 
 /// Language service for managing multi-language support
 pub struct LanguageService;

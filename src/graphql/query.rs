@@ -2,14 +2,13 @@
 
 use async_graphql::*;
 use crate::graphql::types::*;
-use crate::models::DatabasePool;
 
 pub struct QueryRoot;
 
 #[Object]
 impl QueryRoot {
     /// Get a single page by UUID
-    async fn page(&self, ctx: &Context<'_>, uuid: String) -> Result<Option<GqlPage>> {
+    async fn page(&self, _ctx: &Context<'_>, uuid: String) -> Result<Option<GqlPage>> {
         // Mock implementation - replace with actual database query
         Ok(Some(GqlPage {
             uuid: uuid.clone(),
@@ -28,11 +27,11 @@ impl QueryRoot {
     /// List all pages with pagination
     async fn pages(
         &self,
-        ctx: &Context<'_>,
+        _ctx: &Context<'_>,
         pagination: Option<PaginationInput>
     ) -> Result<PageConnection> {
-        let page = pagination.as_ref().and_then(|p| p.page).unwrap_or(1);
-        let per_page = pagination.as_ref().and_then(|p| p.per_page).unwrap_or(20);
+        let _page = pagination.as_ref().and_then(|p| p.page).unwrap_or(1);
+        let _per_page = pagination.as_ref().and_then(|p| p.per_page).unwrap_or(20);
         
         // Mock implementation
         Ok(PageConnection {
@@ -61,9 +60,9 @@ impl QueryRoot {
     /// Search across resources
     async fn search(
         &self,
-        ctx: &Context<'_>,
+        _ctx: &Context<'_>,
         query: String,
-        resources: Option<Vec<String>>
+        _resources: Option<Vec<String>>
     ) -> Result<Vec<GqlSearchResult>> {
         // Mock implementation
         Ok(vec![
@@ -79,7 +78,7 @@ impl QueryRoot {
     /// Get modules for a page
     async fn modules(
         &self,
-        ctx: &Context<'_>,
+        _ctx: &Context<'_>,
         page_uuid: String
     ) -> Result<Vec<GqlModule>> {
         // Mock implementation
@@ -97,8 +96,8 @@ impl QueryRoot {
     /// Get media items
     async fn media_library(
         &self,
-        ctx: &Context<'_>,
-        pagination: Option<PaginationInput>
+        _ctx: &Context<'_>,
+        _pagination: Option<PaginationInput>
     ) -> Result<Vec<GqlMedia>> {
         // Mock implementation
         Ok(vec![

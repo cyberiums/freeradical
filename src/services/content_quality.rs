@@ -78,7 +78,7 @@ impl ContentQualityAnalyzer {
     }
 
     /// Estimate syllables per word (simplified)
-    fn syllables_per_word(&self, content: &str) -> f64 {
+    fn syllables_per_word(&self, _content: &str) -> f64 {
         // Simplified: estimate ~1.5 syllables per word for English
         1.5
     }

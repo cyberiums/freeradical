@@ -1,4 +1,3 @@
-use super::Model;
 use super::PooledDatabaseConnection;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};

@@ -1,12 +1,14 @@
 use actix_web::{web, App, HttpResponse, HttpRequest, HttpServer};
 use actix_web_actors::ws;
-use actix::{Actor, StreamHandler, ActorContext, AsyncContext, Handler, Message as ActixMessage};
+use actix::{Actor, StreamHandler, ActorContext};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use log::{info, error};
 use std::sync::Arc;
 
 use crate::models::DbPool;
+use crate::services::mcp_custom_tool_service::McpCustomToolService;
+use crate::models::mcp_tool_models::McpCustomTool;
 
 // ===== MCP Protocol Types =====
 
@@ -1105,6 +1107,66 @@ impl MCPWebSocket {
             error: None,
             id,
         }
+    }
+    
+    // ===== Phase 2: Custom Tool Integration =====
+    
+    /// Fetch custom tools from database
+    fn fetch_custom_tools(&self) -> Vec<McpCustomTool> {
+        if let Some(tenant_id) = self.tenant_id {
+            let role = self.role.as_deref().unwrap_or("viewer");
+            let pool_clone = self.pool.clone();
+            let tenant_id_clone = tenant_id;
+            let role_clone = role.to_string();
+            
+            // Blocking call to async function
+            let runtime = tokio::runtime::Runtime::new().unwrap();
+            runtime.block_on(async move {
+                McpCustomToolService::list_custom_tools(&pool_clone, tenant_id_clone, &role_clone)
+                    .await
+                    .unwrap_or_else(|e| {
+                        error!("Failed to fetch custom tools: {}", e);
+                        vec![]
+                    })
+            })
+        } else {
+            vec![]
+        }
+    }
+    
+    /// Convert custom tool to MCPTool format
+    fn custom_tool_to_mcp_tool(&self, tool: &McpCustomTool) -> MCPTool {
+        MCPTool {
+            name: tool.name.clone(),
+            description: tool.description.clone().unwrap_or_else(|| "Custom webhook tool".to_string()),
+            input_schema: tool.input_schema.clone(),
+        }
+    }
+    
+    /// Execute custom tool
+    fn execute_custom_tool(&self, tool_name: &str, arguments: serde_json::Value) -> Result<serde_json::Value, MCPError> {
+        let tenant_id = self.check_auth()?;
+        let pool_clone = self.pool.clone();
+        let tool_name_clone = tool_name.to_string();
+        let user_id = self.user_id;
+        
+        // Blocking call to async function
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+        runtime.block_on(async move {
+            McpCustomToolService::execute_by_name(
+                &pool_clone,
+                &tool_name_clone,
+                arguments,
+                tenant_id,
+                user_id,
+            )
+            .await
+            .map_err(|e| MCPError {
+                code: -32000,
+                message: format!("Custom tool execution failed: {}", e),
+                data: None,
+            })
+        })
     }
 }
 

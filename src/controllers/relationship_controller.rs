@@ -4,7 +4,7 @@ use actix_web::{web, HttpResponse, Responder, get, post, delete};
 use serde::{Serialize, Deserialize};
 use utoipa::ToSchema;
 use diesel::prelude::*;
-use crate::models::{DatabasePool, pool_handler};
+use crate::models::DatabasePool;
 
 #[derive(Debug, Serialize, Deserialize, Queryable, ToSchema)]
 #[diesel(table_name = crate::schema::content_relationships)]
@@ -41,7 +41,7 @@ pub struct CreateRelationshipInput {
 #[post("/relationships")]
 pub async fn create_relationship(
     input: web::Json<CreateRelationshipInput>,
-    pool: web::Data<DatabasePool>
+    _pool: web::Data<DatabasePool>
 ) -> impl Responder {
     // Mock implementation - add actual database insert
     HttpResponse::Created().json(serde_json::json!({
@@ -71,7 +71,7 @@ pub async fn create_relationship(
 #[get("/relationships/{resource_type}/{resource_id}")]
 pub async fn get_related(
     path: web::Path<(String, String)>,
-    pool: web::Data<DatabasePool>
+    _pool: web::Data<DatabasePool>
 ) -> impl Responder {
     let (resource_type, resource_id) = path.into_inner();
     
@@ -97,8 +97,8 @@ pub async fn get_related(
 )]
 #[delete("/relationships/{id}")]
 pub async fn delete_relationship(
-    id: web::Path<i64>,
-    pool: web::Data<DatabasePool>
+    _id: web::Path<i64>,
+    _pool: web::Data<DatabasePool>
 ) -> impl Responder {
     // Mock implementation - add actual database delete
     HttpResponse::Ok().json(serde_json::json!({

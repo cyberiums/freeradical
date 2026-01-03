@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use log::info;
-use std::collections::HashMap;
 
 /// SEO Competitor Analyzer
 /// Analyze competitor SEO strategies

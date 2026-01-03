@@ -3,8 +3,6 @@
 
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
-use diesel::serialize::ToSql;
-use diesel::deserialize::FromSql;
 
 #[derive(Queryable, Selectable, Identifiable, Debug, Serialize, Deserialize, Clone)]
 #[diesel(table_name = crate::schema::page_revisions)]

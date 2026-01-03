@@ -1,4 +1,4 @@
-use actix_web::{get, post, web, HttpResponse, Responder};
+use actix_web::{get, post, HttpResponse, Responder};
 use crate::services::backup_service::BackupService;
 use serde::Serialize;
 use utoipa::ToSchema;

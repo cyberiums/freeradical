@@ -1,5 +1,4 @@
 use actix_web::{get, HttpResponse, Responder};
-use utoipa::ToSchema;
 use crate::services::database_service::establish_connection;
 use diesel::prelude::*;
 

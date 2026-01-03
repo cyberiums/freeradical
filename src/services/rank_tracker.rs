@@ -63,7 +63,7 @@ impl RankTracker {
     }
 
     /// Get current rankings
-    async fn get_rankings(&self, keyword: &str, url: &str) -> Result<Vec<RankingSnapshot>, String> {
+    async fn get_rankings(&self, _keyword: &str, url: &str) -> Result<Vec<RankingSnapshot>, String> {
         // TODO: Integrate with rank tracking APIs (SEMrush, Ahrefs, etc.)
         let timestamp = chrono::Utc::now().timestamp();
         

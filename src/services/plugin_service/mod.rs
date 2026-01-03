@@ -1,4 +1,4 @@
-use actix_web::{dev::ServiceRequest, HttpResponse};
+use actix_web::dev::ServiceRequest;
 use std::any::Any;
 use std::sync::{Arc, Mutex};
 use async_trait::async_trait;
@@ -25,7 +25,7 @@ pub trait Plugin: Send + Sync + Any {
     }
     
     /// Called before content is saved to database
-    async fn on_save_content(&self, content_type: &str, data: &serde_json::Value) -> Result<(), String> {
+    async fn on_save_content(&self, _content_type: &str, _data: &serde_json::Value) -> Result<(), String> {
         Ok(())
     }
 }

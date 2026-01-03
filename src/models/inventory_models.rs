@@ -1,6 +1,5 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use diesel::sql_types::{Jsonb, Numeric};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use uuid::Uuid;

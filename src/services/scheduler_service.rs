@@ -14,7 +14,7 @@ use crate::services::email_service::EmailService;
 
 /// Initialize and start the scheduled publishing scheduler
 /// Runs every 1 minute to check for pages that need status changes
-pub async fn start_scheduler(email_service: web::Data<EmailService>) -> Result<JobScheduler, Box<dyn std::error::Error>> {
+pub async fn start_scheduler(_email_service: web::Data<EmailService>) -> Result<JobScheduler, Box<dyn std::error::Error>> {
     let sched = JobScheduler::new().await?;
 
     // Job runs every minute: "0 * * * * *" (sec min hour day month dow)
@@ -82,7 +82,7 @@ async fn process_scheduled_pages() -> Result<(), diesel::result::Error> {
     Ok(())
 }
 
-async fn process_billing(email_service: web::Data<EmailService>) -> Result<(), String> {
+async fn process_billing(_email_service: web::Data<EmailService>) -> Result<(), String> {
     // Billing service disabled - function body commented out
     /*
     let events = web::block(|| {

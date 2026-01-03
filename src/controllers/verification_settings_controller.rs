@@ -118,7 +118,7 @@ pub async fn update_verification_settings(
         })?;
         
         use crate::schema::verification_settings;
-        use diesel::dsl::now;
+        
         
         // Try to find existing settings
         let existing = verification_settings::table
@@ -128,7 +128,7 @@ pub async fn update_verification_settings(
             .optional()
             .map_err(|e| CustomHttpError::InternalServerError(format!("Query failed: {}", e)))?;
         
-        if let Some(mut existing_settings) = existing {
+        if let Some(existing_settings) = existing {
             // Update existing - using individual updates to avoid type mismatch
             use diesel::dsl::now;
             

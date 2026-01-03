@@ -3,12 +3,10 @@
 
 use actix_web::{web, HttpResponse, Responder};
 use diesel::prelude::*;
-use serde_json::json;
 use utoipa::ToSchema;
 
 use crate::services::database_service;
 use crate::models::revision_models::{PageRevision, RevisionSummary};
-use crate::schema::page_revisions;
 
 /// List all revisions for a page
 #[utoipa::path(

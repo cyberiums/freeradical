@@ -1,4 +1,4 @@
-use handlebars::{Handlebars, DirectorySourceOptions};
+use handlebars::Handlebars;
 use serde::Serialize;
 use std::sync::{Arc, Mutex};
 use std::path::PathBuf;

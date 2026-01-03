@@ -46,8 +46,8 @@ impl WishlistManager {
         &self,
         wishlist_id: &str,
         product_id: String,
-        product_name: String,
-        price: f64,
+        _product_name: String,
+        _price: f64,
     ) -> Result<(), String> {
         info!("Adding product {} to wishlist {}", product_id, wishlist_id);
         // TODO: Update database

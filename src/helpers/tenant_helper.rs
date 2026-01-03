@@ -1,7 +1,6 @@
 use actix_web::HttpRequest;
 use crate::models::db_connection::DatabasePool;
 use diesel::prelude::*;
-use crate::schema::tenants;
 use crate::models::tenant_models::Tenant;
 
 pub fn resolve_tenant_id(req: &HttpRequest, pool: &DatabasePool) -> Result<i32, String> {

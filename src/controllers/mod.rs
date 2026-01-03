@@ -35,3 +35,4 @@ pub mod i18n_controller;
 pub mod relationship_controller;
 pub mod revision_controller;
 pub mod graphql_controller;
+pub mod mcp_custom_tool_controller; // Phase 2: Custom MCP tools + marketplace

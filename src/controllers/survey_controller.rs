@@ -1,6 +1,6 @@
 use actix_web::{web, HttpResponse, Responder, HttpRequest};
 use crate::models::{db_connection, survey_models::{Survey, NewSurvey, Question, NewQuestion, Response, NewResponse}};
-use crate::middleware::auth_middleware::{get_user_context, UserContext};
+use crate::middleware::auth_middleware::get_user_context;
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;

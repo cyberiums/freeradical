@@ -1,4 +1,3 @@
-use serde::{Deserialize, Serialize};
 
 #[derive(serde::Deserialize, Clone, Debug)]
 pub struct LocalConfig {

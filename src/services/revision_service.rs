@@ -2,7 +2,6 @@
 use diesel::prelude::*;
 use crate::models::page_models::Page;
 use crate::models::revision_models::NewPageRevision;
-use crate::schema::{pages, page_revisions};
 
 /// Creates a new revision record for a page
 /// 

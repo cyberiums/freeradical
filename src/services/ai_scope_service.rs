@@ -1,7 +1,4 @@
-use actix_web::web;
-use diesel::prelude::*;
 
-use crate::models::DbPool;
 use crate::services::errors_service::CustomHttpError;
 
 /// AI Operation Scopes
@@ -67,7 +64,7 @@ pub fn check_ai_permission(
             }
             
             // Check team-based MCP permissions if user is in a team
-            if let Some(team_role) = &user.team_role {
+            if let Some(_team_role) = &user.team_role {
                 check_team_mcp_permission(user, "ai:generate")?;
             }
             

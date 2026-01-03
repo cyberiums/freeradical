@@ -1,5 +1,5 @@
 use actix_web::{web, HttpResponse, Responder, get, post};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use utoipa::ToSchema;
 use crate::services::billing_service::BillingService;
 use crate::models::db_connection::DatabasePool;
@@ -140,7 +140,7 @@ use handlebars::Handlebars;
 )]
 #[get("/settings/billing")]
 pub async fn get_billing_view(
-    req: actix_web::HttpRequest,
+    _req: actix_web::HttpRequest,
     pool: web::Data<DatabasePool>,
     hb: web::Data<Mutex<Handlebars<'_>>>,
 ) -> impl Responder {
@@ -176,7 +176,7 @@ pub async fn get_billing_view(
 )]
 #[get("/settings/plans")]
 pub async fn get_plans_view(
-    req: actix_web::HttpRequest,
+    _req: actix_web::HttpRequest,
     pool: web::Data<DatabasePool>,
     hb: web::Data<Mutex<Handlebars<'_>>>,
 ) -> impl Responder {

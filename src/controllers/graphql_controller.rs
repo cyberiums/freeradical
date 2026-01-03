@@ -2,9 +2,8 @@
 // Handles GraphQL queries and provides GraphQL Playground
 
 use actix_web::{get, post, web, HttpResponse, Result};
-use async_graphql::http;
 use crate::graphql::AppSchema;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct GraphQLRequest {

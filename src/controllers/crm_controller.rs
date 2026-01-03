@@ -1,4 +1,4 @@
-use crate::models::crm_dtos::{CrmCustomerDTO, CrmCampaignDTO};
+use crate::models::crm_dtos::CrmCustomerDTO;
 use actix_web::{web, HttpResponse, HttpRequest};
 use crate::helpers::tenant_helper::resolve_tenant_id;
 use serde::{Deserialize, Serialize};

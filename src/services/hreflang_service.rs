@@ -1,9 +1,8 @@
-use crate::services::language_service::LanguageService;
 
 /// Generate hreflang tags for multi-language pages
 pub fn generate_hreflang_tags(
     page_uuid: &str,
-    current_lang: &str,  
+    _current_lang: &str,  
     base_url: &str
 ) -> String {
     // Supported languages (ready for database integration)

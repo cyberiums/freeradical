@@ -1,7 +1,7 @@
 // Search Controller - Temporarily disabled
 use actix_web::{web, HttpResponse, Responder, get};
 use utoipa::ToSchema;
-use crate::models::{DatabasePool, pool_handler};
+use crate::models::DatabasePool;
 
 /// Search across pages, modules, and media
 #[utoipa::path(

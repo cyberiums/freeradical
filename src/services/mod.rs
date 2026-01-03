@@ -20,6 +20,7 @@ pub mod recommendation_service; // Content recommendations
 // v1.7.0: MCP/AI Automation Foundation
 pub mod mcp_client; // Model Context Protocol client
 pub mod mcp_server; // Model Context Protocol server (port 9009)
+pub mod mcp_custom_tool_service; // Phase 2: Custom tool registration (HTTP webhooks, 200% isolation)
 pub mod ai_providers; // AI provider abstraction (OpenAI, Anthropic, Google)
 pub mod ai_key_manager; // Encrypted API key management
 pub mod ai_rate_limiter; // Rate limiting & cost tracking

@@ -1,9 +1,8 @@
-use actix_web::{web, HttpResponse, Responder, Error};
+use actix_web::{web, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use crate::models::{DatabasePool, user_models};
+use crate::models::DatabasePool;
 use crate::models::tenant_sso_models::{TenantSsoConfig, MutTenantSsoConfig};
-use crate::models::tenant_models::{Tenant, TenantMember};
 
 #[derive(Serialize, Deserialize, ToSchema)]
 pub struct UpdateSsoRequest {
@@ -44,7 +43,7 @@ pub async fn update_config(
     let mut conn = pool.get().expect("couldn't get db connection");
     
     // Encrypt client secret if present (Placeholder: using plaintext for now, should use encryption_service)
-    let secret = params.client_secret.clone(); 
+    let _secret = params.client_secret.clone(); 
 
     let new_config = MutTenantSsoConfig {
         tenant_id: *tenant_id,
@@ -166,7 +165,7 @@ pub async fn oidc_callback(
     let mut conn = pool.get().expect("couldn't get db connection");
     
     // 2. Lookup Config to get Client Secret
-    let config = match TenantSsoConfig::find_by_tenant(tenant_id, &mut conn) {
+    let _config = match TenantSsoConfig::find_by_tenant(tenant_id, &mut conn) {
         Ok(Some(c)) => c,
         _ => return HttpResponse::BadRequest().body("Tenant Config Not Found"),
     };

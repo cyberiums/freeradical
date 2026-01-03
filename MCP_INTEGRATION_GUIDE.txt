@@ -1,0 +1,124 @@
+// This file contains the additions to integrate custom tools into MCP Server
+// Add this import at the top of mcp_server.rs:
+use crate::services::mcp_custom_tool_service::McpCustomToolService;
+use crate::models::mcp_tool_models::McpCustomTool;
+
+// Add these helper methods to the MCPWebSocket impl block (before line 1121):
+
+    /// Fetch custom tools from database (Phase 2)
+    fn fetch_custom_tools(&self) -> Vec<McpCustomTool> {
+        if let Some(tenant_id) = self.tenant_id {
+            let role = self.role.as_deref().unwrap_or("viewer");
+            let pool_clone = self.pool.clone();
+            let tenant_id_clone = tenant_id;
+            let role_clone = role.to_string();
+            
+            // Blocking call to async function
+            let runtime = tokio::runtime::Runtime::new().unwrap();
+            runtime.block_on(async move {
+                McpCustomToolService::list_custom_tools(&pool_clone, tenant_id_clone, &role_clone)
+                    .await
+                    .unwrap_or_else(|e| {
+                        error!("Failed to fetch custom tools: {}", e);
+                        vec![]
+                    })
+            })
+        } else {
+            vec![]
+        }
+    }
+    
+    /// Convert custom tool to MCPTool format
+    fn custom_tool_to_mcp_tool(&self, tool: &McpCustomTool) -> MCPTool {
+        MCPTool {
+            name: tool.name.clone(),
+            description: tool.description.clone().unwrap_or_else(|| "Custom tool".to_string()),
+            input_schema: tool.input_schema.clone(),
+        }
+    }
+    
+    /// Execute custom tool (Phase 2)
+    fn execute_custom_tool(&self, tool_name: &str, arguments: serde_json::Value) -> Result<serde_json::Value, MCPError> {
+        let tenant_id = self.check_auth()?;
+        let pool_clone = self.pool.clone();
+        let tool_name_clone = tool_name.to_string();
+        let user_id = self.user_id;
+        
+        // Blocking call to async function
+        let runtime = tokio::runtime::Runtime::new().unwrap();
+        runtime.block_on(async move {
+            McpCustomToolService::execute_by_name(
+                &pool_clone,
+                &tool_name_clone,
+                arguments,
+                tenant_id,
+                user_id,
+            )
+            .await
+            .map_err(|e| MCPError {
+                code: -32000,
+                message: format!("Custom tool execution failed: {}", e),
+                data: None,
+            })
+        })
+    }
+
+// Modifications to handle_list_tools (around line 402):
+// Replace the closing of the tools vec (around line 862) with this:
+
+        ];
+        
+        // ===== Phase 2: Add Custom Tools =====
+        let mut all_tools = tools;
+        let custom_tools = self.fetch_custom_tools();
+        for custom_tool in custom_tools {
+            all_tools.push(self.custom_tool_to_mcp_tool(&custom_tool));
+        }
+        
+        MCPResponse {
+            jsonrpc: "2.0".to_string(),
+            result: Some(json!({
+                "tools": all_tools
+            })),
+            error: None,
+            id,
+        }
+
+// Modifications to handle_call_tool (around line 878):
+// Add this before the default case (around line 1060):
+
+        // ===== Phase 2: Try Custom Tools =====
+        // If no built-in tool matched, try custom tools
+        match self.execute_custom_tool(&tool_name, arguments.clone()) {
+            Ok(result) => {
+                info!("✅ Custom tool '{}' executed successfully", tool_name);
+                return MCPResponse {
+                    jsonrpc: "2.0".to_string(),
+                    result: Some(json!({
+                        "content": [{
+                            "type": "text",
+                            "text": serde_json::to_string_pretty(&result).unwrap_or_else(|_| result.to_string())
+                        }]
+                    })),
+                    error: None,
+                    id,
+                };
+            }
+            Err(e) => {
+                // Custom tool failed or doesn't exist
+                // Fall through to error response
+                error!("❌ Custom tool '{}' failed: {}", tool_name, e.message);
+            }
+        }
+        
+        // If we get here, tool not found
+        MCPResponse {
+            jsonrpc: "2.0".to_string(),
+            result: None,
+            error: Some(MCPError {
+                code: -32601,
+                message: format!("Tool '{}' not found", tool_name),
+                data: None,
+            }),
+            id,
+        }

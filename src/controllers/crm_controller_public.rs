@@ -43,9 +43,9 @@ pub async fn create_customer_public(
     }
     
     // 2. Check if customer already exists
-    let email_check = body.email.clone();
-    let tenant_check = body.tenant_id;
-    let pool_check = pool.clone();
+    let _email_check = body.email.clone();
+    let _tenant_check = body.tenant_id;
+    let _pool_check = pool.clone();
     
     // Note: Email duplicate check disabled - email column doesn't exist in crm_customers schema
     // Skipping duplicate check until migration adds email column
@@ -93,7 +93,7 @@ pub async fn verify_customer_email(
     token: web::Path<String>,
 ) -> Result<HttpResponse, CustomHttpError> {
     // 1. Verify token and get payload
-    let (email, payload, tenant_id) = EmailVerificationService::verify_and_get_payload(
+    let (_email, payload, _tenant_id) = EmailVerificationService::verify_and_get_payload(
         &pool,
         &token
     ).await?;
@@ -103,8 +103,8 @@ pub async fn verify_customer_email(
         .map_err(|e| CustomHttpError::InternalServerError(format!("Deserialization error: {}", e)))?;
     
     // 3. Create the actual CRM customer record
-    let pool_clone = pool.clone();
-    let customer = web::block(move || {
+    let _pool_clone = pool.clone();
+    let _customer = web::block(move || {
         // Note: CRM customer creation disabled - email column doesn't exist in schema
         // This would need migration to add: email, first_name, last_name, tags, source, metadata
         // For now, just return success without actually creating the customer

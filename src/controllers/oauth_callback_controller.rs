@@ -3,8 +3,7 @@ use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use crate::models::DatabasePool;
 use crate::services::oauth_service::OAuthService;
-use crate::models::user_models::{User, MutUser};
-use crate::models::Model;
+use crate::models::user_models::MutUser;
 use chrono::Utc;
 use diesel::prelude::*;
 use uuid::Uuid;
@@ -76,7 +75,7 @@ pub async fn google_callback(
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
     // Check if user exists or create new one
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
 
@@ -114,7 +113,7 @@ pub async fn google_callback(
 
         let final_user_id_int: i32;
 
-        if let Some(uuid_str) = user_uuid_option {
+        if let Some(_uuid_str) = user_uuid_option {
             // User exists but not linked -> Link them
             // We need integer ID for foreign key, but User struct has UUID PK? 
             // WAIT: Schema says users.id is what? 
@@ -210,7 +209,7 @@ pub async fn github_callback(
     let profile = oauth.fetch_github_profile(&token_response.access_token).await
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
     
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool.get()
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
 

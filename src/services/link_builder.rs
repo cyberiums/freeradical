@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use log::info;
-use std::collections::HashMap;
 
 /// Link Builder & Analyzer
 /// Internal/external link optimization for SEO

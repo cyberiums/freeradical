@@ -1,5 +1,4 @@
 use sha2::{Sha256, Digest};
-use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use crate::services::database_service::establish_connection;
 
@@ -41,8 +40,8 @@ impl AnalyticsService {
     
     /// Insert page view into database
     fn insert_page_view(
-        page_url: String,
-        page_uuid: Option<String>,
+        _page_url: String,
+        _page_uuid: Option<String>,
         ip_address: String,  // Changed from visitor_hash
         referrer: Option<String>,
         user_agent: Option<String>,
@@ -65,7 +64,7 @@ impl AnalyticsService {
     }
     
     /// Get page view count for a URL
-    pub fn get_page_views(page_url: &str) -> i64 {
+    pub fn get_page_views(_page_url: &str) -> i64 {
         use crate::schema::page_views::dsl;
         
         let mut conn = establish_connection();
@@ -80,7 +79,7 @@ impl AnalyticsService {
     /// Get page views for today
     pub fn get_views_today() -> i64 {
         use crate::schema::page_views::dsl;
-        use chrono::{Utc, Duration, Timelike};
+        use chrono::Utc;
         
         let mut conn = establish_connection();
         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
@@ -125,7 +124,7 @@ impl AnalyticsService {
     /// Get unique visitors today
     pub fn get_unique_visitors_today() -> i64 {
         use crate::schema::page_views::dsl;
-        use chrono::{Utc, Timelike};
+        use chrono::Utc;
         use diesel::dsl::count_distinct;
         
         let mut conn = establish_connection();

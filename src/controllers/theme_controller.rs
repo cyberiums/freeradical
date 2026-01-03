@@ -19,7 +19,7 @@ use diesel::prelude::*;
     )
 )]
 pub async fn list_themes(
-    req: HttpRequest,
+    _req: HttpRequest,
     pool: web::Data<db_connection::DatabasePool>
 ) -> impl Responder {
     let mut conn = pool.get().expect("couldn't get db connection from pool");

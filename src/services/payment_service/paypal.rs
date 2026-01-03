@@ -239,7 +239,7 @@ impl PaymentHandler for PayPalPaymentHandler {
         Err("PayPal orders cannot be manually canceled via API".to_string())
     }
     
-    fn verify_webhook_signature(&self, payload: &[u8], signature: &str) -> Result<bool, String> {
+    fn verify_webhook_signature(&self, _payload: &[u8], signature: &str) -> Result<bool, String> {
         // PayPal webhook verification requires additional metadata
         // For production, implement full webhook verification:
         // https://developer.paypal.com/api/rest/webhooks/

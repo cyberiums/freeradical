@@ -1,5 +1,4 @@
-use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use chrono::NaiveDateTime;
 
 /// Analytics service for tracking events
@@ -21,10 +20,10 @@ impl AnalyticsService {
     /// Track a page view event
     pub fn track_page_view(
         page_uuid: String,
-        session_id: String,
+        _session_id: String,
         ip_address: String,
-        user_agent: String,
-        referer: Option<String>
+        _user_agent: String,
+        _referer: Option<String>
     ) {
         // TODO: Insert into analytics_events table
         log::info!("Page view tracked: {} from {}", page_uuid, ip_address);
@@ -33,17 +32,17 @@ impl AnalyticsService {
     /// Track a conversion event
     pub fn track_conversion(
         event_type: String,
-        page_uuid: Option<String>,
-        metadata: Option<serde_json::Value>
+        _page_uuid: Option<String>,
+        _metadata: Option<serde_json::Value>
     ) {
         log::info!("Conversion tracked: {}", event_type);
     }
     
     /// Get analytics for a page
     pub fn get_page_analytics(
-        page_uuid: &str,
-        from_date: NaiveDateTime,
-        to_date: NaiveDateTime
+        _page_uuid: &str,
+        _from_date: NaiveDateTime,
+        _to_date: NaiveDateTime
     ) -> AnalyticsStats {
         // TODO: Query analytics_events table
         AnalyticsStats {

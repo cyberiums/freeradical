@@ -1,7 +1,6 @@
-use std::path::Path;
 use std::sync::{Arc, Mutex};
 use handlebars::{Handlebars, DirectorySourceOptions};
-use liquid::{Parser, ParserBuilder, Template};
+use liquid::{Parser, ParserBuilder};
 use std::collections::HashMap;
 
 pub enum TemplateEngine {

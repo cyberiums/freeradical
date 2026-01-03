@@ -3,11 +3,7 @@ use actix_governor::{Governor, GovernorConfigBuilder};
 use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use diesel::pg::PgConnection;
-use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::Connection;
-use handlebars::Handlebars;
-use std::sync::Mutex;
-use std::time::Duration;
 use envy;
 use dotenv::dotenv;
 // Diesel 2.x migration import
@@ -345,6 +341,8 @@ async fn main() -> std::io::Result<()> {
             .route("/api/media/upload", web::post().to(controllers::media_controller::upload_media))
             // Billing & Invoicing
             .configure(controllers::billing_controller::init_routes)
+            // Custom MCP Tools & Marketplace (Phase 2)
+            .configure(controllers::mcp_custom_tool_controller::init_routes)
             // OAuth Redirects
             .route("/auth/google", web::get().to(controllers::oauth_controller::google_login))
             .route("/auth/google/callback", web::get().to(controllers::oauth_callback_controller::google_callback));

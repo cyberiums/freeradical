@@ -272,12 +272,12 @@ impl Page {
             })
             .collect::<Vec<_>>();
 
-        let module_dto = FieldsDTO {
+        let _module_dto = FieldsDTO {
             modules: modules_no_category.into_iter().map(|m| m.into()).collect(),
             categories: Some(category_dtos),
         };
 
-        let mut page_dto: PageModuleDTO = filtered_page.into();
+        let page_dto: PageModuleDTO = filtered_page.into();
         // Return FieldsDTO with module structure instead of assigning to fields
         Ok(page_dto)
     }

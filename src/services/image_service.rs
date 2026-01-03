@@ -89,7 +89,7 @@ pub fn resize_image(img: &DynamicImage, target_width: u32) -> DynamicImage {
 }
 
 /// Convert image to WebP format with quality setting
-pub fn convert_to_webp(img: &DynamicImage, quality: u8) -> Result<Vec<u8>, String> {
+pub fn convert_to_webp(img: &DynamicImage, _quality: u8) -> Result<Vec<u8>, String> {
     let mut buffer = Cursor::new(Vec::new());
     
     // WebP encoding with quality

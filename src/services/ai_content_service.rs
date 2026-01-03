@@ -1201,8 +1201,8 @@ pub struct CustomerHealthResponse {
 }
 
 pub async fn calculate_customer_health(
-    req: actix_web::HttpRequest,
-    pool: web::Data<DbPool>,
+    _req: actix_web::HttpRequest,
+    _pool: web::Data<DbPool>,
     payload: web::Json<CustomerHealthRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     // Heuristic Logic for Speed & Reliability (can be upgraded to ML later)
@@ -1276,7 +1276,7 @@ pub async fn generate_outreach_message(
     let api_key = provider.api_key_encrypted.clone();
     let model = provider.model_name.as_deref().unwrap_or("gpt-3.5-turbo");
 
-    let system_prompt = "You are an expert CRM copywriter. Draft a short, personalized email for a customer.";
+    let _system_prompt = "You are an expert CRM copywriter. Draft a short, personalized email for a customer.";
     let user_prompt = format!(
         "Customer: {}\nLast Purchase: {}\nIntent: {}\n\nDraft a Subject line and Body.",
         payload.customer_name,
@@ -1340,8 +1340,8 @@ pub struct ReturnAnalysisResponse {
 }
 
 pub async fn analyze_return_request(
-    req: actix_web::HttpRequest,
-    pool: web::Data<DbPool>,
+    _req: actix_web::HttpRequest,
+    _pool: web::Data<DbPool>,
     payload: web::Json<ReturnAnalysisRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     // Basic Policy Logic (No AI Cost)

@@ -9,7 +9,6 @@ use crate::models::{pool_handler, Model, DatabasePool, ReadDatabasePool};
 use crate::models::module_models::{FieldsDTO};
 use crate::models::page_models::{PageModuleDTO, MutPage, Page, PageDTO};
 
-use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
 use crate::helpers::tenant_helper::{resolve_tenant_id, get_tenant_role};
 use crate::models::rbac::{has_permission, Permission};

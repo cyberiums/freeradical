@@ -76,7 +76,7 @@ impl AEOService {
     async fn extract_qa_pairs(&self, content: &str) -> Result<Vec<QAPair>, String> {
         // TODO: Use AI to identify implicit Q&A in content
         
-        let mut pairs = vec![
+        let pairs = vec![
             QAPair {
                 question: "What is the main topic?".to_string(),
                 answer: content.chars().take(150).collect::<String>(),

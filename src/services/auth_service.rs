@@ -1,8 +1,6 @@
-use actix_web::http::header::HeaderValue;
 use actix_web::{dev::Payload, web, FromRequest, HttpRequest};
 use argon2::{Argon2, PasswordHasher};
-use password_hash::{SaltString, PasswordHash, PasswordVerifier};
-use diesel::prelude::*;
+use password_hash::SaltString;
 use futures::{future::LocalBoxFuture, Future};
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation, Algorithm};
 use rand_core::OsRng;
@@ -10,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use super::errors_service::CustomHttpError;
-use crate::models::{pool_handler, user_models, Model, DatabasePool};
+use crate::models::{user_models, Model, DatabasePool};
 
 #[derive(Error, Debug)]
 pub enum CryptoError {

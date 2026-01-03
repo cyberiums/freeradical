@@ -1,5 +1,5 @@
 use actix_web::{web, HttpResponse, Responder, HttpRequest};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use utoipa::ToSchema;use crate::models::db_connection::DatabasePool;
 use crate::middleware::auth_middleware::get_user_context;
 use crate::models::webhook_models::{NewTenantWebhook, TenantWebhook};

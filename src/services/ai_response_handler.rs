@@ -1,4 +1,4 @@
-use log::{info, warn, error};
+use log::{info, warn};
 use serde::{Deserialize, Serialize};
 
 /// AI Response Handler

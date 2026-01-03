@@ -1,9 +1,9 @@
-use actix_web::{web, HttpResponse, Responder, get, post, put, delete};
+use actix_web::{web, HttpResponse, Responder, get, post};
 use diesel::prelude::*;
 use serde::{Serialize, Deserialize};
 use utoipa::ToSchema;
 use crate::models::DatabasePool;
-use crate::services::language_service::{LanguageService, Language, NewLanguage};
+use crate::services::language_service::{LanguageService, NewLanguage};
 
 #[derive(Debug, Serialize, Deserialize, ToSchema)]
 pub struct CreateLanguageInput {

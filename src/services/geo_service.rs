@@ -29,7 +29,7 @@ impl GEOService {
     pub async fn optimize_for_generative_ai(
         &self,
         content: &str,
-        domain: &str,
+        _domain: &str,
     ) -> Result<GEOOptimization, String> {
         info!("Optimizing content for generative AI engines");
 
@@ -57,7 +57,7 @@ impl GEOService {
     }
 
     /// Extract source attributions
-    async fn extract_attributions(&self, content: &str) -> Result<Vec<SourceAttribution>, String> {
+    async fn extract_attributions(&self, _content: &str) -> Result<Vec<SourceAttribution>, String> {
         // TODO: AI-powered claim extraction and source identification
 
         Ok(vec![

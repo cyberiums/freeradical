@@ -128,7 +128,7 @@ impl MCPClient {
     pub async fn execute_tool(
         &self,
         tool_name: &str,
-        parameters: serde_json::Value
+        _parameters: serde_json::Value
     ) -> Result<serde_json::Value, String> {
         if !self.connected {
             return Err("Not connected to MCP server".to_string());

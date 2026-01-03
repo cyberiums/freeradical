@@ -98,7 +98,7 @@ impl CommandRouter {
         info!("Generating page about: {}", topic);
 
         // Get API key for OpenAI
-        let api_key = self.key_manager
+        let _api_key = self.key_manager
             .get_key(pool.clone(), AIProviderType::OpenAI, None)
             .await?;
 
@@ -108,7 +108,7 @@ impl CommandRouter {
             .map_err(|e| CustomHttpError::BadRequest(e))?;
 
         // Create prompt
-        let prompt = format!(
+        let _prompt = format!(
             "Generate a comprehensive blog post about '{}'. \
             Include an engaging introduction, main content with examples, \
             and a clear conclusion. Format in markdown.",
@@ -152,7 +152,7 @@ impl CommandRouter {
         info!("Optimizing SEO for page {}", page_id);
 
         // Get API key for Anthropic (Claude is good at SEO)
-        let api_key = self.key_manager
+        let _api_key = self.key_manager
             .get_key(pool.clone(), AIProviderType::Anthropic, None)
             .await?;
 
@@ -203,7 +203,7 @@ impl CommandRouter {
         info!("Summarizing content from: {}", url);
 
         // Use Google Gemini (fast and cheap for summaries)
-        let api_key = self.key_manager
+        let _api_key = self.key_manager
             .get_key(pool.clone(), AIProviderType::Google, None)
             .await?;
 
@@ -254,7 +254,7 @@ impl CommandRouter {
         info!("Translating page {} to {}", page_id, language);
 
         // OpenAI is good at translation
-        let api_key = self.key_manager
+        let _api_key = self.key_manager
             .get_key(pool.clone(), AIProviderType::OpenAI, None)
             .await?;
 
@@ -300,7 +300,7 @@ impl CommandRouter {
         info!("Analyzing content ({} chars)", content.len());
 
         // Use Anthropic Claude for analysis
-        let api_key = self.key_manager
+        let _api_key = self.key_manager
             .get_key(pool.clone(), AIProviderType::Anthropic, None)
             .await?;
 

@@ -1,5 +1,4 @@
 use redis::{Client, Commands, RedisResult};
-use std::time::Duration;
 
 /// Simple Redis cache service
 /// Optional - gracefully degrades if Redis unavailable

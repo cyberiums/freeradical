@@ -1,5 +1,5 @@
-use actix_web::{get, HttpResponse, Responder, web};
-use serde::{Serialize, Deserialize};
+use actix_web::{get, HttpResponse, Responder};
+use serde::Serialize;
 use utoipa::ToSchema;
 use crate::services::analytics_service::AnalyticsService;
 use crate::services::database_service::establish_connection;

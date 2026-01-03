@@ -1,5 +1,4 @@
-use actix_web::{web, HttpResponse, Responder};
-use utoipa::ToSchema;
+use actix_web::{HttpResponse, Responder};
 use crate::services::monitoring_service::METRICS;
 
 /// Get performance metrics

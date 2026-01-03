@@ -2,8 +2,7 @@ use actix_web::{web, HttpResponse};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use diesel::prelude::*;
-use diesel::sql_types::{BigInt, Text, Float4, Integer};
-use pgvector::Vector;
+use diesel::sql_types::{Text, Float4, Integer};
 
 use crate::models::DbPool;
 use crate::schema::{pages}; // content_embeddings commented - schema mismatch (has page_id, expects page_uuid)

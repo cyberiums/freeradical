@@ -3,8 +3,6 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 use bigdecimal::BigDecimal;
-use chrono::Utc;
-use uuid::Uuid;
 
 use crate::models::{
     inventory_models::{NewProductVariant, ProductVariant},

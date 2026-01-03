@@ -40,7 +40,7 @@ pub fn create_pool(database_url: &str) -> Result<DatabasePool, PoolError> {
 }
 
 /// Get database type string for logging
-pub fn get_database_type_string(pool: &DatabasePool) -> &'static str {
+pub fn get_database_type_string(_pool: &DatabasePool) -> &'static str {
     "PostgreSQL"
 }
 

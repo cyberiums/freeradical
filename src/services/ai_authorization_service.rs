@@ -1,6 +1,5 @@
-use actix_web::{web, HttpRequest, HttpResponse};
+use actix_web::{web, HttpRequest};
 use serde::{Deserialize, Serialize};
-use diesel::prelude::*;
 
 use crate::models::DbPool;
 use crate::services::errors_service::CustomHttpError;
@@ -89,9 +88,9 @@ pub fn filter_pages_by_permission(
     user: &UserContext,
     pool: &web::Data<DbPool>,
 ) -> Result<Vec<i64>, diesel::result::Error> {
-    use crate::schema::pages;
     
-    let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+    
+    let _conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
         diesel::result::DatabaseErrorKind::Unknown,
         Box::new("Connection error".to_string())
     ))?;
@@ -121,16 +120,16 @@ pub async fn get_accessible_page_ids(
 /// Verify user can access specific page
 pub async fn verify_page_access(
     user: &UserContext,
-    page_id: i64,
+    _page_id: i64,
     pool: web::Data<DbPool>,
 ) -> Result<bool, CustomHttpError> {
-    use crate::schema::pages;
     
-    let user_id = user.user_id;
+    
+    let _user_id = user.user_id;
     let user_role = user.role.clone();
     
     let has_access = web::block(move || -> Result<bool, diesel::result::Error> {
-        let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+        let _conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
             Box::new("Connection error".to_string())
         ))?;

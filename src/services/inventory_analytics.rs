@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use log::info;
-use std::collections::HashMap;
 
 /// Inventory Analytics Engine
 /// Advanced analytics for inventory performance

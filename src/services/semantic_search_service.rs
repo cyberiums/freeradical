@@ -3,11 +3,10 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use diesel::prelude::*;
 use sha2::{Sha256, Digest};
-use pgvector::Vector; 
+ 
 
 use crate::models::DbPool;
-use crate::models::ai_provider_models::AIProviderConfig;
-use crate::schema::{ai_provider_configs, content_embeddings, search_history};
+use crate::schema::content_embeddings;
 use crate::services::errors_service::CustomHttpError;
 
 /// Vector embedding (1536 dimensions for OpenAI ada-002)
@@ -79,7 +78,7 @@ pub async fn create_embedding(
     let model_name = "text-embedding-ada-002".to_string(); 
     let preview = content.chars().take(200).collect::<String>();
     
-    let id = web::block(move || -> Result<i64, diesel::result::Error> {
+    let _id = web::block(move || -> Result<i64, diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
             Box::new("Connection error".to_string())

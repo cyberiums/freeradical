@@ -76,7 +76,7 @@ pub fn decrypt(ciphertext_base64: &str) -> Result<String, String> {
     }
     
     // Split nonce and ciphertext
-    let (nonce_bytes, mut ciphertext) = combined.split_at(NONCE_LEN);
+    let (nonce_bytes, ciphertext) = combined.split_at(NONCE_LEN);
     let mut nonce_array = [0u8; NONCE_LEN];
     nonce_array.copy_from_slice(nonce_bytes);
     

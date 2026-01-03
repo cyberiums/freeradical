@@ -28,9 +28,10 @@ pub mod webhook_models;
 pub mod audit_models;
 pub mod billing_models;
 pub mod verification_models; // Email verification models
+pub mod mcp_tool_models; // Custom MCP tools (Phase 2)
 
 use actix_web::web;
-use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError, PooledConnection}};
+use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError}};
 
 use crate::services::errors_service::CustomHttpError;
 

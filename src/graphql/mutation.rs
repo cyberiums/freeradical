@@ -10,7 +10,7 @@ impl MutationRoot {
     /// Create a new page
     async fn create_page(
         &self,
-        ctx: &Context<'_>,
+        _ctx: &Context<'_>,
         input: CreatePageInput
     ) -> Result<GqlPage> {
         // Mock implementation
@@ -31,7 +31,7 @@ impl MutationRoot {
     /// Update an existing page
     async fn update_page(
         &self,
-        ctx: &Context<'_>,
+        _ctx: &Context<'_>,
         uuid: String,
         input: UpdatePageInput
     ) -> Result<GqlPage> {
@@ -53,8 +53,8 @@ impl MutationRoot {
     /// Delete a page
     async fn delete_page(
         &self,
-        ctx: &Context<'_>,
-        uuid: String
+        _ctx: &Context<'_>,
+        _uuid: String
     ) -> Result<bool> {
         // Mock implementation
         Ok(true)

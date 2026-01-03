@@ -3,7 +3,7 @@ use crate::services::payment_service::{PaymentHandlerRegistry, CreatePaymentInte
 use crate::services::auth_service::Claims;
 use crate::services::errors_service::CustomHttpError;
 use crate::models::DatabasePool;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use std::collections::HashMap;
 use utoipa::ToSchema;
 

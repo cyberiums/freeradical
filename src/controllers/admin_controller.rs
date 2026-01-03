@@ -3,7 +3,6 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::models::user_models::User;
 use crate::models::DbPool;
 use crate::schema::{users, audit_logs};
 use crate::services::errors_service::CustomHttpError;
@@ -160,7 +159,7 @@ pub async fn list_users(
     )
 )]
 pub async fn update_user_role(
-    pool: web::Data<DbPool>,
+    _pool: web::Data<DbPool>,
     user_id: web::Path<i32>,
     payload: web::Json<UpdateRoleRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {

@@ -44,21 +44,21 @@ impl SEOMetaGenerator {
     }
 
     /// Generate SEO-optimized title (50-60 chars)
-    async fn generate_title(&self, content: &str, keyword: &str) -> Result<String, String> {
+    async fn generate_title(&self, _content: &str, keyword: &str) -> Result<String, String> {
         // TODO: AI-powered title generation
         let title = format!("{} - Complete Guide", keyword);
         Ok(title.chars().take(60).collect())
     }
 
     /// Generate meta description (150-160 chars)
-    async fn generate_description(&self, content: &str, keyword: &str) -> Result<String, String> {
+    async fn generate_description(&self, _content: &str, keyword: &str) -> Result<String, String> {
         // TODO: AI-powered description generation
         let desc = format!("Learn about {} with this comprehensive guide.", keyword);
         Ok(desc.chars().take(160).collect())
     }
 
     /// Extract relevant keywords
-    async fn extract_keywords(&self, content: &str) -> Result<Vec<String>, String> {
+    async fn extract_keywords(&self, _content: &str) -> Result<Vec<String>, String> {
         // TODO: NLP-based keyword extraction
         Ok(vec![
             "primary keyword".to_string(),

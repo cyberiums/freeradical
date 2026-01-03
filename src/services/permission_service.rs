@@ -71,10 +71,10 @@ impl Permission {
 /// Check if user has a specific permission
 pub fn user_has_permission(
     user_uuid: &str,
-    required_permission: &str,
+    _required_permission: &str,
     conn: &mut PooledDatabaseConnection
 ) -> Result<bool, diesel::result::Error> {
-    use crate::schema::{user_roles, roles};
+    use crate::schema::user_roles;
     
     let role_count: i64 = user_roles::table
         .filter(user_roles::user_id.eq(user_uuid))
@@ -120,7 +120,7 @@ pub fn user_owns_resource(
     resource_id: &str,
     conn: &mut PooledDatabaseConnection
 ) -> Result<bool, diesel::result::Error> {
-    use crate::schema::pages;
+    
     use crate::schema::modules;
     
     match resource_type {

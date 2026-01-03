@@ -6,7 +6,7 @@ use crate::models::{
     crm_models::*,
     DbPool,
 };
-use crate::schema::{crm_customers, crm_interactions, crm_segments, crm_tasks, crm_notes, users};
+use crate::schema::{crm_customers, crm_interactions, crm_tasks, crm_notes};
 use crate::services::errors_service::CustomHttpError;
 
 /// Calculate RFM score (Recency, Frequency, Monetary) for a customer
@@ -176,7 +176,7 @@ pub async fn get_customer_profile(
     })
     .await
     .map_err(|e| CustomHttpError::InternalServerError(format!("Blocking error: {}", e)))?
-    .map_err(|e| CustomHttpError::NotFound("Customer not found".to_string()))?;
+    .map_err(|_e| CustomHttpError::NotFound("Customer not found".to_string()))?;
     
     Ok(HttpResponse::Ok().json(customer))
 }

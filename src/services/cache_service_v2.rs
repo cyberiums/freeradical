@@ -1,7 +1,7 @@
 // Cache Service V2 - Redis-based caching with connection pooling (Single + Cluster)
 
 use deadpool_redis::{Config, Runtime, Pool};
-use redis::{cluster::ClusterClient, AsyncCommands, Client};
+use redis::{cluster::ClusterClient, AsyncCommands};
 use serde::{Serialize, de::DeserializeOwned};
 use std::error::Error;
 

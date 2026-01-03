@@ -134,7 +134,7 @@ pub async fn create_provider(
 pub async fn update_provider(
     pool: web::Data<DatabasePool>,
     provider_id: web::Path<i64>,
-    payload: web::Json<UpdateProviderRequest>,
+    _payload: web::Json<UpdateProviderRequest>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let id = provider_id.into_inner();
     

@@ -10,6 +10,7 @@ pub enum CustomHttpError {
     Unauthorized(String),
     Forbidden(String),
     NotFound(String),
+    TooManyRequests(String),
     InternalServerError(String),
     Unknown,
 }
@@ -28,6 +29,7 @@ impl ResponseError for CustomHttpError {
             Self::Unauthorized(_) => StatusCode::UNAUTHORIZED,
             Self::Forbidden(_) => StatusCode::FORBIDDEN,
             Self::NotFound(_) => StatusCode::NOT_FOUND,
+            Self::TooManyRequests(_) => StatusCode::TOO_MANY_REQUESTS,
             Self::InternalServerError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             Self::Unknown => StatusCode::INTERNAL_SERVER_ERROR,
         }
@@ -63,6 +65,13 @@ impl ResponseError for CustomHttpError {
                     message: msg.clone(),
                 })
             }
+            CustomHttpError::TooManyRequests(msg) => {
+                HttpResponse::TooManyRequests().json(ErrorResponse {
+                    code: StatusCode::TOO_MANY_REQUESTS.as_u16(),
+                    error: "Too Many Requests".to_string(),
+                    message: msg.clone(),
+                })
+            }
             CustomHttpError::InternalServerError(msg) => {
                 HttpResponse::InternalServerError().json(ErrorResponse {
                     code: StatusCode::INTERNAL_SERVER_ERROR.as_u16(),
@@ -88,6 +97,7 @@ impl fmt::Display for CustomHttpError {
             CustomHttpError::Unauthorized(msg) => write!(f, "Unauthorized: {}", msg),
             CustomHttpError::Forbidden(msg) => write!(f, "Forbidden: {}", msg),
             CustomHttpError::NotFound(msg) => write!(f, "Not Found: {}", msg),
+            CustomHttpError::TooManyRequests(msg) => write!(f, "Too Many Requests: {}", msg),
             CustomHttpError::InternalServerError(msg) => write!(f, "Internal Server Error: {}", msg),
             CustomHttpError::Unknown => write!(f, "An unknown error occurred"),
         }

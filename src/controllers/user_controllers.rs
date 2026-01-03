@@ -258,7 +258,7 @@ pub async fn login(
     }
 }
 
-fn login_res(user: &User) -> Result<Cookie, CustomHttpError> {
+fn login_res(user: &User) -> Result<Cookie<'_>, CustomHttpError> {
     let claim = Claims {
         exp: (chrono::Utc::now() + chrono::Duration::days(10)).timestamp() as usize,
         sub: user.id.to_string(),

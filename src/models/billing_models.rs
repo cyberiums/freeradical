@@ -1,7 +1,7 @@
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use chrono::NaiveDateTime;
-use crate::schema::{billing_plans, billing_subscriptions, billing_invoices, billing_payments, tenants};
+use crate::schema::{billing_plans, billing_subscriptions, billing_invoices, billing_payments};
 
 #[derive(Queryable, Selectable, Identifiable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = billing_plans)]

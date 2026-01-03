@@ -52,7 +52,7 @@ pub async fn list_products(
     // Optional: verify membership? Generally "List" implies ViewContent or similar. 
     // For now we just enforce filtering.
 
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool_handler(pool)?;
     
     let page = query.page.unwrap_or(0);
@@ -107,7 +107,7 @@ pub async fn get_product(
 ) -> Result<HttpResponse, CustomHttpError> {
     let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
 
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool_handler(pool)?;
     
     let product = 
@@ -145,7 +145,7 @@ pub async fn create_product(
 ) -> Result<HttpResponse, CustomHttpError> {
     let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
     let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool_handler(pool)?;
     
     // RBAC Check
@@ -200,7 +200,7 @@ pub async fn update_product(
     let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
     let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
     
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool_handler(pool)?;
     
     // RBAC Check
@@ -257,7 +257,7 @@ pub async fn delete_product(
     let user_ctx = get_user_context(&req).ok_or(CustomHttpError::Unauthorized("Not authenticated".to_string()))?;
     let tenant_id = resolve_tenant_id(&req, &pool).map_err(|e| CustomHttpError::BadRequest(e))?;
 
-    use crate::models::PooledDatabaseConnection;
+    
     let mut conn = pool_handler(pool)?;
     
     // RBAC Check

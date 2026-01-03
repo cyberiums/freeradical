@@ -1,5 +1,5 @@
 use actix_web::web;
-use log::{info, error};
+use log::info;
 
 use crate::models::db_connection::DatabasePool;
 use crate::services::ai_providers::openai::OpenAIProvider;

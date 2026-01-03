@@ -489,6 +489,88 @@ diesel::table! {
 }
 
 diesel::table! {
+    marketplace_submissions (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        resource_type -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 500]
+        repository_url -> Nullable<Varchar>,
+        #[max_length = 50]
+        version -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        reviewed_by -> Nullable<Int4>,
+        reviewed_at -> Nullable<Timestamp>,
+        review_notes -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    mcp_custom_tools (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Nullable<Varchar>,
+        input_schema -> Jsonb,
+        #[max_length = 1000]
+        webhook_url -> Varchar,
+        #[max_length = 10]
+        webhook_method -> Nullable<Varchar>,
+        webhook_headers -> Nullable<Jsonb>,
+        #[max_length = 50]
+        required_role -> Nullable<Varchar>,
+        timeout_seconds -> Nullable<Int4>,
+        max_calls_per_hour -> Nullable<Int4>,
+        is_enabled -> Nullable<Bool>,
+        is_public -> Nullable<Bool>,
+        created_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+        last_used_at -> Nullable<Timestamp>,
+        total_calls -> Nullable<Int4>,
+        success_count -> Nullable<Int4>,
+        error_count -> Nullable<Int4>,
+        avg_execution_ms -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    mcp_tool_executions (id) {
+        id -> Int4,
+        tool_id -> Int4,
+        tenant_id -> Int4,
+        user_id -> Nullable<Int4>,
+        input_data -> Nullable<Jsonb>,
+        output_data -> Nullable<Jsonb>,
+        error_message -> Nullable<Text>,
+        execution_time_ms -> Nullable<Int4>,
+        http_status_code -> Nullable<Int4>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        executed_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    mcp_tool_rate_limits (id) {
+        id -> Int4,
+        tool_id -> Int4,
+        tenant_id -> Int4,
+        window_start -> Timestamp,
+        call_count -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
     media (id) {
         id -> Int4,
         #[max_length = 36]
@@ -1067,7 +1149,7 @@ diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
 diesel::joinable!(crm_campaigns -> tenants (tenant_id));
 diesel::joinable!(crm_customers -> tenants (tenant_id));
 diesel::joinable!(crm_interactions -> crm_customers (customer_id));
-// diesel::joinable!(crm_interactions -> orders (order_id)); // Type mismatch: orders.id is Int8, order_id is Nullable<Int4>
+diesel::joinable!(crm_interactions -> orders (order_id));
 diesel::joinable!(crm_interactions -> tenants (tenant_id));
 diesel::joinable!(crm_notes -> crm_customers (customer_id));
 diesel::joinable!(crm_notes -> tenants (tenant_id));
@@ -1076,9 +1158,14 @@ diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
 diesel::joinable!(crm_segments -> tenants (tenant_id));
 diesel::joinable!(crm_tasks -> crm_customers (customer_id));
 diesel::joinable!(crm_tasks -> tenants (tenant_id));
-// diesel::joinable!(inventory_audit_log -> orders (order_id)); // Type mismatch: orders.id is Int8, order_id is Nullable<Int4>
+diesel::joinable!(inventory_audit_log -> orders (order_id));
 diesel::joinable!(inventory_audit_log -> product_variants (variant_id));
-// diesel::joinable!(inventory_audit_log -> products (product_id)); // Type mismatch: products.id is Int8, product_id is Nullable<Int4>
+diesel::joinable!(inventory_audit_log -> products (product_id));
+diesel::joinable!(mcp_custom_tools -> tenants (tenant_id));
+diesel::joinable!(mcp_tool_executions -> mcp_custom_tools (tool_id));
+diesel::joinable!(mcp_tool_executions -> tenants (tenant_id));
+diesel::joinable!(mcp_tool_rate_limits -> mcp_custom_tools (tool_id));
+diesel::joinable!(mcp_tool_rate_limits -> tenants (tenant_id));
 diesel::joinable!(media -> tenants (tenant_id));
 diesel::joinable!(module_category -> pages (page_uuid));
 diesel::joinable!(module_translations -> languages (language_id));
@@ -1090,7 +1177,7 @@ diesel::joinable!(orders -> tenants (tenant_id));
 diesel::joinable!(page_translations -> languages (language_id));
 diesel::joinable!(pages -> tenants (tenant_id));
 diesel::joinable!(pending_verifications -> tenants (tenant_id));
-// diesel::joinable!(product_variants -> products (product_id)); // Type mismatch: products.id is Int8, product_id is Int4
+diesel::joinable!(product_variants -> products (product_id));
 diesel::joinable!(products -> tenants (tenant_id));
 diesel::joinable!(survey_questions -> surveys (survey_id));
 diesel::joinable!(survey_responses -> surveys (survey_id));
@@ -1131,6 +1218,10 @@ diesel::allow_tables_to_appear_in_same_query!(
     inventory_audit_log,
     languages,
     marketplace_plugins,
+    marketplace_submissions,
+    mcp_custom_tools,
+    mcp_tool_executions,
+    mcp_tool_rate_limits,
     media,
     module_category,
     module_translations,

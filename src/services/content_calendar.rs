@@ -160,7 +160,7 @@ impl ContentCalendar {
         }
 
         // Calculate entropy-based diversity (simplified)
-        let total = schedule.len() as f64;
+        let _total = schedule.len() as f64;
         let unique_types = type_counts.len() as f64;
         
         (unique_types / 6.0) * 100.0 // 6 is max content types

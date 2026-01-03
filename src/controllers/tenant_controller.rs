@@ -290,7 +290,7 @@ pub async fn list_audit_logs(
     pool: web::Data<db_connection::DatabasePool>,
     path: web::Path<i32>
 ) -> impl Responder {
-    let user_ctx = match get_user_context(&req) {
+    let _user_ctx = match get_user_context(&req) {
         Some(ctx) => ctx,
         None => return HttpResponse::Unauthorized().json("User not authenticated"),
     };

@@ -6,7 +6,6 @@ use diesel::sql_types::Text;
 use diesel::expression::AsExpression;
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
-use std::io::Write;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, AsExpression, diesel::query_builder::QueryId, ToSchema)]
 #[diesel(sql_type = crate::schema::sql_types::PagesStatus)]
