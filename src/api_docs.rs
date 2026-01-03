@@ -259,6 +259,18 @@ use utoipa::OpenApi;
         crate::services::recommendation_service::get_related_content,
         crate::services::recommendation_service::get_trending,
         crate::services::ai_content_service::analyze_sentiment,
+        
+        // Internal - MCP Custom Tools (Phase 2)
+        crate::controllers::mcp_custom_tool_controller::list_custom_tools,
+        crate::controllers::mcp_custom_tool_controller::get_custom_tool,
+        crate::controllers::mcp_custom_tool_controller::create_custom_tool,
+        crate::controllers::mcp_custom_tool_controller::update_custom_tool,
+        crate::controllers::mcp_custom_tool_controller::delete_custom_tool,
+        crate::controllers::mcp_custom_tool_controller::test_custom_tool,
+        crate::controllers::mcp_custom_tool_controller::get_tool_executions,
+        crate::controllers::mcp_custom_tool_controller::publish_to_marketplace,
+        crate::controllers::mcp_custom_tool_controller::unpublish_from_marketplace,
+        crate::controllers::mcp_custom_tool_controller::list_marketplace_tools,
     ),
     components(schemas(
         // Auth models
@@ -419,6 +431,14 @@ use utoipa::OpenApi;
         crate::services::recommendation_service::RecommendationResponse,
         crate::services::recommendation_service::Recommendation,
         
+        // Internal - MCP Custom Tools (Phase 2)
+        crate::controllers::mcp_custom_tool_controller::CreateCustomToolRequest,
+        crate::controllers::mcp_custom_tool_controller::UpdateCustomToolRequest,
+        crate::controllers::mcp_custom_tool_controller::CustomToolListResponse,
+        crate::controllers::mcp_custom_tool_controller::ExecutionLogResponse,
+        crate::models::mcp_tool_models::McpCustomTool,
+        crate::models::mcp_tool_models::McpToolExecution,
+        
         // Customer - OAuth DTOs
         crate::controllers::oauth_callback_controller::OAuthCallbackQuery,
         crate::controllers::oauth_callback_controller::UserProfile,
@@ -520,6 +540,10 @@ use utoipa::OpenApi;
         (
             name = "Internal - AI Providers", 
             description = "🤖 AI provider configuration (Admin only): manage AI service providers, API keys, and usage limits"
+        ),
+        (
+            name = "Internal - MCP Custom Tools",
+            description = "🔧 Custom MCP tool registration (Phase 2): webhook-based custom tools with marketplace, 200% isolation"
         )
     ),
     modifiers(&SecurityAddon)

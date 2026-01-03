@@ -402,7 +402,7 @@ impl MCPWebSocket {
     }
 
     fn handle_list_tools(&self, id: Option<serde_json::Value>) -> MCPResponse {
-        let tools = vec![
+        let mut tools = vec![
             // ===== Verification Tools =====
             MCPTool {
                 name: "update_verification_settings".to_string(),
@@ -869,6 +869,17 @@ impl MCPWebSocket {
             },
         ];
 
+        // ===== Phase 2: Add Custom Tools =====
+        let custom_tools = self.fetch_custom_tools();
+        let custom_tool_count = custom_tools.len();
+        let builtin_count = tools.len();
+        
+        for custom_tool in custom_tools {
+            tools.push(self.custom_tool_to_mcp_tool(&custom_tool));
+        }
+        
+        info!("📋 Listing {} tools ({} built-in + {} custom)", tools.len(), builtin_count, custom_tool_count);
+
         MCPResponse {
             jsonrpc: "2.0".to_string(),
             result: Some(json!({ "tools": tools })),
@@ -992,6 +1003,29 @@ impl MCPWebSocket {
                 tenant_id,
                 id,
             );
+        }
+
+        // ===== Phase 2: Try Custom Tools =====
+        // If no built-in tool matched, try custom tools
+        match self.execute_custom_tool(&tool_name, arguments.clone()) {
+            Ok(result) => {
+                info!("✅ Custom tool '{}' executed successfully", tool_name);
+                return MCPResponse {
+                    jsonrpc: "2.0".to_string(),
+                    result: Some(json!({
+                        "content": [{
+                            "type": "text",
+                            "text": serde_json::to_string_pretty(&result).unwrap_or_else(|_| result.to_string())
+                        }]
+                    })),
+                    error: None,
+                    id,
+                };
+            }
+            Err(e) => {
+                // Custom tool failed or doesn't exist - fall through to error
+                info!("❌ Custom tool '{}' not found or failed: {}", tool_name, e.message);
+            }
         }
 
         // Unknown tool
