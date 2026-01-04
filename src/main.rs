@@ -345,7 +345,10 @@ async fn main() -> std::io::Result<()> {
             .configure(controllers::mcp_custom_tool_controller::init_routes)
             // OAuth Redirects
             .route("/auth/google", web::get().to(controllers::oauth_controller::google_login))
-            .route("/auth/google/callback", web::get().to(controllers::oauth_callback_controller::google_callback));
+            .route("/auth/google/callback", web::get().to(controllers::oauth_callback_controller::google_callback))
+            // Refresh Token endpoints
+            .route("/auth/refresh", web::post().to(controllers::refresh_controller::refresh_token))
+            .route("/auth/revoke", web::post().to(controllers::refresh_controller::revoke_token));
 
 
         App::new()

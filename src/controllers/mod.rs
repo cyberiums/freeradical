@@ -17,6 +17,7 @@ pub mod payment_controller;
 pub mod oauth_controller;
 pub mod oauth_callback_controller;
 pub mod oauth_connections_controller;
+pub mod refresh_controller;
 pub mod sitemap_controller;
 pub mod image_sitemap_controller;
 pub mod site_controller;

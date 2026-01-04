@@ -1070,6 +1070,18 @@ diesel::table! {
 }
 
 diesel::table! {
+    refresh_tokens (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 255]
+        token -> Varchar,
+        expires_at -> Timestamp,
+        created_at -> Nullable<Timestamp>,
+        revoked_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     user_roles (user_id, role_id) {
         #[max_length = 255]
         user_id -> Varchar,
@@ -1238,6 +1250,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     products,
     robots_rules,
     roles,
+    refresh_tokens,
     search_history,
     survey_questions,
     survey_responses,

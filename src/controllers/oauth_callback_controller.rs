@@ -98,10 +98,12 @@ pub async fn google_callback(
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
 
     let user_email = profile.email.clone();
+    let final_user_id_int: i32;
 
-    if let Some(_uid) = existing_user_id {
+    if let Some(uid) = existing_user_id {
         // User exists and is linked, update tokens if needed (omitted for brevity)
         // Log them in
+        final_user_id_int = uid;
     } else {
         // 2. Check if user exists by email
         let user_uuid_option: Option<String> = users::table
@@ -110,8 +112,6 @@ pub async fn google_callback(
             .first::<String>(&mut conn)
             .optional()
             .map_err(|e| actix_web::error::ErrorInternalServerError(e))?;
-
-        let final_user_id_int: i32;
 
         if let Some(_uuid_str) = user_uuid_option {
             // User exists but not linked -> Link them
@@ -173,10 +173,89 @@ pub async fn google_callback(
             .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to link account: {}", e)))?;
     }
     
-    // Create session and redirect to dashboard
+    // Generate JWT token for the user
+    use crate::services::auth_service::create_jwt_token;
+    
+    let jwt_token = create_jwt_token(final_user_id_int, user_email.clone(), "user".to_string())
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to create JWT: {}", e)))?;
+    
+    // Generate refresh token (30 days)
+    use uuid::Uuid;
+    use crate::schema::refresh_tokens;
+    
+    let refresh_token = Uuid::new_v4().to_string();
+    let refresh_expires = Utc::now().naive_utc() + chrono::Duration::days(30);
+    
+    // Define NewRefreshToken inline
+    #[derive(Insertable)]
+    #[diesel(table_name = refresh_tokens)]
+    struct NewRefreshToken {
+        user_id: i32,
+        token: String,
+        expires_at: chrono::NaiveDateTime,
+    }
+    
+    // Store refresh token in database
+    diesel::insert_into(refresh_tokens::table)
+        .values(&NewRefreshToken {
+            user_id: final_user_id_int,
+            token: refresh_token.clone(),
+            expires_at: refresh_expires,
+        })
+        .execute(&mut conn)
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to create refresh token: {}", e)))?;
+    
+    
+    // Decode state parameter to get tenant_id
+    use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
+    use crate::schema::tenants;
+    
+    let tenant_id = match BASE64.decode(query.state.as_bytes()) {
+        Ok(decoded_bytes) => {
+            match String::from_utf8(decoded_bytes) {
+                Ok(state_json) => {
+                    match serde_json::from_str::<serde_json::Value>(&state_json) {
+                        Ok(state_data) => {
+                            state_data["tenant_id"].as_i64().unwrap_or(1) as i32
+                        },
+                        Err(_) => 1 // Default if decode fails
+                    }
+                },
+                Err(_) => 1
+            }
+        },
+        Err(_) => 1
+    };
+    
+    // Look up tenant domain from database
+    let tenant_domain = tenants::table
+        .filter(tenants::id.eq(tenant_id))
+        .filter(tenants::is_active.eq(Some(true)))
+        .select((tenants::custom_domain, tenants::subdomain))
+        .first::<(Option<String>, String)>(&mut conn)
+        .optional()
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to lookup tenant: {}", e)))?;
+    
+    // Build redirect URL based on tenant domain
+    let redirect_url = match tenant_domain {
+        Some((custom_domain, subdomain)) => {
+            if let Some(domain) = custom_domain {
+                format!("https://{}", domain)
+            } else {
+                format!("https://{}.oxidly.com", subdomain)
+            }
+        },
+        None => {
+            // Fallback to env var if tenant not found
+            std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
+                .unwrap_or_else(|_| "http://localhost:5005".to_string())
+        }
+    };
+    
+    let redirect_with_tokens = format!("{}?access_token={}&refresh_token={}", redirect_url, jwt_token, refresh_token);
+    
     Ok(HttpResponse::Found()
-        .append_header(("Location", "/admin/dashboard"))
-        .append_header(("Set-Cookie", format!("oauth_user={}; Path=/; HttpOnly", user_email)))
+        .append_header(("Location", redirect_with_tokens.as_str()))
         .finish())
 }
 
@@ -293,8 +372,12 @@ pub async fn github_callback(
             .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to link account: {}", e)))?;
     }
     
+    // Redirect to tenant app
+    let redirect_url = std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
+        .unwrap_or_else(|_| "http://localhost:5005".to_string());
+    
     Ok(HttpResponse::Found()
-        .append_header(("Location", "/admin/dashboard"))
+        .append_header(("Location", redirect_url.as_str()))
         .append_header(("Set-Cookie", format!("oauth_user={}; Path=/; HttpOnly", user_email)))
         .finish())
 }

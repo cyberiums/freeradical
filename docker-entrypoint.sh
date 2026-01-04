@@ -24,8 +24,8 @@ fi
 
 # Run migrations
 echo "🔄 Running database migrations..."
-if [ -d "/app/migrations" ]; then
-    diesel migration run --migration-dir /app/migrations || {
+if [ -d "/app/migrations_postgres" ]; then
+    diesel migration run --migration-dir /app/migrations_postgres || {
         echo "❌ Migration failed!"
         echo "ERROR: Database migrations could not be applied."
         echo "This is likely due to:"

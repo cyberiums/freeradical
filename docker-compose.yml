@@ -72,7 +72,7 @@ services:
     depends_on:
       - cms
     environment:
-      - API_URL=http://cms:8000/v1
+      - API_URL=http://localhost:8000/v1
       - PORT=5005
     ports:
       - "5005:5005"
