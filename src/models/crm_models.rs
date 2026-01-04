@@ -80,7 +80,7 @@ pub struct CrmInteraction {
     pub description: Option<String>,
     pub outcome: Option<String>, // success, failed, pending, no_response
     
-    pub order_id: Option<i32>,
+    pub order_id: Option<i64>,
     pub related_entity_type: Option<String>,
     pub related_entity_id: Option<i32>,
     

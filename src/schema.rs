@@ -359,7 +359,7 @@ diesel::table! {
         description -> Nullable<Text>,
         #[max_length = 100]
         outcome -> Nullable<Varchar>,
-        order_id -> Nullable<Int4>,
+        order_id -> Nullable<Int8>,
         #[max_length = 50]
         related_entity_type -> Nullable<Varchar>,
         related_entity_id -> Nullable<Int4>,
@@ -434,10 +434,10 @@ diesel::table! {
 diesel::table! {
     inventory_audit_log (id) {
         id -> Int4,
-        product_id -> Nullable<Int4>,
+        product_id -> Nullable<Int8>,
         variant_id -> Nullable<Int4>,
         user_id -> Nullable<Int4>,
-        order_id -> Nullable<Int4>,
+        order_id -> Nullable<Int8>,
         #[max_length = 30]
         change_type -> Varchar,
         quantity_before -> Nullable<Int4>,
@@ -833,7 +833,7 @@ diesel::table! {
         id -> Int4,
         #[max_length = 36]
         uuid -> Varchar,
-        product_id -> Int4,
+        product_id -> Int8,
         #[max_length = 100]
         sku -> Nullable<Varchar>,
         #[max_length = 255]
