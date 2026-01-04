@@ -206,7 +206,11 @@ impl McpCustomToolService {
             
             // Get current hour window (round down to start of hour)
             let now = Utc::now().naive_utc();
-            let window_start = now.date().and_hms_opt(now.hour(), 0, 0).unwrap();
+            let hour_secs = 3600;
+            let timestamp = now.timestamp();
+            let hour_start_timestamp = (timestamp / hour_secs) * hour_secs;
+            let window_start = chrono::NaiveDateTime::from_timestamp_opt(hour_start_timestamp, 0).unwrap();
+
             
             // Get or create rate limit record
             let rate_limit = mcp_tool_rate_limits::table

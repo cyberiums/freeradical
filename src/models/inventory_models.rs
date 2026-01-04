@@ -13,7 +13,7 @@ use crate::schema::{product_variants, inventory_audit_log};
 pub struct ProductVariant {
     pub id: i32,
     pub uuid: String,
-    pub product_id: i32,
+    pub product_id: i64,
     pub sku: Option<String>,
     pub variant_name: String,
     #[schema(value_type = Option<String>)]
@@ -33,7 +33,7 @@ pub struct ProductVariant {
 #[diesel(table_name = product_variants)]
 pub struct NewProductVariant {
     pub uuid: String,
-    pub product_id: i32,
+    pub product_id: i64,
     pub sku: Option<String>,
     pub variant_name: String,
     #[schema(value_type = Option<String>)]
@@ -68,10 +68,10 @@ impl Default for NewProductVariant {
 #[diesel(table_name = inventory_audit_log)]
 pub struct InventoryAuditLog {
     pub id: i32,
-    pub product_id: Option<i32>,
+    pub product_id: Option<i64>,
     pub variant_id: Option<i32>,
     pub user_id: Option<i32>,
-    pub order_id: Option<i32>,
+    pub order_id: Option<i64>,
     pub change_type: String,
     pub quantity_before: Option<i32>,
     pub quantity_after: Option<i32>,
@@ -84,10 +84,10 @@ pub struct InventoryAuditLog {
 #[derive(Debug, Clone, Serialize, Deserialize, Insertable)]
 #[diesel(table_name = inventory_audit_log)]
 pub struct NewInventoryAuditLog {
-    pub product_id: Option<i32>,
+    pub product_id: Option<i64>,
     pub variant_id: Option<i32>,
     pub user_id: Option<i32>,
-    pub order_id: Option<i32>,
+    pub order_id: Option<i64>,
     pub change_type: String,
     pub quantity_before: i32,
     pub quantity_after: i32,
@@ -97,7 +97,7 @@ pub struct NewInventoryAuditLog {
 
 impl NewInventoryAuditLog {
     pub fn new(
-        product_id: i32,
+        product_id: i64,
         change_type: &str,
         quantity_before: i32,
         quantity_after: i32,

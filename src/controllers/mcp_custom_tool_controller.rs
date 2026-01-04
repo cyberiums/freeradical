@@ -1,14 +1,16 @@
-use actix_web::{web, HttpRequest, HttpResponse};
+use actix_web::{web, HttpRequest, HttpResponse, HttpMessage};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
-use crate::models::{DbPool, mcp_tool_models::*, user_models::User};
+use crate::models::{DbPool, mcp_tool_models::*};
 use crate::services::{mcp_custom_tool_service::McpCustomToolService, errors_service::CustomHttpError};
 use crate::helpers::tenant_helper::resolve_tenant_id;
+use crate::middleware::auth_middleware::UserContext;
 
 // Helper to extract user from request (uses JWT middleware)
-fn get_user_from_request(req: &HttpRequest) -> Result<User, CustomHttpError> {
-        .get::<User>()
+fn get_user_from_request(req: &HttpRequest) -> Result<UserContext, CustomHttpError> {
+    req.extensions()
+        .get::<UserContext>()
         .cloned()
         .ok_or_else(|| CustomHttpError::Unauthorized("User not authenticated".into()))
 }
@@ -152,7 +154,7 @@ pub async fn create_custom_tool(
         required_role: body.required_role.clone(),
         timeout_seconds: body.timeout_seconds,
         max_calls_per_hour: body.max_calls_per_hour,
-        created_by: Some(user.id),
+        created_by: Some(user.user_id),
     };
     
     let tool = McpCustomToolService::create_custom_tool(&pool, new_tool).await?;
@@ -200,6 +202,7 @@ pub async fn update_custom_tool(
         timeout_seconds: body.timeout_seconds,
         max_calls_per_hour: body.max_calls_per_hour,
         is_enabled: body.is_enabled,
+        is_public: None,  // Not updated via general update endpoint
         updated_at: Some(chrono::Utc::now().naive_utc()),
     };
     
@@ -279,7 +282,7 @@ pub async fn test_custom_tool(
         &tool,
         body.into_inner(),
         tenant_id,
-        Some(user.id),
+        Some(user.user_id),
     ).await?;
     
     Ok(HttpResponse::Ok().json(result))
@@ -413,21 +416,23 @@ pub async fn list_marketplace_tools(
 ) -> Result<HttpResponse, CustomHttpError> {
     let pool_clone = pool.clone();
     
-    let tools = web::block(move || {
+    let tools = web::block(move || -> Result<Vec<McpCustomTool>, CustomHttpError> {
         let mut conn = pool_clone.get().map_err(|e| {
             CustomHttpError::InternalServerError(format!("DB error: {}", e))
         })?;
         
         use crate::schema::mcp_custom_tools;
+        use diesel::prelude::*;
         
         mcp_custom_tools::table
             .filter(mcp_custom_tools::is_public.eq(Some(true)))
             .filter(mcp_custom_tools::is_enabled.eq(Some(true)))
-            .load::<McpCustomTool>(&mut conn)
+            .select(McpCustomTool::as_select())
+            .load(&mut conn)
             .map_err(|e| CustomHttpError::InternalServerError(format!("Query error: {}", e)))
     })
     .await
-    .map_err(|e| CustomHttpError::InternalServerError(format!("Block error: {}", e)))?;
+    .map_err(|e| CustomHttpError::InternalServerError(format!("Block error: {}", e)))??;
     
     let total = tools.len();
     

@@ -61,7 +61,7 @@ pub struct UpdateStockRequest {
 )]
 pub async fn get_product_variants(
     pool: web::Data<DbPool>,
-    product_id: web::Path<i32>,
+    product_id: web::Path<i64>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let product_id = product_id.into_inner();
     
@@ -232,7 +232,7 @@ pub async fn update_variant_stock(
 /// Get inventory audit log for a product
 pub async fn get_inventory_audit_log(
     pool: web::Data<DbPool>,
-    product_id: web::Path<i32>,
+    product_id: web::Path<i64>,
 ) -> Result<HttpResponse, CustomHttpError> {
     let product_id = product_id.into_inner();
     
