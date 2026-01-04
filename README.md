@@ -16,6 +16,7 @@ A **blazing-fast**, **production-ready** headless CMS and **e-commerce platform*
 git clone https://github.com/cyberiums/freeradical.git
 cd freeradical
 
+
 # Option 1: Docker (recommended)
 docker-compose up -d
 
