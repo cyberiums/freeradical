@@ -218,6 +218,16 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
+    - name: Extract metadata (tags, labels) for Jyoface Backend
+      id: meta-jyoface-backend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/jyoface-backend
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
     - name: Extract metadata (tags, labels) for Sansapp
       id: meta-sansapp
       uses: docker/metadata-action@v5
@@ -233,6 +243,16 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: ghcr.io/${{ github.repository }}/upperspace2
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Extract metadata (tags, labels) for Upperspace2 Backend
+      id: meta-upperspace2-backend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/upperspace2-backend
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
@@ -272,17 +292,30 @@ jobs:
     - name: Build and push Jyoface image
       uses: docker/build-push-action@v5
       with:
-        context: ./jyoface
+        context: ./jyoface/webapp
+        file: ./jyoface/webapp/Dockerfile
         push: true
         tags: ${{ steps.meta-jyoface.outputs.tags }}
         labels: ${{ steps.meta-jyoface.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
+    - name: Build and push Jyoface Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./jyoface/backend
+        file: ./jyoface/backend/Dockerfile
+        push: true
+        tags: ${{ steps.meta-jyoface-backend.outputs.tags }}
+        labels: ${{ steps.meta-jyoface-backend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
     - name: Build and push Sansapp image
       uses: docker/build-push-action@v5
       with:
-        context: ./sansapp
+        context: ./sansapp/frontend
+        file: ./sansapp/frontend/Dockerfile
         push: true
         tags: ${{ steps.meta-sansapp.outputs.tags }}
         labels: ${{ steps.meta-sansapp.outputs.labels }}
@@ -292,10 +325,22 @@ jobs:
     - name: Build and push Upperspace2 image
       uses: docker/build-push-action@v5
       with:
-        context: ./upperspace2
+        context: ./upperspace2/frontend
+        file: ./upperspace2/frontend/Dockerfile
         push: true
         tags: ${{ steps.meta-upperspace2.outputs.tags }}
         labels: ${{ steps.meta-upperspace2.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push Upperspace2 Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./upperspace2/backend
+        file: ./upperspace2/backend/Dockerfile
+        push: true
+        tags: ${{ steps.meta-upperspace2-backend.outputs.tags }}
+        labels: ${{ steps.meta-upperspace2-backend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     

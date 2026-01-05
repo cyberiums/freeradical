@@ -85,14 +85,20 @@ services:
 
   jyoface:
     image: ghcr.io/cyberiums/freeradical/jyoface:latest
-    container_name: freeradical_jyoface
+    container_name: freeradical_jyoface_frontend
     depends_on:
-      - cms
-    environment:
-      API_URL: http://cms:8000/v1
-      PORT: 5080
+      - jyoface-backend
     ports:
-      - "5080:5080"
+      - "5100:6790"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  jyoface-backend:
+    image: ghcr.io/cyberiums/freeradical/jyoface-backend:latest
+    container_name: freeradical_jyoface_backend
+    ports:
+      - "5101:6705"
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
@@ -102,25 +108,38 @@ services:
     container_name: freeradical_sansapp
     depends_on:
       - cms
-    environment:
-      API_URL: http://cms:8000/v1
-      PORT: 5090
     ports:
-      - "5090:5090"
+      - "5200:80"
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
   upperspace2:
     image: ghcr.io/cyberiums/freeradical/upperspace2:latest
-    container_name: freeradical_upperspace2
+    container_name: freeradical_upperspace2_frontend
     depends_on:
-      - cms
-    environment:
-      API_URL: http://cms:8000/v1
-      PORT: 5010
+      - upperspace2-backend
     ports:
-      - "5010:5010"
+      - "5300:5173"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  upperspace2-backend:
+    image: ghcr.io/cyberiums/freeradical/upperspace2-backend:latest
+    container_name: freeradical_upperspace2_backend
+    depends_on:
+      - cloud-sql-proxy
+      - redis
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@cloud-sql-proxy:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
+      PORT: 3002
+      RUST_LOG: ${RUST_LOG:-info}
+      JWT_SECRET: ${JWT_SECRET}
+      SQLX_OFFLINE: "true"
+    ports:
+      - "5301:3002"
     restart: unless-stopped
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
