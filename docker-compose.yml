@@ -32,8 +32,6 @@ services:
   cms:
     build: .
     container_name: freeradical_cms
-    env_file:
-      - .env
     depends_on:
       postgres:
         condition: service_healthy
