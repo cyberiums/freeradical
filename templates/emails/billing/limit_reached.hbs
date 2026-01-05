@@ -1,0 +1,64 @@
+{{#*inline "content"}}
+<p>Hi there,</p>
+
+<p>You've reached the limit of your <strong>{{plan_name}}</strong> plan.</p>
+
+<div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 16px; margin: 20px 0; border-radius: 4px;">
+    <p style="margin: 0; color: #991b1b;">
+        <strong>⚠️ Limit Reached:</strong><br>
+        You've used all <strong>{{limit_count}} {{resource_type}}</strong> in your plan.
+    </p>
+</div>
+
+<p>You won't be able to create any more {{resource_type}} until you upgrade to a plan with a higher limit.</p>
+
+<h3 style="color: #0f172a; margin-top: 30px;">Upgrade Now to Continue</h3>
+
+<p>Choose a plan that fits your needs:</p>
+
+<table style="width: 100%; margin: 20px 0;" border="0" cellpadding="8">
+    <tr style="background: #f1f5f9;">
+        <td><strong>Professional</strong></td>
+        <td>{{professional_limit}} {{resource_type}}</td>
+        <td>$29/mo</td>
+    </tr>
+    <tr>
+        <td><strong>Growth</strong></td>
+        <td>{{growth_limit}} {{resource_type}}</td>
+        <td>$79/mo</td>
+    </tr>
+    <tr style="background: #f1f5f9;">
+        <td><strong>Scale</strong></td>
+        <td>{{scale_limit}} {{resource_type}}</td>
+        <td>$199/mo</td>
+    </tr>
+</table>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+        <tr>
+            <td align="center">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a href="{{upgrade_url}}" target="_blank"
+                                    style="display: inline-block; background: #f97316; color: #ffffff; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: 700; font-size: 16px;">
+                                    Upgrade Your Plan →
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<p style="margin-top: 30px; color: #64748b; font-size: 14px;">
+    Need help choosing the right plan? Our team is here to help - just reply to this email!
+</p>
+
+<p>Best regards,<br>The Oxidly Team</p>
+{{/inline}}
+{{> layouts/base body=(partials.content) }}

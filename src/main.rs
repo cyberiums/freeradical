@@ -269,6 +269,11 @@ async fn main() -> std::io::Result<()> {
             .route("/plugins/submit", web::post().to(controllers::marketplace_plugin_controller::submit_plugin))
             .route("/plugins/install", web::post().to(controllers::marketplace_plugin_controller::install_plugin))
             .route("/plugins/approve", web::post().to(controllers::marketplace_plugin_controller::approve_plugin))
+            // User Management Extensions
+            .route("/users/invite", web::post().to(controllers::user_api_extensions::invite_user))
+            .route("/users/export", web::get().to(controllers::user_api_extensions::export_users))
+            // Email Template Testing
+            .route("/email-templates/test", web::post().to(controllers::user_api_extensions::test_email_template))
             // CRM API Routes
             .route("/api/crm/customers", web::get().to(controllers::crm_controller::list_customers))
             .route("/api/crm/customers/{id}", web::get().to(controllers::crm_controller::get_customer_profile))

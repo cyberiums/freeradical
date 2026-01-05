@@ -1,4 +1,5 @@
 pub mod user_controllers;
+pub mod user_api_extensions;
 pub mod page_controllers;
 pub mod module_controllers;
 pub mod ai_provider_controller;

@@ -205,6 +205,12 @@ pub async fn google_callback(
         .execute(&mut conn)
         .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to create refresh token: {}", e)))?;
     
+    // **CRITICAL FIX**: Save JWT token to users.token field for auth validation
+    diesel::update(users::table.filter(users::username.eq(&user_email)))
+        .set(users::token.eq(Some(&jwt_token)))
+        .execute(&mut conn)
+        .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to save user token: {}", e)))?;
+    
     
     // Decode state parameter to get tenant_id
     use base64::{Engine as _, engine::general_purpose::STANDARD as BASE64};
@@ -236,19 +242,29 @@ pub async fn google_callback(
         .optional()
         .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to lookup tenant: {}", e)))?;
     
-    // Build redirect URL based on tenant domain
-    let redirect_url = match tenant_domain {
-        Some((custom_domain, subdomain)) => {
-            if let Some(domain) = custom_domain {
-                format!("https://{}", domain)
-            } else {
-                format!("https://{}.oxidly.com", subdomain)
+    // Build redirect URL based on environment and tenant domain
+    let is_local_dev = std::env::var("ENVIRONMENT").unwrap_or_else(|_| "production".to_string()) == "development"
+        || std::env::var("RUST_ENV").unwrap_or_else(|_| "production".to_string()) == "development";
+    
+    let redirect_url = if is_local_dev {
+        // Always use localhost for development
+        std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
+            .unwrap_or_else(|_| "http://localhost:5005".to_string())
+    } else {
+        // Production: use tenant domain
+        match tenant_domain {
+            Some((custom_domain, subdomain)) => {
+                if let Some(domain) = custom_domain {
+                    format!("https://{}", domain)
+                } else {
+                    format!("https://{}.oxidly.com", subdomain)
+                }
+            },
+            None => {
+                // Fallback to env var if tenant not found
+                std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
+                    .unwrap_or_else(|_| "http://localhost:5005".to_string())
             }
-        },
-        None => {
-            // Fallback to env var if tenant not found
-            std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
-                .unwrap_or_else(|_| "http://localhost:5005".to_string())
         }
     };
     

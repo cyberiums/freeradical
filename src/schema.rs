@@ -281,6 +281,23 @@ diesel::table! {
 }
 
 diesel::table! {
+    email_templates (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 100]
+        template_key -> Varchar,
+        #[max_length = 255]
+        subject -> Varchar,
+        body_template -> Text,
+        #[max_length = 50]
+        template_type -> Varchar,
+        is_active -> Bool,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
     crm_campaigns (id) {
         id -> Int4,
         #[max_length = 200]
@@ -1203,6 +1220,7 @@ diesel::joinable!(themes -> tenants (tenant_id));
 diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
 diesel::joinable!(verification_settings -> tenants (tenant_id));
 diesel::joinable!(webhook_logs -> webhooks (webhook_id));
+diesel::joinable!(email_templates -> tenants (tenant_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     ai_generated_content,
@@ -1220,6 +1238,7 @@ diesel::allow_tables_to_appear_in_same_query!(
     billing_subscriptions,
     content_embeddings,
     content_relationships,
+    email_templates,
     crm_campaigns,
     crm_customers,
     crm_interactions,

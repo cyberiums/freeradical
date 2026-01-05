@@ -29,6 +29,7 @@ pub mod audit_models;
 pub mod billing_models;
 pub mod verification_models; // Email verification models
 pub mod mcp_tool_models; // Custom MCP tools (Phase 2)
+pub mod email_template_model; // Email templates for multi-tenant customization
 
 use actix_web::web;
 use diesel::{PgConnection, query_builder::AsChangeset, r2d2::{ConnectionManager, Pool, PoolError}};

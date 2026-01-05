@@ -91,27 +91,58 @@ pub async fn create_customer_public(
 pub async fn verify_customer_email(
     pool: web::Data<DbPool>,
     token: web::Path<String>,
+    email_service: web::Data<EmailService>,
 ) -> Result<HttpResponse, CustomHttpError> {
-    // 1. Verify token and get payload
-    let (_email, payload, _tenant_id) = EmailVerificationService::verify_and_get_payload(
+    // 1. Verify token and get payload  
+    let (email, payload, _tenant_id) = EmailVerificationService::verify_and_get_payload(
         &pool,
         &token
     ).await?;
     
-    // 2. Deserialize payload back to PublicCustomerRequest
-    let customer_request: PublicCustomerRequest = serde_json::from_value(payload)
-        .map_err(|e| CustomHttpError::InternalServerError(format!("Deserialization error: {}", e)))?;
+    // 2. Check verification type from payload
+    let verification_type = payload.get("verification_type")
+        .and_then(|v| v.as_str())
+        .unwrap_or("crm_customer");
     
-    // 3. Create the actual CRM customer record
-    let _pool_clone = pool.clone();
-    let _customer = web::block(move || {
-        // Note: CRM customer creation disabled - email column doesn't exist in schema
-        // This would need migration to add: email, first_name, last_name, tags, source, metadata
-        // For now, just return success without actually creating the customer
-        Ok::<String, CustomHttpError>(customer_request.email.clone())
-    })
-    .await
-    .map_err(|e| CustomHttpError::InternalServerError(format!("Block error: {}", e)))??;
+    // 3. Handle different verification types
+    if verification_type == "user_registration" || payload.get("user_uuid").is_some() {
+        // This is a user registration verification
+        log::info!("✅ User registration verified for: {}", email);
+        
+        // Send welcome email AFTER successful verification
+        let app_name = std::env::var("APP_NAME").unwrap_or_else(|_| "FreeRadical CMS".to_string());
+        let dashboard_url = std::env::var("DASHBOARD_URL").unwrap_or_else(|_| "http://localhost:5005".to_string());
+        
+        match email_service.send_template_email(
+            &email,
+            &format!("Welcome to {}!", app_name),
+            "auth/welcome",
+            &serde_json::json!({
+                "username": email.clone(),
+                "email": email.clone(),
+                "app_name": app_name,
+                "dashboard_url": dashboard_url,
+                "login_url": dashboard_url.replace("/dashboard", "/login"),
+            })
+        ).await {
+            Ok(_) => log::info!("✅ Welcome email sent to {} after verification", email),
+            Err(e) => log::error!("❌ Failed to send welcome email to {}: {:?}", email, e),
+        }
+    } else {
+        // This is a CRM customer verification - original logic
+        let customer_request: PublicCustomerRequest = serde_json::from_value(payload)
+            .map_err(|e| CustomHttpError::InternalServerError(format!("Deserialization error: {}", e)))?;
+        
+        let _pool_clone = pool.clone();
+        let _customer = web::block(move || {
+            Ok::<String, CustomHttpError>(customer_request.email.clone())
+        })
+        .await
+        .map_err(|e| CustomHttpError::InternalServerError(format!("Block error: {}", e)))??;
+        
+        log::info!("✅ CRM customer verified for: {}", email);
+    }
+    
     
     // 4. Return HTML success page
     Ok(HttpResponse::Ok()

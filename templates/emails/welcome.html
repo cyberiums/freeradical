@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Oxidly</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.05em;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 28px;
+            font-weight: 900;
+            margin: 0 0 16px 0;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 0 0 20px 0;
+        }
+
+        .highlight {
+            color: #f97316;
+            font-weight: 700;
+        }
+
+        .steps {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 30px 0;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-center;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            color: #64748b;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: #ffffff !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
+        }
+
+        .button:hover {
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.5);
+        }
+
+        .features {
+            margin: 30px 0;
+        }
+
+        .feature {
+            margin-bottom: 16px;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .feature:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #10b981;
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .footer {
+            background: #f8fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 8px 0;
+        }
+
+        .footer a {
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e2e8f0;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">Oxidly</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h1>Welcome to Oxidly, {{name}}! 🎉</h1>
+
+            <p>We're thrilled to have you on board! Your account is all set up and ready to go.</p>
+
+            <p>Oxidly is the <span class="highlight">fastest, most powerful</span> platform for building and managing
+                modern websites. With our Rust-powered engine, you'll experience unmatched performance and reliability.
+            </p>
+
+            <!-- Quick Start Steps -->
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Create Your First Site</div>
+                    <p class="step-desc">Start with a blank canvas or choose from our professionally designed templates
+                    </p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Add Your Content</div>
+                    <p class="step-desc">Use our intuitive content editor to build pages, upload media, and organize
+                        everything</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Go Live</div>
+                    <p class="step-desc">Publish your site with one click or connect your custom domain (CNAME
+                        supported)</p>
+                </div>
+            </div>
+
+            <!-- CTA Button -->
+            <center>
+                <a href="{{dashboard_url}}" class="button">Go to Your Dashboard →</a>
+            </center>
+
+            <!-- Features List -->
+            <div class="divider"></div>
+
+            <h2 style="color: #0f172a; font-size: 20px; font-weight: 700; margin-bottom: 16px;">What you can do with
+                Oxidly:</h2>
+
+            <div class="features">
+                <div class="feature">Build unlimited pages with our powerful CMS</div>
+                <div class="feature">Launch an e-commerce store in minutes</div>
+                <div class="feature">Manage customers with built-in CRM</div>
+                <div class="feature">AI-powered content generation and optimization</div>
+                <div class="feature">Lightning-fast performance with Rust engine</div>
+                <div class="feature">Custom domains with automatic SSL</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <p style="font-size: 14px; color: #64748b;">
+                <strong>Need help getting started?</strong><br>
+                Check out our <a href="https://oxidly.com/docs"
+                    style="color: #f97316; text-decoration: none; font-weight: 600;">documentation</a> or reach out to
+                our support team anytime.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Oxidly</strong> - The High-Performance Cloud Platform</p>
+            <p>
+                <a href="{{dashboard_url}}">Dashboard</a> •
+                <a href="https://oxidly.com/docs">Docs</a> •
+                <a href="https://oxidly.com/support">Support</a>
+            </p>
+            <p style="margin-top: 20px;">
+                © 2026 Oxidly. All rights reserved.<br>
+                <a href="https://oxidly.com/unsubscribe?email={{email}}"
+                    style="color: #94a3b8; font-size: 12px;">Unsubscribe</a>
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

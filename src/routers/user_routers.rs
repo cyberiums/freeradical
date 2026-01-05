@@ -7,7 +7,7 @@ pub struct UserRouter;
 
 impl Router for UserRouter {
     fn new() -> Scope {
-        web::scope("/user")
+        web::scope("/users")
             .route("", web::post().to(create_user))
             .route("", web::get().to(check_login))
             .route("/login", web::post().to(login))

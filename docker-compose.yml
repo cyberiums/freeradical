@@ -32,6 +32,8 @@ services:
   cms:
     build: .
     container_name: freeradical_cms
+    env_file:
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,7 +51,7 @@ services:
       APP_MYSQL_PORT: 3306
       APP_BIND_ADDRESS: 0.0.0.0
       APP_BIND_PORT: 8000
-      APP_JWT_KEY: ${JWT_SECRET:-change-this-in-production}
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
       APP_MAX_REQ: 100
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
       REDIS_URL: redis://redis:6379

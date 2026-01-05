@@ -30,6 +30,8 @@ pub async fn create_user(
     pool: web::Data<DatabasePool>,
     email_service: web::Data<crate::services::email_service::EmailService>,
 ) -> Result<HttpResponse, CustomHttpError> {
+    // Clone pool before pool_handler consumes it (needed for EmailVerificationService)
+    let pool_clone = pool.clone();
     let mut mysql_pool = pool_handler(pool)?;
 
     let mut salted_user = new.clone();
@@ -39,17 +41,25 @@ pub async fn create_user(
 
     User::create(&salted_user, &mut mysql_pool)?;
 
-    // Send Welcome Email
-    // Assuming username is email as per system design
-    let _ = email_service.send_template_email(
-         &salted_user.username,
-         "Welcome to FreeRadical CMS",
-         "auth/welcome",
-         &serde_json::json!({
-             "username": salted_user.username,
-             "verify_link": "https://oxidly.com/verify-email" // Implementation pending
-         })
-    ).await;
+
+    // Send verification email (welcome email will be sent AFTER verification)
+    use crate::services::email_verification_service::EmailVerificationService;
+    
+    match EmailVerificationService::create_and_send(
+        &pool_clone,
+        "user_registration",
+        &salted_user.username,
+        serde_json::json!({
+            "user_uuid": salted_user.uuid,
+            "username": salted_user.username.clone(),
+        }),
+        None, // tenant_id - will be added when multi-tenancy is enabled
+        &email_service,
+    ).await {
+        Ok(token) => log::info!("✅ Verification email sent to {} with token preview: {}...", salted_user.username, &token[..20]),
+        Err(e) => log::error!("❌ Failed to send verification email to {}: {:?}", salted_user.username, e),
+    }
+
 
     Ok(HttpResponse::Created().json(&new.clone()))
 }

@@ -1,0 +1,54 @@
+{{#*inline "content"}}
+<p>Hi there,</p>
+
+<p>We wanted to let you know that you're approaching the limit of your <strong>{{plan_name}}</strong> plan.</p>
+
+<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; border-radius: 4px;">
+    <p style="margin: 0; color: #92400e;">
+        <strong>Current Usage:</strong><br>
+        You've used <strong>{{current_count}} of {{limit_count}} {{resource_type}}</strong> ({{usage_percentage}}%)
+    </p>
+</div>
+
+<p>Once you reach your plan limit, you won't be able to create new {{resource_type}} until you upgrade to a higher plan.
+</p>
+
+<h3 style="color: #0f172a; margin-top: 30px;">Upgrade to Continue Growing</h3>
+
+<p>Don't let limits slow you down! Upgrade your plan to unlock:</p>
+
+<ul>
+    <li>More {{resource_type}}</li>
+    <li>Increased storage and bandwidth</li>
+    <li>Priority support</li>
+    <li>Advanced features</li>
+</ul>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
+    <tbody>
+        <tr>
+            <td align="center">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a href="{{upgrade_url}}" target="_blank"
+                                    style="display: inline-block; background: #f97316; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 700;">
+                                    View Upgrade Options
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<p style="margin-top: 30px; color: #64748b; font-size: 14px;">
+    Questions about upgrading? Just reply to this email and our team will help!
+</p>
+
+<p>Best regards,<br>The Oxidly Team</p>
+{{/inline}}
+{{> layouts/base body=(partials.content) }}

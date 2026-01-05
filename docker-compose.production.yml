@@ -83,6 +83,48 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
+  jyoface:
+    image: ghcr.io/cyberiums/freeradical/jyoface:latest
+    container_name: freeradical_jyoface
+    depends_on:
+      - cms
+    environment:
+      API_URL: http://cms:8000/v1
+      PORT: 5080
+    ports:
+      - "5080:5080"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  sansapp:
+    image: ghcr.io/cyberiums/freeradical/sansapp:latest
+    container_name: freeradical_sansapp
+    depends_on:
+      - cms
+    environment:
+      API_URL: http://cms:8000/v1
+      PORT: 5090
+    ports:
+      - "5090:5090"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  upperspace2:
+    image: ghcr.io/cyberiums/freeradical/upperspace2:latest
+    container_name: freeradical_upperspace2
+    depends_on:
+      - cms
+    environment:
+      API_URL: http://cms:8000/v1
+      PORT: 5010
+    ports:
+      - "5010:5010"
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
   watchtower:
     image: containrrr/watchtower
     container_name: freeradical_watchtower
