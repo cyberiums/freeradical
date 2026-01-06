@@ -134,10 +134,25 @@ pub async fn google_callback(
         } else {
             // Create new user
             let new_uuid = Uuid::new_v4().to_string();
+            
+            // Generate a random password for OAuth users (they won't use it)
+            // This satisfies the NOT NULL constraint on the password column
+            use argon2::{
+                password_hash::{rand_core::OsRng, PasswordHasher, SaltString},
+                Argon2,
+            };
+            let random_bytes: Vec<u8> = (0..32).map(|_| rand::random::<u8>()).collect();
+            let random_password = format!("oauth_user_{}", hex::encode(&random_bytes));
+            let salt = SaltString::generate(&mut OsRng);
+            let argon2 = Argon2::default();
+            let password_hash = argon2.hash_password(random_password.as_bytes(), &salt)
+                .map_err(|e| actix_web::error::ErrorInternalServerError(format!("Failed to hash password: {}", e)))?
+                .to_string();
+            
             let new_user = MutUser {
                 uuid: Some(new_uuid.clone()),
                 username: user_email.clone(),
-                password: None, // SSO user
+                password: Some(password_hash), // Set a random hashed password for OAuth users
                 token: None,
                 two_factor_secret: None,
                 two_factor_enabled: Some(false),

@@ -50,13 +50,16 @@ services:
       APP_BIND_ADDRESS: 0.0.0.0
       APP_BIND_PORT: 8000
       JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      APP_jwt_key: ${JWT_SECRET:-change-this-in-production}
       APP_MAX_REQ: 100
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:8001}
       REDIS_URL: redis://redis:6379
       RUST_LOG: info
-      GOOGLE_CLIENT_ID: "867082665481-umkfneu32sak280he9tjuil6rm98k7a2.apps.googleusercontent.com"
+      GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
       GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
       GOOGLE_REDIRECT_URI: "http://localhost:8000/v1/auth/google/callback"
+      OAUTH_SUCCESS_REDIRECT_URL: "http://localhost:5005"
+      RUST_ENV: "development"
     ports:
       - "${APP_PORT:-8000}:8000"
       - "${MCP_PORT:-9009}:9009"
@@ -72,7 +75,7 @@ services:
     depends_on:
       - cms
     environment:
-      - API_URL=http://localhost:8000/v1
+      - API_URL=http://cms:8000  # Use internal container port
       - PORT=5005
     ports:
       - "5005:5005"

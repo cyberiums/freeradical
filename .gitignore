@@ -41,3 +41,4 @@ task.md
 oxidly/
 build_output.txt
 Users/
+oxidly/deployment/docker-compose.production.yml

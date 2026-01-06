@@ -61,7 +61,11 @@ pub async fn create_user(
     }
 
 
-    Ok(HttpResponse::Created().json(&new.clone()))
+    // Return user without password for security  
+    let mut safe_user = salted_user.clone();
+    safe_user.password = None;
+    
+    Ok(HttpResponse::Created().json(&safe_user))
 }
 
 /// Get user by UUID
