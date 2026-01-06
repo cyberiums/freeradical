@@ -75,7 +75,8 @@ services:
     depends_on:
       - cms
     environment:
-      - API_URL=http://cms:8000  # Use internal container port
+      - API_URL=http://cms:8000/v1  # Use internal container port for server-side calls
+      - BROWSER_API_URL=http://localhost:8000/v1  # Use localhost for browser OAuth redirects
       - PORT=5005
     ports:
       - "5005:5005"
