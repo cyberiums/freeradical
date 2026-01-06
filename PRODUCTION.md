@@ -11,6 +11,7 @@
 - Postgres via GCP Cloud SQL (managed)
 - Auto-updates via Watchtower
 
+
 ---
 
 ## 🚀 Option 1: GCP Cloud SQL (Recommended for Production)
