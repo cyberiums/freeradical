@@ -37,7 +37,7 @@ jobs:
           cargo install diesel_cli --no-default-features --features postgres
           
       - name: Run PostgreSQL tests
-        run: bash scripts/test_postgres.sh
+        run: bash oxidly/scripts/test_postgres.sh
         
       - name: Upload test results
         if: always()
