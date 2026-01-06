@@ -9,6 +9,8 @@ A **blazing-fast**, **production-ready** headless CMS and **e-commerce platform*
 
 # Fastly built with <a href="https://fastbuilder.ai" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors">FastBuilder.AI</a>
 
+
+
 ## 🚀 Quick Start
 
 ```bash
