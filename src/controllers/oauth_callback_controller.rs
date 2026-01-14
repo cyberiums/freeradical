@@ -63,7 +63,17 @@ pub async fn google_callback(
 ) -> Result<HttpResponse, Error> {
     let oauth = OAuthService;
     
-    let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or_else(|_| "http://localhost:8000/v1/auth/google/callback".to_string());
+    // Determine redirect URI based on environment
+    let is_production = std::env::var("ENVIRONMENT").unwrap_or_else(|_| "production".to_string()) == "production"
+        || std::env::var("RUST_ENV").unwrap_or_else(|_| "production".to_string()) == "production";
+    
+    let default_redirect = if is_production {
+        "https://freeradical.dev/v1/auth/google/callback".to_string()
+    } else {
+        "http://localhost:8000/v1/auth/google/callback".to_string()
+    };
+    
+    let redirect_uri = std::env::var("GOOGLE_REDIRECT_URI").unwrap_or(default_redirect);
     
     // Exchange authorization code for access token
     let token_response = OAuthService::exchange_code_for_token("google", &query.code, &redirect_uri)
