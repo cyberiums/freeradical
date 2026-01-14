@@ -286,9 +286,9 @@ pub async fn google_callback(
                 }
             },
             None => {
-                // Fallback to env var if tenant not found, or production oxidly URL
+                // Fallback to env var if tenant not found, or production URL
                 std::env::var("OAUTH_SUCCESS_REDIRECT_URL")
-                    .unwrap_or_else(|_| "https://oxidly.dev".to_string())
+                    .unwrap_or_else(|_| "https://freeradical.dev".to_string())
             }
         }
     };
