@@ -140,8 +140,11 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-      with:
-        submodules: true
+        
+    - name: Initialize upperspace2 submodule
+      run: |
+        git submodule init upperspace2
+        git submodule update --depth 1 upperspace2
         
     - name: Setup SSH for Bitbucket
       uses: webfactory/ssh-agent@v0.9.0
