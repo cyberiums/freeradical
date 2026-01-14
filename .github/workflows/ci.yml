@@ -146,12 +146,12 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
 
-    - name: Fetch upperspace2 (Private Repo)
+    - name: Fetch upperspace3 (Private Repo)
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-        rm -rf upperspace2
-        git clone git@bitbucket.org:samskritam/upperspace2.git upperspace2
+        rm -rf upperspace3
+        git clone git@bitbucket.org:samskritam/upperspace3.git upperspace3
 
     - name: Fetch Oxidly (Private Repo)
       run: |
@@ -170,10 +170,10 @@ jobs:
         rm -rf sansapp
         git clone git@bitbucket.org:samskritam/sansapp.git sansapp
 
-    - name: Fetch Upperspace2 (Private Repo)
+    - name: Fetch upperspace3 (Private Repo)
       run: |
-        rm -rf upperspace2
-        git clone git@bitbucket.org:samskritam/upperspace2.git upperspace2
+        rm -rf upperspace3
+        git clone git@bitbucket.org:samskritam/upperspace3.git upperspace3
     
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -225,16 +225,7 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: Extract metadata (tags, labels) for Jyoface Backend
-      id: meta-jyoface-backend
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository }}/jyoface-backend
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
-    
+
     - name: Extract metadata (tags, labels) for Sansapp
       id: meta-sansapp
       uses: docker/metadata-action@v5
@@ -245,21 +236,21 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: Extract metadata (tags, labels) for Upperspace2
-      id: meta-upperspace2
+    - name: Extract metadata (tags, labels) for upperspace3
+      id: meta-upperspace3
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ github.repository }}/upperspace2
+        images: ghcr.io/${{ github.repository }}/upperspace3
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: Extract metadata (tags, labels) for Upperspace2 Backend
-      id: meta-upperspace2-backend
+    - name: Extract metadata (tags, labels) for upperspace3 Backend
+      id: meta-upperspace3-backend
       uses: docker/metadata-action@v5
       with:
-        images: ghcr.io/${{ github.repository }}/upperspace2-backend
+        images: ghcr.io/${{ github.repository }}/upperspace3-backend
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
@@ -318,39 +309,29 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
-    - name: Build and push Upperspace2 image
+    - name: Build and push upperspace3 image
       uses: docker/build-push-action@v5
       with:
-        context: ./upperspace2/frontend
-        file: ./upperspace2/frontend/Dockerfile
+        context: ./upperspace3/frontend
+        file: ./upperspace3/frontend/Dockerfile
         push: true
-        tags: ${{ steps.meta-upperspace2.outputs.tags }}
-        labels: ${{ steps.meta-upperspace2.outputs.labels }}
+        tags: ${{ steps.meta-upperspace3.outputs.tags }}
+        labels: ${{ steps.meta-upperspace3.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
-    - name: Build and push Upperspace2 Backend image
+    - name: Build and push upperspace3 Backend image
       uses: docker/build-push-action@v5
       with:
-        context: ./upperspace2/backend
-        file: ./upperspace2/backend/Dockerfile
+        context: ./upperspace3/backend
+        file: ./upperspace3/backend/Dockerfile
         push: true
-        tags: ${{ steps.meta-upperspace2-backend.outputs.tags }}
-        labels: ${{ steps.meta-upperspace2-backend.outputs.labels }}
+        tags: ${{ steps.meta-upperspace3-backend.outputs.tags }}
+        labels: ${{ steps.meta-upperspace3-backend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
-    - name: Build and push Jyoface Backend image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./jyoface/backend
-        file: ./jyoface/backend/Dockerfile
-        push: true
-        tags: ${{ steps.meta-jyoface-backend.outputs.tags }}
-        labels: ${{ steps.meta-jyoface-backend.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
+
     - name: Test Docker images
       run: |
         # Test CMS image
@@ -394,11 +375,11 @@ jobs:
         docker logs test-sansapp
         docker stop test-sansapp
         
-        # Test Upperspace2 image
-        docker run -d --name test-upperspace2 \
+        # Test upperspace3 image
+        docker run -d --name test-upperspace3 \
           -e PORT=5010 \
-          ghcr.io/${{ github.repository }}/upperspace2:latest
+          ghcr.io/${{ github.repository }}/upperspace3:latest
         sleep 3
-        docker logs test-upperspace2
-        docker stop test-upperspace2
+        docker logs test-upperspace3
+        docker stop test-upperspace3
 
