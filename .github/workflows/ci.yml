@@ -99,26 +99,6 @@ jobs:
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
-    - name: Extract metadata (tags, labels) for Mantrna Backend
-      id: meta-mantrna-backend
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository }}/mantrna-backend
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
-    
-    - name: Extract metadata (tags, labels) for Mantrna Frontend
-      id: meta-mantrna-frontend
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository }}/mantrna-frontend
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}
-    
     - name: Build and push CMS image
       uses: docker/build-push-action@v5
       with:
@@ -169,28 +149,6 @@ jobs:
         push: true
         tags: ${{ steps.meta-sansapp.outputs.tags }}
         labels: ${{ steps.meta-sansapp.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Build and push Mantrna Backend image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./jyoface/backend
-        file: ./jyoface/backend/Dockerfile
-        push: true
-        tags: ${{ steps.meta-mantrna-backend.outputs.tags }}
-        labels: ${{ steps.meta-mantrna-backend.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
-    - name: Build and push Mantrna Frontend image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./jyoface/webapp
-        file: ./jyoface/webapp/Dockerfile
-        push: true
-        tags: ${{ steps.meta-mantrna-frontend.outputs.tags }}
-        labels: ${{ steps.meta-mantrna-frontend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
