@@ -141,15 +141,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
         
-    - name: Initialize upperspace2 submodule
-      run: |
-        git submodule init upperspace2
-        git submodule update --depth 1 upperspace2
-        
     - name: Setup SSH for Bitbucket
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
+
+    - name: Fetch upperspace2 (Private Repo)
+      run: |
+        rm -rf upperspace2
+        git clone git@bitbucket.org:samskritam/upperspace2.git upperspace2
 
     - name: Fetch Oxidly (Private Repo)
       run: |
