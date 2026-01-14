@@ -32,12 +32,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
+    - name: Setup SSH for Bitbucket
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.BITBUCKET_SSH_KEY }}
+
+    - name: Fetch Oxidly (Private Repo)
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
+        rm -rf oxidly
+        git clone git@bitbucket.org:samskritam/oxidly.git oxidly
+    
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: oxidly/package-lock.json
     
     - name: Install dependencies
       working-directory: ./oxidly
@@ -49,7 +59,7 @@ jobs:
     
     - name: Start Docker services
       run: |
-        docker-compose up -d cms oxidly
+        docker compose up -d cms oxidly
         sleep 30  # Wait for services to be ready
     
     - name: Wait for backend
@@ -99,7 +109,7 @@ jobs:
     
     - name: Stop Docker services
       if: always()
-      run: docker-compose down
+      run: docker compose down
     
     - name: Comment PR with results
       if: github.event_name == 'pull_request'
