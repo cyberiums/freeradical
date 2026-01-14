@@ -307,17 +307,6 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
-    - name: Build and push Jyoface Backend image
-      uses: docker/build-push-action@v5
-      with:
-        context: ./jyoface/backend
-        file: ./jyoface/backend/Dockerfile
-        push: true
-        tags: ${{ steps.meta-jyoface-backend.outputs.tags }}
-        labels: ${{ steps.meta-jyoface-backend.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
-    
     - name: Build and push Sansapp image
       uses: docker/build-push-action@v5
       with:
@@ -348,6 +337,17 @@ jobs:
         push: true
         tags: ${{ steps.meta-upperspace2-backend.outputs.tags }}
         labels: ${{ steps.meta-upperspace2-backend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push Jyoface Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./jyoface/backend
+        file: ./jyoface/backend/Dockerfile
+        push: true
+        tags: ${{ steps.meta-jyoface-backend.outputs.tags }}
+        labels: ${{ steps.meta-jyoface-backend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
