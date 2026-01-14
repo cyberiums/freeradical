@@ -148,6 +148,8 @@ jobs:
 
     - name: Fetch upperspace2 (Private Repo)
       run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
         rm -rf upperspace2
         git clone git@bitbucket.org:samskritam/upperspace2.git upperspace2
 
