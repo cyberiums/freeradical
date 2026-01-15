@@ -97,7 +97,7 @@ jobs:
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
-          type=raw,value=latest,enable={{is_default_branch}}\n    
+          type=raw,value=latest,enable={{is_default_branch}}
     - name: Extract metadata (tags, labels) for Mantrna Backend
       id: meta-mantrna-backend
       uses: docker/metadata-action@v5
