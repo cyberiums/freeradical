@@ -152,6 +152,28 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
+    - name: Build and push Mantrna Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./jyoface/backend
+        file: ./jyoface/backend/Dockerfile
+        push: true
+        tags: ${{ steps.meta-mantrna-backend.outputs.tags }}
+        labels: ${{ steps.meta-mantrna-backend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
+    - name: Build and push Mantrna Frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./jyoface/webapp
+        file: ./jyoface/webapp/Dockerfile
+        push: true
+        tags: ${{ steps.meta-mantrna-frontend.outputs.tags }}
+        labels: ${{ steps.meta-mantrna-frontend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+    
     - name: Test Docker images
       run: |
         # Test CMS image
