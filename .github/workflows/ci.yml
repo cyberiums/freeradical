@@ -97,6 +97,25 @@ jobs:
         tags: |
           type=ref,event=branch
           type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}\n    
+    - name: Extract metadata (tags, labels) for Mantrna Backend
+      id: meta-mantrna-backend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/mantrna-backend
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+    
+    - name: Extract metadata (tags, labels) for Mantrna Frontend
+      id: meta-mantrna-frontend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/mantrna-frontend
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
     
     - name: Build and push CMS image
