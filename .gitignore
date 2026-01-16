@@ -38,7 +38,8 @@ task.md
 .gemini
 */.gemini
 **/.gemini
-oxidly/
+# oxidly/ (Removed to allow deployment management)
+
 build_output.txt
 Users/
 oxidly/deployment/docker-compose.production.yml
