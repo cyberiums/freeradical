@@ -46,7 +46,9 @@ jobs:
         path: mantr
 
     - name: Materialize symlink
-      run: cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
+      run: |
+        rm -f mantr/vak-siddhi-core/ptk.v1.json
+        cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
