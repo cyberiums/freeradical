@@ -38,6 +38,13 @@ jobs:
         rm -rf sansapp
         git clone git@bitbucket.org:samskritam/sansapp.git sansapp
 
+    - name: Fetch Mantr (Public Repo)
+      run: |
+        rm -rf mantr
+        git clone https://github.com/Mantrnet/mantr.git mantr
+        # Materialize symlink for Docker build context
+        cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     
@@ -117,6 +124,36 @@ jobs:
           type=ref,event=branch
           type=sha,prefix={{branch}}-
           type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Extract metadata (tags, labels) for Mantr Backend
+      id: meta-mantr-backend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/mantr-backend
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Extract metadata (tags, labels) for Mantr Middleware
+      id: meta-mantr-middleware
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/mantr-middleware
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Extract metadata (tags, labels) for Mantr Frontend
+      id: meta-mantr-frontend
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}/mantr-frontend
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
     
     - name: Build and push CMS image
       uses: docker/build-push-action@v5
@@ -190,6 +227,39 @@ jobs:
         push: true
         tags: ${{ steps.meta-mantrna-frontend.outputs.tags }}
         labels: ${{ steps.meta-mantrna-frontend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push Mantr Backend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./mantr/vak-siddhi-core
+        file: ./mantr/vak-siddhi-core/Dockerfile
+        push: true
+        tags: ${{ steps.meta-mantr-backend.outputs.tags }}
+        labels: ${{ steps.meta-mantr-backend.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push Mantr Middleware image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./mantr/control-plane
+        file: ./mantr/control-plane/Dockerfile.prod
+        push: true
+        tags: ${{ steps.meta-mantr-middleware.outputs.tags }}
+        labels: ${{ steps.meta-mantr-middleware.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Build and push Mantr Frontend image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./mantr/frontend
+        file: ./mantr/frontend/Dockerfile.prod
+        push: true
+        tags: ${{ steps.meta-mantr-frontend.outputs.tags }}
+        labels: ${{ steps.meta-mantr-frontend.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
     
