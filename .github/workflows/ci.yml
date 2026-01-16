@@ -49,6 +49,8 @@ jobs:
       run: |
         rm -f mantr/vak-siddhi-core/ptk.v1.json
         cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
+        rm -rf mantr/control-plane/mantr
+        cp -r mantr/vak-siddhi-core mantr/control-plane/mantr
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
