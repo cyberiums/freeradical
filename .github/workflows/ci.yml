@@ -39,11 +39,14 @@ jobs:
         git clone git@bitbucket.org:samskritam/sansapp.git sansapp
 
     - name: Fetch Mantr (Private Repo)
-      run: |
-        rm -rf mantr
-        git clone https://x-access-token:${{ secrets.GHCR_AUTH_TOKEN }}@github.com/Mantrnet/mantr.git mantr
-        # Materialize symlink for Docker build context
-        cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
+      uses: actions/checkout@v4
+      with:
+        repository: Mantrnet/mantr
+        token: ${{ secrets.GHCR_AUTH_TOKEN }}
+        path: mantr
+
+    - name: Materialize symlink
+      run: cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
