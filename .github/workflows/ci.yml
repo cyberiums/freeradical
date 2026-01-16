@@ -38,10 +38,11 @@ jobs:
         rm -rf sansapp
         git clone git@bitbucket.org:samskritam/sansapp.git sansapp
 
-    - name: Fetch Mantr (Public Repo)
+    - name: Fetch Mantr (Private Repo)
       run: |
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
         rm -rf mantr
-        git clone https://github.com/Mantrnet/mantr.git mantr
+        git clone git@github.com:Mantrnet/mantr.git mantr
         # Materialize symlink for Docker build context
         cp mantr/ptk.v1.json mantr/vak-siddhi-core/ptk.v1.json
 
