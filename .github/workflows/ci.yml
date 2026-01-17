@@ -234,6 +234,10 @@ jobs:
         push: true
         tags: ${{ steps.meta-mantrna-frontend.outputs.tags }}
         labels: ${{ steps.meta-mantrna-frontend.outputs.labels }}
+        build-args: |
+          VITE_API_URL=https://app.mantrna.com
+          VITE_VAPID_PUBLIC_KEY=${{ secrets.VITE_VAPID_PUBLIC_KEY }}
+          VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
