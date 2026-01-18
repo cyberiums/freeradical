@@ -271,8 +271,8 @@ jobs:
         push: true
         tags: ${{ steps.meta-mantr-frontend.outputs.tags }}
         labels: ${{ steps.meta-mantr-frontend.outputs.labels }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        # Disabled cache to force fresh build - investigating production TypeError
+        no-cache: true
     
     - name: Test Docker images
       run: |
