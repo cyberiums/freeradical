@@ -3,14 +3,18 @@ use serde::Serialize;
 use std::sync::{Arc, Mutex};
 use std::path::PathBuf;
 use log::{info, error, warn};
+use actix_web::web;
+use crate::models::db_connection::DatabasePool;
+use crate::models::email_template_model::EmailTemplate;
 
 #[derive(Clone)]
 pub struct EmailTemplateService {
     handlebars: Arc<Mutex<Handlebars<'static>>>,
+    pool: web::Data<DatabasePool>,
 }
 
 impl EmailTemplateService {
-    pub fn new() -> Self {
+    pub fn new(pool: web::Data<DatabasePool>) -> Self {
         // Initialize Handlebars
         let mut handlebars = Handlebars::new();
         
@@ -57,39 +61,48 @@ impl EmailTemplateService {
 
         Self {
             handlebars: Arc::new(Mutex::new(handlebars)),
+            pool,
         }
     }
 
-    pub fn render<T>(&self, template_name: &str, data: &T) -> Result<String, String>
+    pub fn render<T>(&self, template_name: &str, data: &T, tenant_id: Option<i32>) -> Result<String, String>
     where
         T: Serialize,
     {
-        let handlebars = self.handlebars.lock().map_err(|e| e.to_string())?;
+        // 1. Check DB for custom template override
+        let mut conn = self.pool.get().map_err(|e| format!("DB Connection Failed: {}", e))?;
         
-        // Try rendering with the specific template
-        // Note: register_templates_directory registers files relative to the dir. 
-        // e.g. "auth/welcome.hbs" -> "auth/welcome"
-        
-        handlebars.render(template_name, data).map_err(|e| {
-            error!("Failed to render email template '{}': {}", template_name, e);
-            format!("Template render error: {}", e)
-        })
+        match EmailTemplate::get_by_key(template_name, tenant_id, &mut conn) {
+            Ok(db_template) => {
+                // If found in DB, use it directly (skip Handlebars file cache)
+                // Note: We need to compile the string template on the fly or cache it.
+                // For simplicity/accuracy, we render it on the fly using a temp registry or the main one if possible.
+                // Since we have the template string in `db_template.body_template`, we can render it.
+                
+                let handlebars = self.handlebars.lock().map_err(|e| e.to_string())?;
+                handlebars.render_template(&db_template.body_template, data).map_err(|e| {
+                     error!("Failed to render DB template '{}': {}", template_name, e);
+                     format!("DB Template render error: {}", e)
+                })
+            },
+            Err(_) => {
+                // Not found in DB -> Fallback to File
+                let handlebars = self.handlebars.lock().map_err(|e| e.to_string())?;
+                handlebars.render(template_name, data).map_err(|e| {
+                    error!("Failed to render email template '{}': {}", template_name, e);
+                    format!("Template render error: {}", e)
+                })
+            }
+        }
     }
     
+    // Legacy support: Only used for reloads (usually admin) - keeping FS only for now or TODO: update to clear DB cache if we had one.
     pub fn reload_templates(&self) -> Result<(), String> {
         let mut handlebars = self.handlebars.lock().map_err(|e| e.to_string())?;
         handlebars.clear_templates();
         
         let template_dir = PathBuf::from("./templates/emails");
         if template_dir.exists() {
-             // handlebars.register_templates_directory(".hbs", &template_dir).map_err(|e| e.to_string())?;
-             // Quick fix: Recursive walk not implemented here, just shallow or no-op reloader for now to pass build
-             // Or copy the logic above.
-             // Let's implement valid logic
-             
-             // Simplification: We rely on the init logic. Reloading might miss subdirs.
-             // Ideally use the same helper function.
-             // For now, simple loop:
              if let Ok(entries) = std::fs::read_dir(&template_dir) {
                 for entry in entries.flatten() {
                     let path = entry.path();
@@ -100,7 +113,6 @@ impl EmailTemplateService {
                     }
                 }
              }
-             
              info!("Reloaded email templates");
              Ok(())
         } else {

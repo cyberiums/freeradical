@@ -9,7 +9,7 @@ impl Router for UserRouter {
     fn new() -> Scope {
         web::scope("/users")
             .route("", web::post().to(create_user))
-            .route("", web::get().to(check_login))
+            .route("", web::get().to(list_users))
             .route("/login", web::post().to(login))
             .route("/logout", web::delete().to(logout))
             .route("/{id}", web::put().to(update_user))

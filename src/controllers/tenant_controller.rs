@@ -53,6 +53,80 @@ pub async fn create_tenant(
         settings: None,
     };
 
+    // 0. Enforce Subscription Limits (Sites)
+    // We need to check if the user has an active subscription that allows more sites.
+    // Logic: 
+    // 1. Get all tenants user owns/is member of.
+    // 2. Iterate to find an ACTIVE subscription.
+    // 3. If no active subscription => LIMIT = 0 (No free tier).
+    // 4. If active subscription => LIMIT = plan.limits.sites.
+    // 5. Count current sites.
+    // 6. If count >= limit, ERROR.
+
+    use crate::schema::{tenants, tenant_members, billing_subscriptions, billing_plans};
+    use crate::models::billing_models::{Subscription, BillingPlan};
+    
+    // Get all tenants for user
+    let user_tenants_ids = tenant_members::table
+        .filter(tenant_members::user_id.eq(user_ctx.user_id))
+        .select(tenant_members::tenant_id)
+        .load::<i32>(&mut conn);
+
+    let user_tenants_ids = match user_tenants_ids {
+        Ok(ids) => ids,
+        Err(e) => return HttpResponse::InternalServerError().json(format!("DB Error: {}", e)),
+    };
+
+    let current_site_count = user_tenants_ids.len() as i32;
+
+    // Determine Limit from Active Subscriptions
+    let mut sites_limit = 0; // Default: No Free Tier
+    
+    // Find highest limit among all active subscriptions the user has access to
+    if !user_tenants_ids.is_empty() {
+        // Find subscriptions for these tenants
+        let active_subs = billing_subscriptions::table
+            .filter(billing_subscriptions::tenant_id.eq_any(&user_tenants_ids))
+            .filter(billing_subscriptions::status.eq("active"))
+            .inner_join(billing_plans::table) // Join to get plan details
+            .select((Subscription::as_select(), BillingPlan::as_select()))
+            .load::<(Subscription, BillingPlan)>(&mut conn)
+            .unwrap_or(vec![]); // Ignore errors, default to no subs
+
+        for (_, plan) in active_subs {
+             if let Some(limits) = plan.limits {
+                 if let Some(limit_val) = limits.get("sites").and_then(|v| v.as_i64()) {
+                     let l = limit_val as i32;
+                     if l > sites_limit { sites_limit = l; }
+                     // Handle unlimited (-1)
+                     if l == -1 { sites_limit = 9999; } 
+                 }
+             }
+        }
+    }
+    
+    // Special case: If user has 0 sites, they might be signing up. 
+    // IF we allowed a free tier, we'd set limit=1 here.
+    // But requirement is "No Free Tier". However, user needs to create the FIRST site to subscribe?
+    // Chicken/Egg problem.
+    // Solution: If user has 0 sites, ALLOW creation (so they can create site -> then subscribe).
+    // Unless the flow is "Sign up -> Pay -> Create Site".
+    // Assuming typical flow: Create Site (Free/Trial) -> Upgrade.
+    // But since we just wiped DB and user said "Starter Site", the existing site HAS a sub.
+    // If they have 1 site (Starter), limit is 1. They try create 2nd. 1 >= 1 => Block.
+    
+    // If user has 0 sites, we must allow 1 (Trial/Setup).
+    if current_site_count == 0 {
+        sites_limit = 1; 
+    }
+
+    if current_site_count >= sites_limit {
+         return HttpResponse::Forbidden().json(format!(
+             "Plan limit reached. You have {} sites, but your plan allows {}. Please upgrade.", 
+             current_site_count, sites_limit
+         ));
+    }
+
     // Transaction: Create Tenant AND Add Creator as Owner
     let result = conn.transaction::<_, diesel::result::Error, _>(|conn| {
         use crate::schema::tenants;

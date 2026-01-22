@@ -73,9 +73,9 @@ pub struct InventoryAuditLog {
     pub user_id: Option<i32>,
     pub order_id: Option<i64>,
     pub change_type: String,
-    pub quantity_before: Option<i32>,
-    pub quantity_after: Option<i32>,
-    pub quantity_change: Option<i32>,
+    pub quantity_before: i32,
+    pub quantity_after: i32,
+    pub quantity_change: i32,
     pub reason: Option<String>,
     pub created_at: Option<NaiveDateTime>,
 }

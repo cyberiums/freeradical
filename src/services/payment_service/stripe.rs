@@ -29,7 +29,17 @@ struct StripePaymentIntent {
 }
 
 impl StripePaymentHandler {
-    pub fn new(api_key: String) -> Self {
+    pub fn new(mut api_key: String) -> Self {
+        api_key = api_key.trim().to_string();
+        
+        // Validate key for header safety
+        if let Some(bad_byte) = api_key.bytes().find(|&b| b < 32 || b > 126) {
+             panic!("CRITICAL: Invalid character (byte {}) found in STRIPE_SECRET_KEY. Check .env file.", bad_byte);
+        }
+
+        println!("DEBUG: Stripe Key Bytes (Final): {:?}", api_key.as_bytes());
+        log::info!("DEBUG: Stripe Key (Redacted): {}...{}", &api_key[0..5], &api_key[api_key.len()-5..]);
+        
         Self {
             api_key,
             client: Client::new(),
@@ -45,6 +55,44 @@ impl StripePaymentHandler {
             _ => PaymentStatus::Failed,
         }
     }
+
+    pub fn verify_webhook_signature(&self, payload: &[u8], signature: &str) -> Result<bool, String> {
+        // Stripe webhook verification using HMAC-SHA256
+        use hmac::{Hmac, Mac};
+        use sha2::Sha256;
+        
+        type HmacSha256 = Hmac<Sha256>;
+        
+        let webhook_secret = std::env::var("STRIPE_WEBHOOK_SECRET")
+            .map_err(|_| "STRIPE_WEBHOOK_SECRET not set".to_string())?;
+        
+        // Parse signature header (format: "t=timestamp,v1=signature")
+        let parts: HashMap<&str, &str> = signature
+            .split(',')
+            .filter_map(|part| {
+                let mut split = part.split('=');
+                Some((split.next()?, split.next()?))
+            })
+            .collect();
+        
+        let timestamp = parts.get("t").ok_or("Missing timestamp")?;
+        let sig = parts.get("v1").ok_or("Missing v1 signature")?;
+        
+        let signed_payload = format!("{}.{}", timestamp, std::str::from_utf8(payload).unwrap_or(""));
+        
+        let mut mac = HmacSha256::new_from_slice(webhook_secret.as_bytes())
+            .map_err(|_| "Invalid HMAC key".to_string())?;
+            
+        mac.update(signed_payload.as_bytes());
+        
+        let expected_sig = hex::encode(mac.finalize().into_bytes());
+        
+        if expected_sig == *sig {
+            Ok(true)
+        } else {
+            Ok(false)
+        }
+    }
 }
 
 #[async_trait]
@@ -58,27 +106,29 @@ impl PaymentHandler for StripePaymentHandler {
         request: CreatePaymentIntentRequest,
     ) -> Result<PaymentIntent, String> {
         let url = "https://api.stripe.com/v1/payment_intents";
+
+
+        let mut params = HashMap::new();
+        params.insert("amount".to_string(), request.amount_cents.to_string());
+        params.insert("currency".to_string(), request.currency.to_lowercase());
         
-        let stripe_request = StripeCreateIntentRequest {
-            amount: request.amount_cents,
-            currency: request.currency.to_lowercase(),
-            metadata: if request.metadata.is_empty() {
-                None
-            } else {
-                Some(request.metadata.clone())
-            },
-        };
+        for (key, value) in &request.metadata {
+            params.insert(format!("metadata[{}]", key), value.clone());
+        }
         
+        let auth_header = format!("Bearer {}", self.api_key);
+
         let response = self.client
             .post(url)
-            .bearer_auth(&self.api_key)
-            .form(&stripe_request)
+            .header("Authorization", auth_header)
+            .form(&params)
             .send()
             .await
-            .map_err(|e| format!("Stripe API error: {}", e))?;
+            .map_err(|e| format!("Stripe API error (Request Build Failed): {:?} - {}", e, e))?;
         
         if !response.status().is_success() {
             let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+            println!("STRIPE API ERROR RESPONSE: {}", error_text);
             return Err(format!("Stripe API failed: {}", error_text));
         }
         

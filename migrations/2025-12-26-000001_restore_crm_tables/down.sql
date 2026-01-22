@@ -1,0 +1,11 @@
+-- Down migration for restore_crm_tables
+-- Since this is a restoration migration, we might NOT want to drop tables in down,
+-- but to be compliant we can. 
+
+-- DROP TABLE IF EXISTS crm_notes;
+-- DROP TABLE IF EXISTS crm_tasks;
+-- DROP TABLE IF EXISTS crm_campaigns;
+-- DROP TABLE IF EXISTS crm_segment_members;
+-- DROP TABLE IF EXISTS crm_segments;
+-- DROP TABLE IF EXISTS crm_interactions;
+-- DROP TABLE IF EXISTS crm_customers;

@@ -486,7 +486,8 @@ pub async fn create_campaign(
                     "newsletter_intro": request.content.clone().unwrap_or_default(),
                     "sections": [],
                     "company_name": "FreeRadical CRM"
-                 })
+                 }),
+                 Some(tenant_id)
              ).await;
         }
     }

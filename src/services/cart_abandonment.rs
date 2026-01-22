@@ -88,7 +88,8 @@ impl CartAbandonment {
                 email,
                 "Complete your purchase!",
                 "commerce/cart_abandonment", 
-                &data
+                &data,
+                None
             ).await
         } else {
              Err("No email address available".to_string())

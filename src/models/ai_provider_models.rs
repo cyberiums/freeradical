@@ -44,17 +44,22 @@ pub struct NewAIProviderConfig {
     pub created_by: Option<i32>,
 }
 
-/// AI Usage Log Entry
 #[derive(Debug, Clone, Serialize, Deserialize, Queryable, Identifiable)]
 #[diesel(table_name = ai_usage_log)]
 pub struct AIUsageLog {
     pub id: i64,
+    pub provider_id: Option<i64>,
     pub user_id: Option<i32>,
-    pub operation: String,
-    pub provider_type: Option<String>,
-    pub tokens_used: Option<i32>,
+    pub operation: Option<String>,
+    pub prompt_tokens: Option<i32>,
+    pub completion_tokens: Option<i32>,
+    pub total_tokens: Option<i32>,
     pub cost_cents: Option<i32>,
-    pub created_at: NaiveDateTime,
+    pub model: Option<String>,
+    pub latency_ms: Option<i32>,
+    pub success: Option<bool>,
+    pub error: Option<String>,
+    pub created_at: Option<NaiveDateTime>,
 }
 
 /// New AI Usage Log for insertion
@@ -63,8 +68,8 @@ pub struct AIUsageLog {
 pub struct NewAIUsageLog {
     pub user_id: Option<i32>,
     pub operation: String,
-    pub provider_type: Option<String>,
-    pub tokens_used: Option<i32>,
+    pub provider_id: Option<i64>,
+    pub total_tokens: Option<i32>,
     pub cost_cents: Option<i32>,
 }
 

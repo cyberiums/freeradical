@@ -1,0 +1,1384 @@
+// @generated automatically by Diesel CLI.
+
+pub mod sql_types {
+    #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "pages_status"))]
+    pub struct PagesStatus;
+
+    #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "tsvector", schema = "pg_catalog"))]
+    pub struct Tsvector;
+
+    #[derive(diesel::sql_types::SqlType)]
+    #[diesel(postgres_type(name = "vector"))]
+    pub struct Vector;
+}
+
+diesel::table! {
+    ai_generated_content (id) {
+        id -> Int8,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        #[max_length = 50]
+        content_type -> Varchar,
+        prompt_used -> Nullable<Text>,
+        generated_text -> Text,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        #[max_length = 50]
+        provider_type -> Nullable<Varchar>,
+        tokens_used -> Nullable<Int4>,
+        quality_score -> Nullable<Numeric>,
+        was_accepted -> Nullable<Bool>,
+        generated_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    ai_generation_queue (id) {
+        id -> Int8,
+        #[max_length = 255]
+        page_id -> Nullable<Varchar>,
+        #[max_length = 50]
+        task_type -> Nullable<Varchar>,
+        priority -> Nullable<Int4>,
+        #[max_length = 20]
+        status -> Nullable<Varchar>,
+        provider_id -> Nullable<Int8>,
+        input_data -> Nullable<Jsonb>,
+        result_data -> Nullable<Jsonb>,
+        error -> Nullable<Text>,
+        attempts -> Nullable<Int4>,
+        max_attempts -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        started_at -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    ai_key_rotation_history (id) {
+        id -> Int4,
+        provider_key_id -> Int4,
+        rotated_at -> Timestamp,
+        #[max_length = 255]
+        reason -> Nullable<Varchar>,
+        rotated_by -> Nullable<Int4>,
+        #[max_length = 64]
+        old_key_hash -> Nullable<Varchar>,
+    }
+}
+
+diesel::table! {
+    ai_provider_configs (id) {
+        id -> Int8,
+        #[max_length = 20]
+        provider_type -> Varchar,
+        #[max_length = 100]
+        name -> Varchar,
+        api_key_encrypted -> Nullable<Bytea>,
+        config -> Jsonb,
+        is_active -> Nullable<Bool>,
+        is_default -> Nullable<Bool>,
+        priority -> Nullable<Int4>,
+        daily_token_limit -> Nullable<Int4>,
+        monthly_budget_cents -> Nullable<Int4>,
+        tokens_used_today -> Nullable<Int4>,
+        tokens_used_month -> Nullable<Int4>,
+        cost_month_cents -> Nullable<Int4>,
+        last_used_at -> Nullable<Timestamp>,
+        last_reset_daily -> Nullable<Timestamp>,
+        last_reset_monthly -> Nullable<Timestamp>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+        created_by -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    ai_provider_keys (id) {
+        id -> Int4,
+        #[max_length = 50]
+        provider_name -> Varchar,
+        #[max_length = 100]
+        key_name -> Varchar,
+        encrypted_key -> Text,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        rotated_at -> Nullable<Timestamp>,
+        last_used_at -> Nullable<Timestamp>,
+        request_count -> Int4,
+        token_count -> Int8,
+        notes -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
+    ai_usage_log (id) {
+        id -> Int8,
+        provider_id -> Nullable<Int8>,
+        user_id -> Nullable<Int4>,
+        #[max_length = 50]
+        operation -> Nullable<Varchar>,
+        prompt_tokens -> Nullable<Int4>,
+        completion_tokens -> Nullable<Int4>,
+        total_tokens -> Nullable<Int4>,
+        cost_cents -> Nullable<Int4>,
+        #[max_length = 50]
+        model -> Nullable<Varchar>,
+        latency_ms -> Nullable<Int4>,
+        success -> Nullable<Bool>,
+        error -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    analytics_events (id) {
+        id -> Int8,
+        #[max_length = 50]
+        event_type -> Varchar,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        user_id -> Nullable<Int4>,
+        #[max_length = 255]
+        session_id -> Nullable<Varchar>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        user_agent -> Nullable<Text>,
+        referer -> Nullable<Text>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    analytics_summary (id) {
+        id -> Int4,
+        #[max_length = 500]
+        page_url -> Varchar,
+        date -> Date,
+        view_count -> Nullable<Int4>,
+        unique_visitors -> Nullable<Int4>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    audit_logs (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        user_id -> Int4,
+        #[max_length = 50]
+        action -> Varchar,
+        #[max_length = 50]
+        resource_type -> Varchar,
+        #[max_length = 255]
+        resource_id -> Nullable<Varchar>,
+        details -> Nullable<Json>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    backups (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[sql_name = "type"]
+        #[max_length = 50]
+        type_ -> Varchar,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        #[max_length = 500]
+        file_path -> Nullable<Varchar>,
+        file_size -> Nullable<Int8>,
+        #[max_length = 100]
+        storage_location -> Nullable<Varchar>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    billing_invoices (id) {
+        id -> Int4,
+        subscription_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        due_date -> Timestamp,
+        paid_at -> Nullable<Timestamp>,
+        line_items -> Nullable<Jsonb>,
+        #[max_length = 50]
+        invoice_number -> Nullable<Varchar>,
+        pdf_url -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_payments (id) {
+        id -> Int4,
+        invoice_id -> Int4,
+        amount_cents -> Int4,
+        #[max_length = 255]
+        provider_transaction_id -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Varchar,
+        #[max_length = 50]
+        payment_method -> Nullable<Varchar>,
+        payment_date -> Nullable<Timestamp>,
+        created_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_plans (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 50]
+        code -> Varchar,
+        price_cents -> Int4,
+        #[max_length = 20]
+        billing_interval -> Varchar,
+        #[max_length = 3]
+        currency -> Varchar,
+        limits -> Nullable<Jsonb>,
+        is_active -> Nullable<Bool>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    billing_subscriptions (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        plan_id -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        current_period_start -> Timestamp,
+        current_period_end -> Timestamp,
+        cancel_at_period_end -> Nullable<Bool>,
+        canceled_at -> Nullable<Timestamp>,
+        #[max_length = 255]
+        provider_subscription_id -> Nullable<Varchar>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::Vector;
+
+    content_embeddings (id) {
+        id -> Int8,
+        page_id -> Nullable<Int4>,
+        embedding_vector -> Nullable<Vector>,
+        #[max_length = 100]
+        model_name -> Nullable<Varchar>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        #[max_length = 255]
+        page_uuid -> Nullable<Varchar>,
+        #[max_length = 64]
+        content_hash -> Varchar,
+        embedding -> Nullable<Text>,
+        content_preview -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
+    content_relationships (id) {
+        id -> Int8,
+        #[max_length = 20]
+        source_type -> Varchar,
+        #[max_length = 255]
+        source_id -> Varchar,
+        #[max_length = 20]
+        target_type -> Varchar,
+        #[max_length = 255]
+        target_id -> Varchar,
+        #[max_length = 50]
+        relationship_type -> Nullable<Varchar>,
+        metadata -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    crm_campaigns (id) {
+        id -> Int4,
+        #[max_length = 200]
+        name -> Varchar,
+        #[max_length = 50]
+        campaign_type -> Varchar,
+        #[max_length = 20]
+        status -> Nullable<Varchar>,
+        segment_id -> Nullable<Int4>,
+        target_customer_count -> Nullable<Int4>,
+        #[max_length = 255]
+        subject -> Nullable<Varchar>,
+        content -> Nullable<Text>,
+        template_id -> Nullable<Int4>,
+        scheduled_at -> Nullable<Timestamp>,
+        started_at -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+        sent_count -> Nullable<Int4>,
+        delivered_count -> Nullable<Int4>,
+        opened_count -> Nullable<Int4>,
+        clicked_count -> Nullable<Int4>,
+        converted_count -> Nullable<Int4>,
+        revenue_generated -> Nullable<Numeric>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    crm_customers (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        lifecycle_stage -> Varchar,
+        customer_since -> Nullable<Timestamp>,
+        last_purchase_date -> Nullable<Timestamp>,
+        rfm_recency_score -> Nullable<Int4>,
+        rfm_frequency_score -> Nullable<Int4>,
+        rfm_monetary_score -> Nullable<Int4>,
+        rfm_total_score -> Nullable<Int4>,
+        total_orders -> Nullable<Int4>,
+        total_revenue -> Nullable<Numeric>,
+        average_order_value -> Nullable<Numeric>,
+        customer_lifetime_value -> Nullable<Numeric>,
+        last_interaction_date -> Nullable<Timestamp>,
+        interaction_count -> Nullable<Int4>,
+        email_open_rate -> Nullable<Numeric>,
+        email_click_rate -> Nullable<Numeric>,
+        health_score -> Nullable<Int4>,
+        #[max_length = 20]
+        churn_risk -> Nullable<Varchar>,
+        primary_segment_id -> Nullable<Int4>,
+        tags -> Nullable<Array<Nullable<Text>>>,
+        notes -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::Tsvector;
+
+    crm_interactions (id) {
+        id -> Int4,
+        customer_id -> Int4,
+        #[max_length = 50]
+        interaction_type -> Varchar,
+        #[max_length = 50]
+        interaction_channel -> Nullable<Varchar>,
+        #[max_length = 255]
+        subject -> Nullable<Varchar>,
+        description -> Nullable<Text>,
+        #[max_length = 100]
+        outcome -> Nullable<Varchar>,
+        order_id -> Nullable<Int4>,
+        #[max_length = 50]
+        related_entity_type -> Nullable<Varchar>,
+        related_entity_id -> Nullable<Int4>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        search_vector -> Nullable<Tsvector>,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    crm_notes (id) {
+        id -> Int4,
+        customer_id -> Int4,
+        note_text -> Text,
+        is_pinned -> Nullable<Bool>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    crm_segment_members (segment_id, customer_id) {
+        segment_id -> Int4,
+        customer_id -> Int4,
+        added_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    crm_segments (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        criteria -> Jsonb,
+        is_dynamic -> Nullable<Bool>,
+        customer_count -> Nullable<Int4>,
+        last_calculated_at -> Nullable<Timestamp>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    crm_tasks (id) {
+        id -> Int4,
+        customer_id -> Nullable<Int4>,
+        #[max_length = 200]
+        title -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        task_type -> Nullable<Varchar>,
+        #[max_length = 20]
+        priority -> Nullable<Varchar>,
+        #[max_length = 20]
+        status -> Nullable<Varchar>,
+        due_date -> Nullable<Timestamp>,
+        completed_at -> Nullable<Timestamp>,
+        assigned_to -> Nullable<Int4>,
+        created_by -> Nullable<Int4>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    email_templates (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 100]
+        template_key -> Varchar,
+        #[max_length = 255]
+        subject -> Varchar,
+        body_template -> Text,
+        #[max_length = 50]
+        template_type -> Varchar,
+        is_active -> Bool,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    inventory_audit_log (id) {
+        id -> Int4,
+        product_id -> Nullable<Int4>,
+        variant_id -> Nullable<Int4>,
+        user_id -> Nullable<Int4>,
+        order_id -> Nullable<Int4>,
+        #[max_length = 20]
+        change_type -> Varchar,
+        quantity_before -> Int4,
+        quantity_after -> Int4,
+        quantity_change -> Int4,
+        #[max_length = 500]
+        reason -> Nullable<Varchar>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    languages (id) {
+        id -> Int4,
+        #[max_length = 10]
+        code -> Varchar,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 100]
+        native_name -> Nullable<Varchar>,
+        is_default -> Nullable<Bool>,
+        is_rtl -> Nullable<Bool>,
+        enabled -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    marketplace_plugins (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        #[max_length = 500]
+        icon_url -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        developer_id -> Nullable<Int4>,
+        price_cents -> Nullable<Int4>,
+        downloads_count -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    marketplace_submissions (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        resource_type -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 500]
+        repository_url -> Nullable<Varchar>,
+        #[max_length = 50]
+        version -> Nullable<Varchar>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        reviewed_by -> Nullable<Int4>,
+        reviewed_at -> Nullable<Timestamp>,
+        review_notes -> Nullable<Text>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    mcp_custom_tools (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Nullable<Varchar>,
+        input_schema -> Jsonb,
+        #[max_length = 1000]
+        webhook_url -> Varchar,
+        #[max_length = 10]
+        webhook_method -> Nullable<Varchar>,
+        webhook_headers -> Nullable<Jsonb>,
+        #[max_length = 50]
+        required_role -> Nullable<Varchar>,
+        timeout_seconds -> Nullable<Int4>,
+        max_calls_per_hour -> Nullable<Int4>,
+        is_enabled -> Nullable<Bool>,
+        is_public -> Nullable<Bool>,
+        created_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+        last_used_at -> Nullable<Timestamp>,
+        total_calls -> Nullable<Int4>,
+        success_count -> Nullable<Int4>,
+        error_count -> Nullable<Int4>,
+        avg_execution_ms -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    mcp_tool_executions (id) {
+        id -> Int4,
+        tool_id -> Int4,
+        tenant_id -> Int4,
+        user_id -> Nullable<Int4>,
+        input_data -> Nullable<Jsonb>,
+        output_data -> Nullable<Jsonb>,
+        error_message -> Nullable<Text>,
+        execution_time_ms -> Nullable<Int4>,
+        http_status_code -> Nullable<Int4>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        executed_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    mcp_tool_rate_limits (id) {
+        id -> Int4,
+        tool_id -> Int4,
+        tenant_id -> Int4,
+        window_start -> Timestamp,
+        call_count -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    media (id) {
+        id -> Int4,
+        #[max_length = 36]
+        uuid -> Varchar,
+        #[max_length = 255]
+        filename -> Varchar,
+        #[max_length = 255]
+        original_filename -> Varchar,
+        #[max_length = 100]
+        mime_type -> Varchar,
+        file_size -> Int8,
+        width -> Nullable<Int4>,
+        height -> Nullable<Int4>,
+        #[max_length = 255]
+        folder -> Nullable<Varchar>,
+        #[max_length = 500]
+        storage_path -> Varchar,
+        #[max_length = 500]
+        cdn_url -> Nullable<Varchar>,
+        upload_user_id -> Nullable<Int4>,
+        #[max_length = 255]
+        alt_text -> Nullable<Varchar>,
+        caption -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    media_variants (id) {
+        id -> Int4,
+        media_id -> Int4,
+        #[max_length = 50]
+        variant_name -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        width -> Nullable<Int4>,
+        height -> Nullable<Int4>,
+        file_size -> Nullable<Int8>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    module_category (uuid) {
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        page_uuid -> Varchar,
+        #[max_length = 255]
+        title -> Varchar,
+    }
+}
+
+diesel::table! {
+    module_translations (id) {
+        id -> Int4,
+        #[max_length = 255]
+        module_id -> Varchar,
+        language_id -> Int4,
+        #[max_length = 255]
+        title -> Nullable<Varchar>,
+        content -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    modules (uuid) {
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        page_uuid -> Varchar,
+        #[max_length = 255]
+        category_uuid -> Nullable<Varchar>,
+        #[max_length = 255]
+        title -> Varchar,
+        content -> Text,
+        #[max_length = 30]
+        field_type -> Nullable<Varchar>,
+        field_config -> Nullable<Text>,
+        validation_rules -> Nullable<Text>,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    oauth_providers (id) {
+        id -> Int4,
+        #[max_length = 100]
+        name -> Varchar,
+        #[max_length = 255]
+        client_id -> Varchar,
+        #[max_length = 255]
+        client_secret -> Varchar,
+        enabled -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    order_items (id) {
+        id -> Int8,
+        order_id -> Int8,
+        product_id -> Int8,
+        quantity -> Int4,
+        price_cents -> Int8,
+    }
+}
+
+diesel::table! {
+    orders (id) {
+        id -> Int8,
+        #[max_length = 36]
+        uuid -> Varchar,
+        #[max_length = 36]
+        user_uuid -> Varchar,
+        #[max_length = 50]
+        status -> Varchar,
+        total_amount_cents -> Int8,
+        #[max_length = 50]
+        payment_status -> Nullable<Varchar>,
+        #[max_length = 50]
+        payment_provider -> Nullable<Varchar>,
+        #[max_length = 255]
+        payment_intent_id -> Nullable<Varchar>,
+        metadata -> Nullable<Jsonb>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    page_revisions (id) {
+        id -> Int8,
+        #[max_length = 36]
+        page_uuid -> Varchar,
+        revision_number -> Int4,
+        #[max_length = 255]
+        page_title -> Varchar,
+        #[max_length = 500]
+        page_url -> Varchar,
+        page_content -> Nullable<Text>,
+        #[max_length = 70]
+        meta_title -> Nullable<Varchar>,
+        #[max_length = 160]
+        meta_description -> Nullable<Varchar>,
+        #[max_length = 255]
+        meta_keywords -> Nullable<Varchar>,
+        #[max_length = 500]
+        canonical_url -> Nullable<Varchar>,
+        full_snapshot -> Text,
+        #[max_length = 500]
+        change_summary -> Nullable<Varchar>,
+        changed_by_user_id -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    page_translations (id) {
+        id -> Int4,
+        #[max_length = 255]
+        page_id -> Varchar,
+        language_id -> Int4,
+        #[max_length = 255]
+        page_title -> Nullable<Varchar>,
+        page_content -> Nullable<Text>,
+        #[max_length = 255]
+        page_url -> Nullable<Varchar>,
+        #[max_length = 255]
+        meta_title -> Nullable<Varchar>,
+        meta_description -> Nullable<Text>,
+        #[max_length = 255]
+        og_title -> Nullable<Varchar>,
+        og_description -> Nullable<Text>,
+        #[max_length = 255]
+        twitter_title -> Nullable<Varchar>,
+        twitter_description -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    page_views (id) {
+        id -> Int4,
+        page_id -> Nullable<Int4>,
+        user_id -> Nullable<Int4>,
+        #[max_length = 45]
+        ip_address -> Nullable<Varchar>,
+        user_agent -> Nullable<Text>,
+        referer -> Nullable<Text>,
+        #[max_length = 2]
+        country_code -> Nullable<Varchar>,
+        #[max_length = 100]
+        city -> Nullable<Varchar>,
+        viewed_at -> Timestamp,
+        #[max_length = 255]
+        session_id -> Nullable<Varchar>,
+        duration_seconds -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    use diesel::sql_types::*;
+    use super::sql_types::PagesStatus;
+
+    pages (uuid) {
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 500]
+        page_name -> Varchar,
+        #[max_length = 255]
+        page_url -> Varchar,
+        #[max_length = 500]
+        page_title -> Varchar,
+        time_created -> Timestamp,
+        #[max_length = 70]
+        meta_title -> Nullable<Varchar>,
+        #[max_length = 160]
+        meta_description -> Nullable<Varchar>,
+        #[max_length = 255]
+        meta_keywords -> Nullable<Varchar>,
+        #[max_length = 500]
+        canonical_url -> Nullable<Varchar>,
+        #[max_length = 70]
+        og_title -> Nullable<Varchar>,
+        #[max_length = 200]
+        og_description -> Nullable<Varchar>,
+        #[max_length = 500]
+        og_image -> Nullable<Varchar>,
+        #[max_length = 20]
+        twitter_card -> Nullable<Varchar>,
+        #[max_length = 70]
+        twitter_title -> Nullable<Varchar>,
+        #[max_length = 200]
+        twitter_description -> Nullable<Varchar>,
+        #[max_length = 100]
+        author -> Nullable<Varchar>,
+        #[max_length = 50]
+        article_type -> Nullable<Varchar>,
+        #[max_length = 500]
+        featured_image -> Nullable<Varchar>,
+        word_count -> Nullable<Int4>,
+        reading_time -> Nullable<Int4>,
+        current_revision -> Nullable<Int4>,
+        last_modified_by -> Nullable<Int4>,
+        status -> Nullable<PagesStatus>,
+        publish_at -> Nullable<Timestamp>,
+        unpublish_at -> Nullable<Timestamp>,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    pending_verifications (id) {
+        id -> Int4,
+        uuid -> Uuid,
+        #[max_length = 50]
+        verification_type -> Varchar,
+        #[max_length = 255]
+        email -> Varchar,
+        #[max_length = 255]
+        verification_token -> Varchar,
+        payload -> Jsonb,
+        tenant_id -> Nullable<Int4>,
+        verified -> Nullable<Bool>,
+        expires_at -> Timestamp,
+        created_at -> Nullable<Timestamp>,
+        verified_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    product_variants (id) {
+        id -> Int4,
+        #[max_length = 36]
+        uuid -> Varchar,
+        product_id -> Int4,
+        #[max_length = 100]
+        sku -> Nullable<Varchar>,
+        #[max_length = 255]
+        variant_name -> Varchar,
+        price -> Nullable<Numeric>,
+        stock_quantity -> Nullable<Int4>,
+        weight -> Nullable<Numeric>,
+        attributes -> Nullable<Jsonb>,
+        #[max_length = 500]
+        image_url -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    products (id) {
+        id -> Int8,
+        #[max_length = 36]
+        uuid -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        price_cents -> Int8,
+        #[max_length = 100]
+        sku -> Nullable<Varchar>,
+        inventory_count -> Nullable<Int4>,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        stock_quantity -> Int4,
+        low_stock_threshold -> Nullable<Int4>,
+        #[max_length = 20]
+        stock_status -> Nullable<Varchar>,
+        track_inventory -> Nullable<Bool>,
+        allow_backorder -> Nullable<Bool>,
+        backorder_limit -> Nullable<Int4>,
+        tenant_id -> Nullable<Int4>,
+    }
+}
+
+diesel::table! {
+    refresh_tokens (id) {
+        id -> Int4,
+        user_id -> Int4,
+        #[max_length = 255]
+        token -> Varchar,
+        expires_at -> Timestamp,
+        created_at -> Nullable<Timestamp>,
+        revoked_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    robots_rules (id) {
+        id -> Int4,
+        #[max_length = 100]
+        user_agent -> Varchar,
+        #[max_length = 20]
+        directive -> Varchar,
+        #[max_length = 500]
+        path -> Varchar,
+        crawl_delay -> Nullable<Int4>,
+        #[max_length = 200]
+        comment -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    roles (id) {
+        id -> Int4,
+        #[max_length = 50]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        permissions -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    search_history (id) {
+        id -> Int8,
+        user_id -> Nullable<Int4>,
+        query -> Text,
+        #[max_length = 20]
+        search_type -> Nullable<Varchar>,
+        results_count -> Nullable<Int4>,
+        top_result_id -> Nullable<Int8>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    survey_questions (id) {
+        id -> Int4,
+        survey_id -> Nullable<Int4>,
+        question_text -> Text,
+        #[max_length = 50]
+        question_type -> Varchar,
+        options -> Nullable<Jsonb>,
+        order_index -> Nullable<Int4>,
+        is_required -> Nullable<Bool>,
+    }
+}
+
+diesel::table! {
+    survey_responses (id) {
+        id -> Int4,
+        survey_id -> Nullable<Int4>,
+        respondent_id -> Nullable<Int4>,
+        answers -> Jsonb,
+        metadata -> Nullable<Jsonb>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    surveys (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 255]
+        title -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        status -> Nullable<Varchar>,
+        created_by -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    tenant_members (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        user_id -> Int4,
+        #[max_length = 50]
+        role -> Varchar,
+        #[max_length = 20]
+        status -> Varchar,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    tenant_plugins (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        plugin_id -> Int4,
+        #[max_length = 50]
+        status -> Varchar,
+        settings -> Nullable<Jsonb>,
+        installed_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    tenant_sso_configs (id) {
+        id -> Int4,
+        tenant_id -> Int4,
+        #[max_length = 255]
+        idp_entity_id -> Nullable<Varchar>,
+        #[max_length = 500]
+        idp_sso_url -> Nullable<Varchar>,
+        x509_certificate -> Nullable<Text>,
+        is_enabled -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+        #[max_length = 50]
+        provider_type -> Nullable<Varchar>,
+        #[max_length = 255]
+        client_id -> Nullable<Varchar>,
+        #[max_length = 500]
+        client_secret -> Nullable<Varchar>,
+        #[max_length = 500]
+        discovery_url -> Nullable<Varchar>,
+    }
+}
+
+diesel::table! {
+    tenant_webhooks (id) {
+        id -> Uuid,
+        tenant_id -> Int4,
+        #[max_length = 2048]
+        url -> Varchar,
+        #[max_length = 255]
+        secret -> Varchar,
+        events -> Jsonb,
+        is_active -> Bool,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
+diesel::table! {
+    tenants (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        name -> Varchar,
+        #[max_length = 100]
+        subdomain -> Varchar,
+        #[max_length = 255]
+        custom_domain -> Nullable<Varchar>,
+        #[max_length = 50]
+        plan -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        settings -> Nullable<Json>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    themes (id) {
+        id -> Int4,
+        #[max_length = 255]
+        name -> Varchar,
+        description -> Nullable<Text>,
+        #[max_length = 50]
+        version -> Varchar,
+        #[max_length = 500]
+        file_path -> Varchar,
+        #[max_length = 500]
+        thumbnail_url -> Nullable<Varchar>,
+        is_active -> Nullable<Bool>,
+        is_default -> Nullable<Bool>,
+        tenant_id -> Nullable<Int4>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    user_oauth_connections (id) {
+        id -> Int4,
+        user_id -> Int4,
+        provider_id -> Int4,
+        #[max_length = 255]
+        provider_user_id -> Varchar,
+        access_token -> Nullable<Text>,
+        refresh_token -> Nullable<Text>,
+        expires_at -> Nullable<Timestamp>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    user_roles (user_id, role_id) {
+        #[max_length = 255]
+        user_id -> Varchar,
+        role_id -> Int4,
+        assigned_at -> Nullable<Timestamp>,
+        #[max_length = 255]
+        assigned_by -> Nullable<Varchar>,
+    }
+}
+
+diesel::table! {
+    users (id) {
+        id -> Int4,
+        #[max_length = 255]
+        uuid -> Varchar,
+        #[max_length = 255]
+        username -> Varchar,
+        #[max_length = 255]
+        password -> Varchar,
+        #[max_length = 511]
+        token -> Nullable<Varchar>,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 255]
+        two_factor_secret -> Nullable<Varchar>,
+        two_factor_enabled -> Bool,
+    }
+}
+
+diesel::table! {
+    verification_settings (id) {
+        id -> Int4,
+        tenant_id -> Nullable<Int4>,
+        #[max_length = 50]
+        verification_type -> Varchar,
+        ttl_hours -> Nullable<Int4>,
+        enabled -> Nullable<Bool>,
+        email_template -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+        updated_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    webhook_logs (id) {
+        id -> Int8,
+        webhook_id -> Int4,
+        #[max_length = 100]
+        event_type -> Varchar,
+        payload -> Nullable<Json>,
+        response_status -> Nullable<Int4>,
+        response_body -> Nullable<Text>,
+        created_at -> Nullable<Timestamp>,
+    }
+}
+
+diesel::table! {
+    webhooks (id) {
+        id -> Int4,
+        #[max_length = 500]
+        url -> Varchar,
+        events -> Json,
+        #[max_length = 255]
+        secret -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
+        created_at -> Nullable<Timestamp>,
+        last_triggered_at -> Nullable<Timestamp>,
+        failure_count -> Nullable<Int4>,
+    }
+}
+
+diesel::joinable!(ai_generation_queue -> ai_provider_configs (provider_id));
+diesel::joinable!(ai_key_rotation_history -> ai_provider_keys (provider_key_id));
+diesel::joinable!(ai_provider_configs -> users (created_by));
+diesel::joinable!(ai_usage_log -> ai_provider_configs (provider_id));
+diesel::joinable!(ai_usage_log -> users (user_id));
+diesel::joinable!(audit_logs -> tenants (tenant_id));
+diesel::joinable!(audit_logs -> users (user_id));
+diesel::joinable!(billing_invoices -> billing_subscriptions (subscription_id));
+diesel::joinable!(billing_payments -> billing_invoices (invoice_id));
+diesel::joinable!(billing_subscriptions -> billing_plans (plan_id));
+diesel::joinable!(billing_subscriptions -> tenants (tenant_id));
+diesel::joinable!(crm_campaigns -> crm_segments (segment_id));
+diesel::joinable!(crm_campaigns -> tenants (tenant_id));
+diesel::joinable!(crm_campaigns -> users (created_by));
+diesel::joinable!(crm_customers -> tenants (tenant_id));
+diesel::joinable!(crm_customers -> users (user_id));
+diesel::joinable!(crm_interactions -> crm_customers (customer_id));
+diesel::joinable!(crm_interactions -> orders (order_id));
+diesel::joinable!(crm_interactions -> tenants (tenant_id));
+diesel::joinable!(crm_interactions -> users (created_by));
+diesel::joinable!(crm_notes -> crm_customers (customer_id));
+diesel::joinable!(crm_notes -> tenants (tenant_id));
+diesel::joinable!(crm_notes -> users (created_by));
+diesel::joinable!(crm_segment_members -> crm_customers (customer_id));
+diesel::joinable!(crm_segment_members -> crm_segments (segment_id));
+diesel::joinable!(crm_segments -> tenants (tenant_id));
+diesel::joinable!(crm_segments -> users (created_by));
+diesel::joinable!(crm_tasks -> crm_customers (customer_id));
+diesel::joinable!(crm_tasks -> tenants (tenant_id));
+diesel::joinable!(email_templates -> tenants (tenant_id));
+diesel::joinable!(inventory_audit_log -> orders (order_id));
+diesel::joinable!(inventory_audit_log -> product_variants (variant_id));
+diesel::joinable!(inventory_audit_log -> products (product_id));
+diesel::joinable!(inventory_audit_log -> users (user_id));
+diesel::joinable!(marketplace_plugins -> users (developer_id));
+diesel::joinable!(mcp_custom_tools -> tenants (tenant_id));
+diesel::joinable!(mcp_custom_tools -> users (created_by));
+diesel::joinable!(mcp_tool_executions -> mcp_custom_tools (tool_id));
+diesel::joinable!(mcp_tool_executions -> tenants (tenant_id));
+diesel::joinable!(mcp_tool_executions -> users (user_id));
+diesel::joinable!(mcp_tool_rate_limits -> mcp_custom_tools (tool_id));
+diesel::joinable!(mcp_tool_rate_limits -> tenants (tenant_id));
+diesel::joinable!(media -> tenants (tenant_id));
+diesel::joinable!(media_variants -> media (media_id));
+diesel::joinable!(module_category -> pages (page_uuid));
+diesel::joinable!(module_translations -> languages (language_id));
+diesel::joinable!(module_translations -> modules (module_id));
+diesel::joinable!(modules -> module_category (category_uuid));
+diesel::joinable!(modules -> pages (page_uuid));
+diesel::joinable!(modules -> tenants (tenant_id));
+diesel::joinable!(order_items -> orders (order_id));
+diesel::joinable!(order_items -> products (product_id));
+diesel::joinable!(orders -> tenants (tenant_id));
+diesel::joinable!(page_translations -> languages (language_id));
+diesel::joinable!(page_translations -> pages (page_id));
+diesel::joinable!(pages -> tenants (tenant_id));
+diesel::joinable!(pending_verifications -> tenants (tenant_id));
+diesel::joinable!(product_variants -> products (product_id));
+diesel::joinable!(products -> tenants (tenant_id));
+diesel::joinable!(refresh_tokens -> users (user_id));
+diesel::joinable!(search_history -> users (user_id));
+diesel::joinable!(survey_questions -> surveys (survey_id));
+diesel::joinable!(survey_responses -> surveys (survey_id));
+diesel::joinable!(survey_responses -> users (respondent_id));
+diesel::joinable!(surveys -> tenants (tenant_id));
+diesel::joinable!(surveys -> users (created_by));
+diesel::joinable!(tenant_members -> tenants (tenant_id));
+diesel::joinable!(tenant_members -> users (user_id));
+diesel::joinable!(tenant_plugins -> marketplace_plugins (plugin_id));
+diesel::joinable!(tenant_plugins -> tenants (tenant_id));
+diesel::joinable!(tenant_sso_configs -> tenants (tenant_id));
+diesel::joinable!(tenant_webhooks -> tenants (tenant_id));
+diesel::joinable!(themes -> tenants (tenant_id));
+diesel::joinable!(user_oauth_connections -> oauth_providers (provider_id));
+diesel::joinable!(user_oauth_connections -> users (user_id));
+diesel::joinable!(user_roles -> roles (role_id));
+diesel::joinable!(users -> tenants (tenant_id));
+diesel::joinable!(verification_settings -> tenants (tenant_id));
+diesel::joinable!(webhook_logs -> webhooks (webhook_id));
+
+diesel::allow_tables_to_appear_in_same_query!(
+    ai_generated_content,
+    ai_generation_queue,
+    ai_key_rotation_history,
+    ai_provider_configs,
+    ai_provider_keys,
+    ai_usage_log,
+    analytics_events,
+    analytics_summary,
+    audit_logs,
+    backups,
+    billing_invoices,
+    billing_payments,
+    billing_plans,
+    billing_subscriptions,
+    content_embeddings,
+    content_relationships,
+    crm_campaigns,
+    crm_customers,
+    crm_interactions,
+    crm_notes,
+    crm_segment_members,
+    crm_segments,
+    crm_tasks,
+    email_templates,
+    inventory_audit_log,
+    languages,
+    marketplace_plugins,
+    marketplace_submissions,
+    mcp_custom_tools,
+    mcp_tool_executions,
+    mcp_tool_rate_limits,
+    media,
+    media_variants,
+    module_category,
+    module_translations,
+    modules,
+    oauth_providers,
+    order_items,
+    orders,
+    page_revisions,
+    page_translations,
+    page_views,
+    pages,
+    pending_verifications,
+    product_variants,
+    products,
+    refresh_tokens,
+    robots_rules,
+    roles,
+    search_history,
+    survey_questions,
+    survey_responses,
+    surveys,
+    tenant_members,
+    tenant_plugins,
+    tenant_sso_configs,
+    tenant_webhooks,
+    tenants,
+    themes,
+    user_oauth_connections,
+    user_roles,
+    users,
+    verification_settings,
+    webhook_logs,
+    webhooks,
+);

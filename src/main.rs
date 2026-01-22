@@ -107,6 +107,7 @@ async fn main() -> std::io::Result<()> {
     let cache_service = web::Data::new(cache_service);
 
     // Initialize Template Service (Supports Handlebars + Liquid)
+    // Initialize Template Service (Supports Handlebars + Liquid)
     let template_service = services::template_service::TemplateService::new();
     
     // Register templates
@@ -155,7 +156,7 @@ async fn main() -> std::io::Result<()> {
     // Register Stripe handler if API key is present
     if let Ok(stripe_key) = std::env::var("STRIPE_SECRET_KEY") {
         payment_registry.register(Box::new(
-            services::payment_service::stripe::StripePaymentHandler::new(stripe_key)
+            services::payment_service::stripe::StripePaymentHandler::new(stripe_key.trim().to_string())
         ));
     }
     
@@ -166,7 +167,7 @@ async fn main() -> std::io::Result<()> {
     ) {
         let sandbox = std::env::var("PAYPAL_SANDBOX").unwrap_or_else(|_| "true".to_string()) == "true";
         payment_registry.register(Box::new(
-            services::payment_service::paypal::PayPalPaymentHandler::new(client_id, client_secret, sandbox)
+            services::payment_service::paypal::PayPalPaymentHandler::new(client_id.trim().to_string(), client_secret.trim().to_string(), sandbox)
         ));
     }
     
@@ -181,7 +182,7 @@ async fn main() -> std::io::Result<()> {
     let payment_registry = web::Data::new(payment_registry);
 
     // Initialize Email Service
-    let email_template_service = services::email_template_service::EmailTemplateService::new();
+    let email_template_service = services::email_template_service::EmailTemplateService::new(web::Data::new(pool.clone()));
     let email_service = services::email_service::EmailService::new(email_template_service).await;
     let email_service = web::Data::new(email_service);
 
@@ -211,6 +212,7 @@ async fn main() -> std::io::Result<()> {
             .route("/payments/create", web::post().to(controllers::payment_controller::create_payment_intent))
             .route("/payments/get", web::get().to(controllers::payment_controller::get_payment_intent))
             .route("/payments/providers", web::get().to(controllers::payment_controller::list_payment_handlers))
+            .service(controllers::stripe_webhook_controller::handle_webhook)
             // Product management routes
             .route("/products", web::get().to(controllers::product_controller::list_products)) // Commerce disabled
             .route("/products/{id}", web::get().to(controllers::product_controller::get_product)) // Commerce disabled
@@ -260,6 +262,7 @@ async fn main() -> std::io::Result<()> {
             .route("/sites", web::post().to(controllers::site_controller::create_site))
             .route("/sites/validate-cname", web::post().to(controllers::site_controller::validate_cname))
             .route("/sites/{id}", web::get().to(controllers::site_controller::get_site))
+            .route("/sites/{id}", web::put().to(controllers::site_controller::update_site))
             // Theme routes
             .route("/themes", web::get().to(controllers::theme_controller::list_themes))
             .route("/themes/upload", web::post().to(controllers::theme_controller::upload_theme))

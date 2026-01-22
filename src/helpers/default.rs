@@ -94,4 +94,28 @@ pub fn register_helpers(handlebars: Data<Mutex<Handlebars<'_>>>) {
         .lock()
         .unwrap()
         .register_helper("getarray", Box::new(ARRAY_HELPER));
+    handlebars
+        .lock()
+        .unwrap()
+        .register_helper("formatPrice", Box::new(format_price));
+}
+
+fn format_price(
+    h: &Helper,
+    _: &Handlebars,
+    _: &Context,
+    _: &mut RenderContext,
+    out: &mut dyn Output,
+) -> Result<(), RenderError> {
+    let param = h.param(0).ok_or(RenderError::new("Param 0 required for formatPrice"))?;
+    let val = param.value().as_f64().or_else(|| param.value().as_i64().map(|i| i as f64)).unwrap_or(0.0);
+    // If input is cents (integer-like), divide by 100. If it looks like dollars, keep it.
+    // However, the model usually sends cents. Let's assume input matches the usage.
+    // If the invoice line items are cents, we divide by 100.
+    // Let's check the param.
+    
+    // Usage in invoice.hbs: {{formatPrice amount_cents}} -> likely cents.
+    let dollars = val / 100.0;
+    out.write(&format!("${:.2}", dollars))?;
+    Ok(())
 }

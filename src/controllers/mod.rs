@@ -14,6 +14,7 @@ pub mod theme_controller;
 pub mod marketplace_plugin_controller;
 pub mod tenant_controller;
 pub mod webhook_controller;
+pub mod stripe_webhook_controller;
 pub mod payment_controller;
 pub mod oauth_controller;
 pub mod oauth_callback_controller;

@@ -1,13 +1,16 @@
 use std::sync::Mutex;
+use diesel::prelude::*;
 
 use actix_web::{web, HttpRequest, HttpResponse};
 use handlebars::Handlebars;
 use uuid::Uuid;
+use serde_json::json;
 
 use crate::models::{pool_handler, Model, DatabasePool, ReadDatabasePool};
 
 use crate::models::module_models::{FieldsDTO};
 use crate::models::page_models::{PageModuleDTO, MutPage, Page, PageDTO};
+use crate::models::tenant_models::Tenant;
 
 use crate::services::errors_service::CustomHttpError;
 use crate::helpers::tenant_helper::{resolve_tenant_id, get_tenant_role};
@@ -101,10 +104,14 @@ pub async fn display_page(
     let path = req.path();
     let cache_key = format!("page:{}:{}:html", tenant_id, path);
 
-    // 1. Check Cache
-    if let Some(cached_html) = cache.get::<String>(&cache_key).await {
-         // log::debug!("Cache hit for {}", cache_key);
-         return Ok(HttpResponse::Ok().content_type("text/html").body(cached_html));
+    // 1. Check Cache (Skip for Dashboard or Admin routes which are user-specific)
+    let is_dynamic_route = path.starts_with("/dashboard") || path.starts_with("/admin") || path.starts_with("/settings");
+    
+    if !is_dynamic_route {
+        if let Some(cached_html) = cache.get::<String>(&cache_key).await {
+             // log::debug!("Cache hit for {}", cache_key);
+             return Ok(HttpResponse::Ok().content_type("text/html").body(cached_html));
+        }
     }
 
     // Use Read Replica for page display high-traffic endpoint
@@ -119,14 +126,122 @@ pub async fn display_page(
         }
     };
 
+    // Inject User Context data into the template
+    // This allows pages like /dashboard/sites to verify subscription limits
+    let mut context_data = serde_json::to_value(&pagemodule).unwrap_or(serde_json::json!({}));
+    
+    if let Some(user_ctx) = get_user_context(&req) {
+        // Count sites usage
+        let sites_count = Tenant::count_by_user(user_ctx.user_id, &mut mysql_pool).unwrap_or(0);
+        // Fetch limit from Active Subscriptions (Matches tenant_controller logic)
+        use crate::schema::billing_subscriptions;
+        use crate::models::billing_models::{Subscription, BillingPlan};
+        use crate::schema::billing_plans;
+
+        let mut plan_code = "free".to_string();
+        let mut plan_name = "Free".to_string();
+        
+        // Find subscriptions for user's tenants (Account Level Check)
+        use crate::schema::tenant_members;
+        
+        let user_tenants_ids = tenant_members::table
+            .filter(tenant_members::user_id.eq(user_ctx.user_id))
+            .select(tenant_members::tenant_id)
+            .load::<i32>(&mut mysql_pool)
+            .unwrap_or(vec![]);
+
+        let mut sites_limit = 0; // Default none
+
+        if !user_tenants_ids.is_empty() {
+             let active_subs = billing_subscriptions::table
+                .filter(billing_subscriptions::tenant_id.eq_any(&user_tenants_ids))
+                .filter(billing_subscriptions::status.eq("active"))
+                .inner_join(billing_plans::table)
+                .select((Subscription::as_select(), BillingPlan::as_select()))
+                .load::<(Subscription, BillingPlan)>(&mut mysql_pool)
+                .unwrap_or(vec![]);
+
+             for (_, plan) in active_subs {
+                 // Update plan info (use the highest tier found)
+                 plan_code = plan.code.clone();
+                 plan_name = plan.name.clone();
+
+                 if let Some(limits) = plan.limits {
+                     if let Some(limit_val) = limits.get("sites").and_then(|v| v.as_i64()) {
+                         let l = limit_val as i32;
+                         if l > sites_limit { sites_limit = l; }
+                         if l == -1 { sites_limit = 9999; }
+                     }
+                 }
+             }
+        }
+        
+        // Logical Fallback: Ensure limit isn't 0 if user has sites (Validation vs Display)
+        if sites_count == 0 {
+             sites_limit = std::cmp::max(sites_limit, 1);
+        } else {
+             sites_limit = std::cmp::max(sites_limit, 1);
+        }
+
+        if let Some(obj) = context_data.as_object_mut() {
+            obj.insert("user".to_string(), json!({
+                "email": user_ctx.email,
+                "role": user_ctx.role,
+                "id": user_ctx.user_id,
+                "subscription": {
+                    "sites_count": sites_count,
+                    "sites_limit": sites_limit,
+                    "code": plan_code,
+                    "plan_name": plan_name
+                }
+            }));
+            
+            // Inject Sites List (SSR)
+            // Inject Sites List (SSR)
+            let result_sites = Tenant::find_by_user(user_ctx.user_id, &mut mysql_pool);
+            match result_sites {
+                Ok(user_sites) => {
+                    let sites_len = user_sites.len();
+                    // Log mismatch if count != len (indicates probable ghost sites or deserialization issues if logic differed, but now logic is same)
+                    // We can inject debug info if needed
+                    // obj.insert("_debug_sites_count".to_string(), json!(sites_count));
+                    // obj.insert("_debug_sites_len".to_string(), json!(sites_len));
+
+                    let sites_json: Vec<serde_json::Value> = user_sites.into_iter().map(|t| {
+                        let domain = t.custom_domain.or(Some(t.subdomain)).unwrap_or_default();
+                        json!({
+                            "id": t.id,
+                            "name": t.name,
+                            "domain": domain, 
+                            "status": if t.is_active.unwrap_or(false) { "active" } else { "inactive" },
+                            "visits": 0, 
+                            "created_at": t.created_at.map(|d| d.to_string()).unwrap_or_default()
+                        })
+                    }).collect();
+                 
+                    obj.insert("sites".to_string(), serde_json::Value::Array(sites_json));
+                },
+                Err(e) => {
+                    log::error!("Failed to fetch sites for user {}: {}", user_ctx.user_id, e);
+                    // Inject empty list to ensure template doesn't crash if it expects array? 
+                    // (It handles missing 'sites' key via #if, but explicit empty array is fine)
+                    obj.insert("sites".to_string(), json!([]));
+                    obj.insert("sites_error".to_string(), json!(e.to_string()));
+                }
+            }
+        }
+    }
+
     let s = hb
         .lock()
         .unwrap()
-        .render(&pagemodule.page_name, &pagemodule)
+        .render(&pagemodule.page_name, &context_data)
         .unwrap();
 
-    // 2. Store in Cache
-    let _ = cache.set(&cache_key, &s, None).await;
+    // 2. Store in Cache (Only static pages)
+    if !is_dynamic_route {
+        let _ = cache.set(&cache_key, &s, None).await;
+    }
 
     Ok(HttpResponse::Ok().content_type("text/html").body(s))
 }

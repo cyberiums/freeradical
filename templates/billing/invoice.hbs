@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{invoice.invoice_number}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen py-10">
+    <div class="max-w-3xl mx-auto bg-white p-12 rounded-xl shadow-sm border border-slate-200">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-12">
+            <div>
+                <h1 class="text-3xl font-black text-slate-900 mb-2">INVOICE</h1>
+                <p class="text-slate-500 font-mono">{{invoice.invoice_number}}</p>
+                <div class="mt-4">
+                    <span
+                        class="px-3 py-1 rounded-full text-sm font-bold {{#if (eq invoice.status 'paid')}}bg-emerald-100 text-emerald-800{{else}}bg-yellow-100 text-yellow-800{{/if}}">
+                        {{invoice.status}}
+                    </span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="font-bold text-xl text-slate-900">{{company.name}}</div>
+                <div class="text-slate-500 text-sm">
+                    {{{company.address}}}<br>
+                    {{company.email}}
+                </div>
+            </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="flex justify-between mb-12 py-6 border-y border-slate-100">
+            <div>
+                <div class="text-sm text-slate-500 mb-1">Bill To</div>
+                <div class="font-bold text-slate-900">{{tenant.name}}</div>
+                <div class="text-sm text-slate-500">{{user.email}}</div>
+            </div>
+            <div class="text-right">
+                <div class="grid grid-cols-2 gap-x-8 gap-y-2">
+                    <div class="text-sm text-slate-500">Invoice Date</div>
+                    <div class="font-bold text-slate-900">{{invoice.created_at}}</div>
+
+                    <div class="text-sm text-slate-500">Due Date</div>
+                    <div class="font-bold text-slate-900">{{invoice.due_date}}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Line Items -->
+        <table class="w-full mb-12">
+            <thead>
+                <tr class="border-b border-slate-200">
+                    <th class="text-left py-3 font-bold text-slate-600">Description</th>
+                    <th class="text-right py-3 font-bold text-slate-600">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {{#each invoice.line_items}}
+                <tr>
+                    <td class="py-4 text-slate-900">{{this.description}}</td>
+                    <td class="py-4 text-right font-mono font-medium">${{formatPrice this.amount}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="pt-6 text-right font-bold text-slate-900">Total</td>
+                    <td class="pt-6 text-right font-black text-2xl text-slate-900">${{formatPrice invoice.amount_cents}}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <!-- Footer -->
+        <div class="text-center text-slate-500 text-sm mt-12 pt-8 border-t border-slate-100">
+            <p>Thank you for your business.</p>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 text-center no-print">
+            <button onclick="window.print()"
+                class="px-6 py-3 bg-slate-900 text-white font-bold rounded-lg hover:bg-slate-800 transition-colors">
+                Print / Save as PDF
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

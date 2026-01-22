@@ -1,5 +1,4 @@
--- Create themes table for theme management with multi-tenant support
-CREATE TABLE themes (
+CREATE TABLE IF NOT EXISTS themes (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,

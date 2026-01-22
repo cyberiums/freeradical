@@ -43,8 +43,10 @@ impl Model<User, MutUser, String> for User {
             .first(db)
     }
 
-    fn read_all(_: &mut PooledDatabaseConnection) -> Result<Vec<User>, diesel::result::Error> {
-        unimplemented!()
+    fn read_all(db: &mut PooledDatabaseConnection) -> Result<Vec<User>, diesel::result::Error> {
+        users::table
+            .select(User::as_select())
+            .load(db)
     }
 
     fn update(

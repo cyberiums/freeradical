@@ -22,6 +22,7 @@ pub struct Module {
     pub field_type: Option<String>,
     pub field_config: Option<String>,
     pub validation_rules: Option<String>,
+    pub tenant_id: Option<i32>,
 }
 
 #[derive(Insertable, AsChangeset, Deserialize, Serialize, Clone, ToSchema)]

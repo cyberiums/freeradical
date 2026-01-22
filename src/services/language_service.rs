@@ -57,7 +57,7 @@ impl LanguageService {
         use crate::schema::page_translations::dsl::*;
         
         page_translations
-            .filter(page_id.eq(target_page_id))
+            .filter(page_id.eq(target_page_id.to_string()))
             .filter(language_id.eq(lang_id))
             .first::<PageTranslation>(conn)
             .optional()

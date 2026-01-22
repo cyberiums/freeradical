@@ -149,11 +149,11 @@ impl EmailService {
         }
     }
 
-    pub async fn send_template_email<T>(&self, to: &str, subject: &str, template_name: &str, data: &T) -> Result<(), String>
+    pub async fn send_template_email<T>(&self, to: &str, subject: &str, template_name: &str, data: &T, tenant_id: Option<i32>) -> Result<(), String>
     where
         T: Serialize,
     {
-        let html_body = self.template_service.render(template_name, data)?;
+        let html_body = self.template_service.render(template_name, data, tenant_id)?;
         self.send_email(to, subject, &html_body).await
     }
 }

@@ -123,7 +123,8 @@ pub async fn verify_customer_email(
                 "app_name": app_name,
                 "dashboard_url": dashboard_url,
                 "login_url": dashboard_url.replace("/dashboard", "/login"),
-            })
+            }),
+            _tenant_id
         ).await {
             Ok(_) => log::info!("✅ Welcome email sent to {} after verification", email),
             Err(e) => log::error!("❌ Failed to send welcome email to {}: {:?}", email, e),

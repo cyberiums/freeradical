@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS ai_generated_content CASCADE;
 CREATE TABLE IF NOT EXISTS ai_generated_content (
     id BIGSERIAL PRIMARY KEY,
     page_uuid VARCHAR(255),  -- Reference to pages.page_uuid (no FK constraint due to schema complexity)

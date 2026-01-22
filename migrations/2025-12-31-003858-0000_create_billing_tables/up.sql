@@ -1,5 +1,5 @@
 -- Create billing_plans table
-CREATE TABLE billing_plans (
+CREATE TABLE IF NOT EXISTS billing_plans (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     code VARCHAR(100) NOT NULL UNIQUE,
@@ -13,7 +13,7 @@ CREATE TABLE billing_plans (
 );
 
 -- Create billing_subscriptions table
-CREATE TABLE billing_subscriptions (
+CREATE TABLE IF NOT EXISTS billing_subscriptions (
     id SERIAL PRIMARY KEY,
     tenant_id INTEGER NOT NULL REFERENCES tenants(id),
     plan_id INTEGER NOT NULL REFERENCES billing_plans(id),
@@ -28,7 +28,7 @@ CREATE TABLE billing_subscriptions (
 );
 
 -- Create billing_invoices table
-CREATE TABLE billing_invoices (
+CREATE TABLE IF NOT EXISTS billing_invoices (
     id SERIAL PRIMARY KEY,
     subscription_id INTEGER NOT NULL REFERENCES billing_subscriptions(id),
     amount_cents INTEGER NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE billing_invoices (
 );
 
 -- Create billing_payments table
-CREATE TABLE billing_payments (
+CREATE TABLE IF NOT EXISTS billing_payments (
     id SERIAL PRIMARY KEY,
     invoice_id INTEGER NOT NULL REFERENCES billing_invoices(id),
     amount_cents INTEGER NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE billing_payments (
 );
 
 -- Indexes for performance
-CREATE INDEX idx_billing_subscriptions_tenant ON billing_subscriptions(tenant_id);
-CREATE INDEX idx_billing_subscriptions_plan ON billing_subscriptions(plan_id);
-CREATE INDEX idx_billing_invoices_subscription ON billing_invoices(subscription_id);
-CREATE INDEX idx_billing_payments_invoice ON billing_payments(invoice_id);
+CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_tenant ON billing_subscriptions(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_billing_subscriptions_plan ON billing_subscriptions(plan_id);
+CREATE INDEX IF NOT EXISTS idx_billing_invoices_subscription ON billing_invoices(subscription_id);
+CREATE INDEX IF NOT EXISTS idx_billing_payments_invoice ON billing_payments(invoice_id);

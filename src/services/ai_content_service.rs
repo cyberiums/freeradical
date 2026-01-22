@@ -182,6 +182,8 @@ async fn log_usage(
     let provider_type = Some(provider.provider_type.clone());
     let op = operation.to_string();
     
+    let provider_id_val = provider.id;
+    
     web::block(move || -> Result<(), diesel::result::Error> {
         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
             diesel::result::DatabaseErrorKind::Unknown,
@@ -191,8 +193,8 @@ async fn log_usage(
         let log = NewAIUsageLog {
             user_id,
             operation: op,
-            provider_type,
-            tokens_used: Some(tokens as i32),
+            provider_id: Some(provider_id_val as i64),
+            total_tokens: Some(tokens as i32),
             cost_cents: Some(cost_cents as i32),
         };
         

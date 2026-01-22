@@ -1,0 +1,410 @@
+    Checking freeradical v2.6.1 (/Users/prabhatsingh/freeradical)
+warning: unused import: `HttpRequest`
+ --> src/controllers/user_api_extensions.rs:1:22
+  |
+1 | use actix_web::{web, HttpRequest, HttpResponse};
+  |                      ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Serialize`
+ --> src/controllers/user_api_extensions.rs:2:26
+  |
+2 | use serde::{Deserialize, Serialize};
+  |                          ^^^^^^^^^
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:223:9
+    |
+223 |         ;
+    |         ^ help: remove this semicolon
+    |
+    = note: `#[warn(redundant_semicolons)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:277:9
+    |
+277 |         ;
+    |         ^ help: remove this semicolon
+
+warning: unused imports: `BillingPlan`, `NewBillingPlan`, and `Subscription`
+ --> src/controllers/billing_controller.rs:8:37
+  |
+8 | use crate::models::billing_models::{BillingPlan, NewBillingPlan, Subscription, Invoice};
+  |                                     ^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^
+
+warning: unused imports: `billing_plans` and `billing_subscriptions`
+  --> src/controllers/billing_controller.rs:10:21
+   |
+10 | use crate::schema::{billing_plans, billing_subscriptions, billing_invoices};
+   |                     ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Duration`
+ --> src/services/mcp_custom_tool_service.rs:3:19
+  |
+3 | use chrono::{Utc, Duration};
+  |                   ^^^^^^^^
+
+warning: use of deprecated type alias `diesel::dsl::count_distinct`
+   --> src/services/analytics_service.rs:128:26
+    |
+128 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:128:26
+    |
+128 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:135:21
+    |
+135 |             .select(count_distinct(dsl::user_id))
+    |                     ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `aws_config::from_env`: Use the `aws_config::defaults` function. If you don't care about future default behavior changes, you can continue to use this function by enabling the `behavior-version-latest` feature. Doing so will make this deprecation notice go away.
+  --> src/services/storage_service.rs:78:34
+   |
+78 |         let config = aws_config::from_env()
+   |                                  ^^^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src/services/payment_service/square.rs:237:32
+    |
+237 |         let expected = base64::encode(mac.finalize().into_bytes());
+    |                                ^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+ --> src/services/email_verification_service.rs:4:12
+  |
+4 | use rand::{thread_rng, Rng, distr::Alphanumeric};
+  |            ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/services/email_verification_service.rs:149:35
+    |
+149 |         let random_part: String = thread_rng()
+    |                                   ^^^^^^^^^^
+
+warning: use of deprecated type alias `diesel::backend::RawValue`: Use `Backend::RawValue` directly
+  --> src/models/status_enum.rs:34:41
+   |
+34 |     fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
+   |                                         ^^^^^^^^
+
+error[E0599]: `billing_subscriptions::table` is not an iterator
+   --> src/controllers/page_controllers.rs:139:14
+    |
+138 |           let active_sub_opt = billing_subscriptions::table
+    |  ______________________________-
+139 | |             .filter(billing_subscriptions::tenant_id.eq(tenant_id))
+    | |             -^^^^^^ `billing_subscriptions::table` is not an iterator
+    | |_____________|
+    |
+    |
+   ::: src/schema.rs:253:1
+    |
+253 | / diesel::table! {
+254 | |     billing_subscriptions (id) {
+255 | |         id -> Int4,
+256 | |         tenant_id -> Int4,
+...   |
+269 | | }
+    | |_- method `filter` not found for this struct because it doesn't satisfy `billing_subscriptions::table: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `billing_subscriptions::table: Iterator`
+            which is required by `&mut billing_subscriptions::table: Iterator`
+note: the trait `Iterator` must be implemented
+   --> /rustc/ded5c06cf21d2b93bffd5d884aa6e96934ee4234/library/core/src/iter/traits/iterator.rs:40:1
+    = help: items from traits can only be used if the trait is in scope
+help: the following traits which provide `filter` are implemented but not in scope; perhaps you want to import one of them
+    |
+  1 + use crate::diesel::QueryDsl;
+    |
+  1 + use crate::diesel::query_dsl::methods::FilterDsl;
+    |
+
+error[E0599]: `billing_subscriptions::columns::tenant_id` is not an iterator
+   --> src/controllers/page_controllers.rs:139:54
+    |
+139 |             .filter(billing_subscriptions::tenant_id.eq(tenant_id))
+    |                                                      ^^ `billing_subscriptions::columns::tenant_id` is not an iterator
+    |
+   ::: src/schema.rs:256:9
+    |
+256 |         tenant_id -> Int4,
+    |         --------- method `eq` not found for this struct because it doesn't satisfy `_: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `billing_subscriptions::columns::tenant_id: Iterator`
+            which is required by `&mut billing_subscriptions::columns::tenant_id: Iterator`
+note: the trait `Iterator` must be implemented
+   --> /rustc/ded5c06cf21d2b93bffd5d884aa6e96934ee4234/library/core/src/iter/traits/iterator.rs:40:1
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ExpressionMethods` which provides `eq` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use crate::diesel::ExpressionMethods;
+    |
+
+error[E0599]: `billing_subscriptions::columns::status` is not an iterator
+   --> src/controllers/page_controllers.rs:140:51
+    |
+140 |             .filter(billing_subscriptions::status.eq("active"))
+    |                                                   ^^ `billing_subscriptions::columns::status` is not an iterator
+    |
+   ::: src/schema.rs:259:9
+    |
+259 |         status -> Varchar,
+    |         ------ method `eq` not found for this struct because it doesn't satisfy `billing_subscriptions::columns::status: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `billing_subscriptions::columns::status: Iterator`
+            which is required by `&mut billing_subscriptions::columns::status: Iterator`
+note: the trait `Iterator` must be implemented
+   --> /rustc/ded5c06cf21d2b93bffd5d884aa6e96934ee4234/library/core/src/iter/traits/iterator.rs:40:1
+    = help: items from traits can only be used if the trait is in scope
+help: trait `ExpressionMethods` which provides `eq` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use crate::diesel::ExpressionMethods;
+    |
+
+error[E0599]: no method named `find` found for struct `billing_plans::table` in the current scope
+   --> src/controllers/page_controllers.rs:149:53
+    |
+149 |                if let Ok(plan) = billing_plans::table.find(sub.plan_id).first::<BillingPlan>(&mut mysql_pool) {
+    |                                                       ^^^^ method not found in `billing_plans::table`
+    |
+   ::: src/schema.rs:234:1
+    |
+234 | / diesel::table! {
+235 | |     billing_plans (id) {
+236 | |         id -> Int4,
+237 | |         #[max_length = 100]
+...   |
+251 | | }
+    | |_- method `find` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: the following traits which provide `find` are implemented but not in scope; perhaps you want to import one of them
+    |
+  1 + use crate::diesel::QueryDsl;
+    |
+  1 + use crate::diesel::query_dsl::methods::FindDsl;
+    |
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:72:26
+   |
+72 |                         .set_header("Content-Encoding", "gzip")
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:73:26
+   |
+73 |                         .set_header("X-Sitemap-Count", page_count.to_string())
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:79:30
+   |
+79 | ...                   .set_header("X-Sitemap-Count", page_count.to_string())
+   |                        ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:87:22
+   |
+87 |                     .set_header("X-Sitemap-Count", page_count.to_string())
+   |                      ^^^^^^^^^^
+
+warning: use of deprecated method `chrono::NaiveDateTime::timestamp`: use `.and_utc().timestamp()` instead
+   --> src/services/mcp_custom_tool_service.rs:210:33
+    |
+210 |             let timestamp = now.timestamp();
+    |                                 ^^^^^^^^^
+
+warning: use of deprecated associated function `chrono::NaiveDateTime::from_timestamp_opt`: use `DateTime::from_timestamp` instead
+   --> src/services/mcp_custom_tool_service.rs:212:55
+    |
+212 |             let window_start = chrono::NaiveDateTime::from_timestamp_opt(hour_start_timestamp, 0).unwrap();
+    |                                                       ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:17:29
+   |
+17 |         .ok_or(RenderError::new(
+   |                             ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:28:33
+   |
+28 |             .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:30:33
+   |
+30 |             .ok_or(RenderError::new(&format!(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:61:33
+   |
+61 |             .ok_or(RenderError::new(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:70:37
+   |
+70 |                 .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                     ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:72:37
+   |
+72 |                 .ok_or(RenderError::new(&format!(
+   |                                     ^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+  --> src/services/analytics_service.rs:85:38
+   |
+85 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+  --> src/services/analytics_service.rs:85:45
+   |
+85 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                             ^^^^^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+   --> src/services/analytics_service.rs:131:38
+    |
+131 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+   --> src/services/analytics_service.rs:131:45
+    |
+131 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                             ^^^^^^^
+
+warning: unused import: `MigrationHarness`
+  --> src/main.rs:10:63
+   |
+10 | use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+   |                                                               ^^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/media_controller.rs:3:5
+  |
+3 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/search_controller.rs:3:5
+  |
+3 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::prelude`
+ --> src/controllers/i18n_controller.rs:2:5
+  |
+2 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/revision_controller.rs:6:5
+  |
+6 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `Digest`
+ --> src/services/webhook_service.rs:5:20
+  |
+5 | use sha2::{Sha256, Digest};
+  |                    ^^^^^^
+
+warning: unused variable: `template_vars`
+  --> src/controllers/user_api_extensions.rs:71:9
+   |
+71 |     let template_vars = serde_json::json!({
+   |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_template_vars`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `claims`
+   --> src/controllers/billing_controller.rs:197:5
+    |
+197 |     claims: Claims,
+    |     ^^^^^^ help: if this is intentional, prefix it with an underscore: `_claims`
+
+warning: variable `caption` is assigned to, but never used
+   --> src/controllers/media_controller.rs:144:9
+    |
+144 |     let mut caption = None;
+    |         ^^^^^^^^^^^
+    |
+    = note: consider using `_caption` instead
+
+warning: variable `folder` is assigned to, but never used
+   --> src/controllers/media_controller.rs:145:9
+    |
+145 |     let mut folder = None;
+    |         ^^^^^^^^^^
+    |
+    = note: consider using `_folder` instead
+
+warning: value assigned to `caption` is never read
+   --> src/controllers/media_controller.rs:201:21
+    |
+201 |                     caption = Some(value);
+    |                     ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `folder` is never read
+   --> src/controllers/media_controller.rs:212:21
+    |
+212 |                     folder = Some(value);
+    |                     ^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:188:9
+    |
+188 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:235:9
+    |
+235 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:344:9
+    |
+344 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:384:9
+    |
+384 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `provider_type`
+   --> src/services/ai_content_service.rs:182:9
+    |
+182 |     let provider_type = Some(provider.provider_type.clone());
+    |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_provider_type`
+
+For more information about this error, try `rustc --explain E0599`.
+warning: `freeradical` (bin "freeradical") generated 48 warnings
+error: could not compile `freeradical` (bin "freeradical") due to 4 previous errors; 48 warnings emitted

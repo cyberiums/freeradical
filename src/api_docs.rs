@@ -138,6 +138,7 @@ use utoipa::OpenApi;
         crate::controllers::payment_controller::create_payment_intent,
         crate::controllers::payment_controller::get_payment_intent,
         crate::controllers::payment_controller::list_payment_handlers,
+        crate::controllers::stripe_webhook_controller::handle_webhook,
         
         // Customer - OAuth
         crate::controllers::oauth_controller::google_login,

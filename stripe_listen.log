@@ -1,0 +1,29 @@
+Checking for new versions...
+
+A newer version of the Stripe CLI is available, please update to: v1.34.0
+Getting ready...
+Ready! You are using Stripe API Version [2024-06-20]. Your webhook signing secret is whsec_22bae007c8a9e841d4fdeb3ffcce636dfc2fa127b3c64ed51140051954a17c4f (^C to quit)
+2026-01-19 21:22:54   --> charge.succeeded [evt_3SrUanGIY9ES5fga1OsxVMhD]
+
+2026-01-19 21:22:54            [ERROR] Failed to POST: Post "http://localhost:8000/v1/webhooks/stripe": dial tcp [::1]:8000: connect: connection refused
+
+2026-01-19 21:22:54   --> payment_intent.succeeded [evt_3SrUanGIY9ES5fga1Sw5hvrc]
+
+2026-01-19 21:22:54            [ERROR] Failed to POST: Post "http://localhost:8000/v1/webhooks/stripe": dial tcp [::1]:8000: connect: connection refused
+
+2026-01-19 21:22:54   --> payment_intent.created [evt_3SrUanGIY9ES5fga1Am8g8F1]
+
+2026-01-19 21:22:54            [ERROR] Failed to POST: Post "http://localhost:8000/v1/webhooks/stripe": dial tcp [::1]:8000: connect: connection refused
+
+2026-01-19 21:22:57   --> charge.updated [evt_3SrUanGIY9ES5fga13XjjCye]
+
+2026-01-19 21:22:57            [ERROR] Failed to POST: Post "http://localhost:8000/v1/webhooks/stripe": dial tcp [::1]:8000: connect: connection refused
+
+2026-01-21 19:31:16   --> payout.created [evt_1SsBnsGIY9ES5fgaaCf3Uf1L]
+2026-01-21 19:31:16   --> payout.reconciliation_completed [evt_1SsBnsGIY9ES5fgabYMw4vOr]
+2026-01-21 19:31:16  <--  [200] POST http://localhost:8000/v1/webhooks/stripe [evt_1SsBnsGIY9ES5fgaaCf3Uf1L]
+2026-01-21 19:31:16  <--  [200] POST http://localhost:8000/v1/webhooks/stripe [evt_1SsBnsGIY9ES5fgabYMw4vOr]
+2026-01-21 19:36:16   --> payout.paid [evt_1SsBsiGIY9ES5fgafT26M21S]
+2026-01-21 19:36:16  <--  [200] POST http://localhost:8000/v1/webhooks/stripe [evt_1SsBsiGIY9ES5fgafT26M21S]
+2026-01-21 20:37:18   --> balance.available [evt_1SsCpmGIY9ES5fgafbZPwjaL]
+2026-01-21 20:37:18  <--  [200] POST http://localhost:8000/v1/webhooks/stripe [evt_1SsCpmGIY9ES5fgafbZPwjaL]

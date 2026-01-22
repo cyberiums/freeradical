@@ -68,6 +68,28 @@ pub async fn create_user(
     Ok(HttpResponse::Created().json(&safe_user))
 }
 
+/// List all users
+#[utoipa::path(
+    get,
+    path = "/v1/users",
+    tag = "Internal - Users",
+    responses(
+        (status = 200, description = "List of users", body = Vec<User>),
+        (status = 401, description = "Not authenticated")
+    ),
+    security((
+        "bearer_auth" = []
+    ))
+)]
+pub async fn list_users(
+    pool: web::Data<DatabasePool>,
+    _: Claims,
+) -> Result<HttpResponse, CustomHttpError> {
+    let mut mysql_pool = pool_handler(pool)?;
+    let users = User::read_all(&mut mysql_pool)?;
+    Ok(HttpResponse::Ok().json(users))
+}
+
 /// Get user by UUID
 #[utoipa::path(
     get,

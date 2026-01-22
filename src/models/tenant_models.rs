@@ -128,4 +128,20 @@ impl Tenant {
             .first::<i32>(db)
             .optional()
     }
+
+    pub fn count_by_user(user_id: i32, db: &mut PooledDatabaseConnection) -> Result<i64, diesel::result::Error> {
+        tenant_members::table
+            .inner_join(tenants::table)
+            .filter(tenant_members::user_id.eq(user_id))
+            .count()
+            .get_result(db)
+    }
+
+    pub fn find_by_user(user_id: i32, db: &mut PooledDatabaseConnection) -> Result<Vec<Tenant>, diesel::result::Error> {
+         tenant_members::table
+            .inner_join(tenants::table)
+            .filter(tenant_members::user_id.eq(user_id))
+            .select(Tenant::as_select())
+            .load::<Tenant>(db)
+    }
 }

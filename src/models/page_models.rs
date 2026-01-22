@@ -48,6 +48,7 @@ pub struct Page {
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
     pub tenant_id: Option<i32>,
+    pub content: Option<String>,
 }
 
 #[derive(Insertable, AsChangeset, Serialize, Deserialize, ToSchema)]
@@ -81,6 +82,7 @@ pub struct MutPage {
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
     pub tenant_id: Option<i32>,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
@@ -111,6 +113,7 @@ pub struct PageDTO {
     pub publish_at: Option<NaiveDateTime>,
     pub unpublish_at: Option<NaiveDateTime>,
     pub tenant_id: Option<i32>,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, ToSchema)]
@@ -166,6 +169,7 @@ impl From<Page> for PageDTO {
             publish_at: page.publish_at,
             unpublish_at: page.unpublish_at,
             tenant_id: page.tenant_id,
+            content: page.content,
         }
     }
 }

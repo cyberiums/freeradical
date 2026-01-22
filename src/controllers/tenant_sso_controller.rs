@@ -43,17 +43,17 @@ pub async fn update_config(
     let mut conn = pool.get().expect("couldn't get db connection");
     
     // Encrypt client secret if present (Placeholder: using plaintext for now, should use encryption_service)
-    let _secret = params.client_secret.clone(); 
+    let secret = params.client_secret.clone(); 
 
     let new_config = MutTenantSsoConfig {
         tenant_id: *tenant_id,
-        // provider_type: Some(params.provider_type.clone()), // Field doesn't exist in schema
+        provider_type: Some(params.provider_type.clone()),
         idp_entity_id: params.entity_id.clone(),
         idp_sso_url: params.sso_url.clone(),
         x509_certificate: params.x509_cert.clone(),
-        // client_id: params.client_id.clone(), // Field doesn't exist in schema
-        // client_secret: secret, // Field doesn't exist in schema
-        // discovery_url: params.discovery_url.clone(), // Field doesn't exist in schema
+        client_id: params.client_id.clone(),
+        client_secret: secret,
+        discovery_url: params.discovery_url.clone(),
         is_enabled: Some(params.is_enabled),
     };
 
@@ -120,8 +120,8 @@ pub async fn login(
         "saml" => {
             // Stub SAML
             let sso_url = config.idp_sso_url;
-            if !sso_url.is_empty() {
-                 HttpResponse::Found().append_header(("Location", sso_url)).finish()
+            if let Some(url) = sso_url {
+                 HttpResponse::Found().append_header(("Location", url)).finish()
             } else {
                  HttpResponse::InternalServerError().body("Invalid SAML Configuration")
             }

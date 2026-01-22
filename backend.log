@@ -1,0 +1,457 @@
+Running migrations...
+Migrations complete
+[2026-01-21T21:01:18Z INFO  freeradical::services::storage_service] Using Local Storage Backend
+[2026-01-21T21:01:18Z INFO  freeradical::services::cache_service_v2] Initializing Single Node Redis...
+[2026-01-21T21:01:18Z INFO  freeradical] Database migrations executed successfully.
+[2026-01-21T21:01:18Z INFO  freeradical::services::plugin_service] Loading 0 plugins
+DEBUG: Stripe Key Bytes (Final): [115, 107, 95, 116, 101, 115, 116, 95, 53, 49, 83, 111, 116, 86, 56, 57, 48, 90, 98, 48, 107, 84, 56, 76, 108, 52, 76, 116, 82, 98, 85, 81, 107, 82, 120, 114, 79, 84, 75, 79, 48, 97, 70, 97, 73, 101, 120, 105, 66, 80, 82, 116, 118, 104, 88, 66, 117, 118, 65, 102, 52, 66, 86, 56, 48, 97, 78, 81, 57, 70, 50, 49, 118, 116, 78, 106, 76, 75, 104, 51, 116, 108, 65, 119, 119, 57, 52, 71, 109, 49, 80, 116, 71, 88, 121, 77, 55, 48, 48, 90, 68, 115, 66, 104, 111, 77, 79]
+[2026-01-21T21:01:18Z INFO  freeradical::services::payment_service::stripe] DEBUG: Stripe Key (Redacted): sk_te...BhoMO
+[2026-01-21T21:01:18Z INFO  freeradical::services::payment_service] Registering payment handler: stripe
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Loading email templates from "./templates/emails"
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: commerce/order_confirmation
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: commerce/cart_abandonment
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: auth/welcome
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: crm/newsletter
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: layouts/base
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: billing/subscription_welcome
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: billing/limit_reached
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: billing/limit_warning_80
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: billing/payment_failed
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_template_service] Registered email template: billing/invoice_paid
+[2026-01-21T21:01:18Z INFO  freeradical::services::email_service] EmailService initialized with AWS SES provider
+[2026-01-21T21:01:18Z INFO  actix_server::builder] starting 2 workers
+🚀 Server is running 🚀
+[2026-01-21T21:01:18Z INFO  actix_server::server] Actix runtime found; starting in Actix runtime
+[2026-01-21T21:01:18Z INFO  actix_server::server] starting service: "actix-web-service-0.0.0.0:8000", workers: 2, listening on: 0.0.0.0:8000
+[2026-01-21T21:01:18Z INFO  freeradical] 🔌 Starting FreeRadical MCP Server on port 9009...
+[2026-01-21T21:01:18Z INFO  freeradical::services::mcp_server] 🚀 Starting FreeRadical MCP Server on 0.0.0.0:9009
+[2026-01-21T21:01:18Z INFO  freeradical::services::mcp_server] 📡 WebSocket endpoint: ws://0.0.0.0:9009/mcp
+[2026-01-21T21:01:18Z INFO  freeradical::services::mcp_server] 🏥 Health check: http://0.0.0.0:9009/health
+[2026-01-21T21:01:18Z INFO  actix_server::builder] starting 8 workers
+[2026-01-21T21:01:18Z INFO  actix_server::server] Actix runtime found; starting in Actix runtime
+[2026-01-21T21:01:18Z INFO  actix_server::server] starting service: "actix-web-service-0.0.0.0:9009", workers: 8, listening on: 0.0.0.0:9009
+[2026-01-21T21:01:18Z INFO  tokio_cron_scheduler::job_scheduler] Uninited
+[2026-01-21T21:01:18Z INFO  tokio_cron_scheduler::job_scheduler] Job creator created
+[2026-01-21T21:01:18Z INFO  freeradical::services::scheduler_service] 📅 Scheduled publishing & billing service started
+[2026-01-21T21:07:40Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.001535
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:40Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.050456
+[2026-01-21T21:07:40Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.003125
+[2026-01-21T21:07:40Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 548 "-" "axios/1.13.2" 0.001227
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:40Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001615
+[2026-01-21T21:07:41Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001730
+[2026-01-21T21:07:41Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 548 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.005752
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000138
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.006028
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.001055
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002666
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 548 "-" "axios/1.13.2" 0.001109
+Successfully updated is_active to false for site 9
+[2026-01-21T21:07:54Z INFO  actix_web::middleware::logger] 127.0.0.1 "PUT /v1/sites/9 HTTP/1.1" 200 54 "-" "axios/1.13.2" 0.025008
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000311
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002227
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000498
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000722
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001637
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000300
+[2026-01-21T21:07:55Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.004578
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000205
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002181
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000590
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000665
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001455
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001177
+[2026-01-21T21:08:05Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.005759
+[2026-01-21T22:01:18Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000502
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.028435
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.001148
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.001292
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002007
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000508
+[2026-01-21T22:40:35Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.005342
+[2026-01-21T22:40:37Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000331
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:40:37Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.003696
+[2026-01-21T22:40:37Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000609
+[2026-01-21T22:40:38Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000730
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:40:38Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.003684
+[2026-01-21T22:40:38Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001615
+[2026-01-21T22:40:38Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.005780
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000769
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.012571
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.001520
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.001898
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.003711
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000351
+[2026-01-21T22:53:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.009170
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000074
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001655
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000305
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000515
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001627
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000244
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001247
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000137
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001919
+[2026-01-21T22:53:21Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000417
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000645
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001081
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001030
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001385
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000127
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002853
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000488
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000478
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001007
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000139
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001282
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000243
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001941
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000561
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000425
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001162
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000186
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000570
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000552
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002458
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000557
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000432
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.000913
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000171
+[2026-01-21T22:53:22Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000613
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000213
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001460
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000778
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000596
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001344
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000160
+[2026-01-21T22:53:23Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000408
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000102
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002536
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000712
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000417
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001001
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000176
+[2026-01-21T22:53:24Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001304
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000202
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001456
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000469
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000389
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000167
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000111
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/pages HTTP/1.1" 200 1878 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.023430
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/pages HTTP/1.1" 200 1878 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.005230
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.012914
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.005398
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000634
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/pages HTTP/1.1" 200 1878 "-" "axios/1.13.2" 0.001743
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000331
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/pages HTTP/1.1" 200 1878 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.020055
+[2026-01-21T22:53:25Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/pages HTTP/1.1" 200 1878 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000918
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000119
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002142
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000287
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.000382
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001397
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000438
+[2026-01-21T22:53:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000408
+[2026-01-21T23:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.055209
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.060140
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.003881
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.002366
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001552
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000295
+[2026-01-21T23:32:30Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.004396
+[2026-01-22T00:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+DEBUG: Stripe Key Bytes (Final): [115, 107, 95, 116, 101, 115, 116, 95, 53, 49, 83, 111, 116, 86, 56, 57, 48, 90, 98, 48, 107, 84, 56, 76, 108, 52, 76, 116, 82, 98, 85, 81, 107, 82, 120, 114, 79, 84, 75, 79, 48, 97, 70, 97, 73, 101, 120, 105, 66, 80, 82, 116, 118, 104, 88, 66, 117, 118, 65, 102, 52, 66, 86, 56, 48, 97, 78, 81, 57, 70, 50, 49, 118, 116, 78, 106, 76, 75, 104, 51, 116, 108, 65, 119, 119, 57, 52, 71, 109, 49, 80, 116, 71, 88, 121, 77, 55, 48, 48, 90, 68, 115, 66, 104, 111, 77, 79]
+[2026-01-22T00:31:16Z INFO  freeradical::services::payment_service::stripe] DEBUG: Stripe Key (Redacted): sk_te...BhoMO
+DEBUG: Stripe Key Bytes (Final): [115, 107, 95, 116, 101, 115, 116, 95, 53, 49, 83, 111, 116, 86, 56, 57, 48, 90, 98, 48, 107, 84, 56, 76, 108, 52, 76, 116, 82, 98, 85, 81, 107, 82, 120, 114, 79, 84, 75, 79, 48, 97, 70, 97, 73, 101, 120, 105, 66, 80, 82, 116, 118, 104, 88, 66, 117, 118, 65, 102, 52, 66, 86, 56, 48, 97, 78, 81, 57, 70, 50, 49, 118, 116, 78, 106, 76, 75, 104, 51, 116, 108, 65, 119, 119, 57, 52, 71, 109, 49, 80, 116, 71, 88, 121, 77, 55, 48, 48, 90, 68, 115, 66, 104, 111, 77, 79]
+[2026-01-22T00:31:16Z INFO  freeradical::services::payment_service::stripe] DEBUG: Stripe Key (Redacted): sk_te...BhoMO
+[2026-01-22T00:31:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "POST /v1/webhooks/stripe HTTP/1.1" 200 13 "-" "Stripe/1.0 (+https://stripe.com/docs/webhooks)" 0.083145
+[2026-01-22T00:31:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "POST /v1/webhooks/stripe HTTP/1.1" 200 13 "-" "Stripe/1.0 (+https://stripe.com/docs/webhooks)" 0.050167
+[2026-01-22T00:35:15Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.056443
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:15Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.043805
+[2026-01-22T00:35:15Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.007410
+[2026-01-22T00:35:15Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.002455
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:15Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001531
+[2026-01-22T00:35:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000430
+[2026-01-22T00:35:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 549 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.003125
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000072
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.007007
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000979
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001435
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 549 "-" "axios/1.13.2" 0.001129
+Successfully updated is_active to false for site 11
+[2026-01-22T00:35:26Z INFO  actix_web::middleware::logger] 127.0.0.1 "PUT /v1/sites/11 HTTP/1.1" 200 54 "-" "axios/1.13.2" 0.024106
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000178
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002147
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000602
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.000986
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001404
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000291
+[2026-01-22T00:35:27Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001394
+DEBUG: Stripe Key Bytes (Final): [115, 107, 95, 116, 101, 115, 116, 95, 53, 49, 83, 111, 116, 86, 56, 57, 48, 90, 98, 48, 107, 84, 56, 76, 108, 52, 76, 116, 82, 98, 85, 81, 107, 82, 120, 114, 79, 84, 75, 79, 48, 97, 70, 97, 73, 101, 120, 105, 66, 80, 82, 116, 118, 104, 88, 66, 117, 118, 65, 102, 52, 66, 86, 56, 48, 97, 78, 81, 57, 70, 50, 49, 118, 116, 78, 106, 76, 75, 104, 51, 116, 108, 65, 119, 119, 57, 52, 71, 109, 49, 80, 116, 71, 88, 121, 77, 55, 48, 48, 90, 68, 115, 66, 104, 111, 77, 79]
+[2026-01-22T00:36:16Z INFO  freeradical::services::payment_service::stripe] DEBUG: Stripe Key (Redacted): sk_te...BhoMO
+[2026-01-22T00:36:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "POST /v1/webhooks/stripe HTTP/1.1" 200 13 "-" "Stripe/1.0 (+https://stripe.com/docs/webhooks)" 0.001432
+[2026-01-22T01:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+DEBUG: Stripe Key Bytes (Final): [115, 107, 95, 116, 101, 115, 116, 95, 53, 49, 83, 111, 116, 86, 56, 57, 48, 90, 98, 48, 107, 84, 56, 76, 108, 52, 76, 116, 82, 98, 85, 81, 107, 82, 120, 114, 79, 84, 75, 79, 48, 97, 70, 97, 73, 101, 120, 105, 66, 80, 82, 116, 118, 104, 88, 66, 117, 118, 65, 102, 52, 66, 86, 56, 48, 97, 78, 81, 57, 70, 50, 49, 118, 116, 78, 106, 76, 75, 104, 51, 116, 108, 65, 119, 119, 57, 52, 71, 109, 49, 80, 116, 71, 88, 121, 77, 55, 48, 48, 90, 68, 115, 66, 104, 111, 77, 79]
+[2026-01-22T01:37:18Z INFO  freeradical::services::payment_service::stripe] DEBUG: Stripe Key (Redacted): sk_te...BhoMO
+[2026-01-22T01:37:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "POST /v1/webhooks/stripe HTTP/1.1" 200 13 "-" "Stripe/1.0 (+https://stripe.com/docs/webhooks)" 0.002294
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000423
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.011539
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.001518
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.001302
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001904
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000779
+[2026-01-22T01:38:16Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001471
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000179
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.009375
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000589
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.000723
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001539
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.002763
+[2026-01-22T01:38:18Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001789
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.004981
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.042043
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.008191
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.001681
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.005370
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000577
+[2026-01-22T01:38:52Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001008
+[2026-01-22T02:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T03:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.058457
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.063984
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.003238
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.001055
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.003324
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000541
+[2026-01-22T03:16:59Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.006003
+[2026-01-22T03:17:08Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000098
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T03:17:08Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.007171
+[2026-01-22T03:17:08Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.002276
+[2026-01-22T03:17:08Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000415
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 401 24 "-" "axios/1.13.2" 0.000120
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.002060
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/products HTTP/1.1" 400 63 "-" "axios/1.13.2" 0.000534
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/sites HTTP/1.1" 200 550 "-" "axios/1.13.2" 0.000510
+TRACE: get_my_subscription called for user 2
+TRACE: Resolving tenant for user_id 2
+TRACE: Found tenant_id 9
+DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("none"), "interval": String("month"), "name": String("No Active Plan"), "next_billing_date": String("N/A"), "payment_method": Object {"exp_month": String("--"), "exp_year": String("--"), "last4": String("----")}, "price": String("0.00"), "status": String("none")}, "recentInvoices": Array [Object {"amount": String("50.00"), "date": String("2026-01-21"), "id": Number(23), "status": String("open")}, Object {"amount": String("25.00"), "date": String("2026-01-20"), "id": Number(22), "status": String("paid")}]}
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/billing/subscription HTTP/1.1" 200 343 "-" "axios/1.13.2" 0.001471
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/config/stripe HTTP/1.1" 200 128 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.000240
+[2026-01-22T03:17:11Z INFO  actix_web::middleware::logger] 127.0.0.1 "GET /v1/api/tenants HTTP/1.1" 200 550 "http://localhost:5005/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" 0.001906
+[2026-01-22T04:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T05:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T06:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T07:01:19Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T08:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T09:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T10:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T11:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T12:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T13:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T14:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T15:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T16:01:21Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications

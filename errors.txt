@@ -1,0 +1,487 @@
+    Checking freeradical v2.6.1 (/Users/prabhatsingh/freeradical)
+warning: unused import: `HttpRequest`
+ --> src/controllers/user_api_extensions.rs:1:22
+  |
+1 | use actix_web::{web, HttpRequest, HttpResponse};
+  |                      ^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Serialize`
+ --> src/controllers/user_api_extensions.rs:2:26
+  |
+2 | use serde::{Deserialize, Serialize};
+  |                          ^^^^^^^^^
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:223:9
+    |
+223 |         ;
+    |         ^ help: remove this semicolon
+    |
+    = note: `#[warn(redundant_semicolons)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary trailing semicolon
+   --> src/controllers/product_controller.rs:277:9
+    |
+277 |         ;
+    |         ^ help: remove this semicolon
+
+warning: unused import: `Duration`
+ --> src/services/mcp_custom_tool_service.rs:3:19
+  |
+3 | use chrono::{Utc, Duration};
+  |                   ^^^^^^^^
+
+warning: use of deprecated type alias `diesel::dsl::count_distinct`
+   --> src/services/analytics_service.rs:128:26
+    |
+128 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:128:26
+    |
+128 |         use diesel::dsl::count_distinct;
+    |                          ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `diesel::dsl::count_distinct`: Use `AggregateExpressionMethods::aggregate_distinct` instead
+   --> src/services/analytics_service.rs:135:21
+    |
+135 |             .select(count_distinct(dsl::user_id))
+    |                     ^^^^^^^^^^^^^^
+
+warning: use of deprecated function `aws_config::from_env`: Use the `aws_config::defaults` function. If you don't care about future default behavior changes, you can continue to use this function by enabling the `behavior-version-latest` feature. Doing so will make this deprecation notice go away.
+  --> src/services/storage_service.rs:78:34
+   |
+78 |         let config = aws_config::from_env()
+   |                                  ^^^^^^^^
+
+warning: use of deprecated function `base64::encode`: Use Engine::encode
+   --> src/services/payment_service/square.rs:237:32
+    |
+237 |         let expected = base64::encode(mac.finalize().into_bytes());
+    |                                ^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+ --> src/services/email_verification_service.rs:4:12
+  |
+4 | use rand::{thread_rng, Rng, distr::Alphanumeric};
+  |            ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/services/email_verification_service.rs:149:35
+    |
+149 |         let random_part: String = thread_rng()
+    |                                   ^^^^^^^^^^
+
+warning: use of deprecated type alias `diesel::backend::RawValue`: Use `Backend::RawValue` directly
+  --> src/models/status_enum.rs:34:41
+   |
+34 |     fn from_sql(bytes: diesel::backend::RawValue<Pg>) -> deserialize::Result<Self> {
+   |                                         ^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:72:26
+   |
+72 |                         .set_header("Content-Encoding", "gzip")
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:73:26
+   |
+73 |                         .set_header("X-Sitemap-Count", page_count.to_string())
+   |                          ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:79:30
+   |
+79 | ...                   .set_header("X-Sitemap-Count", page_count.to_string())
+   |                        ^^^^^^^^^^
+
+warning: use of deprecated method `actix_web::HttpResponseBuilder::set_header`: Replaced with `insert_header((key, value))`. Will be removed in v5.
+  --> src/controllers/sitemap_controller.rs:87:22
+   |
+87 |                     .set_header("X-Sitemap-Count", page_count.to_string())
+   |                      ^^^^^^^^^^
+
+error[E0063]: missing fields `client_id`, `client_secret`, `discovery_url` and 1 other field in initializer of `MutTenantSsoConfig`
+  --> src/controllers/tenant_sso_controller.rs:48:22
+   |
+48 |     let new_config = MutTenantSsoConfig {
+   |                      ^^^^^^^^^^^^^^^^^^ missing `client_id`, `client_secret`, `discovery_url` and 1 other field
+
+error[E0599]: no method named `is_empty` found for enum `std::option::Option<T>` in the current scope
+   --> src/controllers/tenant_sso_controller.rs:123:25
+    |
+123 |             if !sso_url.is_empty() {
+    |                         ^^^^^^^^ method not found in `std::option::Option<std::string::String>`
+    |
+note: the method `is_empty` exists on the type `std::string::String`
+   --> /rustc/ded5c06cf21d2b93bffd5d884aa6e96934ee4234/library/alloc/src/string.rs:1868:5
+help: consider using `Option::expect` to unwrap the `std::string::String` value, panicking if the value is an `Option::None`
+    |
+123 |             if !sso_url.expect("REASON").is_empty() {
+    |                        +++++++++++++++++
+
+error[E0277]: the trait bound `(&str, std::option::Option<std::string::String>): TryIntoHeaderPair` is not satisfied
+   --> src/controllers/tenant_sso_controller.rs:124:54
+    |
+124 |                  HttpResponse::Found().append_header(("Location", sso_url)).finish()
+    |                                        ------------- ^^^^^^^^^^^^^^^^^^^^^ the trait `TryIntoHeaderPair` is not implemented for `(&str, std::option::Option<std::string::String>)`
+    |                                        |
+    |                                        required by a bound introduced by this call
+    |
+    = help: the following other types implement trait `TryIntoHeaderPair`:
+              (&[u8], V)
+              (&actix_web::http::header::HeaderName, V)
+              (&str, V)
+              (actix_web::http::header::HeaderName, V)
+              (std::string::String, V)
+note: required by a bound in `HttpResponseBuilder::append_header`
+   --> /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/actix-web-4.12.1/src/response/builder.rs:85:50
+    |
+ 85 |     pub fn append_header(&mut self, header: impl TryIntoHeaderPair) -> &mut Self {
+    |                                                  ^^^^^^^^^^^^^^^^^ required by this bound in `HttpResponseBuilder::append_header`
+
+error[E0277]: the trait bound `(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...): CompatibleType<..., ...>` is not satisfied
+    --> src/services/inventory_service.rs:249:40
+     |
+ 249 |             .load::<InventoryAuditLog>(&mut conn)
+     |              ----                      ^^^^^^^^^ unsatisfied trait bound
+     |              |
+     |              required by a bound introduced by this call
+     |
+     = help: the trait `load_dsl::private::CompatibleType<InventoryAuditLog, Pg>` is not implemented for `(Integer, Nullable<...>, ..., ..., ..., ..., ..., ..., ..., ..., ...)`
+     = note: this is a mismatch between what your query returns and what your type expects the query to return
+     = note: the fields in your struct need to match the fields returned by your query in count, order and type
+     = note: consider using `#[diesel(check_for_backend(Pg))]` on either `#[derive(Selectable)]` or `#[derive(QueryableByName)]` 
+             on your struct `InventoryAuditLog` and in your query `.select(InventoryAuditLog::as_select())` to get a better error message
+     = help: the following other types implement trait `load_dsl::private::CompatibleType<U, DB>`:
+               `Untyped` implements `load_dsl::private::CompatibleType<U, DB>`
+               `diesel::expression::select_by::SelectBy<U, DB>` implements `load_dsl::private::CompatibleType<U, DB>`
+               `diesel::sql_types::Nullable<(ST, ST1)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+               `diesel::sql_types::Nullable<(ST, ST1, ST2)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+               `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+               `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+               `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+               `diesel::sql_types::Nullable<(ST, ST1, ST2, ST3, ST4, ST5, ST6)>` implements `load_dsl::private::CompatibleType<std::option::Option<__T>, __DB>`
+             and 26 others
+     = note: required for `SelectStatement<FromClause<table>, ..., ..., ..., ..., ...>` to implement `LoadQuery<'_, _, InventoryAuditLog>`
+note: required by a bound in `diesel::RunQueryDsl::load`
+    --> /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/diesel-2.3.5/src/query_dsl/mod.rs:1592:15
+     |
+1590 |     fn load<'query, U>(self, conn: &mut Conn) -> QueryResult<Vec<U>>
+     |        ---- required by a bound in this associated function
+1591 |     where
+1592 |         Self: LoadQuery<'query, Conn, U>,
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `RunQueryDsl::load`
+     = note: the full name for the type has been written to '/Users/prabhatsingh/freeradical/target/debug/deps/freeradical-1128cebf035bdb63.long-type-11479757699626117501.txt'
+     = note: consider using `--verbose` to print the full type name to the console
+
+error[E0521]: borrowed data escapes outside of function
+   --> src/services/ai_content_service.rs:185:5
+    |
+174 |       provider: &AIProviderConfig,
+    |       --------  - let's call the lifetime of this reference `'1`
+    |       |
+    |       `provider` is a reference that is only valid in the function body
+...
+185 | /     web::block(move || -> Result<(), diesel::result::Error> {
+186 | |         let mut conn = pool.get().map_err(|_| diesel::result::Error::DatabaseError(
+187 | |             diesel::result::DatabaseErrorKind::Unknown,
+188 | |             Box::new("Database connection error".to_string())
+...   |
+203 | |         Ok(())
+204 | |     })
+    | |      ^
+    | |      |
+    | |______`provider` escapes the function body here
+    |        argument requires that `'1` must outlive `'static`
+
+warning: use of deprecated method `chrono::NaiveDateTime::timestamp`: use `.and_utc().timestamp()` instead
+   --> src/services/mcp_custom_tool_service.rs:210:33
+    |
+210 |             let timestamp = now.timestamp();
+    |                                 ^^^^^^^^^
+
+warning: use of deprecated associated function `chrono::NaiveDateTime::from_timestamp_opt`: use `DateTime::from_timestamp` instead
+   --> src/services/mcp_custom_tool_service.rs:212:55
+    |
+212 |             let window_start = chrono::NaiveDateTime::from_timestamp_opt(hour_start_timestamp, 0).unwrap();
+    |                                                       ^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:17:29
+   |
+17 |         .ok_or(RenderError::new(
+   |                             ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:28:33
+   |
+28 |             .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:30:33
+   |
+30 |             .ok_or(RenderError::new(&format!(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:61:33
+   |
+61 |             .ok_or(RenderError::new(
+   |                                 ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:70:37
+   |
+70 |                 .ok_or(RenderError::new("No fields exist on this page."))?
+   |                                     ^^^
+
+warning: use of deprecated associated function `handlebars::RenderError::new`: Use RenderErrorReason instead
+  --> src/helpers/default.rs:72:37
+   |
+72 |                 .ok_or(RenderError::new(&format!(
+   |                                     ^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+  --> src/services/analytics_service.rs:85:38
+   |
+85 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+  --> src/services/analytics_service.rs:85:45
+   |
+85 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+   |                                             ^^^^^^^
+
+warning: use of deprecated method `chrono::DateTime::<Tz>::date`: Use `date_naive()` instead
+   --> src/services/analytics_service.rs:131:38
+    |
+131 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                      ^^^^
+
+warning: use of deprecated method `chrono::Date::<Tz>::and_hms`: Use and_hms_opt() instead
+   --> src/services/analytics_service.rs:131:45
+    |
+131 |         let today_start = Utc::now().date().and_hms(0, 0, 0).naive_utc();
+    |                                             ^^^^^^^
+
+error[E0277]: the trait bound `i32: AsExpression<diesel::sql_types::Text>` is not satisfied
+  --> src/services/language_service.rs:60:29
+   |
+60 |             .filter(page_id.eq(target_page_id))
+   |                             ^^ the trait `AsExpression<diesel::sql_types::Text>` is not implemented for `i32`
+   |
+   = help: the following other types implement trait `AsExpression<T>`:
+             `&&i32` implements `AsExpression<diesel::sql_types::Integer>`
+             `&&i32` implements `AsExpression<diesel::sql_types::Nullable<diesel::sql_types::Integer>>`
+             `&i32` implements `AsExpression<diesel::sql_types::Integer>`
+             `&i32` implements `AsExpression<diesel::sql_types::Nullable<diesel::sql_types::Integer>>`
+             `i32` implements `AsExpression<diesel::sql_types::Integer>`
+             `i32` implements `AsExpression<diesel::sql_types::Nullable<diesel::sql_types::Integer>>`
+
+error[E0277]: the trait bound `i32: ValidGrouping<()>` is not satisfied
+  --> src/services/language_service.rs:60:14
+   |
+60 |             .filter(page_id.eq(target_page_id))
+   |              ^^^^^^ the trait `ValidGrouping<()>` is not implemented for `i32`
+   |
+   = help: the following other types implement trait `ValidGrouping<GroupByClause>`:
+             `&T` implements `ValidGrouping<GB>`
+             `()` implements `ValidGrouping<GB>`
+             `(T, T1)` implements `ValidGrouping<__GroupByClause>`
+             `(T, T1, T2)` implements `ValidGrouping<__GroupByClause>`
+             `(T, T1, T2, T3)` implements `ValidGrouping<__GroupByClause>`
+             `(T, T1, T2, T3, T4)` implements `ValidGrouping<__GroupByClause>`
+             `(T, T1, T2, T3, T4, T5)` implements `ValidGrouping<__GroupByClause>`
+             `(T, T1, T2, T3, T4, T5, T6)` implements `ValidGrouping<__GroupByClause>`
+           and 1683 others
+   = note: required for `diesel::expression::operators::Eq<schema::page_translations::columns::page_id, i32>` to implement `ValidGrouping<()>`
+   = note: required for `Grouped<Eq<page_id, i32>>` to implement `NonAggregate`
+   = note: required for `SelectStatement<FromClause<schema::page_translations::table>>` to implement `FilterDsl<Grouped<Eq<page_id, i32>>>`
+   = note: the full name for the type has been written to '/Users/prabhatsingh/freeradical/target/debug/deps/freeradical-1128cebf035bdb63.long-type-4770269613288809560.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `i32: diesel::Expression` is not satisfied
+  --> src/services/language_service.rs:60:14
+   |
+60 |             .filter(page_id.eq(target_page_id))
+   |              ^^^^^^ the trait `diesel::Expression` is not implemented for `i32`
+   |
+   = help: the following other types implement trait `diesel::Expression`:
+             &T
+             AliasedField<S, C>
+             Box<T>
+             CaseWhen<CaseWhenConditionsIntermediateNode<W, T, Whens>, E>
+             CaseWhen<CaseWhenConditionsLeaf<W, T>, ElseExpression<E>>
+             CaseWhen<CaseWhenConditionsLeaf<W, T>, NoElseExpression>
+             Exists<T>
+             In<T, U>
+           and 918 others
+   = note: required for `diesel::expression::operators::Eq<schema::page_translations::columns::page_id, i32>` to implement `diesel::Expression`
+   = note: required for `SelectStatement<FromClause<schema::page_translations::table>>` to implement `FilterDsl<Grouped<Eq<page_id, i32>>>`
+   = note: the full name for the type has been written to '/Users/prabhatsingh/freeradical/target/debug/deps/freeradical-1128cebf035bdb63.long-type-4189888300236108863.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0277]: the trait bound `SelectStatement<FromClause<table>, ..., ..., ...>: FilterDsl<_>` is not satisfied
+  --> src/services/language_service.rs:61:14
+   |
+61 |             .filter(language_id.eq(lang_id))
+   |              ^^^^^^ the trait `FilterDsl<_>` is not implemented for `SelectStatement<FromClause<table>, DefaultSelectClause<...>, ..., ...>`
+   |
+   = help: the trait `FilterDsl<Predicate>` is implemented for `SelectStatement<F, S, D, W, O, LOf, G, H, LC>`
+   = note: the full name for the type has been written to '/Users/prabhatsingh/freeradical/target/debug/deps/freeradical-1128cebf035bdb63.long-type-14464336541352081563.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+error[E0282]: type annotations needed
+  --> src/services/language_service.rs:59:9
+   |
+59 | /         page_translations
+60 | |             .filter(page_id.eq(target_page_id))
+61 | |             .filter(language_id.eq(lang_id))
+   | |____________________________________________^ cannot infer type
+
+error[E0599]: `NaiveDateTime` is not an iterator
+   --> src/services/billing_service.rs:231:40
+    |
+231 |                 "date": inv.created_at.map(|dt| dt.format("%Y-%m-%d").to_string()).unwrap_or_else(|| "N/A".to_string()),
+    |                                        ^^^ `NaiveDateTime` is not an iterator
+    |
+   ::: /Users/prabhatsingh/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/chrono-0.4.42/src/naive/datetime/mod.rs:76:1
+    |
+ 76 | pub struct NaiveDateTime {
+    | ------------------------ doesn't satisfy `NaiveDateTime: Iterator`
+    |
+    = note: the following trait bounds were not satisfied:
+            `NaiveDateTime: Iterator`
+            which is required by `&mut NaiveDateTime: Iterator`
+
+error[E0282]: type annotations needed
+   --> src/services/billing_service.rs:231:45
+    |
+231 |                 "date": inv.created_at.map(|dt| dt.format("%Y-%m-%d").to_string()).unwrap_or_else(|| "N/A".to_string()),
+    |                                             ^^  -- type must be known at this point
+    |
+help: consider giving this closure parameter an explicit type
+    |
+231 |                 "date": inv.created_at.map(|dt: /* Type */| dt.format("%Y-%m-%d").to_string()).unwrap_or_else(|| "N/A".to_string()),
+    |                                               ++++++++++++
+
+warning: unused import: `MigrationHarness`
+  --> src/main.rs:10:63
+   |
+10 | use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+   |                                                               ^^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/media_controller.rs:3:5
+  |
+3 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/search_controller.rs:3:5
+  |
+3 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `diesel::prelude`
+ --> src/controllers/i18n_controller.rs:2:5
+  |
+2 | use diesel::prelude::*;
+  |     ^^^^^^^^^^^^^^^
+
+warning: unused import: `utoipa::ToSchema`
+ --> src/controllers/revision_controller.rs:6:5
+  |
+6 | use utoipa::ToSchema;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused import: `Digest`
+ --> src/services/webhook_service.rs:5:20
+  |
+5 | use sha2::{Sha256, Digest};
+  |                    ^^^^^^
+
+warning: unused variable: `template_vars`
+  --> src/controllers/user_api_extensions.rs:71:9
+   |
+71 |     let template_vars = serde_json::json!({
+   |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_template_vars`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable `caption` is assigned to, but never used
+   --> src/controllers/media_controller.rs:144:9
+    |
+144 |     let mut caption = None;
+    |         ^^^^^^^^^^^
+    |
+    = note: consider using `_caption` instead
+
+warning: variable `folder` is assigned to, but never used
+   --> src/controllers/media_controller.rs:145:9
+    |
+145 |     let mut folder = None;
+    |         ^^^^^^^^^^
+    |
+    = note: consider using `_folder` instead
+
+warning: value assigned to `caption` is never read
+   --> src/controllers/media_controller.rs:201:21
+    |
+201 |                     caption = Some(value);
+    |                     ^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `folder` is never read
+   --> src/controllers/media_controller.rs:212:21
+    |
+212 |                     folder = Some(value);
+    |                     ^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:188:9
+    |
+188 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:235:9
+    |
+235 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:344:9
+    |
+344 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `user`
+   --> src/controllers/mcp_custom_tool_controller.rs:384:9
+    |
+384 |     let user = get_user_from_request(&req)?;
+    |         ^^^^ help: if this is intentional, prefix it with an underscore: `_user`
+
+warning: unused variable: `provider_type`
+   --> src/services/ai_content_service.rs:182:9
+    |
+182 |     let provider_type = Some(provider.provider_type.clone());
+    |         ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_provider_type`
+
+Some errors have detailed explanations: E0063, E0277, E0282, E0521, E0599.
+For more information about an error, try `rustc --explain E0063`.
+warning: `freeradical` (bin "freeradical") generated 45 warnings
+error: could not compile `freeradical` (bin "freeradical") due to 12 previous errors; 45 warnings emitted

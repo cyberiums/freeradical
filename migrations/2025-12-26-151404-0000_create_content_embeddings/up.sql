@@ -1,4 +1,5 @@
 -- Content Embeddings for Semantic Search
+DROP TABLE IF EXISTS content_embeddings CASCADE;
 CREATE TABLE IF NOT EXISTS content_embeddings (
     id BIGSERIAL PRIMARY KEY,
     page_id INTEGER,

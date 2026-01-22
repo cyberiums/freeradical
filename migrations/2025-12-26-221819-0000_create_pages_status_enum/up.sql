@@ -1,5 +1,10 @@
 -- Create enum type for page status
-CREATE TYPE pages_status AS ENUM ('draft', 'published', 'archived', 'scheduled');
+-- Create enum type for page status (SAFE)
+DO $$ BEGIN
+    CREATE TYPE pages_status AS ENUM ('draft', 'published', 'archived', 'scheduled');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
 
 -- Add status column to pages table with enum type
 DO $$ 

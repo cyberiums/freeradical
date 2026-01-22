@@ -5,7 +5,7 @@ use crate::schema::page_translations;
 #[derive(Debug, Queryable, Serialize, Deserialize)]
 pub struct PageTranslation {
     pub id: i32,
-    pub page_id: i32,
+    pub page_id: String,
     pub language_id: i32,
     pub page_title: Option<String>,
     pub page_content: Option<String>,
@@ -23,7 +23,7 @@ pub struct PageTranslation {
 #[derive(Debug, Insertable, Deserialize)]
 #[diesel(table_name = page_translations)]
 pub struct NewPageTranslation {
-    pub page_id: i32,
+    pub page_id: String,
     pub language_id: i32,
     pub page_title: Option<String>,
     pub page_content: Option<String>,
