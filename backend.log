@@ -455,3 +455,4 @@ DEBUG: Subscription Response: Object {"currentPlan": Object {"code": String("non
 [2026-01-22T14:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
 [2026-01-22T15:01:20Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
 [2026-01-22T16:01:21Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
+[2026-01-22T17:01:21Z INFO  freeradical] ✅ Cleaned up 0 expired email verifications
